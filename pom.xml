@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.lvmama.comm</groupId>
+	<artifactId>module_pet</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<!--<module>../../message/tnt_message</module>-->
+
+		<!-- tnt_user -->
+		<!--<module>../../merchant/tnt_merchant_api</module>-->
+		<!--<module>../../merchant/tnt_merchant_service</module>-->
+		<!--<module>../../hotel_price/tnt_hotel_price_api</module>-->
+		<!--&lt;!&ndash;<module>../../hotel_price/tnt_hotel_price_service</module>&ndash;&gt;-->
+		<!--<module>../../ship_price/tnt_ship_price_api</module>-->
+
+
+		<!-- route_auto_package -->
+		<!--<module>../../route_auto_package/route_package_comm</module>-->
+
+		<!-- tnt -->
+		<module>../tnt/tnt_pom_base</module>
+		<module>../tnt/tnt_interface</module>
+		<module>../tnt/tnt_comm</module>
+		<module>../tnt/tnt_api</module>
+		<module>../tnt/tnt_back</module>
+		<module>../tnt/tnt_dist</module>
+		<!--<module>../tnt/tnt_order</module>-->
+		<!--<module>../tnt/tnt_clutter</module>-->
+		<!--<module>../tnt/tnt_client</module>-->
+		<!--<module>../tnt/tnt_cps</module>-->
+		<!--<module>../tnt/tnt_front</module>-->
+		<module>../tnt/tnt_lvmmapi</module>
+		<module>../tnt/tnt_platform</module>
+		<module>../tnt/tnt_price</module>
+		<module>../tnt/tnt_priceapi</module>
+		<!--<module>../tnt/tnt_sback</module>-->
+		<module>../tnt/tnt_sorder</module>
+		<module>../tnt/tnt_taobao</module>
+		<module>../tnt/tnt_taobaoapi</module>
+		<module>../tnt/tnt_prod</module>
+		<module>../tnt/tnt_prodserver</module>
+
+		<!-- vst-->
+		<module>../../trunk/versatile/vst_api</module>
+		<!--<module>../../trunk/versatile/vst_pom_base</module>-->
+		<!--<module>../../trunk/versatile/vst_pet</module>-->
+		<!--<module>../../trunk/versatile/vst_comm</module>-->
+		<!--&lt;!&ndash;<module>../../trunk/versatile/vst_searchapi</module>&ndash;&gt;-->
+		<!--<module>../../trunk/versatile/vst_back</module>-->
+		<!--<module>../../trunk/versatile/vst_order</module>-->
+		<!--<module>../../trunk/dest/dest-api</module>-->
+
+
+		<!-- pet -->
+		<!--<module>../../trunk/focus/pom_base</module>-->
+		<!--<module>../../trunk/focus/lvmama_common</module>-->
+		<!--		<module>../../trunk/focus/pay_common</module>
+                <module>../../trunk/focus/pet_public</module>
+                <module>../../trunk/focus/pet_back</module>-->
+		<!--<module>../../trunk/focus/pet_job</module>-->
+		<!--<module>../../trunk/focus/pet_sso</module>-->
+		<!--<module>../../trunk/focus/pet_topic</module>-->
+		<!--<module>../../trunk/focus/pet_payment</module>-->
+		<!--<module>../../trunk/focus/pet_dest</module>-->
+		<!--<module>../../trunk/focus/pet_ebk_push</module>-->
+		<!--<module>../../trunk/focus/pet_payfront</module>-->
+		<!--<module>../../trunk/focus/pet_finfront</module>-->
+
+		<!-- crm -->
+		<!--<module>../../trunk/crm/crm-client</module>-->
+		<!-- cmt -->
+		<!--<module>../../trunk/cmt/cmt_interface</module>-->
+		<!-- user -->
+		<!--<module>../../trunk/user/user-client</module>-->
+
+		<!-- soa -->
+		<!--<module>../../trunk/soa/lvmama_bigger</module>-->
+		<!--<module>../../trunk/soa/lvmama-lang</module>-->
+		<!--<module>../../trunk/soa/lvmama_soa</module>-->
+		<!--<module>../../trunk/soa/dubbo-transfer</module>-->
+		<!--<module>../../trunk/soa/lvmama_task</module>-->
+		<!--<module>../../trunk/soa/prism/bigger_search-web</module>-->
+		<!--<module>../../trunk/soa/prism/common</module>-->
+		<!--<module>../../trunk/soa/pet_pic</module>-->
+		<!--<module>../soa/prism/sweet-web</module>
+		<module>../soa/prism/theone_web</module>
+		<module>../soa/prism/web</module>-->
+
+		<!-- super -->
+		<!--<module>../../trunk/super/Super_back</module>-->
+		<!--<module>../../trunk/super/Super_order</module>-->
+	</modules>
+</project>
