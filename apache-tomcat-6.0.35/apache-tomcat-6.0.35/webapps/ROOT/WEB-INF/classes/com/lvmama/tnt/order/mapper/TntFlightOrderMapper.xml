@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntFlightOrderMapper">
+	<resultMap type="com.lvmama.tnt.order.po.TntFlightOrder" id="tntFlightOrderMap">
+		<id property="tntOrderFlightId" column="TNT_ORDER_FLIGHT_ID"/>
+		<result property="tntOrderId" column="TNT_ORDER_ID"/>
+		<result property="flightOrderId" column="FLIGHT_ORDER_ID"/>
+		<result property="flightOrderNumber" column="FLIGHT_ORDER_NUMBER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="flightType" column="FLIGHT_TYPE"/>
+		<result property="fromCity" column="FROM_CITY"/>
+		<result property="fromAirPort" column="FROM_ARIPORT"/>
+		<result property="fromTermainalBuilding" column="FROM_TERMAINAL_BUILDING"/>
+		<result property="toCity" column="TO_CITY"/>
+		<result property="toAirPort" column="TO_AIRPORT"/>
+		<result property="toTermainalBuilding" column="TO_TERMAINAL_BUILDING"/>
+		<result property="airLine" column="AIR_LINE"/>
+		<result property="flightNo" column="FLIGHT_NO"/>
+		<result property="takeOffTime" column="TAKEOFF_TIME"/>
+		<result property="orderAmount" column="ORDER_AMOUNT"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="paymentStatus" column="PAYMENT_STATUS"/>
+		<result property="parentTntOrderFlightId" column="PARENT_TNT_ORDER_FLIGHT_ID"/>
+		<result property="orderType" column="ORDER_TYPE"/>
+		<result property="createOperator" column="CREATE_OPERATOR"/>
+		<result property="passengerType" column="PASSENGER_TYPE"/>
+		<result property="passengerName" column="PASSENGER_NAME"/>
+		<result property="flightTripType" column="FLIGHT_TRIP_TYPE"/>
+		<result property="distributorId" column="DISTRIBUTOR_ID"/>
+		<result property="distributorName" column="DISTRIBUTOR_NAME"/>
+		<result property="channelId" column="CHANNEL_ID"/>
+		<association property="refundFlag" column="TNT_ORDER_ID" select="selectRefundFlag"/>
+		<association property="rescheduleFlag" column="TNT_ORDER_ID" select="selectReScheduleFlag"/>
+		<association property="reschedulePayFlag" column="TNT_ORDER_ID" select="selectReschedulePayFlag"/>
+		<association property="rescheduleChildOrderId" column="TNT_ORDER_ID" select="selectRescheduleChildOrderId"/> 
+	</resultMap>
+	
+	<resultMap type="com.lvmama.tnt.flight.vo.TntFlightOrderVO" id="tntFlightOrderVOMap">
+		<id property="tntOrderFlightId" column="TNT_ORDER_FLIGHT_ID"/>
+		<result property="tntOrderId" column="TNT_ORDER_ID"/>
+		<result property="flightOrderId" column="FLIGHT_ORDER_ID"/>
+		<result property="flightOrderNumber" column="FLIGHT_ORDER_NUMBER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="flightType" column="FLIGHT_TYPE"/>
+		<result property="fromCity" column="FROM_CITY"/>
+		<result property="fromAirPort" column="FROM_ARIPORT"/>
+		<result property="fromTermainalBuilding" column="FROM_TERMAINAL_BUILDING"/>
+		<result property="toCity" column="TO_CITY"/>
+		<result property="toAirPort" column="TO_AIRPORT"/>
+		<result property="toTermainalBuilding" column="TO_TERMAINAL_BUILDING"/>
+		<result property="airLine" column="AIR_LINE"/>
+		<result property="flightNo" column="FLIGHT_NO"/>
+		<result property="takeOffTime" column="TAKEOFF_TIME"/>
+		<result property="orderAmount" column="ORDER_AMOUNT"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="paymentStatus" column="PAYMENT_STATUS"/>
+		<result property="parentTntOrderFlightId" column="PARENT_TNT_ORDER_FLIGHT_ID"/>
+		<result property="orderType" column="ORDER_TYPE"/>
+		<result property="createOperator" column="CREATE_OPERATOR"/>
+		<result property="passengerType" column="PASSENGER_TYPE"/>
+		<result property="passengerName" column="PASSENGER_NAME"/>
+		<result property="flightTripType" column="FLIGHT_TRIP_TYPE"/>
+		<result property="distributorId" column="DISTRIBUTOR_ID"/>
+		<result property="distributorName" column="DISTRIBUTOR_NAME"/>
+		<result property="channelId" column="CHANNEL_ID"/>
+	</resultMap>
+	
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_FLIGHT_ID, PARENT_TNT_ORDER_FLIGHT_ID, TNT_ORDER_ID, FLIGHT_ORDER_ID, CREATE_TIME, FLIGHT_TYPE, 
+		FROM_CITY, FROM_ARIPORT, FROM_TERMAINAL_BUILDING, TO_CITY, TO_AIRPORT, TO_TERMAINAL_BUILDING,
+		AIR_LINE, FLIGHT_NO, TAKEOFF_TIME, ORDER_AMOUNT, ORDER_STATUS, ORDER_TYPE, CREATE_OPERATOR, 
+		PAYMENT_STATUS, PASSENGER_TYPE, FLIGHT_TRIP_TYPE, PASSENGER_NAME, FLIGHT_ORDER_NUMBER
+	    ]]>
+	</sql>
+	
+	<sql id="where">
+		<if test="tntOrderId != null and tntOrderId !=''">
+			AND o.TNT_ORDER_ID = #{tntOrderId} AND o.ORDER_TYPE = 'MAIN'
+		</if>
+		<if test="flightOrderId != null and flightOrderId !=''">
+			AND o.FLIGHT_ORDER_ID = #{flightOrderId}
+		</if>
+		<if test="flightOrderNumber != null and flightOrderNumber !=''">
+			AND o.FLIGHT_ORDER_NUMBER = #{flightOrderNumber}
+		</if>
+		<if test="distributorId != null and distributorId !=''">
+			AND o.DISTRIBUTOR_ID = #{distributorId}
+		</if>
+		<if test="createOperator != null and createOperator !=''">
+			AND o.CREATE_OPERATOR = #{createOperator}
+		</if>
+		<if test="orderStatus != null and orderStatus !=''">
+			AND o.ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test="paymentStatus != null and paymentStatus !=''">
+			AND o.PAYMENT_STATUS = #{paymentStatus}
+		</if>
+		<if test="dateCreateTimeBegin != null and dateCreateTimeBegin !=''">
+			AND o.CREATE_TIME >= #{dateCreateTimeBegin}
+		</if>
+		<if test="dateCreateTimeEnd != null and dateCreateTimeEnd !=''">
+			<![CDATA[ AND o.CREATE_TIME <= #{dateCreateTimeEnd} ]]>
+		</if>
+	</sql>
+	
+	<sql id="pageWhere">
+		<if test="param.tntOrderId != null and param.tntOrderId !=''">
+			AND o.TNT_ORDER_ID = #{param.tntOrderId} AND o.ORDER_TYPE = 'MAIN'
+		</if>
+		<if test="param.flightOrderId != null and param.flightOrderId !=''">
+			AND o.FLIGHT_ORDER_ID = #{param.flightOrderId}
+		</if>
+		<if test="param.flightOrderNumber != null and param.flightOrderNumber !=''">
+			AND o.FLIGHT_ORDER_NUMBER = #{param.flightOrderNumber}
+		</if>
+		<if test="param.distributorId != null and param.distributorId !=''">
+			AND o.DISTRIBUTOR_ID = #{param.distributorId}
+		</if>
+		<if test="param.createOperator != null and param.createOperator !=''">
+			AND o.CREATE_OPERATOR = #{param.createOperator}
+		</if>
+		<if test="param.orderStatus != null and param.orderStatus !=''">
+			AND o.ORDER_STATUS = #{param.orderStatus}
+		</if>
+		<if test="param.paymentStatus != null and param.paymentStatus !=''">
+			AND o.PAYMENT_STATUS = #{param.paymentStatus}
+		</if>
+		<if test="param.dateCreateTimeBegin != null and param.dateCreateTimeBegin !=''">
+			<![CDATA[ AND o.CREATE_TIME >= #{param.dateCreateTimeBegin} ]]>
+		</if>
+		<if test="param.dateCreateTimeEnd != null and param.dateCreateTimeEnd !=''">
+			<![CDATA[ AND o.CREATE_TIME <= #{param.dateCreateTimeEnd} ]]>
+		</if>
+	</sql>
+	
+	<select id="selectRefundFlag" resultType="boolean">
+		SELECT COUNT(*) FROM TNT_ORDER_FLIGHT 
+		WHERE TNT_ORDER_ID = #{tntOrderId}
+		AND ORDER_TYPE = 'REFUND' AND ORDER_STATUS != 'REFUND_CANCELED'
+	</select>
+	
+	<select id="selectReScheduleFlag" resultType="boolean">
+		SELECT COUNT(*) FROM TNT_ORDER_FLIGHT 
+		WHERE TNT_ORDER_ID = #{tntOrderId}
+		AND ORDER_TYPE = 'RESCHEDULE' AND ORDER_STATUS != 'RESCHEDULE_CANCELED'
+	</select>
+	
+	<select id="selectReschedulePayFlag" resultType="java.lang.String">
+		SELECT PAYMENT_STATUS FROM TNT_ORDER_FLIGHT 
+		WHERE TNT_ORDER_ID = #{tntOrderId}
+		AND ORDER_TYPE = 'RESCHEDULE' AND ORDER_STATUS != 'RESCHEDULE_CANCELED'
+	</select>
+	
+	<select id="selectRescheduleChildOrderId" resultType="java.lang.Long">
+		SELECT TNT_ORDER_FLIGHT_ID FROM TNT_ORDER_FLIGHT 
+		WHERE TNT_ORDER_ID = #{tntOrderId}
+		AND ORDER_TYPE = 'RESCHEDULE' AND ORDER_STATUS != 'RESCHEDULE_CANCELED'
+	</select>
+	
+	<insert id="insertFlightOrder" parameterType="com.lvmama.tnt.order.po.TntFlightOrder">
+		<selectKey resultType="java.lang.Long" keyProperty="tntOrderFlightId" order="BEFORE">
+			select TNT_ORDER_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_ORDER_FLIGHT 
+		(
+			TNT_ORDER_FLIGHT_ID,
+			TNT_ORDER_ID,
+			FLIGHT_ORDER_ID,
+			FLIGHT_ORDER_NUMBER,
+			CREATE_TIME,
+			FLIGHT_TYPE,
+			FROM_CITY,
+			FROM_ARIPORT,
+			FROM_TERMAINAL_BUILDING,
+			TO_CITY,
+			TO_AIRPORT,
+			TO_TERMAINAL_BUILDING,
+			AIR_LINE,
+			FLIGHT_NO,
+			TAKEOFF_TIME,
+			ORDER_AMOUNT,
+			ORDER_STATUS,
+			PAYMENT_STATUS,
+			PARENT_TNT_ORDER_FLIGHT_ID,
+			ORDER_TYPE,
+			CREATE_OPERATOR,
+			PASSENGER_TYPE,
+			FLIGHT_TRIP_TYPE,
+			PASSENGER_NAME,
+			DISTRIBUTOR_ID,
+			DISTRIBUTOR_NAME,
+			CHANNEL_ID
+		)
+		VALUES 
+		(
+			#{tntOrderFlightId, jdbcType=DECIMAL},
+			#{tntOrderId, jdbcType=DECIMAL},
+			#{flightOrderId, jdbcType=DECIMAL},
+			#{flightOrderNumber, jdbcType=VARCHAR},
+			sysdate,
+			#{flightType, jdbcType=VARCHAR},
+			#{fromCity, jdbcType=VARCHAR},
+			#{fromAirPort, jdbcType=VARCHAR},
+			#{fromTermainalBuilding, jdbcType=VARCHAR},
+			#{toCity, jdbcType=VARCHAR},
+			#{toAirPort, jdbcType=VARCHAR},
+			#{toTermainalBuilding, jdbcType=VARCHAR},
+			#{airLine, jdbcType=VARCHAR},
+			#{flightNo, jdbcType=VARCHAR},
+			#{takeOffTime, jdbcType=TIMESTAMP},
+			#{orderAmount, jdbcType=DECIMAL},
+			#{orderStatus, jdbcType=VARCHAR},
+			#{paymentStatus, jdbcType=VARCHAR},
+			#{parentTntOrderFlightId, jdbcType=VARCHAR},
+			#{orderType, jdbcType=VARCHAR},
+			#{createOperator, jdbcType=VARCHAR},
+			#{passengerType, jdbcType=VARCHAR},
+			#{flightTripType, jdbcType=VARCHAR},
+			#{passengerName, jdbcType=VARCHAR},
+			#{distributorId, jdbcType=DECIMAL},
+			#{distributorName, jdbcType=VARCHAR},
+			#{channelId, jdbcType=DECIMAL}
+		)
+	</insert>
+	
+	<select id="getById" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId}
+	</select>
+	
+	<select id="getByTntOrderId" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where TNT_ORDER_ID = #{tntOrderId} AND ORDER_TYPE = 'MAIN'
+	</select>
+	
+	<update id="updateOrderStatusByTntFlightOrderId">
+		update TNT_ORDER_FLIGHT set ORDER_STATUS = #{orderStatus} where TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId}
+	</update>
+	
+	<update id="updatePaymentStatusByTntFlightOrderId">
+		update TNT_ORDER_FLIGHT set PAYMENT_STATUS = #{paymentStatus} where TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId}
+	</update>
+	
+	<select id="getSubOrdersByParentTntOrderFlightId" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where PARENT_TNT_ORDER_FLIGHT_ID = #{parentTntOrderFlightId}
+	</select>
+	
+	<select id="count" resultType="int" parameterType="com.lvmama.tnt.order.po.TntFlightOrder">
+		select count(*) from TNT_ORDER_FLIGHT o
+		<where>
+			<include refid="where" />
+			AND o.ORDER_TYPE = 'MAIN'
+		</where>
+	</select>
+	
+	<select id="findPage" parameterType="page" resultMap="tntFlightOrderMap">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_FLIGHT o
+		<where>
+			<include refid="pageWhere" />
+			AND ORDER_TYPE = 'MAIN'
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="getChildOrdersById" resultMap="tntFlightOrderMap">
+		select 
+		<include refid="columns" />
+		FROM TNT_ORDER_FLIGHT o
+		where PARENT_TNT_ORDER_FLIGHT_ID = #{tntOrderFlightId}
+	</select>
+	
+	<select id="isRefundOrderExists" resultType="boolean">
+		select count(*) FROM TNT_ORDER_FLIGHT
+		where PARENT_TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId} AND ORDER_TYPE = 'REFUND' AND ORDER_STATUS != 'REFUND_CANCELED'
+	</select>
+	
+	<select id="getByFlightOrderId" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where FLIGHT_ORDER_ID = #{flightOrderId}
+	</select>
+	
+	<select id="getRefundOrder" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT 
+		where PARENT_TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId} AND ORDER_TYPE = 'REFUND' AND ORDER_STATUS != 'REFUND_CANCELED' 
+	</select>
+	
+	<select id="getRescheduleOrder" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT 
+		where PARENT_TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId} AND ORDER_TYPE = 'RESCHEDULE' AND ORDER_STATUS != 'RESCHEDULE_CANCELED'
+	</select>
+	
+	<select id="getByFlightOrderNumber" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where FLIGHT_ORDER_NUMBER = #{flightOrderNumber}
+	</select>
+	
+	<select id="getReturnSubOrders" resultMap="tntFlightOrderMap">
+		select * from TNT_ORDER_FLIGHT where PARENT_TNT_ORDER_FLIGHT_ID = #{parentTntOrderFlightId} AND FLIGHT_TRIP_TYPE = 'RETURN'
+	</select>
+	
+	<update id="updateRefundOrder" parameterType="com.lvmama.tnt.order.po.TntFlightOrder">
+		update TNT_ORDER_FLIGHT 
+		set ORDER_STATUS = #{orderStatus, jdbcType=VARCHAR}, ORDER_AMOUNT = #{orderAmount, jdbcType=DECIMAL} 
+		where TNT_ORDER_FLIGHT_ID = #{tntOrderFlightId, jdbcType=DECIMAL}
+	</update>
+	
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntFlightOrder">
+		update TNT_ORDER_FLIGHT
+		set 
+		TNT_ORDER_ID = #{tntOrderId, jdbcType=DECIMAL},
+		FLIGHT_ORDER_ID = #{flightOrderId, jdbcType=DECIMAL},
+		FLIGHT_ORDER_NUMBER = #{flightOrderNumber, jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime, jdbcType=TIMESTAMP},
+		FLIGHT_TYPE = #{flightType, jdbcType=VARCHAR},
+		FROM_CITY = #{fromCity, jdbcType=VARCHAR},
+		FROM_ARIPORT = #{fromAirPort, jdbcType=VARCHAR},
+		FROM_TERMAINAL_BUILDING = #{fromTermainalBuilding, jdbcType=VARCHAR},
+		TO_CITY = #{toCity, jdbcType=VARCHAR},
+		TO_AIRPORT = #{toAirPort, jdbcType=VARCHAR},
+		TO_TERMAINAL_BUILDING = #{toTermainalBuilding, jdbcType=VARCHAR},
+		AIR_LINE = #{airLine, jdbcType=VARCHAR},
+		FLIGHT_NO = #{flightNo, jdbcType=VARCHAR},
+		TAKEOFF_TIME = #{takeOffTime, jdbcType=TIMESTAMP},
+		ORDER_AMOUNT = #{orderAmount, jdbcType=DECIMAL},
+		ORDER_STATUS = #{orderStatus, jdbcType=VARCHAR},
+		PAYMENT_STATUS = #{paymentStatus, jdbcType=VARCHAR},
+		PARENT_TNT_ORDER_FLIGHT_ID = #{parentTntOrderFlightId, jdbcType=VARCHAR},
+		ORDER_TYPE = #{orderType, jdbcType=VARCHAR},
+		CREATE_OPERATOR = #{createOperator, jdbcType=VARCHAR},
+		PASSENGER_TYPE = #{passengerType, jdbcType=VARCHAR},
+		FLIGHT_TRIP_TYPE = #{flightTripType, jdbcType=VARCHAR},
+		PASSENGER_NAME = #{passengerName, jdbcType=VARCHAR},
+		DISTRIBUTOR_ID = #{distributorId, jdbcType=DECIMAL},
+		DISTRIBUTOR_NAME = #{distributorName, jdbcType=VARCHAR},
+		CHANNEL_ID = #{channelId, jdbcType=DECIMAL}
+		where TNT_ORDER_FLIGHT_ID = #{tntOrderFlightId, jdbcType=DECIMAL}
+	</update>
+	
+	<!-- =========================================== API ================================================= -->
+	<select id="getVOById" resultMap="tntFlightOrderVOMap">
+		select * from TNT_ORDER_FLIGHT where TNT_ORDER_FLIGHT_ID = #{tntFlightOrderId}
+	</select>
+</mapper>

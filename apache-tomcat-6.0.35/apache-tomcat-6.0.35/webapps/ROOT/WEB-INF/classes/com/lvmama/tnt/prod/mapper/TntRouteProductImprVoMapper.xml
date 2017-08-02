@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntRouteProductImprVoMapper">
+
+	<resultMap id="tntRouteProductImprVoResult" type="com.lvmama.tnt.prod.vo.route.TntRouteProductImprVo">
+		<result property="tntRouteProductId" column="TNT_ROUTE_PRODUCT_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="status" column="VALID" />
+		<result property="saleFlag" column="SALE_FLAG" />
+		<result property="subType" column="SUB_TYPE" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="isAperiodic" column="IS_APERIODIC" />
+		<result property="payToLvmama" column="PAY_TO_LVMAMA" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="packageType" column="PACKAGE_TYPE" />
+		<result property="goodsStatus" column="GOODS_STATUS" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="packageFlag" column="PACKAGE_FLAG" />
+		<result property="isBigTraffic" column="is_big_traffic" />
+		<result property="includeItem" column="INCLUDE_ITEM" />
+		<result property="minPeople" column="MIN_PEOPLE" />
+		<result property="isChangedHotel" column="IS_CHANGED_HOTEL" />
+		<result property="groupType" column="GROUP_TYPE" />
+		<result property="startPlace" column="START_PLACE" />
+		<result property="destId" column="DEST_ID" />
+		<result property="destName" column="DEST_NAME" />
+		<result property="destType" column="DEST_TYPE" />
+		<result property="days" column="DAYS" />
+		<result property="night" column="NIGHT" />
+		<result property="districtName" column="DISTRICT_NAME"/>
+		<result property="districtId" column="DISTRICT_ID"/>
+		<result property="subCategoryId" column="SUB_CATEGORY_ID" />
+		<!-- 不包含营销信息的ProductName -->
+		<result property="noSaleProductName" column="NO_SALE_PRODUCT_NAME"/>
+		<result property="commission" column="COMMISSION" />
+		<result property="lowestPrice" column="LOWEST_PRICE" />
+	</resultMap>
+	
+	
+	
+	<select id="count" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.vo.TntProductVo">
+		SELECT count(distinct TRP.PRODUCT_ID)
+		FROM
+		TNT_ROUTE_PRODUCT_IMPR TRP LEFT JOIN TNT_SELL_PACKAGE TSP ON TRP.PRODUCT_ID = TSP.PRODUCT_ID  
+		<where>
+			1=1
+			<include refid="where" />
+		</where>
+		ORDER BY TRP.PRODUCT_ID DESC 
+	</select>
+	
+	<select id="findPage" resultMap="tntRouteProductImprVoResult"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="listColumns" />
+		FROM TNT_ROUTE_PRODUCT_IMPR TRP LEFT JOIN TNT_SELL_PACKAGE TSP ON TRP.PRODUCT_ID = TSP.PRODUCT_ID  
+		<where>
+			1=1
+			<include refid="pageWhere" />
+		</where>
+		ORDER BY TRP.PRODUCT_ID DESC 
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	
+	<select id="getByProductId" resultMap="tntRouteProductImprVoResult" parameterType="java.lang.Long">
+		SELECT
+		<include refid="listColumns" />
+		FROM TNT_ROUTE_PRODUCT_IMPR TRP
+		WHERE
+		TRP.PRODUCT_ID = #{productId}
+		AND ROWNUM = 1
+	</select>
+	
+	<select id="getValidByProductId" resultMap="tntRouteProductImprVoResult" parameterType="java.lang.Long">
+		SELECT
+		<include refid="listColumns" />
+		FROM TNT_ROUTE_PRODUCT_IMPR TRP
+		WHERE
+		TRP.PRODUCT_ID = #{productId}
+		AND TRP.VALID = 'Y' AND TRP.SALE_FLAG = 'Y' AND TRP.IS_BIG_TRAFFIC = 'N' AND TRP.CATEGORY_ID = 18
+	</select>
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.route.TntRouteProductImprVo">
+		UPDATE TNT_ROUTE_PRODUCT_IMPR
+		<set>
+			<if test="noSaleProductName != null and noSaleProductName != '' ">
+				NO_SALE_PRODUCT_NAME = #{noSaleProductName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="productId != null and productId !=''">
+				PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+			</if>
+		</where>
+	</update>
+	<sql id="listColumns">
+		DISTINCT
+		TRP.PRODUCT_ID,
+		TRP.PRODUCT_NAME,
+		TRP.VALID,
+		TRP.CATEGORY_ID,
+		TRP.PACKAGE_TYPE,
+		TRP.DEST_ID,
+		TRP.PRODUCT_TYPE,
+<!-- 		TRP.TNT_ROUTE_PRODUCT_ID, -->
+		TRP.SUB_TYPE,
+		TRP.IS_BIG_TRAFFIC,
+		TRP.INCLUDE_ITEM,
+		TRP.MIN_PEOPLE,
+		TRP.DAYS,
+		TRP.NIGHT,
+		TRP.START_PLACE,
+		TRP.GROUP_TYPE,
+		TRP.IS_CHANGED_HOTEL,
+		TRP.SALE_FLAG,
+		TRP.SUB_CATEGORY_ID,
+		TRP.NO_SALE_PRODUCT_NAME,
+		TRP.COMMISSION,
+		TRP.LOWEST_PRICE
+	</sql>
+	
+	<!--查询套餐总数 -->
+	<select id="packageTotalCount" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.vo.TntProductVo">
+		SELECT count(distinct TSP.TNT_SELL_PACKAGE_ID)
+		FROM
+		TNT_ROUTE_PRODUCT_IMPR TRP LEFT JOIN TNT_SELL_PACKAGE TSP ON TRP.PRODUCT_ID = TSP.PRODUCT_ID  
+		<where>
+			1=1
+			<include refid="where" />
+		</where>
+	</select>
+	
+	<sql id="pageWhere">
+		<if test="param.productName != null  and param.productName !=''">
+			AND TRP.PRODUCT_NAME like #{param.productName}||'%'
+		</if>
+		<if test="param.productId != null and param.productId !=''">
+			AND TRP.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.status != null and param.status !=''">
+			AND TRP.VALID = #{param.status}
+		</if>
+		<if test="param.categoryId != null and param.categoryId !=''">
+			AND TRP.CATEGORY_ID = #{param.categoryId}
+		</if>
+		<if test="param.categoryIds != null and param.categoryIds !=''">
+			AND TRP.CATEGORY_ID IN
+			<foreach item="categoryId" index="index" collection="param.categoryIds"
+				open="(" separator="," close=")">
+				#{categoryId}
+			</foreach>
+		</if>
+		<if test="param.paymentTargets != null and param.paymentTargets !=''">
+			AND TRP.PAY_TO_LVMAMA IN
+			<foreach item="paymentTarget" index="index" collection="param.paymentTargets"
+				open="(" separator="," close=")">
+				#{paymentTarget}
+			</foreach>
+		</if>
+
+		<if test="param.packageType != null and param.packageType !=''">
+			AND TRP.PACKAGE_TYPE = #{param.packageType}
+		</if>
+		<if test="param.channelId != null and param.channelId !=''">
+			AND TRP.CHANNEL_ID = #{param.channelId}
+		</if>
+		<if test="param.dest!=null">
+			<if test="param.dest.destType != null and param.dest.destType !=''">
+				AND TRP.DEST_TYPE = #{param.dest.destType}
+			</if>
+			<if test="param.dest.destName != null and param.dest.destName !=''">
+				AND TRP.DEST_NAME like #{param.dest.destName}||'%'
+			</if>
+			<if
+				test="param.dest.districtName != null and param.dest.districtName !=''">
+				AND TRP.START_PLACE like #{param.dest.districtName}||'%' 
+			</if>
+		</if>
+		<if test="param.goods!=null">
+			<if test="param.goods.goodsName != null and param.goods.goodsName !=''">
+				AND TRP.GOODS_NAME like #{param.goods.goodsName}||'%'
+			</if>
+			<if test="param.goods.goodsId != null and param.goods.goodsId !=''">
+				AND TRP.BRANCH_ID = #{param.goods.goodsId}
+			</if>
+			<if
+				test="param.goods.aperiodicFlag != null and param.goods.aperiodicFlag !=''">
+				AND TRP.IS_APERIODIC = #{param.goods.aperiodicFlag}
+			</if>
+			<if test="param.goods.goodsType != null and param.goods.goodsType !=''">
+				AND TRP.GOODS_TYPE = #{param.goods.goodsType}
+			</if>
+			<if test="param.goods.payTarget != null and param.goods.payTarget !=''">
+				AND TRP.PAY_TO_LVMAMA =
+				#{param.goods.payTarget,jdbcType=VARCHAR}
+			</if>
+			<if test="param.goods.status != null and param.goods.status !=''">
+				AND TRP.GOODS_STATUS = #{param.goods.status}
+			</if>
+		</if>
+		<if test="param.tntSellPackage!=null">
+		    <if test="param.tntSellPackage.packageName != null and param.tntSellPackage.packageName !='' ">
+					AND TSP.PACKAGE_NAME LIKE '%'||#{param.tntSellPackage.packageName}||'%'
+		    </if>
+		    <if test="param.tntSellPackage.tntSellPackageId != null and param.tntSellPackage.tntSellPackageId !='' ">
+					AND TSP.TNT_SELL_PACKAGE_ID =
+					#{param.tntSellPackage.tntSellPackageId}
+		    </if>
+		    <if test="param.tntSellPackage.valid != null and param.tntSellPackage.valid != ''  ">
+					AND TSP.VALID = #{param.tntSellPackage.valid}
+	        </if>
+	        <if test="param.tntSellPackage.categoryTag != null and param.tntSellPackage.categoryTag != ''  ">
+					AND TSP.CATEGORY_TAG = #{param.tntSellPackage.categoryTag}
+	        </if>
+	        
+		</if>
+		<if test="param.productType!=null">
+			AND lower(TRP.product_type) =
+			lower(#{param.productType})
+		</if>
+		<if test="param.valid != null and param.valid !=''">
+			AND TRP.valid = #{param.valid}
+		</if>
+		<if test="param.subCategoryId != null and param.subCategoryId !=''">
+			AND TRP.SUB_CATEGORY_ID = #{param.subCategoryId}
+		</if>
+	</sql>
+	
+	
+	<sql id="where">
+		<if test="productName != null  and productName !=''">
+			AND TRP.PRODUCT_NAME like #{productName}||'%'
+		</if>
+		<if test="productId != null and productId !=''">
+			AND TRP.PRODUCT_ID = #{productId}
+		</if>
+		<if test="status != null and status !=''">
+			AND TRP.VALID = #{status}
+		</if>
+		<if test="categoryId != null and categoryId !=''">
+			AND TRP.CATEGORY_ID = #{categoryId}
+		</if>
+		<if test="categoryIds != null and categoryIds !=''">
+			AND TRP.CATEGORY_ID IN
+			<foreach item="categoryId" index="index" collection="categoryIds"
+				open="(" separator="," close=")">
+				#{categoryId}
+			</foreach>
+		</if>
+		<if test="paymentTargets != null and paymentTargets !=''">
+			AND TRP.PAY_TO_LVMAMA IN
+			<foreach item="paymentTarget" index="index" collection="paymentTargets"
+				open="(" separator="," close=")">
+				#{paymentTarget}
+			</foreach>
+		</if>
+
+		<if test="packageType != null and packageType !=''">
+			AND TRP.PACKAGE_TYPE = #{packageType}
+		</if>
+		<if test="channelId != null and channelId !=''">
+			AND TRP.CHANNEL_ID = #{channelId}
+		</if>
+		<if test="dest!=null">
+			<if test="dest.destType != null and dest.destType !=''">
+				AND TRP.DEST_TYPE = #{dest.destType}
+			</if>
+			<if test="dest.destName != null and dest.destName !=''">
+				AND TRP.DEST_NAME like #{dest.destName}||'%' 
+			</if>
+			<if
+				test="dest.districtName != null and dest.districtName !=''">
+				AND TRP.START_PLACE like #{dest.districtName}||'%' 
+			</if>
+		</if>
+		<if test="goods!=null">
+			<if test="goods.goodsName != null and goods.goodsName !=''">
+				AND TRP.GOODS_NAME like #{goods.goodsName}||'%'
+			</if>
+			<if test="goods.goodsId != null and goods.goodsId !=''">
+				AND TRP.BRANCH_ID = #{goods.goodsId}
+			</if>
+			<if
+				test="goods.aperiodicFlag != null and goods.aperiodicFlag !=''">
+				AND TRP.IS_APERIODIC = #{goods.aperiodicFlag}
+			</if>
+			<if test="goods.goodsType != null and goods.goodsType !=''">
+				AND TRP.GOODS_TYPE = #{goods.goodsType}
+			</if>
+			<if test="goods.payTarget != null and goods.payTarget !=''">
+				AND TRP.PAY_TO_LVMAMA =
+				#{goods.payTarget,jdbcType=VARCHAR}
+			</if>
+			<if test="goods.status != null and goods.status !=''">
+				AND TRP.GOODS_STATUS = #{goods.status}
+			</if>
+		</if>
+		<if test="tntSellPackage!=null">
+		    <if test="tntSellPackage.packageName != null and tntSellPackage.packageName !='' ">
+					AND TSP.PACKAGE_NAME LIKE '%'||#{tntSellPackage.packageName}||'%'
+		    </if>
+		    <if test="tntSellPackage.tntSellPackageId != null and tntSellPackage.tntSellPackageId !='' ">
+					AND TSP.TNT_SELL_PACKAGE_ID =
+					#{tntSellPackage.tntSellPackageId}
+		    </if>
+		    <if test="tntSellPackage.valid != null and tntSellPackage.valid != ''  ">
+					AND TSP.VALID = #{tntSellPackage.valid}
+	        </if>
+	        <if test="tntSellPackage.categoryTag != null and tntSellPackage.categoryTag != ''  ">
+					AND TSP.CATEGORY_TAG = #{tntSellPackage.categoryTag}
+	        </if>
+		</if>
+		<if test="productType!=null">
+			AND lower(TRP.product_type) =
+			lower(#{productType})
+		</if>
+		<if test="valid != null and valid !=''">
+			AND TRP.valid = #{valid}
+		</if>
+		<if test="subCategoryId != null and subCategoryId !=''">
+			AND TRP.SUB_CATEGORY_ID = #{subCategoryId}
+		</if>
+	</sql>
+	
+	<update id="modPriceAndCommission" parameterType="com.lvmama.tnt.prod.vo.route.TntRouteProductImprVo">
+		UPDATE TNT_ROUTE_PRODUCT_IMPR 
+		<set>
+			<if test="commission !=null">
+				COMMISSION=#{commission jdbcType=NUMERIC},
+			</if>
+			<if test="lowestPrice !=null">
+				LOWEST_PRICE=#{lowestPrice jdbcType=NUMERIC},
+			</if>
+		</set>
+        WHERE  
+        	PRODUCT_ID = #{productId jdbcType=NUMERIC} 
+	</update>
+
+</mapper> 

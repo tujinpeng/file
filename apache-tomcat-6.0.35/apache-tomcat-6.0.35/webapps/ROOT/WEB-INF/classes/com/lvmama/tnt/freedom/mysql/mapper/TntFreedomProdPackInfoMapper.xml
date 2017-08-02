@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntFreedomProdPackInfoMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntFreedomProdPackInfo">
+        <result property="id" column="ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="status" column="STATUS"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="adultNum" column="ADULT_NUM"/>
+        <result property="childNum" column="CHILD_NUM"/>
+        <result property="trafficPackStatus" column="TRAFFIC_PACK_STATUS"/>
+        <result property="hotelPackStatus" column="HOTEL_PACK_STATUS"/>
+        <result property="routePackStatus" column="ROUTE_PACK_STATUS"/>
+        <result property="ticketPackStatus" column="TICKET_PACK_STATUS"/>
+        <result property="includeTrffic" column="INCLUDE_TRFFIC"/>
+        <result property="includeHotel" column="INCLUDE_HOTEL"/>
+        <result property="includeRoute" column="INCLUDE_ROUTE"/>
+        <result property="includeTicket" column="INCLUDE_TICKET"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,PRODUCT_ID,STATUS,SALE_TYPE,ADULT_NUM,CHILD_NUM,TRAFFIC_PACK_STATUS,HOTEL_PACK_STATUS,ROUTE_PACK_STATUS,TICKET_PACK_STATUS,INCLUDE_TRFFIC,INCLUDE_HOTEL,INCLUDE_ROUTE,INCLUDE_TICKET
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomProdPackInfo">
+        INSERT INTO TNT_FREEDOM_PROD_PACK_INFO (
+        	PRODUCT_ID ,
+        	STATUS ,
+        	SALE_TYPE ,
+        	ADULT_NUM ,
+        	CHILD_NUM ,
+        	TRAFFIC_PACK_STATUS ,
+        	HOTEL_PACK_STATUS ,
+        	ROUTE_PACK_STATUS ,
+        	TICKET_PACK_STATUS ,
+        	INCLUDE_TRFFIC ,
+        	INCLUDE_HOTEL ,
+        	INCLUDE_ROUTE ,
+        	INCLUDE_TICKET 
+        ) VALUES (
+        	#{productId} ,
+        	#{status} ,
+        	#{saleType} ,
+        	#{adultNum} ,
+        	#{childNum} ,
+        	#{trafficPackStatus} ,
+        	#{hotelPackStatus} ,
+        	#{routePackStatus} ,
+        	#{ticketPackStatus} ,
+        	#{includeTrffic} ,
+        	#{includeHotel} ,
+        	#{includeRoute} ,
+        	#{includeTicket} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomProdPackInfo">
+        UPDATE TNT_FREEDOM_PROD_PACK_INFO
+        <set>
+        	PRODUCT_ID = #{productId}
+        	<if test="status != null and status !=''">
+				, STATUS = #{status}
+			</if>
+        	<if test="saleType != null and saleType !=''">
+				, SALE_TYPE = #{saleType}
+			</if>
+        	<if test="adultNum != null">
+				, ADULT_NUM = #{adultNum}
+			</if>
+        	<if test="childNum != null">
+				, CHILD_NUM = #{childNum}
+			</if>
+        	<if test="trafficPackStatus != null and trafficPackStatus !=''">
+				, TRAFFIC_PACK_STATUS = #{trafficPackStatus}
+			</if>
+        	<if test="hotelPackStatus != null and hotelPackStatus !=''">
+				, HOTEL_PACK_STATUS = #{hotelPackStatus}
+			</if>
+        	<if test="routePackStatus != null and routePackStatus !=''">
+				, ROUTE_PACK_STATUS = #{routePackStatus}
+			</if>
+        	<if test="ticketPackStatus != null and ticketPackStatus !=''">
+				, TICKET_PACK_STATUS = #{ticketPackStatus}
+			</if>
+        	<if test="includeTrffic != null and includeTrffic !=''">
+				, INCLUDE_TRFFIC = #{includeTrffic}
+			</if>
+        	<if test="includeHotel != null and includeHotel !=''">
+				, INCLUDE_HOTEL = #{includeHotel}
+			</if>
+        	<if test="includeRoute != null and includeRoute !=''">
+				, INCLUDE_ROUTE = #{includeRoute}
+			</if>
+        	<if test="includeTicket != null and includeTicket !=''">
+				, INCLUDE_TICKET = #{includeTicket}
+			</if>
+        </set>
+        WHERE 
+        	<if test="id !=null">
+	        	ID = #{id} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_FREEDOM_PROD_PACK_INFO WHERE
+        ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_FREEDOM_PROD_PACK_INFO
+        WHERE
+        ID = #{id}
+    </select>
+
+    <select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_FREEDOM_PROD_PACK_INFO
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="id != null and id !=''">
+                AND ID = #{id}
+            </if>
+            <if test="productId != null and productId !=''">
+                AND PRODUCT_ID = #{productId}
+            </if>
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if>
+            <if test="saleType != null and saleType !=''">
+                AND SALE_TYPE = #{saleType}
+            </if>
+            <if test="adultNum != null and adultNum !=''">
+                AND ADULT_NUM = #{adultNum}
+            </if>
+            <if test="childNum != null and childNum !=''">
+                AND CHILD_NUM = #{childNum}
+            </if>
+            <if test="trafficPackStatus != null and trafficPackStatus !=''">
+                AND TRAFFIC_PACK_STATUS = #{trafficPackStatus}
+            </if>
+            <if test="hotelPackStatus != null and hotelPackStatus !=''">
+                AND HOTEL_PACK_STATUS = #{hotelPackStatus}
+            </if>
+            <if test="routePackStatus != null and routePackStatus !=''">
+                AND ROUTE_PACK_STATUS = #{routePackStatus}
+            </if>
+            <if test="ticketPackStatus != null and ticketPackStatus !=''">
+                AND TICKET_PACK_STATUS = #{ticketPackStatus}
+            </if>
+            <if test="includeTrffic != null and includeTrffic !=''">
+                AND INCLUDE_TRFFIC = #{includeTrffic}
+            </if>
+            <if test="includeHotel != null and includeHotel !=''">
+                AND INCLUDE_HOTEL = #{includeHotel}
+            </if>
+            <if test="includeRoute != null and includeRoute !=''">
+                AND INCLUDE_ROUTE = #{includeRoute}
+            </if>
+            <if test="includeTicket != null and includeTicket !=''">
+                AND INCLUDE_TICKET = #{includeTicket}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.id != null and param.id !=''">
+                AND ID = #{param.id}
+            </if>
+            <if test="param.productId != null and param.productId !=''">
+                AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.status != null and param.status !=''">
+				AND STATUS = #{param.status}
+            </if>
+            <if test="param.saleType != null and param.saleType !=''">
+                AND SALE_TYPE = #{param.saleType}
+            </if>
+            <if test="param.adultNum != null and param.adultNum !=''">
+                AND ADULT_NUM = #{param.adultNum}
+            </if>
+            <if test="param.childNum != null and param.childNum !=''">
+                AND CHILD_NUM = #{param.childNum}
+            </if>
+            <if test="param.trafficPackStatus != null and param.trafficPackStatus !=''">
+                AND TRAFFIC_PACK_STATUS = #{param.trafficPackStatus}
+            </if>
+            <if test="param.hotelPackStatus != null and param.hotelPackStatus !=''">
+                AND HOTEL_PACK_STATUS = #{param.hotelPackStatus}
+            </if>
+            <if test="param.routePackStatus != null and param.routePackStatus !=''">
+                AND ROUTE_PACK_STATUS = #{param.routePackStatus}
+            </if>
+            <if test="param.ticketPackStatus != null and param.ticketPackStatus !=''">
+                AND TICKET_PACK_STATUS = #{param.ticketPackStatus}
+            </if>
+            <if test="param.includeTrffic != null and param.includeTrffic !=''">
+                AND INCLUDE_TRFFIC = #{param.includeTrffic}
+            </if>
+            <if test="param.includeHotel != null and param.includeHotel !=''">
+                AND INCLUDE_HOTEL = #{param.includeHotel}
+            </if>
+            <if test="param.includeRoute != null and param.includeRoute !=''">
+                AND INCLUDE_ROUTE = #{param.includeRoute}
+            </if>
+            <if test="param.includeTicket != null and param.includeTicket !=''">
+                AND INCLUDE_TICKET = #{param.includeTicket}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomProdPackInfo">
+        SELECT count(*) FROM TNT_FREEDOM_PROD_PACK_INFO 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_FREEDOM_PROD_PACK_INFO 
+		<include refid="pageWhere"/>
+		<include refid="mysql.pageSearchFoot" />
+    </select>
+	
+	<!-- 通过产品id修改  by baojiawei -->
+	<update id="updateProdPackInfoByProductId" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomProdPackInfo"> 
+		UPDATE TNT_FREEDOM_PROD_PACK_INFO 
+		<set>
+			<if test="status != null and status !=''">
+				STATUS = #{status},
+			</if>
+        	<if test="saleType != null and saleType !=''">
+				 SALE_TYPE = #{saleType},
+			</if>
+        	<if test="adultNum != null and adultNum !=''">
+				 ADULT_NUM = #{adultNum},
+			</if>
+        	<if test="childNum != null and childNum !=''">
+				 CHILD_NUM = #{childNum},
+			</if>
+        	<if test="trafficPackStatus != null and trafficPackStatus !=''">
+				TRAFFIC_PACK_STATUS = #{trafficPackStatus},
+			</if>
+        	<if test="hotelPackStatus != null and hotelPackStatus !=''">
+				 HOTEL_PACK_STATUS = #{hotelPackStatus},
+			</if>
+        	<if test="routePackStatus != null and routePackStatus !=''">
+				 ROUTE_PACK_STATUS = #{routePackStatus},
+			</if>
+        	<if test="ticketPackStatus != null and ticketPackStatus !=''">
+				 TICKET_PACK_STATUS = #{ticketPackStatus},
+			</if>
+        	<if test="includeTrffic != null and includeTrffic !=''">
+				 INCLUDE_TRFFIC = #{includeTrffic},
+			</if>
+        	<if test="includeHotel != null and includeHotel !=''">
+				 INCLUDE_HOTEL = #{includeHotel},
+			</if>
+        	<if test="includeRoute != null and includeRoute !=''">
+				 INCLUDE_ROUTE = #{includeRoute},
+			</if>
+        	<if test="includeTicket != null and includeTicket !=''">
+				 INCLUDE_TICKET = #{includeTicket}
+			</if>
+		</set>
+		<where>
+			<if test="productId != null and productId != '' ">
+				PRODUCT_ID = #{productId}
+			</if>
+		</where>
+	</update>
+</mapper>
+

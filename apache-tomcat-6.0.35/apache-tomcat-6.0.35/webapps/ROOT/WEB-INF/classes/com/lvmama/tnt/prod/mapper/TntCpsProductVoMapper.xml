@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCpsProductVoMapper">
+
+	<resultMap id="tntCpsProductVoResult" type="com.lvmama.tnt.prod.vo.TntCpsProductVo">
+		<id property="tntProductId" column="TNT_PRODUCT_ID"/>
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<association property="commission" javaType="com.lvmama.tnt.cps.vo.TntCpsProdCommission">
+			<id property="prodCommissionId" column="PROD_COMMISSION_ID" />
+			<result property="startPrice" column="START_PRICE" />
+			<result property="commissionRate" column="COMMISSION_RATE" />
+		</association>
+	</resultMap>
+
+	<select id="countProdForCps" resultType="Long" parameterType="com.lvmama.tnt.prod.vo.TntCpsProductVo">
+		SELECT COUNT(1) FROM (
+			SELECT DISTINCT PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID
+			<choose>
+				<when test="categoryId ==1">
+					FROM TNT_HOTEL_PRODUCT
+					<where>
+						PRODUCT_NAME IS NOT NULL
+						AND CATEGORY_ID = 1
+						AND PAY_TO_LVMAMA = 'PREPAID'
+						AND SYS_FLAG = 'VST'
+						<if test="saleFlag != null and saleFlag !=''">
+							AND VALID = #{saleFlag}
+						</if>
+						<if test="productName != null and productName !=''">
+							AND PRODUCT_NAME LIKE
+							CONCAT(CONCAT('%',ltrim(rtrim(#{productName}))),'%')
+						</if>
+					</where>
+				</when>
+				<otherwise>
+					FROM TNT_PRODUCT
+					<where>
+						PRODUCT_NAME IS NOT NULL
+						AND SYS_FLAG = 'VST'
+						<if test="categoryId != null and categoryId !=''">
+							AND CATEGORY_ID = #{categoryId}
+						</if>
+						<if test="saleFlag != null and saleFlag !=''">
+							AND VALID = #{saleFlag} AND CAN_SALE_FLAG = #{saleFlag}
+						</if>
+						<if test="productName != null and productName !=''">
+							AND PRODUCT_NAME LIKE
+							CONCAT(CONCAT('%',ltrim(rtrim(#{productName}))),'%')
+						</if>
+					</where>
+				</otherwise>
+			</choose>
+		)
+	</select>
+	
+	<select id="findCpsProdByPage" resultMap="tntCpsProductVoResult" parameterType="java.util.Map">
+		SELECT * FROM (
+			SELECT P_T.*,ROWNUM AS RN FROM (
+				SELECT p.PRODUCT_ID,p.PRODUCT_NAME,p.CATEGORY_ID,c.START_PRICE,
+				DECODE(c.IN_CANCEL_DATE,'Y',c.COMMISSION_CANCEL_RATE,'N',NVL(c.COMMISSION_RATE,#{product.defaultCommission}),NULL,NVL(c.COMMISSION_RATE,#{product.defaultCommission})) AS COMMISSION_RATE
+				FROM (SELECT DISTINCT PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID
+				<choose>
+					<when test="product.categoryId ==1">
+						FROM TNT_HOTEL_PRODUCT
+						<where>
+							PRODUCT_NAME IS NOT NULL
+							AND CATEGORY_ID = 1
+							AND PAY_TO_LVMAMA = 'PREPAID'
+							AND SYS_FLAG = 'VST'
+							<if test="product.saleFlag != null and product.saleFlag  !=''">
+								AND VALID = #{product.saleFlag}
+							</if>
+							<if test="product.productName != null and product.productName !=''">
+								AND PRODUCT_NAME LIKE
+								CONCAT(CONCAT('%',ltrim(rtrim(#{product.productName}))),'%')
+							</if>
+						</where>
+					</when>
+					<otherwise>
+						FROM TNT_PRODUCT
+						<where>
+							PRODUCT_NAME IS NOT NULL
+							AND SYS_FLAG = 'VST'
+							<if test="product.categoryId != null and product.categoryId !=''">
+								AND CATEGORY_ID = #{product.categoryId}
+							</if>
+							<if test="product.saleFlag != null and product.saleFlag  !=''">
+								AND VALID = #{product.saleFlag} AND CAN_SALE_FLAG = #{product.saleFlag}
+							</if>
+							<if test="product.productName != null and product.productName !=''">
+								AND PRODUCT_NAME LIKE
+								CONCAT(CONCAT('%',ltrim(rtrim(#{product.productName}))),'%')
+							</if>
+						</where>
+					</otherwise>
+				</choose>
+				) p
+				LEFT JOIN TNT_CPS_PROD_COMMISSION c
+				ON c.CATEGORY_ID = p.CATEGORY_ID AND c.PRODUCT_ID=p.PRODUCT_ID
+				ORDER BY DECODE(c.IN_CANCEL_DATE,'Y',c.COMMISSION_CANCEL_RATE,'N',NVL(c.COMMISSION_RATE,#{product.defaultCommission}),NULL,NVL(c.COMMISSION_RATE,#{product.defaultCommission})) DESC
+			) P_T
+		) WHERE RN BETWEEN #{start} AND #{end}
+	</select>
+</mapper> 

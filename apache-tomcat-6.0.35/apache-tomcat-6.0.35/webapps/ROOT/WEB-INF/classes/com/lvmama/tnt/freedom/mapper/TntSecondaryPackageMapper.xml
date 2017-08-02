@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mapper.TntSecondaryPackageMapper">
+    <!--自由行二次打包使用 *********start*********** -->
+    <resultMap id="baseResultMapForFreedom" type="com.lvmama.tnt.freedom.mysql.vo.TntSecondaryPackageVO">
+        <result property="tntSellPackageId" column="TNT_SELL_PACKAGE_ID" />
+        <result property="packageName" column="PACKAGE_NAME" />
+        <result property="productId" column="PRODUCT_ID" />
+        <result property="productName" column="PRODUCT_NAME" />
+        <result property="maxCnt" column="MAX_CNT" />
+        <result property="minCnt" column="MIN_CNT" />
+        <result property="valid" column="VALID" />
+        <result property="isCompleted" column="IS_COMPLETED" />
+        <result property="payTarget" column="PAY_TARGET" />
+        <result property="adult" column="ADULT" />
+        <result property="child" column="CHILD" />
+        <result property="packageType" column="PACKAGE_TYPE" />
+        <result property="combineType" column="COMBINE_TYPE" />
+        <result property="isHotelPackage" column="IS_HOTEL_PACKAGE" />
+        <result property="lvmamaPackageType" column="LVMAMA_PACKAGE_TYPE" />
+        <result property="lineRouteId" column="LINE_ROUTE_ID" />
+        <result property="routeNum" column="ROUTE_NUM" />
+        <result property="deleteFlag" column="DELETE_FLAG" />
+        <result property="routeName" column="ROUTE_NAME" />
+		<result property="maxGuests" column="MAX_GUESTS" />
+        <result property="createTime" column="CREATE_TIME" />
+        <result property="updateTime" column="UPDATE_TIME" />
+		<result property="startDistrictName" column="START_DISTRICT_NAME" />
+		<result property="startDistrictId" column="START_DISTRICT_ID" />
+        <collection property="secondaryPackageRelationList" select="selectRelationBySellPackageIdForFreedom" column="{tntSellPackageId=TNT_SELL_PACKAGE_ID}" javaType="ArrayList" >
+        </collection>
+    </resultMap>
+
+    <resultMap id="relationMapForFreedom" type="com.lvmama.tnt.freedom.mysql.po.TntSecondaryPackageRelation">
+        <result property="packageRelationId" column="PACKAGE_RELATION_ID" />
+        <result property="tntSecondaryPackageId" column="TNT_SECONDARY_PACKAGE_ID" />
+        <result property="productId" column="PRODUCT_ID" />
+        <result property="firstPackageId" column="FIRST_PACKAGE_ID" />
+        <result property="firstPackageName" column="FIRST_PACKAGE_NAME" />
+		<result property="categoryType" column="CATEGORY_TYPE"/>
+        <result property="createTime" column="CREATE_TIME" />
+        <result property="updateTime" column="UPDATE_TIME" />
+    </resultMap>
+
+	<resultMap id="resultMap" type="java.util.Map" />
+
+    <sql id="columns"><![CDATA[
+    		TNT_SELL_PACKAGE_ID,
+			PACKAGE_NAME,
+			PRODUCT_ID,
+			PRODUCT_NAME,
+			VALID,
+			IS_COMPLETED,
+			PAY_TARGET,
+			PACKAGE_TYPE,
+			LVMAMA_PACKAGE_TYPE,
+			IS_HOTEL_PACKAGE,
+			ROUTE_NAME,
+			ROUTE_NUM,
+			LINE_ROUTE_ID,
+			DELETE_FLAG,
+			COMBINE_TYPE,
+			START_DISTRICT_NAME,
+			START_DISTRICT_ID,
+			MAX_GUESTS,
+			MIN_CNT,
+			MAX_CNT,
+			CHILD,
+			ADULT,
+			CREATE_TIME,
+			UPDATE_TIME]]>
+	</sql>
+	
+	<sql id="tableName">TNT_SELL_PACKAGE</sql>
+	<sql id="where">
+		<where>
+			DELETE_FLAG = 'N' AND COMBINE_TYPE = 'AUTO'
+			<if test="tntSellPackageId != null">
+				AND TNT_SELL_PACKAGE_ID = #{tntSellPackageId,jdbcType=DECIMAL}
+			</if>
+			<if test="productId != null">
+				AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+			</if>
+			<if test="productName != null and productName != ''">
+				AND PRDUCT_NAME = #{productName,jdbcType=VARCHAR}
+			</if>
+			<if test="packageName != null and packageName != ''">
+				AND PACKAGE_NAME = #{packageName,jdbcType=VARCHAR}
+			</if>
+			<if test="valid != null and valid != ''">
+				AND VALID = #{valid,jdbcType=VARCHAR}
+			</if>
+			<if test="isCompleted != null and isCompleted != ''">
+				AND IS_COMPLETED = #{isCompleted,jdbcType=VARCHAR}
+			</if>
+			<if test="payTarget != null and payTarger != ''">
+				AND PAY_TARGET = #{payTarget,jdbcType=VARCHAR}
+			</if>
+			<if test="packageType != null and packageType != ''">
+				AND PACKAGE_TYPE = #{packageType,jdbcType=VARCHAR}
+			</if>
+			<if test="lvmamaPackageType != null and lvmamaPackageType != ''">
+				AND LVMAMA_PACKAGE_TYPE = #{lvmamaPackageType,jdbcType=VARCHAR}
+			</if>
+			<if test="isHotelPackage != null and isHotelPackage != ''">
+				AND IS_HOTEL_PACKAGE = #{isHotelPackage,jdbcType=VARCHAR}
+			</if>
+			<if test="routeName != null and routeName != ''">
+				AND ROUTE_NAME = #{routeName,jdbcType=VARCHAR}
+			</if>
+			<if test="routeNum != null ">
+				AND ROUTE_NUM = #{routeNum,jdbcType=SMALLINT}
+			</if>
+			<if test="lineRouteId != null">
+				AND LINE_ROUTE_ID = #{lineRouteID,jdbcType=DECIMAL}
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				AND DELETE_FLAG = #{deleteFlag,jdbcType=VARCHAR}
+			</if>
+			<if test="combineType != null and combineType != ''">
+				AND COMBINE_TYPE = #{combineType,jdbcType=VARCHAR}
+			</if>
+			<if test="maxGuests != null">
+				AND MAX_GUESTS = #{maxGuests,jdbcType=DECIMAL}
+			</if>
+			<if test="minCnt != null">
+				AND MIX_CNT = #{minCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="maxCnt != null">
+				AND MAX_CNT = #{maxCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="child != null">
+				AND CHILD = #{child,jdbcType=DECIMAL}
+			</if>
+			<if test="adult != null ">
+				AND ADULT = #{adult,jdbcType=DECIMAL}
+			</if>
+			<if test="startDistrictName != null and startDistrictName != ''">
+				AND START_DISTRICT_NAME = #{startDistrictName,jdbcType=VARCHAR}
+			</if>
+			<if test="startDistrictId != null">
+				AND START_DISTRICT_ID = #{startDistrictId,jdbcType=DECIMAL}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND CREATE_TIME = #{createTime,jdbcType=DATE}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND UPDATE_TIME = #{updateTime,jdbcType=DATE}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			DELETE_FLAG = 'N' AND COMBINE_TYPE = 'AUTO'
+			<if test="param.tntSellPackageId != null">
+				AND TNT_SELL_PACKAGE_ID = #{page.tntSellPackageId,jdbcType=DECIMAL}
+			</if>
+			<if test="param.productId != null">
+				AND PRODUCT_ID = #{param.productId,jdbcType=DECIMAL}
+			</if>
+			<if test="param.productName != null and param.productName != ''">
+				AND PRDUCT_NAME = #{param.productName,jdbcType=VARCHAR}
+			</if>
+			<if test="param.packageName != null and param.packageName != ''">
+				AND PACKAGE_NAME = #{param.packageName,jdbcType=VARCHAR}
+			</if>
+			<if test="param.valid != null and param.valid != ''">
+				AND VALID = #{param.valid,jdbcType=VARCHAR}
+			</if>
+			<if test="param.isCompleted != null and param.isCompleted != ''">
+				AND IS_COMPLETED = #{param.isCompleted,jdbcType=VARCHAR}
+			</if>
+			<if test="param.payTarget != null and param.payTarger != ''">
+				AND PAY_TARGET = #{param.payTarget,jdbcType=VARCHAR}
+			</if>
+			<if test="param.packageType != null and param.packageType != ''">
+				AND PACKAGE_TYPE = #{param.packageType,jdbcType=VARCHAR}
+			</if>
+			<if test="param.lvmamaPackageType != null and param.lvmamaPackageType != ''">
+				AND LVMAMA_PACKAGE_TYPE = #{param.lvmamaPackageType,jdbcType=VARCHAR}
+			</if>
+			<if test="param.isHotelPackage != null and param.isHotelPackage != ''">
+				AND IS_HOTEL_PACKAGE = #{param.isHotelPackage,jdbcType=VARCHAR}
+			</if>
+			<if test="param.routeName != null and param.routeName != ''">
+				AND ROUTE_NAME = #{param.routeName,jdbcType=VARCHAR}
+			</if>
+			<if test="param.routeNum != null ">
+				AND ROUTE_NUM = #{param.routeNum,jdbcType=SMALLINT}
+			</if>
+			<if test="param.lineRouteId != null">
+				AND LINE_ROUTE_ID = #{param.lineRouteID,jdbcType=DECIMAL}
+			</if>
+			<if test="param.deleteFlag != null and param.deleteFlag != ''">
+				AND DELETE_FLAG = #{param.deleteFlag,jdbcType=VARCHAR}
+			</if>
+			<if test="param.combineType != null and param.combineType != ''">
+				AND COMBINE_TYPE = #{param.combineType,jdbcType=VARCHAR}
+			</if>
+			<if test="param.maxGuests != null">
+				AND MAX_GUESTS = #{param.maxGuests,jdbcType=DECIMAL}
+			</if>
+			<if test="param.minCnt != null">
+				AND MIX_CNT = #{param.minCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="param.maxCnt != null">
+				AND MAX_CNT = #{param.maxCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="param.child != null">
+				AND CHILD = #{param.child,jdbcType=DECIMAL}
+			</if>
+			<if test="param.adult != null ">
+				AND ADULT = #{param.adult,jdbcType=DECIMAL}
+			</if>
+			<if test="param.startDistrictName != null and param.startDistrictName != ''">
+				AND START_DISTRICT_NAME = #{param.startDistrictName,jdbcType=VARCHAR}
+			</if>
+			<if test="param.startDistrictId != null">
+				AND START_DISTRICT_ID = #{param.startDistrictId,jdbcType=DECIMAL}
+			</if>
+			<if test="param.createTime != null and param.createTime != ''">
+				AND CREATE_TIME = #{param.createTime,jdbcType=DATE}
+			</if>
+			<if test="param.updateTime != null and param.updateTime != ''">
+				AND UPDATE_TIME = #{param.updateTime,jdbcType=DATE}
+			</if>
+		</where>
+	</sql>
+
+    <select id="selectRelationBySellPackageIdForFreedom" parameterType="java.util.Map" resultMap="relationMapForFreedom">
+        select * from TNT_SECONDARY_PACKAGE_RELATION where TNT_SECONDARY_PACKAGE_ID = #{tntSellPackageId}
+    </select>
+
+    <!--自由行二次组合查询 -->
+    <select id="queryAutoPackageByParams" parameterType="com.lvmama.tnt.freedom.mysql.vo.TntSecondaryPackageVO" resultMap="baseResultMapForFreedom">
+        SELECT * FROM <include refid="tableName"/> <include refid="where"/>
+    </select>
+
+    <select id="countPageAutoPackageByParams" resultType="java.lang.Long" parameterType="com.lvmama.tnt.freedom.mysql.vo.TntSecondaryPackageVO">
+        SELECT count(*) FROM <include refid="tableName"/> <include refid="where"/>
+    </select>
+
+    <select id="queryPageAutoPackageByParams" resultMap="baseResultMapForFreedom" parameterType="page">
+        <include refid="basic.pageSearchHead" />
+        SELECT * FROM <include refid="tableName"/> <include refid="pageWhere"/>
+        <include refid="basic.pageSearchFoot" />
+    </select>
+
+    <select id="queryBySecondaryPackageId" parameterType="java.lang.Long" resultMap="baseResultMapForFreedom">
+    	SELECT <include refid="columns"/>
+    	FROM <include refid="tableName"/>
+    	WHERE TNT_SELL_PACKAGE_ID = #{tntSecondaryPackageId} AND COMBINE_TYPE = 'AUTO'
+    </select>
+    
+    <!-- 通过二次组合id查询有效的二次组合 -->
+    <select id="queryValidBySecondaryPackageIds" parameterType="java.util.List" resultMap="baseResultMapForFreedom">
+    	SELECT <include refid="columns"/>
+    	FROM <include refid="tableName"/>
+    	WHERE VALID = 'Y' AND IS_COMPLETED = 'Y' AND DELETE_FLAG = 'N' AND TNT_SELL_PACKAGE_ID IN
+    	<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+    		#{item.tntSecondaryPackageId}
+    	</foreach>
+    	AND COMBINE_TYPE = 'AUTO'
+    </select>
+	
+	<!-- 查询所有的二次组合 -->
+	<select id="queryAllSecondaryPackagesByFistCombineIds" resultMap="baseResultMapForFreedom" parameterType="java.util.List">
+		SELECT <include refid="columns"/> FROM <include refid="tableName"/> WHERE DELETE_FLAG = 'N' AND TNT_SELL_PACKAGE_ID IN
+		<foreach collection="list" index="index" open="(" close=")" item="item" separator=",">
+			#{item.tntSecondaryPackageId}
+		</foreach>
+		AND COMBINE_TYPE = 'AUTO'
+	</select>
+	
+	
+	<!-- 批量插入tntSecondaryPackage -->
+	<insert id="insertSecondaryPackageForList" parameterType="java.util.List">
+		<selectKey keyProperty="tntSellPackageId" order="BEFORE" resultType="java.lang.Long">
+			SELECT TNT_SELL_PACKAGE_SEQ.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO <include refid="tableName"/> 
+			(
+			TNT_SELL_PACKAGE_ID,
+			PACKAGE_NAME,
+			PRODUCT_ID,
+			PRODUCT_NAME,
+			VALID,
+			IS_COMPLETED,
+			PAY_TARGET,
+			PACKAGE_TYPE,
+			LVMAMA_PACKAGE_TYPE,
+			IS_HOTEL_PACKAGE,
+			ROUTE_NAME,
+			ROUTE_NUM,
+			LINE_ROUTE_ID,
+			DELETE_FLAG,
+			COMBINE_TYPE,
+			MAX_GUESTS,
+			MIN_CNT,
+			MAX_CNT,
+			CHILD,
+			ADULT,
+			START_DISTRICT_NAME,
+			START_DISTRICT_ID,
+			CREATE_TIME,
+			UPDATE_TIME
+		) SELECT TNT_SELL_PACKAGE_SEQ.NEXTVAL,PACKAGE_NAME,PRODUCT_NAME,PRODUCT_ID,VALID,IS_COMPLETED,PAY_TARGET,PACKAGE_TYPE,LVMAMA_PACKAGE_TYPE,
+		IS_HOTEL_PACKAGE,ROUTE_NAME,ROUTE_NUM,LINE_ROUTE_ID,DELETE_FLAG,COMBINE_TYPE,MAX_GUESTS,MIN_CNT,MAX_CNT,CHILD,ADULT,START_DISTRICT_NAME,START_DISTRICT_ID,CREATE_TIME,UPDATE_TIME FROM
+		<foreach collection="list" index="index" separator="UNION ALL" item="item" open="(" close=")">
+			SELECT TNT_SELL_PACKAGE_SEQ.nextval,
+				#{item.packageName} AS PACKAGE_NAME,
+				#{item.productName} AS PRODUCT_NAME,
+				#{item.productId} AS PRODUCT_ID,
+				#{item.valid} AS VALID,
+				#{item.isCompleted} AS IS_COMPLETED,
+				#{item.payTarget} AS PAY_TARGET,
+				#{item.packageType} AS PACKAGE_TYPE,
+				#{item.lvmamaPackageType} AS LVMAMA_PACKAGE_TYPE,
+				#{item.isHotelPackage} AS IS_HOTEL_PACKAGE,
+				#{item.routeName} AS ROUTE_NAME,
+				#{item.routeNum} AS ROUTE_NUM,
+				#{item.lineRouteId} AS LINE_ROUTE_ID,
+				#{item.deleteFlag} AS DELETE_FLAG,
+				#{item.combineType} AS COMBINE_TYPE,
+				#{item.maxGuests} AS MAX_GUESTS,
+				#{item.minCnt} AS MIN_CNT,
+				#{item.maxCnt} AS MAX_CNT,
+				#{item.child} AS CHILD,
+				#{item.adult} AS ADULT,
+				#{startDistrictName} AS START_DISTRICT_NAME,
+				#{startDistrictId} AS START_DISTRICT_ID,
+				#{item.createTime} AS CREATE_TIME,
+				#{item.updateTime} AS UPDATE_TIME
+			FROM DUAL
+		</foreach>
+	</insert>
+	
+	<insert id="insertSecondaryPackage" parameterType="com.lvmama.tnt.freedom.mysql.vo.TntSecondaryPackageVO">
+		<selectKey keyProperty="tntSellPackageId" order="BEFORE" resultType="java.lang.Long">
+			SELECT TNT_SELL_PACKAGE_SEQ.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO 
+		<include refid="tableName"/>
+			(
+			TNT_SELL_PACKAGE_ID,
+			PACKAGE_NAME,
+			PRODUCT_ID,
+			PRODUCT_NAME,
+			VALID,
+			IS_COMPLETED,
+			PAY_TARGET,
+			PACKAGE_TYPE,
+			LVMAMA_PACKAGE_TYPE,
+			IS_HOTEL_PACKAGE,
+			ROUTE_NAME,
+			ROUTE_NUM,
+			LINE_ROUTE_ID,
+			DELETE_FLAG,
+			COMBINE_TYPE,
+			MAX_GUESTS,
+			MIN_CNT,
+			MAX_CNT,
+			CHILD,
+			ADULT,
+			START_DISTRICT_NAME,
+			START_DISTRICT_ID,
+			CREATE_TIME,
+			UPDATE_TIME)
+			VALUES(
+			#{tntSellPackageId,jdbcType=DECIMAL},
+			#{packageName,jdbcType=VARCHAR},
+			#{productId,jdbcType=DECIMAL},
+			#{productName,jdbcType=VARCHAR},
+			#{valid,jdbcType=VARCHAR},
+			#{isCompleted,jdbcType=VARCHAR},
+			#{payTarget,jdbcType=VARCHAR},
+			#{packageType,jdbcType=VARCHAR},
+			#{lvmamaPackageType,jdbcType=VARCHAR},
+			#{isHotelPackage,jdbcType=VARCHAR},
+			#{routeName,jdbcType=VARCHAR},
+			#{routeNum,,jdbcType=DECIMAL},
+			#{lineRouteId,jdbcType=DECIMAL},
+			#{deleteFlag,jdbcType=VARCHAR},
+			#{combineType,jdbcType=VARCHAR},
+			#{maxGuests,jdbcType=DECIMAL},
+			#{minCnt,jdbcType=DECIMAL},
+			#{maxCnt,jdbcType=DECIMAL},
+			#{child,jdbcType=DECIMAL},
+			#{adult,jdbcType=DECIMAL},
+			#{startDistrictName,jdbcType=VARCHAR},
+			#{startDistrictId,jdbcType=DECIMAL},
+			sysdate,
+			sysdate
+		)
+	</insert>
+
+	<!--批量更新操作  -->
+	<update id="updateByList" parameterType="java.util.List">
+		UPDATE <include refid="tableName"/>
+		SET DELETE_FLAG = 'Y', UPDATE_TIME = sysdate WHERE TNT_SELL_PACKAGE_ID IN
+		<foreach collection="list" item="item" open="(" close=")" index="index" separator=",">
+		#{item.tntSellPackageId}
+		</foreach>
+		AND DELETE_FLAG = 'N' AND COMBINE_TYPE = 'AUTO'
+	</update>
+
+	<select id="queryByProductId" resultMap="baseResultMapForFreedom" parameterType="java.lang.Long">
+		SELECT <include refid="columns"/> <include refid="tableName"/> WHERE PRODUCT_ID = #{productId} AND DELETE_FLAG = 'N' AND COMBINE_TYPE = 'AUTO'
+	</select>
+	
+	<!-- 处理一次组合下线导致二次组合下线 -->
+	<update id="processFirstCombineOffLine" parameterType="java.util.List">
+		UPDATE <include refid="tableName"/> SET VALID = 'N', UPDATE_TIME = SYSDATE WHERE TNT_SELL_PACKAGE_ID IN
+		<foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+			#{item.tntSellPackageId}
+		</foreach>
+	</update>
+	
+	<select id="updateSecondaryPackageStatusToValid" parameterType="java.lang.Long">
+		UPDATE <include refid="tableName"/> SET VALID = 'Y',UPDATE_TIME = SYSDATE WHERE TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+	</select>
+	
+	<update id="updateSecondaryPackageDeleteFlag" parameterType="java.lang.Long">
+		  UPDATE <include refid="tableName"/> SET DELETE_FLAG = 'Y' ,UPDATE_TIME = SYSDATE WHERE PRODUCT_ID = #{productId} AND COMBINE_TYPE = 'AUTO'
+	</update>
+	
+    <!-- 自由行二次打包使用  *********end********** -->
+	<select id="querySqlListByAnySql" parameterType="java.util.HashMap" resultMap="resultMap" statementType="STATEMENT">
+		<if test=" sql != null and sql != ''">
+			${sql}
+		</if>
+	</select>
+</mapper>
+

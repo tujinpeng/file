@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.lts.mysql.mapper.LtsEventTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.lts.po.LtsEventType" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="EVENT_TYPE" property="eventType" jdbcType="VARCHAR" />
+    <result column="NODE_GROUP" jdbcType="VARCHAR" property="nodeGroup" />
+    <result column="INVALID" property="invalid" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, EVENT_TYPE,NODE_GROUP, INVALID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LTS_EVENT_TYPE
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LTS_EVENT_TYPE
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.lvmama.tnt.lts.po.LtsEventType" >
+    insert into LTS_EVENT_TYPE (ID, EVENT_TYPE, NODE_GROUP, 
+      INVALID)
+    values (#{id,jdbcType=BIGINT}, #{eventType,jdbcType=VARCHAR}, #{nodeGroup,jdbcType=VARCHAR}, 
+      #{invalid,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.lts.po.LtsEventType" >
+    insert into LTS_EVENT_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="eventType != null" >
+        EVENT_TYPE,
+      </if>
+      <if test="nodeGroup != null">
+        NODE_GROUP,
+      </if>
+      <if test="invalid != null" >
+        INVALID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="eventType != null" >
+        #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeGroup != null">
+        #{nodeGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="invalid != null" >
+        #{invalid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.lts.po.LtsEventType">
+    update LTS_EVENT_TYPE
+    <set>
+      <if test="eventType != null">
+        EVENT_TYPE = #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeGroup != null">
+        NODE_GROUP = #{nodeGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="invalid != null">
+        INVALID = #{invalid,jdbcType=TINYINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+ <update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.lts.po.LtsEventType">
+    update LTS_EVENT_TYPE
+    set EVENT_TYPE = #{eventType,jdbcType=VARCHAR},
+      NODE_GROUP = #{nodeGroup,jdbcType=VARCHAR},
+      INVALID = #{invalid,jdbcType=TINYINT}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findPage" resultMap="BaseResultMap" parameterType="page">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM LTS_EVENT_TYPE t
+		<where>
+			<if test="param.eventType != null and param.eventType !=''">
+			AND t.EVENT_TYPE LIKE concat('%',#{param.eventType},'%')
+		   </if>
+		   <if test="param.nodeGroup != null and param.nodeGroup !=''">
+			AND t.NODE_GROUP = #{param.nodeGroup}
+		   </if>
+		</where>
+		    ORDER BY t.EVENT_TYPE 
+		<if test="startRowsForMySql!=null and pageSize!=null">
+      		LIMIT #{startRowsForMySql}, #{pageSize}
+    	</if>
+		
+	</select>
+
+	<select id="count" resultType="Integer"
+		parameterType="com.lvmama.tnt.lts.po.LtsEventType">
+		SELECT count(*) FROM LTS_EVENT_TYPE t
+		<where>
+			<if test="eventType != null and eventType !=''">
+				AND t.EVENT_TYPE LIKE concat('%',#{eventType},'%')
+			</if>
+			<if test="nodeGroup != null and nodeGroup !=''">
+			    AND t.NODE_GROUP = #{nodeGroup}
+		   </if>
+		</where>
+	</select>
+	
+	<select id="selectByEventType" resultMap="BaseResultMap"
+		parameterType="com.lvmama.tnt.lts.po.LtsEventType">
+		select
+		<include refid="Base_Column_List" />
+		from LTS_EVENT_TYPE t
+		<where>
+			<if test="eventType != null and eventType !=''">
+				AND t.EVENT_TYPE = #{eventType}
+			</if>
+			<if test="nodeGroup != null and nodeGroup !=''">
+			    AND t.NODE_GROUP = #{nodeGroup}
+		   </if>
+		</where>
+	</select>
+    <update id="batchUpdate" parameterType="Map">
+        update LTS_EVENT_TYPE
+        set INVALID = #{valid,jdbcType=TINYINT}
+        where ID IN
+        <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

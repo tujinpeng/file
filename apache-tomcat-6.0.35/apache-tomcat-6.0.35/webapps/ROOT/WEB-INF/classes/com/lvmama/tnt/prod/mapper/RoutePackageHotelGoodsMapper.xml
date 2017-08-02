@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.RoutePackageHotelGoodsMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.RoutePackageHotelGoods">
+        <result property="packageGoodsId" column="PACKAGE_GOODS_ID"/>
+        <result property="routePackageHotelId" column="ROUTE_PACKAGE_HOTEL_ID"/>
+        <result property="selectDate" column="SELECT_DATE"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="stockFlag" column="STOCK_FLAG"/>
+        <result property="stockNum" column="STOCK_NUM"/>
+        <result property="overSale" column="OVER_SALE"/>
+        <result property="vstSellPrice" column="VST_SELL_PRICE"/>
+        <result property="vstSettlePrice" column="VST_SETTLE_PRICE"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="startDays" column="START_DAYS"/>
+        <result property="goodsStatus" column="GOODS_STATUS"/>
+        <result property="aheadHour" column="AHEAD_HOUR"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		PACKAGE_GOODS_ID,ROUTE_PACKAGE_HOTEL_ID,SELECT_DATE,GOODS_ID,STOCK_FLAG,STOCK_NUM,OVER_SALE,VST_SELL_PRICE,VST_SETTLE_PRICE,SALE_TYPE,BRANCH_ID,GROUP_ID,START_DAYS,GOODS_STATUS,AHEAD_HOUR,BOOK_LIMIT_TYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.RoutePackageHotelGoods">
+		<selectKey resultType="java.lang.Long" keyProperty="packageGoodsId"
+			order="BEFORE">
+			select  ROUTE_PACKAGE_HOTEL_GOODS_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO ROUTE_PACKAGE_HOTEL_GOODS (
+        	PACKAGE_GOODS_ID ,
+        	SELECT_DATE ,
+        	GOODS_ID ,
+        	STOCK_FLAG ,
+        	STOCK_NUM ,
+        	OVER_SALE ,
+        	VST_SELL_PRICE ,
+        	VST_SETTLE_PRICE ,
+        	SALE_TYPE ,
+        	BRANCH_ID ,
+        	GROUP_ID ,
+        	START_DAYS ,
+        	GOODS_STATUS ,
+        	AHEAD_HOUR ,
+        	BOOK_LIMIT_TYPE,
+        	ROUTE_PACKAGE_HOTEL_ID
+        ) VALUES (
+        	#{packageGoodsId,jdbcType=DECIMAL} ,
+        	#{selectDate,jdbcType=DATE} ,
+        	#{goodsId,jdbcType=DECIMAL} ,
+        	#{stockFlag,jdbcType=DECIMAL} ,
+        	#{stockNum,jdbcType=VARCHAR} ,
+        	#{overSale,jdbcType=VARCHAR} ,
+        	#{vstSellPrice,jdbcType=DECIMAL} ,
+        	#{vstSettlePrice,jdbcType=DECIMAL} ,
+        	#{saleType,jdbcType=VARCHAR} ,
+        	#{branchId,jdbcType=DECIMAL} ,
+        	#{groupId,jdbcType=DECIMAL} ,
+        	#{startDays,jdbcType=VARCHAR} ,
+        	#{goodsStatus,jdbcType=VARCHAR} ,
+        	#{aheadHour,jdbcType=DECIMAL} ,
+        	#{bookLimitType,jdbcType=VARCHAR},
+        	#{routePackageHotelId,jdbcType=DECIMAL}
+        )
+	</insert>
+	
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.RoutePackageHotelGoods">
+        UPDATE ROUTE_PACKAGE_HOTEL_GOODS SET
+	        SELECT_DATE = #{selectDate,jdbcType=DATE} ,
+	        GOODS_ID = #{goodsId,jdbcType=DECIMAL} ,
+	        STOCK_FLAG = #{stockFlag,jdbcType=DECIMAL} ,
+	        STOCK_NUM = #{stockNum,jdbcType=VARCHAR} ,
+	        OVER_SALE = #{overSale,jdbcType=VARCHAR} ,
+	        VST_SELL_PRICE = #{vstSellPrice,jdbcType=DECIMAL} ,
+	        VST_SETTLE_PRICE = #{vstSettlePrice,jdbcType=DECIMAL} ,
+	        SALE_TYPE = #{saleType,jdbcType=VARCHAR} ,
+	        BRANCH_ID = #{branchId,jdbcType=DECIMAL} ,
+	        GROUP_ID = #{groupId,jdbcType=DECIMAL} ,
+	        START_DAYS = #{startDays,jdbcType=VARCHAR} ,
+	        GOODS_STATUS = #{goodsStatus,jdbcType=VARCHAR} ,
+	        AHEAD_HOUR = #{aheadHour,jdbcType=DECIMAL} ,
+        	BOOK_LIMIT_TYPE = #{bookLimitType,jdbcType=VARCHAR}
+        WHERE
+        	<if test="packageGoodsId !=null">
+	        	PACKAGE_GOODS_ID = #{packageGoodsId,jdbcType=DECIMAL}
+	        	AND 
+	        </if>
+	        <if test="branchId !=null">
+	        	BRANCH_ID = #{branchId}
+	        	AND
+	        </if>
+	        <if test="selectDate !=null">
+	        	SELECT_DATE = #{selectDate}
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM ROUTE_PACKAGE_HOTEL_GOODS WHERE
+        PACKAGE_GOODS_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_PACKAGE_HOTEL_GOODS 
+	        WHERE 
+		        PACKAGE_GOODS_ID = #{id} 
+	</select>
+	
+	<select id="findRoutePackageHotelGoodsByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_PACKAGE_HOTEL_GOODS 
+	        WHERE 1=1
+	        <if test="branchId != null and branchId !=''">
+		        AND BRANCH_ID = #{branchId} 
+		    </if>
+		    <if test="selectDate != null and selectDate !=''">
+		        AND SELECT_DATE = #{selectDate}
+		    </if>
+		    <if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if>
+	       	<if test="routePackageHotelId != null and routePackageHotelId !=''">
+				AND ROUTE_PACKAGE_HOTEL_ID = #{routePackageHotelId}
+	       	</if>
+	       	<if test="saleType != null and saleType !=''">
+				AND SALE_TYPE = #{saleType}
+	       	</if> 
+	</select>
+	
+	<select id="findRoutePackageHotelGoodsByRoutePackageHotelId" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_PACKAGE_HOTEL_GOODS 
+	        WHERE 1=1
+	       	<if test="routePackageHotelId != null and routePackageHotelId !=''">
+				AND ROUTE_PACKAGE_HOTEL_ID = #{routePackageHotelId}
+	       	</if>
+	       	 <if test="selectDate != null and selectDate !=''">
+		        AND SELECT_DATE = #{selectDate}
+		    </if>
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="packageGoodsId != null and packageGoodsId !=''">
+				AND PACKAGE_GOODS_ID = #{packageGoodsId}
+	       	</if> 
+			<if test="selectDate != null and selectDate !=''">
+				AND SELECT_DATE = #{selectDate}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="stockFlag != null and stockFlag !=''">
+				AND STOCK_FLAG = #{stockFlag}
+	       	</if> 
+			<if test="stockNum != null and stockNum !=''">
+				AND STOCK_NUM = #{stockNum}
+	       	</if> 
+			<if test="overSale != null and overSale !=''">
+				AND OVER_SALE = #{overSale}
+	       	</if> 
+			<if test="vstSellPrice != null and vstSellPrice !=''">
+				AND VST_SELL_PRICE = #{vstSellPrice}
+	       	</if> 
+			<if test="vstSettlePrice != null and vstSettlePrice !=''">
+				AND VST_SETTLE_PRICE = #{vstSettlePrice}
+	       	</if> 
+			<if test="saleType != null and saleType !=''">
+				AND SALE_TYPE = #{saleType}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+	       	</if>
+	       	<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="startDays != null and startDays !=''">
+				AND START_DAYS = #{startDays}
+	       	</if> 
+			<if test="goodsStatus != null and goodsStatus !=''">
+				AND GOODS_STATUS = #{goodsStatus}
+	       	</if> 
+	       	<if test="aheadHour != null and aheadHour !=''">
+				AND AHEAD_HOUR = #{aheadHour}
+	       	</if>
+	       	<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if>
+	       	<if test="routePackageHotelId != null and routePackageHotelId !=''">
+				AND ROUTE_PACKAGE_HOTEL_ID = #{routePackageHotelId}
+	       	</if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.packageGoodsId != null and param.packageGoodsId !=''">
+				AND PACKAGE_GOODS_ID = param.packageGoodsId
+	       	</if>
+			<if test="param.selectDate != null and param.selectDate !=''">
+				AND SELECT_DATE = param.selectDate
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = param.goodsId
+	       	</if>
+			<if test="param.stockFlag != null and param.stockFlag !=''">
+				AND STOCK_FLAG = param.stockFlag
+	       	</if>
+			<if test="param.stockNum != null and param.stockNum !=''">
+				AND STOCK_NUM = param.stockNum
+	       	</if>
+			<if test="param.overSale != null and param.overSale !=''">
+				AND OVER_SALE = param.overSale
+	       	</if>
+			<if test="param.vstSellPrice != null and param.vstSellPrice !=''">
+				AND VST_SELL_PRICE = param.vstSellPrice
+	       	</if>
+			<if test="param.vstSettlePrice != null and param.vstSettlePrice !=''">
+				AND VST_SETTLE_PRICE = param.vstSettlePrice
+	       	</if>
+			<if test="param.saleType != null and param.saleType !=''">
+				AND SALE_TYPE = param.saleType
+	       	</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = param.branchId
+	       	</if>
+	       	<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = param.groupId
+	       	</if>
+			<if test="param.startDays != null and param.startDays !=''">
+				AND START_DAYS = param.startDays
+	       	</if>
+			<if test="param.goodsStatus != null and param.goodsStatus !=''">
+				AND GOODS_STATUS = param.goodsStatus
+	       	</if>
+	       	<if test="aheadHour != null and aheadHour !=''">
+				AND AHEAD_HOUR = #{aheadHour}
+	       	</if>
+	       	<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.RoutePackageHotelGoods">
+        SELECT count(*) FROM ROUTE_PACKAGE_HOTEL_GOODS 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM ROUTE_PACKAGE_HOTEL_GOODS 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+     <select id="findByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_PACKAGE_HOTEL_GOODS 
+	    WHERE ROUTE_PACKAGE_HOTEL_ID = #{routePackageHotelId}
+	    	AND SELECT_DATE between #{beginDate} and #{endDate}
+	</select>
+
+</mapper>
+

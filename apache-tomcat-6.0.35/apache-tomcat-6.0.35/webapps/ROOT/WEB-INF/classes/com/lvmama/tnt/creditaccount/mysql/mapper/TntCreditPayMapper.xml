@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.creditaccount.mysql.mapper.TntCreditPayMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.creditaccount.po.TntCreditPay">
+        <result property="creidtPayId" column="CREDITPAY_ID"/>
+        <result property="serial" column="SERIAL"/>
+        <result property="creditId" column="CREDIT_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="status" column="STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="consumerUserId" column="CONSUMER_USER_ID"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="recordId" column="RECORD_ID"/>
+	</resultMap>
+	<!--  -->
+	<resultMap id="creditDetailMap" type="com.lvmama.tnt.creditaccount.po.TntCreditDetailVo">
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="recordId" column="RECORD_ID"/>
+		<result property="status" column="STATUS"/>
+		<result property="userId" column="USER_ID"/>
+		<!-- <result property="companyName" column="COMPANY_NAME"/>
+		<result property="productName" column="PORDUCT_NAME"/> -->
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="changeMoney" column="AMOUNT"/>
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CREDITPAY_ID,SERIAL,CREDIT_ID,ORDER_ID,AMOUNT,STATUS,CREATE_TIME,CONSUMER_USER_ID,RECORD_ID,UPDATE_TIME
+	    ]]>
+	</sql>
+	<!-- 消费明细查询where条件 -->
+	<sql id="comWhere">
+		<where>
+			<if test="recordId != null and recordId !=''">
+				AND P.RECORD_ID=#{recordId}
+			</if>
+			<if test="creditId != null and creditId !=''">
+				AND P.CREDIT_ID=#{creditId}
+			</if>
+			<if test="orderId != null and orderId !=''">
+				AND P.ORDER_ID=#{orderId}
+			</if>			
+			<if test="consumerUserId != null and consumerUserId != ''">
+				AND P.CONSUMER_USER_ID=#{consumerUserId}
+			</if>
+			<if test="createTimeStart != null and createTimeStart !=''">
+				<![CDATA[ AND DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d') >= #{createTimeStart,jdbcType=DATE}]]>
+			</if>
+			<if test="createTimeEnd != null and createTimeEnd !=''">
+				<![CDATA[ AND DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d') <= #{createTimeEnd,jdbcType=DATE}]]>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="creditId" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditPay">
+        INSERT INTO TNT_CREDIT_PAY (
+        	SERIAL ,
+        	CREDIT_ID ,
+        	ORDER_ID ,
+        	AMOUNT ,
+        	STATUS ,
+        	CREATE_TIME ,
+        	CONSUMER_USER_ID,
+        	UPDATE_TIME,
+        	RECORD_ID
+        ) VALUES (
+        	#{serial} ,
+        	#{creditId} ,
+        	#{orderId} ,
+        	#{amount} ,
+        	#{status} ,
+        	#{createTime} ,
+        	#{consumerUserId} ,
+        	#{updateTime},
+        	#{recordId}
+        )
+	</insert>
+    
+	<update id="updateStatus" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditPay">
+        UPDATE TNT_CREDIT_PAY SET
+	       <if test="status !=null"> STATUS = #{status} ,</if>
+	        UPDATE_TIME = NOW()
+        WHERE 
+        	<if test="serial !=null">
+	        	SERIAL = #{serial} 
+	        </if>
+	</update>
+	
+	<select id="getByOrderId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_PAY 
+	        WHERE  
+		     ORDER_ID = #{orderId} 
+	</select>
+	<!--消费明细查询条数统计  -->
+	<select id="contPage" resultType="Integer" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditDetailVo">
+        SELECT COUNT(1) FROM TNT_CREDIT_PAY P
+		<include refid="comWhere"/>
+    </select>
+    <!-- 消费明细查询 -->
+    <select id="getTradeDetailList" parameterType="java.util.Map" resultMap="creditDetailMap">
+    	SELECT P.CREATE_TIME,P.RECORD_ID,C.STATUS,C.USER_ID,P.ORDER_ID,P.AMOUNT FROM TNT_CREDIT_PAY P LEFT JOIN TNT_CREDIT_ACCOUNT C ON P.CREDIT_ID=C.CREDIT_ID 
+    	<include refid="comWhere"/>
+    	ORDER BY P.CREATE_TIME DESC
+		LIMIT #{startRow},#{pageSize}
+    </select>
+</mapper>
+

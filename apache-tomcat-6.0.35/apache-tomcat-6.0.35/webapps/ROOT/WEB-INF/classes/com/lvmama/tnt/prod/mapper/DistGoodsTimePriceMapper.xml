@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.DistGoodsTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.DistGoodsTimePrice">
+        <result property="distGoodsTimePriceId" column="DIST_GOODS_TIME_PRICE_ID"/>
+        <result property="distGoodsBranchId" column="DIST_GOODS_BRANCH_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="fstSettlementPrice" column="FST_SETTLEMENT_PRICE"/>
+        <result property="fstPrice" column="FST_PRICE"/>
+        <result property="fstMarketPrice" column="FST_MARKET_PRICE"/>
+        <result property="fstDistributionPrice" column="FST_DISTRIBUTION_PRICE"/>
+        <result property="gapSettlementPrice" column="GAP_SETTLEMENT_PRICE"/>
+        <result property="gapPrice" column="GAP_PRICE"/>
+        <result property="gapMarketPrice" column="GAP_MARKET_PRICE"/>
+        <result property="gapDistributionPrice" column="GAP_DISTRIBUTION_PRICE"/>
+        <result property="secSettlementPrice" column="SEC_SETTLEMENT_PRICE"/>
+        <result property="secPrice" column="SEC_PRICE"/>
+        <result property="secMarketPrice" column="SEC_MARKET_PRICE"/>
+        <result property="secDistributionPrice" column="SEC_DISTRIBUTION_PRICE"/>
+        <result property="childSettlementPrice" column="CHILD_SETTLEMENT_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="childMarketPrice" column="CHILD_MARKET_PRICE"/>
+        <result property="childDistributionPrice" column="CHILD_DISTRIBUTION_PRICE"/>
+        <result property="fstBasisOfCalc" column="FST_BASIS_OF_CALC"/>
+        <result property="fstPriceMode" column="FST_PRICE_MODE"/>
+        <result property="fstPriceModeValue" column="FST_PRICE_MODE_VALUE"/>
+        <result property="gapBasisOfCalc" column="GAP_BASIS_OF_CALC"/>
+        <result property="gapPriceMode" column="GAP_PRICE_MODE"/>
+        <result property="gapPriceModeValue" column="GAP_PRICE_MODE_VALUE"/>
+        <result property="secBasisOfCalc" column="SEC_BASIS_OF_CALC"/>
+        <result property="secPriceMode" column="SEC_PRICE_MODE"/>
+        <result property="secPriceModeValue" column="SEC_PRICE_MODE_VALUE"/>
+        <result property="childBasisOfCalc" column="CHILD_BASIS_OF_CALC"/>
+        <result property="childPriceMode" column="CHILD_PRICE_MODE"/>
+        <result property="childPriceModeValue" column="CHILD_PRICE_MODE_VALUE"/>
+        <result property="onsaleFlag" column="ONSALE_FLAG"/>
+        <result property="stockType" column="STOCK_TYPE"/>
+        <result property="stock" column="STOCK"/>
+        <result property="totalStock" column="TOTAL_STOCK"/>
+        <result property="cancelStrategy" column="CANCEL_STRATEGY"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <!-- 添加返佣字段 -->
+        <result property="fstCommissionPrice" column="FST_COMMISSION_PRICE"/>
+        <result property="secCommissionPrice" column="SEC_COMMISSION_PRICE"/>
+        <result property="gapCommissionPrice" column="GAP_COMMISSION_PRICE"/>
+        <result property="childCommissionPrice" column="CHILD_COMMISSION_PRICE"/>
+        <!-- 分销价计算公式 -->
+        <result property="priceFormula" column="PRICE_FORMULA"/>
+        <result property="secPriceFormula" column="SEC_PRICE_FORMULA"/>
+        <result property="gapPriceFormula" column="GAP_PRICE_FORMULA"/>
+        <result property="childPriceFormula" column="CHILD_PRICE_FORMULA"/>
+        <!-- 分销商分销价设置mark -->
+        <result property="markUserSetterPrice" column="MARK_USER_SETTER_PRICE"/>
+        <result property="secMarkUserSetterPrice" column="SEC_MARK_USER_SETTER_PRICE"/>
+        <result property="gapMarkUserSetterPrice" column="GAP_MARK_USER_SETTER_PRICE"/>
+        <result property="childMarkUserSetterPrice" column="CHILD_MARK_USER_SETTER_PRICE"/>
+        <result property="aheadBookTime" column="AHEAD_BOOK_TIME"/>
+        <result property="fstRule" column="FST_RULE"/>
+        <result property="secRule" column="SEC_RULE"/>
+        <result property="gapRule" column="GAP_RULE"/>
+        <result property="childRule" column="CHILD_RULE"/>
+		<!-- 最后更新日期 -->
+		<result property="lastUpdateTime" column="CREATE_TIMES"/>        
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		DIST_GOODS_TIME_PRICE_ID,CREATE_TIMES,MARK_USER_SETTER_PRICE,SEC_MARK_USER_SETTER_PRICE,GAP_MARK_USER_SETTER_PRICE,CHILD_MARK_USER_SETTER_PRICE,SEC_PRICE_FORMULA,GAP_PRICE_FORMULA,CHILD_PRICE_FORMULA,PRICE_FORMULA,FST_COMMISSION_PRICE,SEC_COMMISSION_PRICE,GAP_COMMISSION_PRICE,CHILD_COMMISSION_PRICE,DIST_GOODS_BRANCH_ID,SPEC_DATE,FST_SETTLEMENT_PRICE,FST_PRICE,FST_MARKET_PRICE,FST_DISTRIBUTION_PRICE,GAP_SETTLEMENT_PRICE,GAP_PRICE,GAP_MARKET_PRICE,GAP_DISTRIBUTION_PRICE,SEC_SETTLEMENT_PRICE,SEC_PRICE,SEC_MARKET_PRICE,SEC_DISTRIBUTION_PRICE,CHILD_SETTLEMENT_PRICE,CHILD_PRICE,CHILD_MARKET_PRICE,CHILD_DISTRIBUTION_PRICE,FST_BASIS_OF_CALC,FST_PRICE_MODE,FST_PRICE_MODE_VALUE,GAP_BASIS_OF_CALC,GAP_PRICE_MODE,GAP_PRICE_MODE_VALUE,SEC_BASIS_OF_CALC,SEC_PRICE_MODE,SEC_PRICE_MODE_VALUE,CHILD_BASIS_OF_CALC,CHILD_PRICE_MODE,CHILD_PRICE_MODE_VALUE,ONSALE_FLAG,STOCK_TYPE,STOCK,TOTAL_STOCK,CANCEL_STRATEGY,BOOK_LIMIT_TYPE,AHEAD_BOOK_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.DistGoodsTimePrice">
+		<selectKey resultType="java.lang.Long" keyProperty="distGoodsTimePriceId"
+			order="BEFORE">
+			select  DIST_GOODS_TIME_PRICE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO DIST_GOODS_TIME_PRICE (
+        	DIST_GOODS_TIME_PRICE_ID ,
+        	DIST_GOODS_BRANCH_ID ,
+        	SPEC_DATE ,
+        	FST_SETTLEMENT_PRICE ,
+        	FST_PRICE ,
+        	FST_MARKET_PRICE ,
+        	FST_DISTRIBUTION_PRICE ,
+        	GAP_SETTLEMENT_PRICE ,
+        	GAP_PRICE ,
+        	GAP_MARKET_PRICE ,
+        	GAP_DISTRIBUTION_PRICE ,
+        	SEC_SETTLEMENT_PRICE ,
+        	SEC_PRICE ,
+        	SEC_MARKET_PRICE ,
+        	SEC_DISTRIBUTION_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	CHILD_MARKET_PRICE ,
+        	CHILD_DISTRIBUTION_PRICE ,
+        	FST_BASIS_OF_CALC ,
+        	FST_PRICE_MODE ,
+        	FST_PRICE_MODE_VALUE ,
+        	GAP_BASIS_OF_CALC ,
+        	GAP_PRICE_MODE ,
+        	GAP_PRICE_MODE_VALUE ,
+        	SEC_BASIS_OF_CALC ,
+        	SEC_PRICE_MODE ,
+        	SEC_PRICE_MODE_VALUE ,
+        	CHILD_BASIS_OF_CALC ,
+        	CHILD_PRICE_MODE ,
+        	CHILD_PRICE_MODE_VALUE ,
+        	ONSALE_FLAG ,
+        	STOCK_TYPE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	CANCEL_STRATEGY ,
+        	BOOK_LIMIT_TYPE,
+        	FST_COMMISSION_PRICE,
+        	SEC_COMMISSION_PRICE,
+        	GAP_COMMISSION_PRICE,
+        	CHILD_COMMISSION_PRICE,
+        	PRICE_FORMULA,
+        	SEC_PRICE_FORMULA,
+        	GAP_PRICE_FORMULA,
+        	CHILD_PRICE_FORMULA,
+        	
+        	MARK_USER_SETTER_PRICE,
+        	SEC_MARK_USER_SETTER_PRICE,
+        	GAP_MARK_USER_SETTER_PRICE,
+        	CHILD_MARK_USER_SETTER_PRICE,
+        	AHEAD_BOOK_TIME,
+        	FST_RULE,
+        	SEC_RULE,
+        	GAP_RULE,
+        	CHILD_RULE,
+        	CREATE_TIMES
+        	
+        	 
+        ) VALUES (
+        	#{distGoodsTimePriceId jdbcType=NUMERIC} ,
+        	#{distGoodsBranchId jdbcType=NUMERIC} ,
+        	#{specDate jdbcType=DATE} ,
+        	#{fstSettlementPrice jdbcType=NUMERIC} ,
+        	#{fstPrice jdbcType=NUMERIC} ,
+        	#{fstMarketPrice jdbcType=NUMERIC} ,
+        	#{fstDistributionPrice jdbcType=NUMERIC} ,
+        	#{gapSettlementPrice jdbcType=NUMERIC} ,
+        	#{gapPrice jdbcType=NUMERIC} ,
+        	#{gapMarketPrice jdbcType=NUMERIC} ,
+        	#{gapDistributionPrice jdbcType=NUMERIC} ,
+        	#{secSettlementPrice jdbcType=NUMERIC} ,
+        	#{secPrice jdbcType=NUMERIC} ,
+        	#{secMarketPrice jdbcType=NUMERIC} ,
+        	#{secDistributionPrice jdbcType=NUMERIC} ,
+        	#{childSettlementPrice jdbcType=NUMERIC} ,
+        	#{childPrice jdbcType=NUMERIC} ,
+        	#{childMarketPrice jdbcType=NUMERIC} ,
+        	#{childDistributionPrice jdbcType=NUMERIC} ,
+        	#{fstBasisOfCalc jdbcType=NUMERIC} ,
+        	#{fstPriceMode jdbcType=VARCHAR} ,
+        	#{fstPriceModeValue jdbcType=NUMERIC} ,
+        	#{gapBasisOfCalc jdbcType=VARCHAR} ,
+        	#{gapPriceMode jdbcType=VARCHAR} ,
+        	#{gapPriceModeValue jdbcType=NUMERIC} ,
+        	#{secBasisOfCalc jdbcType=VARCHAR} ,
+        	#{secPriceMode jdbcType=VARCHAR} ,
+        	#{secPriceModeValue jdbcType=NUMERIC} ,
+        	#{childBasisOfCalc jdbcType=VARCHAR} ,
+        	#{childPriceMode jdbcType=VARCHAR} ,
+        	#{childPriceModeValue jdbcType=NUMERIC} ,
+        	#{onsaleFlag jdbcType=VARCHAR} ,
+        	#{stockType jdbcType=VARCHAR} ,
+        	#{stock jdbcType=NUMERIC} ,
+        	#{totalStock jdbcType=NUMERIC} ,
+        	#{cancelStrategy jdbcType=VARCHAR} ,
+        	#{bookLimitType jdbcType=VARCHAR},
+        	#{fstCommissionPrice jdbcType=NUMERIC} ,
+        	#{secCommissionPrice jdbcType=NUMERIC} ,
+        	#{gapCommissionPrice jdbcType=NUMERIC} ,
+        	#{childCommissionPrice jdbcType=NUMERIC},
+        	#{priceFormula jdbcType=VARCHAR},
+        	#{secPriceFormula jdbcType=VARCHAR},
+        	#{gapPriceFormula jdbcType=VARCHAR},
+        	#{childPriceFormula jdbcType=VARCHAR},
+        	
+        	#{markUserSetterPrice jdbcType=VARCHAR},
+        	#{secMarkUserSetterPrice jdbcType=VARCHAR},
+        	#{gapMarkUserSetterPrice jdbcType=VARCHAR},
+        	#{childMarkUserSetterPrice jdbcType=VARCHAR},
+        	#{aheadBookTime jdbcType=NUMERIC},
+        	#{fstRule jdbcType=NUMERIC},
+        	#{secRule jdbcType=NUMERIC},
+        	#{gapRule jdbcType=NUMERIC},
+        	#{childRule jdbcType=NUMERIC},
+        	#{lastUpdateTime jdbcType=TIMESTAMP}
+        	 
+        )
+	</insert>
+    
+    <!-- 批量更新时间价格表信息 -->
+    <update id="updateTimePriceBatch" parameterType="java.util.List">
+     BEGIN
+     <foreach collection="list" item="item" index="index" separator=";" >
+     	 UPDATE DIST_GOODS_TIME_PRICE
+     	 <set>
+     	 	DIST_GOODS_BRANCH_ID = #{item.distGoodsBranchId jdbcType=NUMERIC} ,
+	        SPEC_DATE = #{item.specDate jdbcType=DATE} ,
+	        FST_SETTLEMENT_PRICE = #{item.fstSettlementPrice jdbcType=NUMERIC} ,
+	        FST_PRICE = #{item.fstPrice jdbcType=NUMERIC} ,
+	        FST_MARKET_PRICE = #{item.fstMarketPrice jdbcType=NUMERIC} ,
+	        FST_DISTRIBUTION_PRICE = #{item.fstDistributionPrice jdbcType=NUMERIC} ,
+	        GAP_SETTLEMENT_PRICE = #{item.gapSettlementPrice jdbcType=NUMERIC} ,
+	        GAP_PRICE = #{item.gapPrice jdbcType=NUMERIC} ,
+	        GAP_MARKET_PRICE = #{item.gapMarketPrice jdbcType=NUMERIC} ,
+	        GAP_DISTRIBUTION_PRICE = #{item.gapDistributionPrice jdbcType=NUMERIC} ,
+	        SEC_SETTLEMENT_PRICE = #{item.secSettlementPrice jdbcType=NUMERIC} ,
+	        SEC_PRICE = #{item.secPrice jdbcType=NUMERIC} ,
+	        SEC_MARKET_PRICE = #{item.secMarketPrice jdbcType=NUMERIC} ,
+	        SEC_DISTRIBUTION_PRICE = #{item.secDistributionPrice jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{item.childSettlementPrice jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{item.childPrice jdbcType=NUMERIC} ,
+	        CHILD_MARKET_PRICE = #{item.childMarketPrice jdbcType=NUMERIC} ,
+	        CHILD_DISTRIBUTION_PRICE = #{item.childDistributionPrice jdbcType=NUMERIC} ,
+	        FST_BASIS_OF_CALC = #{item.fstBasisOfCalc jdbcType=VARCHAR} ,
+	        FST_PRICE_MODE = #{item.fstPriceMode jdbcType=VARCHAR} ,
+	        FST_PRICE_MODE_VALUE = #{item.fstPriceModeValue jdbcType=NUMERIC} ,
+	        GAP_BASIS_OF_CALC = #{item.gapBasisOfCalc jdbcType=VARCHAR} ,
+	        GAP_PRICE_MODE = #{item.gapPriceMode jdbcType=VARCHAR} ,
+	        GAP_PRICE_MODE_VALUE = #{item.gapPriceModeValue jdbcType=NUMERIC} ,
+	        SEC_BASIS_OF_CALC = #{item.secBasisOfCalc jdbcType=VARCHAR} ,
+	        SEC_PRICE_MODE = #{item.secPriceMode jdbcType=VARCHAR} ,
+	        SEC_PRICE_MODE_VALUE = #{item.secPriceModeValue jdbcType=NUMERIC} ,
+	        CHILD_BASIS_OF_CALC = #{item.childBasisOfCalc jdbcType=VARCHAR} ,
+	        CHILD_PRICE_MODE = #{item.childPriceMode jdbcType=VARCHAR} ,
+	        CHILD_PRICE_MODE_VALUE = #{item.childPriceModeValue jdbcType=NUMERIC} ,
+	        ONSALE_FLAG = #{item.onsaleFlag jdbcType=VARCHAR} ,
+	        STOCK_TYPE = #{item.stockType jdbcType=VARCHAR} ,
+	        STOCK = #{item.stock jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{item.totalStock jdbcType=NUMERIC} ,
+	        CANCEL_STRATEGY = #{item.cancelStrategy jdbcType=VARCHAR} ,
+	        BOOK_LIMIT_TYPE = #{item.bookLimitType jdbcType=VARCHAR},
+	        FST_COMMISSION_PRICE = #{item.fstCommissionPrice jdbcType=NUMERIC} ,
+	        SEC_COMMISSION_PRICE = #{item.secCommissionPrice jdbcType=NUMERIC} ,
+	        GAP_COMMISSION_PRICE = #{item.gapCommissionPrice jdbcType=NUMERIC} ,
+	        CHILD_COMMISSION_PRICE = #{item.childCommissionPrice jdbcType=NUMERIC},
+	        PRICE_FORMULA = #{item.priceFormula jdbcType=VARCHAR},
+	        SEC_PRICE_FORMULA = #{item.secPriceFormula jdbcType=VARCHAR},
+        	GAP_PRICE_FORMULA = #{item.gapPriceFormula jdbcType=VARCHAR},
+        	CHILD_PRICE_FORMULA = #{item.childPriceFormula jdbcType=VARCHAR},
+        	
+        	MARK_USER_SETTER_PRICE = #{item.markUserSetterPrice jdbcType=VARCHAR},
+	        SEC_MARK_USER_SETTER_PRICE = #{item.secMarkUserSetterPrice jdbcType=VARCHAR},
+        	GAP_MARK_USER_SETTER_PRICE = #{item.gapMarkUserSetterPrice jdbcType=VARCHAR},
+        	CHILD_MARK_USER_SETTER_PRICE = #{item.childMarkUserSetterPrice jdbcType=VARCHAR},
+        	AHEAD_BOOK_TIME = #{item.aheadBookTime jdbcType=NUMERIC},
+        	
+        	CREATE_TIMES = #{item.lastUpdateTime jdbcType=TIMESTAMP}
+     	 </set>
+     	 WHERE DIST_GOODS_TIME_PRICE_ID = #{item.distGoodsTimePriceId jdbcType=NUMERIC} 
+     </foreach>
+     ;END;
+	</update>
+    
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.DistGoodsTimePrice">
+        UPDATE DIST_GOODS_TIME_PRICE SET
+	        DIST_GOODS_BRANCH_ID = #{distGoodsBranchId jdbcType=NUMERIC} ,
+	        SPEC_DATE = #{specDate jdbcType=DATE} ,
+	        FST_SETTLEMENT_PRICE = #{fstSettlementPrice jdbcType=NUMERIC} ,
+	        FST_PRICE = #{fstPrice jdbcType=NUMERIC} ,
+	        FST_MARKET_PRICE = #{fstMarketPrice jdbcType=NUMERIC} ,
+	        FST_DISTRIBUTION_PRICE = #{fstDistributionPrice jdbcType=NUMERIC} ,
+	        GAP_SETTLEMENT_PRICE = #{gapSettlementPrice jdbcType=NUMERIC} ,
+	        GAP_PRICE = #{gapPrice jdbcType=NUMERIC} ,
+	        GAP_MARKET_PRICE = #{gapMarketPrice jdbcType=NUMERIC} ,
+	        GAP_DISTRIBUTION_PRICE = #{gapDistributionPrice jdbcType=NUMERIC} ,
+	        SEC_SETTLEMENT_PRICE = #{secSettlementPrice jdbcType=NUMERIC} ,
+	        SEC_PRICE = #{secPrice jdbcType=NUMERIC} ,
+	        SEC_MARKET_PRICE = #{secMarketPrice jdbcType=NUMERIC} ,
+	        SEC_DISTRIBUTION_PRICE = #{secDistributionPrice jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{childPrice jdbcType=NUMERIC} ,
+	        CHILD_MARKET_PRICE = #{childMarketPrice jdbcType=NUMERIC} ,
+	        CHILD_DISTRIBUTION_PRICE = #{childDistributionPrice jdbcType=NUMERIC} ,
+	        FST_BASIS_OF_CALC = #{fstBasisOfCalc jdbcType=VARCHAR} ,
+	        FST_PRICE_MODE = #{fstPriceMode jdbcType=VARCHAR} ,
+	        FST_PRICE_MODE_VALUE = #{fstPriceModeValue jdbcType=NUMERIC} ,
+	        GAP_BASIS_OF_CALC = #{gapBasisOfCalc jdbcType=VARCHAR} ,
+	        GAP_PRICE_MODE = #{gapPriceMode jdbcType=VARCHAR} ,
+	        GAP_PRICE_MODE_VALUE = #{gapPriceModeValue jdbcType=NUMERIC} ,
+	        SEC_BASIS_OF_CALC = #{secBasisOfCalc jdbcType=VARCHAR} ,
+	        SEC_PRICE_MODE = #{secPriceMode jdbcType=VARCHAR} ,
+	        SEC_PRICE_MODE_VALUE = #{secPriceModeValue jdbcType=NUMERIC} ,
+	        CHILD_BASIS_OF_CALC = #{childBasisOfCalc jdbcType=VARCHAR} ,
+	        CHILD_PRICE_MODE = #{childPriceMode jdbcType=VARCHAR} ,
+	        CHILD_PRICE_MODE_VALUE = #{childPriceModeValue jdbcType=NUMERIC} ,
+	        ONSALE_FLAG = #{onsaleFlag jdbcType=VARCHAR} ,
+	        STOCK_TYPE = #{stockType jdbcType=VARCHAR} ,
+	        STOCK = #{stock jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{totalStock jdbcType=NUMERIC} ,
+	        CANCEL_STRATEGY = #{cancelStrategy jdbcType=VARCHAR} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType jdbcType=VARCHAR},
+	        FST_COMMISSION_PRICE = #{fstCommissionPrice jdbcType=NUMERIC} ,
+	        SEC_COMMISSION_PRICE = #{secCommissionPrice jdbcType=NUMERIC} ,
+	        GAP_COMMISSION_PRICE = #{gapCommissionPrice jdbcType=NUMERIC} ,
+	        CHILD_COMMISSION_PRICE = #{childCommissionPrice jdbcType=NUMERIC},
+	        PRICE_FORMULA = #{priceFormula jdbcType=VARCHAR},
+	        SEC_PRICE_FORMULA = #{secPriceFormula jdbcType=VARCHAR},
+        	GAP_PRICE_FORMULA = #{gapPriceFormula jdbcType=VARCHAR},
+        	CHILD_PRICE_FORMULA = #{childPriceFormula jdbcType=VARCHAR},
+        	
+        	MARK_USER_SETTER_PRICE = #{markUserSetterPrice jdbcType=VARCHAR},
+	        SEC_MARK_USER_SETTER_PRICE = #{secMarkUserSetterPrice jdbcType=VARCHAR},
+        	GAP_MARK_USER_SETTER_PRICE = #{gapMarkUserSetterPrice jdbcType=VARCHAR},
+        	CHILD_MARK_USER_SETTER_PRICE = #{childMarkUserSetterPrice jdbcType=VARCHAR},
+        	
+        	AHEAD_BOOK_TIME = #{aheadBookTime jdbcType=NUMERIC},
+        	FST_RULE = #{fstRule jdbcType=NUMERIC},
+        	SEC_RULE = #{secRule jdbcType=NUMERIC},
+        	GAP_RULE = #{gapRule jdbcType=NUMERIC},
+        	CHILD_RULE = #{childRule jdbcType=NUMERIC},
+        	
+        	CREATE_TIMES = #{lastUpdateTime jdbcType=TIMESTAMP}
+        WHERE 
+        	<if test="distGoodsTimePriceId !=null">
+	        	DIST_GOODS_TIME_PRICE_ID = #{distGoodsTimePriceId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM DIST_GOODS_TIME_PRICE WHERE
+        DIST_GOODS_TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <delete id="deleteAll" >
+        DELETE FROM DIST_GOODS_TIME_PRICE 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM DIST_GOODS_TIME_PRICE 
+	        WHERE 
+		        DIST_GOODS_TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="distGoodsTimePriceId != null and distGoodsTimePriceId !=''">
+				AND DIST_GOODS_TIME_PRICE_ID = #{distGoodsTimePriceId}
+	       	</if> 
+			<if test="distGoodsBranchId != null and distGoodsBranchId !=''">
+				AND DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+	       	</if> 
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if> 
+			<if test="fstSettlementPrice != null and fstSettlementPrice !=''">
+				AND FST_SETTLEMENT_PRICE = #{fstSettlementPrice}
+	       	</if> 
+			<if test="fstPrice != null and fstPrice !=''">
+				AND FST_PRICE = #{fstPrice}
+	       	</if> 
+			<if test="fstMarketPrice != null and fstMarketPrice !=''">
+				AND FST_MARKET_PRICE = #{fstMarketPrice}
+	       	</if> 
+			<if test="fstDistributionPrice != null and fstDistributionPrice !=''">
+				AND FST_DISTRIBUTION_PRICE = #{fstDistributionPrice}
+	       	</if> 
+			<if test="gapSettlementPrice != null and gapSettlementPrice !=''">
+				AND GAP_SETTLEMENT_PRICE = #{gapSettlementPrice}
+	       	</if> 
+			<if test="gapPrice != null and gapPrice !=''">
+				AND GAP_PRICE = #{gapPrice}
+	       	</if> 
+			<if test="gapMarketPrice != null and gapMarketPrice !=''">
+				AND GAP_MARKET_PRICE = #{gapMarketPrice}
+	       	</if> 
+			<if test="gapDistributionPrice != null and gapDistributionPrice !=''">
+				AND GAP_DISTRIBUTION_PRICE = #{gapDistributionPrice}
+	       	</if> 
+			<if test="secSettlementPrice != null and secSettlementPrice !=''">
+				AND SEC_SETTLEMENT_PRICE = #{secSettlementPrice}
+	       	</if> 
+			<if test="secPrice != null and secPrice !=''">
+				AND SEC_PRICE = #{secPrice}
+	       	</if> 
+			<if test="secMarketPrice != null and secMarketPrice !=''">
+				AND SEC_MARKET_PRICE = #{secMarketPrice}
+	       	</if> 
+			<if test="secDistributionPrice != null and secDistributionPrice !=''">
+				AND SEC_DISTRIBUTION_PRICE = #{secDistributionPrice}
+	       	</if> 
+			<if test="childSettlementPrice != null and childSettlementPrice !=''">
+				AND CHILD_SETTLEMENT_PRICE = #{childSettlementPrice}
+	       	</if> 
+			<if test="childPrice != null and childPrice !=''">
+				AND CHILD_PRICE = #{childPrice}
+	       	</if> 
+			<if test="childMarketPrice != null and childMarketPrice !=''">
+				AND CHILD_MARKET_PRICE = #{childMarketPrice}
+	       	</if> 
+			<if test="childDistributionPrice != null and childDistributionPrice !=''">
+				AND CHILD_DISTRIBUTION_PRICE = #{childDistributionPrice}
+	       	</if> 
+			<if test="fstBasisOfCalc != null and fstBasisOfCalc !=''">
+				AND FST_BASIS_OF_CALC = #{fstBasisOfCalc}
+	       	</if> 
+			<if test="fstPriceMode != null and fstPriceMode !=''">
+				AND FST_PRICE_MODE = #{fstPriceMode}
+	       	</if> 
+			<if test="fstPriceModeValue != null and fstPriceModeValue !=''">
+				AND FST_PRICE_MODE_VALUE = #{fstPriceModeValue}
+	       	</if> 
+			<if test="gapBasisOfCalc != null and gapBasisOfCalc !=''">
+				AND GAP_BASIS_OF_CALC = #{gapBasisOfCalc}
+	       	</if> 
+			<if test="gapPriceMode != null and gapPriceMode !=''">
+				AND GAP_PRICE_MODE = #{gapPriceMode}
+	       	</if> 
+			<if test="gapPriceModeValue != null and gapPriceModeValue !=''">
+				AND GAP_PRICE_MODE_VALUE = #{gapPriceModeValue}
+	       	</if> 
+			<if test="secBasisOfCalc != null and secBasisOfCalc !=''">
+				AND SEC_BASIS_OF_CALC = #{secBasisOfCalc}
+	       	</if> 
+			<if test="secPriceMode != null and secPriceMode !=''">
+				AND SEC_PRICE_MODE = #{secPriceMode}
+	       	</if> 
+			<if test="secPriceModeValue != null and secPriceModeValue !=''">
+				AND SEC_PRICE_MODE_VALUE = #{secPriceModeValue}
+	       	</if> 
+			<if test="childBasisOfCalc != null and childBasisOfCalc !=''">
+				AND CHILD_BASIS_OF_CALC = #{childBasisOfCalc}
+	       	</if> 
+			<if test="childPriceMode != null and childPriceMode !=''">
+				AND CHILD_PRICE_MODE = #{childPriceMode}
+	       	</if> 
+			<if test="childPriceModeValue != null and childPriceModeValue !=''">
+				AND CHILD_PRICE_MODE_VALUE = #{childPriceModeValue}
+	       	</if> 
+			<if test="onsaleFlag != null and onsaleFlag !=''">
+				AND ONSALE_FLAG = #{onsaleFlag}
+	       	</if> 
+			<if test="stockType != null and stockType !=''">
+				AND STOCK_TYPE = #{stockType}
+	       	</if> 
+			<if test="stock != null">
+				AND STOCK = #{stock}
+	       	</if> 
+			<if test="totalStock != null">
+				AND TOTAL_STOCK = #{totalStock}
+	       	</if> 
+			<if test="cancelStrategy != null and cancelStrategy !=''">
+				AND CANCEL_STRATEGY = #{cancelStrategy}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+	       	<if test="aheadBookTime != null">
+				AND AHEAD_BOOK_TIME = #{aheadBookTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.distGoodsTimePriceId != null and param.distGoodsTimePriceId !=''">
+				AND DIST_GOODS_TIME_PRICE_ID = #{param.distGoodsTimePriceId}
+	       	</if>
+			<if test="param.distGoodsBranchId != null and param.distGoodsBranchId !=''">
+				AND DIST_GOODS_BRANCH_ID = #{param.distGoodsBranchId}
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = #{param.specDate}
+	       	</if>
+			<if test="param.fstSettlementPrice != null">
+				AND FST_SETTLEMENT_PRICE = #{param.fstSettlementPrice}
+	       	</if>
+			<if test="param.fstPrice != null">
+				AND FST_PRICE = #{param.fstPrice}
+	       	</if>
+			<if test="param.fstMarketPrice != null">
+				AND FST_MARKET_PRICE = #{param.fstMarketPrice}
+	       	</if>
+			<if test="param.fstDistributionPrice != null ">
+				AND FST_DISTRIBUTION_PRICE = #{param.fstDistributionPrice}
+	       	</if>
+			<if test="param.gapSettlementPrice != null ">
+				AND GAP_SETTLEMENT_PRICE = #{param.gapSettlementPrice}
+	       	</if>
+			<if test="param.gapPrice != null ">
+				AND GAP_PRICE = #{param.gapPrice}
+	       	</if>
+			<if test="param.gapMarketPrice != null ">
+				AND GAP_MARKET_PRICE = #{param.gapMarketPrice}
+	       	</if>
+			<if test="param.gapDistributionPrice != null ">
+				AND GAP_DISTRIBUTION_PRICE = #{param.gapDistributionPrice}
+	       	</if>
+			<if test="param.secSettlementPrice != null ">
+				AND SEC_SETTLEMENT_PRICE = #{param.secSettlementPrice}
+	       	</if>
+			<if test="param.secPrice != null">
+				AND SEC_PRICE = #{param.secPrice}
+	       	</if>
+			<if test="param.secMarketPrice != null">
+				AND SEC_MARKET_PRICE = #{param.secMarketPrice}
+	       	</if>
+			<if test="param.secDistributionPrice != null ">
+				AND SEC_DISTRIBUTION_PRICE = #{param.secDistributionPrice}
+	       	</if>
+			<if test="param.childSettlementPrice != null">
+				AND CHILD_SETTLEMENT_PRICE = #{param.childSettlementPrice}
+	       	</if>
+			<if test="param.childPrice != null ">
+				AND CHILD_PRICE = #{param.childPrice}
+	       	</if>
+			<if test="param.childMarketPrice != null ">
+				AND CHILD_MARKET_PRICE = #{param.childMarketPrice}
+	       	</if>
+			<if test="param.childDistributionPrice != null ">
+				AND CHILD_DISTRIBUTION_PRICE = #{param.childDistributionPrice}
+	       	</if>
+			<if test="param.fstBasisOfCalc != null and param.fstBasisOfCalc !=''">
+				AND FST_BASIS_OF_CALC = #{param.fstBasisOfCalc}
+	       	</if>
+			<if test="param.fstPriceMode != null and param.fstPriceMode !=''">
+				AND FST_PRICE_MODE = #{param.fstPriceMode}
+	       	</if>
+			<if test="param.fstPriceModeValue != null and param.fstPriceModeValue !=''">
+				AND FST_PRICE_MODE_VALUE = #{param.fstPriceModeValue}
+	       	</if>
+			<if test="param.gapBasisOfCalc != null and param.gapBasisOfCalc !=''">
+				AND GAP_BASIS_OF_CALC = #{param.gapBasisOfCalc}
+	       	</if>
+			<if test="param.gapPriceMode != null and param.gapPriceMode !=''">
+				AND GAP_PRICE_MODE = #{param.gapPriceMode}
+	       	</if>
+			<if test="param.gapPriceModeValue != null and param.gapPriceModeValue !=''">
+				AND GAP_PRICE_MODE_VALUE = #{param.gapPriceModeValue}
+	       	</if>
+			<if test="param.secBasisOfCalc != null and param.secBasisOfCalc !=''">
+				AND SEC_BASIS_OF_CALC = #{param.secBasisOfCalc}
+	       	</if>
+			<if test="param.secPriceMode != null and param.secPriceMode !=''">
+				AND SEC_PRICE_MODE = #{param.secPriceMode}
+	       	</if>
+			<if test="param.secPriceModeValue != null and param.secPriceModeValue !=''">
+				AND SEC_PRICE_MODE_VALUE = #{param.secPriceModeValue}
+	       	</if>
+			<if test="param.childBasisOfCalc != null and param.childBasisOfCalc !=''">
+				AND CHILD_BASIS_OF_CALC = #{param.childBasisOfCalc}
+	       	</if>
+			<if test="param.childPriceMode != null and param.childPriceMode !=''">
+				AND CHILD_PRICE_MODE = #{param.childPriceMode}
+	       	</if>
+			<if test="param.childPriceModeValue != null and param.childPriceModeValue !=''">
+				AND CHILD_PRICE_MODE_VALUE = #{param.childPriceModeValue}
+	       	</if>
+			<if test="param.onsaleFlag != null and param.onsaleFlag !=''">
+				AND ONSALE_FLAG = #{param.onsaleFlag}
+	       	</if>
+			<if test="param.stockType != null and param.stockType !=''">
+				AND STOCK_TYPE = #{param.stockType}
+	       	</if>
+			<if test="param.stock != null">
+				AND STOCK = #{param.stock}
+	       	</if>
+			<if test="param.totalStock != null">
+				AND TOTAL_STOCK = #{param.totalStock}
+	       	</if>
+			<if test="param.cancelStrategy != null and param.cancelStrategy !=''">
+				AND CANCEL_STRATEGY = #{param.cancelStrategy}
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{param.bookLimitType}
+	       	</if>
+       		<if test="param.aheadBookTime != null">
+				AND AHEAD_BOOK_TIME = #{param.aheadBookTime}
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.DistGoodsTimePrice">
+        SELECT count(*) FROM DIST_GOODS_TIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM DIST_GOODS_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+      <select id="selectGoodsTimePriceByParams" parameterType="Map" resultMap="baseResultMap">
+	  select * from DIST_GOODS_TIME_PRICE
+	  <where>	
+	  	<if test="distGoodsTimePriceId != null and distGoodsTimePriceId !=''">
+			AND DIST_GOODS_TIME_PRICE_ID = #{distGoodsTimePriceId}
+	    </if>
+	    <if test="distGoodsBranchId != null and distGoodsBranchId !=''">
+			AND DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+	    </if>
+		 <if test="date != null and date !=''">
+			AND SPEC_DATE = TO_DATE(#{date},'YYYY-MM-DD')
+	    </if>
+	    <if test="specDate != null and specDate !=''">
+			AND SPEC_DATE = TO_DATE(#{specDate},'YYYY-MM-DD')
+	    </if>
+	    <if test="beginDate != null and beginDate !=''">
+			AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    </if>
+	    <if test="endDate != null and endDate !=''">
+			AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+	    </if>
+	</where>
+	  order by SPEC_DATE DESC
+  </select>
+  
+  <select id="findDistByParameters" resultMap="baseResultMap" parameterType="Map">
+  	SELECT <include refid="columns" />
+	FROM DIST_GOODS_TIME_PRICE
+	WHERE
+	DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+	AND SPEC_DATE = TO_DATE(#{specDate},'YYYY-MM-DD')
+  </select>
+  
+  <select id="findDistRuleByBranchId" resultMap="baseResultMap" parameterType="Long">
+  	SELECT *
+  FROM 
+       (SELECT DISTINCT DIST_GOODS_BRANCH_ID,
+                         FST_RULE,
+                         FST_PRICE_MODE,
+                         FST_PRICE_MODE_VALUE,
+                         FST_BASIS_OF_CALC
+           FROM lvmama_pet.DIST_GOODS_TIME_PRICE
+          where DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+            AND NVL(FST_RULE,0) = 0
+              AND SPEC_DATE>SYSDATE
+            AND FST_BASIS_OF_CALC IS NOT NULL
+            AND FST_PRICE_MODE IS NOT NULL) A
+            
+            LEFT JOIN
+       
+        (SELECT DISTINCT DIST_GOODS_BRANCH_ID,
+                         SEC_RULE,
+                         SEC_PRICE_MODE,
+                         SEC_PRICE_MODE_VALUE,
+                         SEC_BASIS_OF_CALC
+           FROM lvmama_pet.DIST_GOODS_TIME_PRICE
+          where DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+            AND NVL(SEC_RULE,0) = 0
+              AND SPEC_DATE>SYSDATE
+            AND SEC_BASIS_OF_CALC IS NOT NULL
+            AND SEC_PRICE_MODE IS NOT NULL) B
+            
+      ON A.DIST_GOODS_BRANCH_ID = B.DIST_GOODS_BRANCH_ID   
+       
+      LEFT JOIN
+      
+        (SELECT DISTINCT DIST_GOODS_BRANCH_ID,
+                         GAP_RULE,
+                         GAP_PRICE_MODE,
+                         GAP_PRICE_MODE_VALUE,
+                         GAP_BASIS_OF_CALC
+           FROM lvmama_pet.DIST_GOODS_TIME_PRICE
+          where DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+            AND NVL(GAP_RULE,0) = 0
+              AND SPEC_DATE>SYSDATE
+            AND GAP_BASIS_OF_CALC IS NOT NULL
+            AND GAP_PRICE_MODE IS NOT NULL) C
+            
+         ON A.DIST_GOODS_BRANCH_ID = C.DIST_GOODS_BRANCH_ID  
+         
+          LEFT JOIN
+      
+        (SELECT DISTINCT DIST_GOODS_BRANCH_ID,
+                         CHILD_RULE,
+                         CHILD_PRICE_MODE,
+                         CHILD_PRICE_MODE_VALUE,
+                         CHILD_BASIS_OF_CALC
+           FROM lvmama_pet.DIST_GOODS_TIME_PRICE
+          where DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+            AND NVL(CHILD_RULE,0) = 0
+              AND SPEC_DATE>SYSDATE
+            AND CHILD_BASIS_OF_CALC IS NOT NULL
+            AND CHILD_PRICE_MODE IS NOT NULL) D     
+ 
+       ON A.DIST_GOODS_BRANCH_ID = D.DIST_GOODS_BRANCH_ID  
+  </select>
+    
+   <select id="findSpecDatesByProductId" resultMap="baseResultMap" parameterType="long">
+	SELECT DGTP.* FROM LVMAMA_PET.DIST_GOODS_TIME_PRICE DGTP,
+		LVMAMA_PET.DIST_GOODS_BRANCH DGB,
+		LVMAMA_PET.TNT_CRUISE_PACKAGE TCP 
+	WHERE TCP.GOODS_ID=DGB.GOODS_ID 
+		AND DGB.DIST_GOODS_BRANCH_ID=DGTP.DIST_GOODS_BRANCH_ID
+		AND TCP.INTEGRITY='Y' 
+	 <if test="productId != null and productId !=''">
+		AND TCP.PRODUCT_ID=#{productId}
+	 </if>
+  </select>
+ 
+</mapper>
+

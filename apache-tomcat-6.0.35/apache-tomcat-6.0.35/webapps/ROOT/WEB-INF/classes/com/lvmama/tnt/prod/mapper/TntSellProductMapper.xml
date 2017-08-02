@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntSellProductMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.TntSellProduct">
+		<result property="tntSellProductId" column="TNT_SELL_PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="sellProductName" column="SELL_PRODUCT_NAME" />
+		<result property="upgrateGoodsId" column="UPGRATE_GOODS_ID" />
+		<result property="minCnt" column="MIN_CNT" />
+		<result property="maxCnt" column="MAX_CNT" />
+		<result property="valid" column="VALID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="goodsName" column="GOODS_NAME" />
+		<result property="upgrateGoodsName" column="UPGRATE_GOODS_NAME" />
+		
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="branchName" column="BRANCH_NAME" />
+		<result property="payTarget" column="PAY_TARGET" />
+		<result property="faxFlag" column="FAX_FLAG" />
+		<result property="goodsType" column="GOODS_TYPE" />
+		<result property="adult" column="ADULT" />
+		<result property="child" column="CHILD" />
+		
+		<result property="additionGoodsIds" column="ADDITION_GOODS_IDS" />
+		<result property="additionGoodsNames" column="ADDITION_GOODS_NAMES" />
+		<result property="relationGoodsIds" column="RELATION_GOODS_IDS" />
+		<result property="relationGoodsNames" column="RELATION_GOODS_NAMES" />
+		
+	</resultMap>
+	
+	<resultMap id="allSellProdMap" type="com.lvmama.comm.tnt.vo.TntProductQunarVo">
+		<result property="productId" column="product_id" />
+		<result property="sellProductId" column="sell_product_id" />
+		<result property="sellProdPackageId" column="sell_prod_package_id" />
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		 TNT_SELL_PRODUCT_ID, GOODS_ID,SELL_PRODUCT_NAME, UPGRATE_GOODS_ID,MIN_CNT , MAX_CNT , VALID, PRODUCT_ID,GOODS_NAME,UPGRATE_GOODS_NAME,
+		 BRANCH_ID , BRANCH_NAME, PAY_TARGET,FAX_FLAG,GOODS_TYPE,ADULT ,CHILD,ADDITION_GOODS_IDS,ADDITION_GOODS_NAMES,RELATION_GOODS_IDS,RELATION_GOODS_NAMES
+	    ]]>
+	</sql>
+	
+
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.TntSellProduct">
+		<selectKey resultType="java.lang.Long" keyProperty="tntSellProductId" order="BEFORE">
+			select TNT_SELL_PRODUCT_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_SELL_PRODUCT (
+		TNT_SELL_PRODUCT_ID ,
+		GOODS_ID ,
+		SELL_PRODUCT_NAME ,
+		UPGRATE_GOODS_ID ,
+		MIN_CNT ,
+		MAX_CNT ,
+		VALID ,
+		PRODUCT_ID,
+		GOODS_NAME,
+		UPGRATE_GOODS_NAME,
+		BRANCH_ID , 
+		BRANCH_NAME, 
+		PAY_TARGET,
+		FAX_FLAG,
+		GOODS_TYPE,
+		ADULT ,
+		CHILD,
+		ADDITION_GOODS_IDS,
+		ADDITION_GOODS_NAMES,
+		RELATION_GOODS_IDS,
+		RELATION_GOODS_NAMES
+		) VALUES (
+		#{tntSellProductId,jdbcType=DECIMAL} ,
+		#{goodsId,jdbcType=DECIMAL} ,
+		#{sellProductName,jdbcType=VARCHAR} ,
+		#{upgrateGoodsId,jdbcType=VARCHAR} ,
+		#{minCnt,jdbcType=VARCHAR} ,
+		#{maxCnt,jdbcType=VARCHAR} ,
+		#{valid,jdbcType=VARCHAR} ,
+		#{productId,jdbcType=DECIMAL},
+		#{goodsName,jdbcType=VARCHAR} ,
+		#{upgrateGoodsName,jdbcType=VARCHAR},
+		#{branchId,jdbcType=DECIMAL},
+		#{branchName,jdbcType=VARCHAR},
+		#{payTarget,jdbcType=VARCHAR},
+		#{faxFlag,jdbcType=VARCHAR},
+		#{goodsType,jdbcType=VARCHAR},
+		#{adult,jdbcType=DECIMAL},
+		#{child,jdbcType=DECIMAL},
+		#{additionGoodsIds,jdbcType=VARCHAR},
+		#{additionGoodsNames,jdbcType=VARCHAR},
+		#{relationGoodsIds,jdbcType=VARCHAR},
+		#{relationGoodsNames,jdbcType=VARCHAR}
+		
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.TntSellProduct">
+		UPDATE TNT_SELL_PRODUCT SET
+		<if test="goodsId != null and goodsId !=''">
+			GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="sellProductName != null and sellProductName !=''">
+			, SELL_PRODUCT_NAME = #{sellProductName,jdbcType=VARCHAR}
+		</if>
+		<if test="upgrateGoodsId != null and upgrateGoodsId !=''">
+			, UPGRATE_GOODS_ID = #{upgrateGoodsId,jdbcType=VARCHAR}
+		</if>
+		<if test="minCnt != null and minCnt !=''">
+			, MIN_CNT = #{minCnt,jdbcType=DECIMAL}
+		</if>
+		<if test="maxCnt != null and maxCnt !=''">
+			, MAX_CNT = #{maxCnt,jdbcType=VARCHAR}
+		</if>
+		<if test="valid != null and valid !=''">
+			, VALID = #{valid,jdbcType=VARCHAR}
+		</if>
+		<if test="productId != null and productId !=''">
+			, PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="goodsName != null and goodsName !=''">
+			, GOODS_NAME = #{goodsName,jdbcType=VARCHAR}
+		</if>
+		<if test="upgrateGoodsName != null and upgrateGoodsName !=''">
+			, UPGRATE_GOODS_NAME = #{upgrateGoodsName,jdbcType=VARCHAR}
+		</if>
+		<if test="branchId != null and branchId  !=''">
+			, BRANCH_ID = #{branchId,jdbcType=DECIMAL}
+		</if>
+		<if test="branchName != null and branchName  !=''">
+			, BRANCH_NAME = #{branchName,jdbcType=VARCHAR}
+		</if>
+		<if test="payTarget != null and payTarget  !=''">
+			, PAY_TARGET = #{payTarget,jdbcType=VARCHAR}
+		</if>
+		<if test="faxFlag != null and faxFlag  !=''">
+			, FAX_FLAG = #{faxFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="goodsType != null and goodsType  !=''">
+			, GOODS_TYPE = #{goodsType,jdbcType=VARCHAR}
+		</if>
+		<if test="adult != null and adult  !=''">
+			, ADULT = #{adult,jdbcType=DECIMAL}
+		</if>
+		<if test="child != null and child  !=''">
+			, CHILD = #{child,jdbcType=DECIMAL}
+		</if>
+		
+		<if test="additionGoodsIds != null and additionGoodsIds  !=''">
+			, ADDITION_GOODS_IDS = #{additionGoodsIds,jdbcType=VARCHAR}
+		</if>
+		<if test="additionGoodsNames != null and additionGoodsNames  !=''">
+			, ADDITION_GOODS_NAMES = #{additionGoodsNames,jdbcType=VARCHAR}
+		</if>
+		<if test="relationGoodsIds != null and relationGoodsIds  !=''">
+			, RELATION_GOODS_IDS = #{relationGoodsIds,jdbcType=VARCHAR}
+		</if>
+		<if test="relationGoodsNames != null and relationGoodsNames  !=''">
+			, RELATION_GOODS_NAMES = #{relationGoodsNames,jdbcType=VARCHAR}
+		</if>
+		
+		WHERE
+		TNT_SELL_PRODUCT_ID = #{tntSellProductId}
+	</update>
+	
+	
+	<update id="updateValidByParams" parameterType="com.lvmama.tnt.prod.vo.TntSellProduct">
+		UPDATE TNT_SELL_PRODUCT SET 
+		 	VALID = #{valid,jdbcType=VARCHAR}
+		WHERE 1=1
+		<if test="productId != null and productId !=''">
+			AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="upgrateGoodsId != null and upgrateGoodsId !=''">
+			AND  UPGRATE_GOODS_ID = #{upgrateGoodsId,jdbcType=VARCHAR}
+		</if>
+		<if test="tntSellProductId != null and tntSellProductId !=''">
+			AND TNT_SELL_PRODUCT_ID = #{tntSellProductId,jdbcType=DECIMAL}
+		</if>
+	</update>
+	
+<!-- 	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_SELL_PRODUCT
+		WHERE
+		TNT_SELL_PRODUCT_ID = #{id}
+	</select> -->
+	
+	<select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_SELL_PRODUCT
+		WHERE
+		PRODUCT_ID = #{proudctId}
+	</select>
+	
+	<select id="selectByParams" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.vo.TntSellProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_SELL_PRODUCT
+		WHERE 1=1
+		<include refid="where" />
+	</select>
+	
+	<sql id="where">
+	
+		<if test="goodsId != null and goodsId !=''">
+			AND GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="sellProductName != null and sellProductName !=''">
+			 AND SELL_PRODUCT_NAME = #{sellProductName,jdbcType=VARCHAR}
+		</if>
+		<if test="upgrateGoodsId != null and upgrateGoodsId !=''">
+			AND  UPGRATE_GOODS_ID = #{upgrateGoodsId,jdbcType=VARCHAR}
+		</if>
+		<if test="minCnt != null and minCnt !=''">
+			AND  MIN_CNT = #{minCnt,jdbcType=DECIMAL}
+		</if>
+		<if test="maxCnt != null and maxCnt !=''">
+			AND  MAX_CNT = #{maxCnt,jdbcType=VARCHAR}
+		</if>
+		<if test="valid != null and valid !=''">
+			AND  VALID = #{valid,jdbcType=VARCHAR}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND  PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="goodsName != null and goodsName !=''">
+			AND  GOODS_NAME = #{goodsName,jdbcType=VARCHAR}
+		</if>
+		<if test="upgrateGoodsName != null and upgrateGoodsName !=''">
+			AND  UPGRATE_GOODS_NAME = #{upgrateGoodsName,jdbcType=VARCHAR}
+		</if>
+		<if test="branchId != null and branchId  !=''">
+			AND  BRANCH_ID = #{branchId,jdbcType=DECIMAL}
+		</if>
+		<if test="branchName != null and branchName  !=''">
+			AND  BRANCH_NAME = #{branchName,jdbcType=VARCHAR}
+		</if>
+		<if test="payTarget != null and payTarget  !=''">
+			AND  PAY_TARGET = #{payTarget,jdbcType=VARCHAR}
+		</if>
+		<if test="faxFlag != null and faxFlag  !=''">
+			AND  FAX_FLAG = #{faxFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="goodsType != null and goodsType  !=''">
+			AND  GOODS_TYPE = #{goodsType,jdbcType=VARCHAR}
+		</if>
+		<if test="additionGoodsIds != null and additionGoodsIds  !=''">
+			AND ADDITION_GOODS_IDS = #{additionGoodsIds,jdbcType=VARCHAR}
+		</if>
+		<if test="additionGoodsNames != null and additionGoodsNames  !=''">
+			AND ADDITION_GOODS_NAMES = #{additionGoodsNames,jdbcType=VARCHAR}
+		</if>
+		<if test="relationGoodsIds != null and relationGoodsIds  !=''">
+			AND RELATION_GOODS_IDS = #{relationGoodsIds,jdbcType=VARCHAR}
+		</if>
+		<if test="relationGoodsNames != null and relationGoodsNames  !=''">
+			AND RELATION_GOODS_NAMES = #{relationGoodsNames,jdbcType=VARCHAR}
+		</if>
+	
+	</sql>
+	
+	
+	
+	<select id="getAllSellProdCount" resultType="Integer" parameterType="com.lvmama.comm.tnt.vo.TntProductQunarVo">
+		select res.product_id
+		  from (select tsp.product_id,
+		               null                    as sell_product_id,
+		               tsp.tnt_sell_package_id as sell_prod_package_id
+		          from tnt_sell_package tsp
+		        union all
+		        select tspp.product_id,
+		               tspp.tnt_sell_product_id as sell_product_id,
+		               null                     as sell_prod_package_id
+		          from tnt_sell_product tspp) res
+		 where res.product_id in
+		       (select distinct product.product_id
+		          from tnt_product       product,
+		               tnt_route_product trp,
+		               tnt_product_user  usr
+		         where product.product_id = trp.product_id(+)
+		               <!--   and product.product_id = usr.product_id
+			              and usr.valid = 'true'
+			              and usr.user_id = #{userId,jdbcType=VARCHAR} -->
+		           and lower(product.product_type) = lower(#{productType,jdbcType=VARCHAR})
+		        ) 
+	</select>
+	
+	
+	<select id="findAllSellPordPage" resultMap="allSellProdMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+			select res.*
+			  from (select tsp.product_id,
+			               null                    as sell_product_id,
+			               tsp.tnt_sell_package_id as sell_prod_package_id
+			          from tnt_sell_package tsp
+			        union all
+			        select tspp.product_id,
+			               tspp.tnt_sell_product_id as sell_product_id,
+			               null                     as sell_prod_package_id
+			          from tnt_sell_product tspp) res
+			 where res.product_id in
+			       (select distinct product.product_id
+			          from tnt_product       product,
+			               tnt_route_product trp,
+			               tnt_product_user  usr
+			         where product.product_id = trp.product_id(+)
+			            <!--   and product.product_id = usr.product_id
+			              and usr.valid = 'true'
+			              and usr.user_id = #{userId,jdbcType=VARCHAR} -->
+		           and lower(product.product_type) = lower(#{param.productType,jdbcType=VARCHAR})
+			        ) 
+		<include refid="basic.pageSearchFoot" />
+	</select>
+</mapper>
+

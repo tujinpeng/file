@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntRoutePackageMapper">
+	
+	<!-- 普通map -->
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        <result property="tntRoutePackageId" column="TNT_ROUTE_PACKAGE_ID"/>
+        <result property="packageName" column="PACKAGE_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="valid" column="VALID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="deleteFlag" column="DELETE_FLAG"/>
+	</resultMap>
+	
+	<!-- 需要关联商品list的map -->
+	<resultMap id="extResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        <result property="tntRoutePackageId" column="TNT_ROUTE_PACKAGE_ID"/>
+        <result property="packageName" column="PACKAGE_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="valid" column="VALID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="deleteFlag" column="DELETE_FLAG"/>
+        <collection property="goodsList" select="findGoodsByPackageId" column="{tntRoutePackageId=TNT_ROUTE_PACKAGE_ID}" javaType="ArrayList" >
+        </collection>
+	</resultMap>
+	
+	<resultMap id="goodsMap" type="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+        <result property="tntRoutePackageGoodsId" column="TNT_ROUTE_PACKAGE_GOODS_ID"/>
+        <result property="tntRoutePackageId" column="TNT_ROUTE_PACKAGE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="startDay" column="START_DAY"/>
+        <result property="day" column="DAY"/>
+        <result property="night" column="NIGHT"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="valid" column="VALID"/>
+        <result property="price" column="PRICE"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="maxGuests" column="MAX_GUESTS"/>
+        <result property="adult" column="ADULT"/>
+        <result property="child" column="CHILD"/>
+        <result property="adultCnt" column="ADULT_CNT"/>
+        <result property="childCnt" column="CHILD_CNT"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ROUTE_PACKAGE_ID,PACKAGE_NAME,PRODUCT_ID,VALID,CREATE_TIME,UPDATE_TIME,DELETE_FLAG
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+		<selectKey resultType="java.lang.Long" keyProperty="tntRoutePackageId" order="BEFORE">
+			SELECT TNT_SEQ_NEXTVAL('combine_id') FROM DUAL
+		</selectKey>
+        INSERT INTO TNT_ROUTE_PACKAGE (
+        	TNT_ROUTE_PACKAGE_ID,
+        	PACKAGE_NAME,
+        	PRODUCT_ID,
+        	VALID,
+			CREATE_TIME,
+			UPDATE_TIME
+        ) VALUES (
+        	#{tntRoutePackageId},
+        	#{packageName},
+        	#{productId},
+        	#{valid},
+        	now(),
+        	now()
+        )
+	</insert>
+	
+    <select id="findGoodsByPackageId" resultMap="goodsMap" parameterType="java.util.Map">
+		SELECT *
+		FROM TNT_ROUTE_PACKAGE_GOODS 
+	    WHERE TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId} 
+	</select>
+	
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        UPDATE TNT_ROUTE_PACKAGE 
+        <set>
+	        UPDATE_TIME = now()
+			<if test="packageName != null and packageName !=''">
+				, PACKAGE_NAME = #{packageName}
+			</if>
+			<if test="productId != null and productId !=''">
+				, PRODUCT_ID = #{productId}
+			</if>
+			<if test="valid != null and valid !=''">
+				, VALID = #{valid}
+			</if>
+			<if test="createTime != null and createTime !=''">
+				, CREATE_TIME = #{createTime}
+			</if>
+			<if test="deleteFlag != null and deleteFlag !=''">
+				, DELETE_FLAG = #{deleteFlag}
+			</if>
+		</set>
+        WHERE TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId} 
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ROUTE_PACKAGE WHERE
+        TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_PACKAGE 
+	        WHERE 
+		        TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId}
+		        AND DELETE_FLAG='N'
+	</select>
+	
+    <select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_PACKAGE 
+	        WHERE 
+		        PRODUCT_ID = #{productId}
+		        AND DELETE_FLAG='N' 
+	</select>
+	
+	<sql id="where">
+		<where>
+			DELETE_FLAG='N'	      				
+			<if test="tntRoutePackageId != null and tntRoutePackageId !=''">
+				AND TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId}
+	       	</if> 
+			<if test="packageName != null and packageName !=''">
+				AND PACKAGE_NAME = #{packageName}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+	       	</if>
+	       	<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if>
+	       	<if test="deleteFlag != null and deleteFlag !=''">
+				<if test='deleteFlag =="Y"'>
+                	AND DELETE_FLAG = #{deleteFlag}
+            	</if>
+            	<if test='deleteFlag =="N"'>
+            		AND ( DELETE_FLAG = #{deleteFlag} or DELETE_FLAG = '' or DELETE_FLAG is NULL)
+            	</if>
+			</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	
+			DELETE_FLAG='N'      				
+	        <if test="param.tntRoutePackageId != null and param.tntRoutePackageId !=''">
+				AND TNT_ROUTE_PACKAGE_ID = #{param.tntRoutePackageId}
+	       	</if> 
+			<if test="param.packageName != null and param.packageName !=''">
+				AND PACKAGE_NAME = #{param.packageName}
+	       	</if> 
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if> 
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+	       	</if>
+	       	<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if> 
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if>
+	       	<if test="param.deleteFlag != null and param.deleteFlag !=''">
+				AND DELETE_FLAG = #{param.deleteFlag}
+			</if>  
+		</where>
+	</sql>
+	
+	 <delete id="deleteByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        DELETE FROM TNT_ROUTE_PACKAGE
+        <include refid="where"/>
+    </delete>
+    
+    <update id="updateByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        UPDATE TNT_ROUTE_PACKAGE
+        <set>
+        	UPDATE_TIME = now()
+			<if test="packageName != null and packageName !=''">
+				, PACKAGE_NAME = #{packageName}
+			</if>
+			<if test="valid != null and valid !=''">
+				, VALID = #{valid}
+			</if>
+			<if test="createTime != null and createTime !=''">
+				, CREATE_TIME = #{createTime}
+			</if>
+			<if test="deleteFlag != null and deleteFlag !=''">
+				, DELETE_FLAG = #{deleteFlag}
+			</if>
+			
+	  </set>
+      WHERE PRODUCT_ID=#{productId}
+	</update>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+        SELECT count(*) FROM TNT_ROUTE_PACKAGE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_PACKAGE
+	    <include refid="pageWhere"/> 
+	    <include refid="mysqlPageSearchFoot"/> 
+    </select>
+    
+	<sql id="mysqlPageSearchFoot">
+    	LIMIT #{startRowsForMySql},#{pageSize}
+    </sql>
+    
+    <select id="findByParams" resultMap="baseResultMap" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackage">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_PACKAGE
+	   <include refid="where"/> 
+    </select>
+    
+    <!-- 通过Map参数查询一次组合. by baojiawei -->
+    <select id="findByParamsMap" resultMap="extResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns"/>
+    	FROM TNT_ROUTE_PACKAGE
+    	<include refid="where"/>
+    </select>
+    
+    <select id="findByRelatedGoodsParams" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT *
+		FROM TNT_ROUTE_PACKAGE
+		WHERE TNT_ROUTE_PACKAGE_ID IN
+		(
+			SELECT DISTINCT g.TNT_ROUTE_PACKAGE_ID 
+			FROM lmm_tnt.TNT_ROUTE_PACKAGE_GOODS g
+			WHERE 1=1	
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND SUB_BRANCH_ID = #{branchId}
+	       	</if> 
+		)
+		AND DELETE_FLAG='N'
+    </select>
+    
+     <!-- 批量插入一次组合. by baojiawei -->
+    <insert id="insertRoutePackageBatch" parameterType="java.util.List">
+    	INSERT INTO TNT_ROUTE_PACKAGE(
+    		TNT_ROUTE_PACKAGE_ID,
+        	PACKAGE_NAME,
+        	PRODUCT_ID,
+        	VALID,
+			CREATE_TIME,
+			UPDATE_TIME,
+			DELETE_FLAG
+    	) 
+	   	<foreach collection="list" item="item" separator="UNION ALL" index="index">
+	   		SELECT TNT_SEQ_NEXTVAL('combine_id'),
+	       		#{item.packageName},
+	       		#{item.productId},
+	       		#{item.valid},
+	       		now(),
+	       		now(),
+	       		#{item.deleteFlag}	
+	       	FROM DUAL	
+	   	</foreach>
+    
+    </insert>
+    
+    <!-- 批量更新操作  by baojiawei -->
+    <update id="updateByList" parameterType="java.util.List" >
+    	UPDATE TNT_ROUTE_PACKAGE SET
+    		DELETE_FLAG = 'Y' , VALID = "N" WHERE TNT_ROUTE_PACKAGE_ID IN
+    			<foreach collection="list" item="item" open="(" close=")" index="index" separator=",">
+			    	#{item.tntRoutePackageId}		
+    			</foreach>
+    </update>
+    
+    <!-- 查询所有的一次打包组合和关联的一次打包组合商品数据 -->
+    <select id="findPageAndGoods" resultMap="extResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_PACKAGE
+	    <include refid="pageWhere"/> 
+	    <include refid="mysqlPageSearchFoot"/> 
+    </select>
+</mapper>
+

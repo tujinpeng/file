@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntHotelPackageBranchTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranchTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="packageId" column="PACKAGE_ID"/>
+        <result property="packageBranchId" column="PACKAGE_BRANCH_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="adultNum" column="ADULT_NUM"/>
+        <result property="childNum" column="CHILD_NUM"/>
+        <result property="selectDate" column="SELECT_DATE"/>
+        <result property="onsaleFlag" column="ONSALE_FLAG"/>
+        <result property="stayDays" column="STAY_DAYS"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="auditPrice" column="AUDIT_PRICE"/>
+        <result property="auditSettlePrice" column="AUDIT_SETTLE_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="childSettlePrice" column="CHILD_SETTLE_PRICE"/>
+        <result property="differPrice" column="DIFFER_PRICE"/>
+        <result property="differSettlePrice" column="DIFFER_SETTLE_PRICE"/>
+        <result property="price" column="PRICE"/>
+        <result property="settlePrice" column="SETTLE_PRICE"/>
+        <result property="hasNotReservedRoom" column="HAS_NOT_RESERVED_ROOM"/>
+        <result property="stockStatus" column="STOCK_STATUS"/>
+        <result property="stockNum" column="STOCK_NUM"/>
+        <result property="overSale" column="OVER_SALE"/>
+        <result property="aheadHour" column="AHEAD_HOUR"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="packHotelCount" column="PACK_HOTEL_COUNT"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TIME_PRICE_ID,GROUP_ID,PACKAGE_ID,PACKAGE_BRANCH_ID,BRANCH_ID,SALE_TYPE,ADULT_NUM,CHILD_NUM,SELECT_DATE,ONSALE_FLAG,STAY_DAYS,GOODS_ID,AUDIT_PRICE,AUDIT_SETTLE_PRICE,CHILD_PRICE,CHILD_SETTLE_PRICE,DIFFER_PRICE,DIFFER_SETTLE_PRICE,PRICE,SETTLE_PRICE,HAS_NOT_RESERVED_ROOM,STOCK_STATUS,STOCK_NUM,OVER_SALE,AHEAD_HOUR,BOOK_LIMIT_TYPE,PACK_HOTEL_COUNT,CREATE_TIME,UPDATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranchTimePrice">
+        INSERT INTO TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE (
+        	TIME_PRICE_ID ,
+        	GROUP_ID ,
+        	PACKAGE_ID ,
+        	PACKAGE_BRANCH_ID ,
+        	BRANCH_ID ,
+        	SALE_TYPE ,
+        	ADULT_NUM ,
+        	CHILD_NUM ,
+        	SELECT_DATE ,
+        	ONSALE_FLAG ,
+        	STAY_DAYS ,
+        	GOODS_ID ,
+        	AUDIT_PRICE ,
+        	AUDIT_SETTLE_PRICE ,
+        	CHILD_PRICE ,
+        	CHILD_SETTLE_PRICE ,
+        	DIFFER_PRICE ,
+        	DIFFER_SETTLE_PRICE ,
+        	PRICE ,
+        	SETTLE_PRICE ,
+        	HAS_NOT_RESERVED_ROOM ,
+        	STOCK_STATUS ,
+        	STOCK_NUM ,
+        	OVER_SALE ,
+        	AHEAD_HOUR ,
+        	BOOK_LIMIT_TYPE ,
+        	PACK_HOTEL_COUNT ,
+        	CREATE_TIME ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{timePriceId} ,
+        	#{groupId} ,
+        	#{packageId} ,
+        	#{packageBranchId} ,
+        	#{branchId} ,
+        	#{saleType} ,
+        	#{adultNum} ,
+        	#{childNum} ,
+        	#{selectDate} ,
+        	#{onsaleFlag} ,
+        	#{stayDays} ,
+        	#{goodsId} ,
+        	#{auditPrice} ,
+        	#{auditSettlePrice} ,
+        	#{childPrice} ,
+        	#{childSettlePrice} ,
+        	#{differPrice} ,
+        	#{differSettlePrice} ,
+        	#{price} ,
+        	#{settlePrice} ,
+        	#{hasNotReservedRoom} ,
+        	#{stockStatus} ,
+        	#{stockNum} ,
+        	#{overSale} ,
+        	#{aheadHour} ,
+        	#{bookLimitType} ,
+        	#{packHotelCount} ,
+        	#{createTime} ,
+        	#{updateTime} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranchTimePrice">
+        UPDATE TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE SET
+	        GROUP_ID = #{groupId} ,
+	        PACKAGE_ID = #{packageId} ,
+	        PACKAGE_BRANCH_ID = #{packageBranchId} ,
+	        BRANCH_ID = #{branchId} ,
+	        SALE_TYPE = #{saleType} ,
+	        ADULT_NUM = #{adultNum} ,
+	        CHILD_NUM = #{childNum} ,
+	        SELECT_DATE = #{selectDate} ,
+	        ONSALE_FLAG = #{onsaleFlag} ,
+	        STAY_DAYS = #{stayDays} ,
+	        GOODS_ID = #{goodsId} ,
+	        AUDIT_PRICE = #{auditPrice} ,
+	        AUDIT_SETTLE_PRICE = #{auditSettlePrice} ,
+	        CHILD_PRICE = #{childPrice} ,
+	        CHILD_SETTLE_PRICE = #{childSettlePrice} ,
+	        DIFFER_PRICE = #{differPrice} ,
+	        DIFFER_SETTLE_PRICE = #{differSettlePrice} ,
+	        PRICE = #{price} ,
+	        SETTLE_PRICE = #{settlePrice} ,
+	        HAS_NOT_RESERVED_ROOM = #{hasNotReservedRoom} ,
+	        STOCK_STATUS = #{stockStatus} ,
+	        STOCK_NUM = #{stockNum} ,
+	        OVER_SALE = #{overSale} ,
+	        AHEAD_HOUR = #{aheadHour} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType} ,
+	        PACK_HOTEL_COUNT = #{packHotelCount} ,
+	        CREATE_TIME = #{createTime} ,
+	        UPDATE_TIME = #{updateTime} 
+        WHERE 
+        	<if test="timePriceId !=null">
+	        	TIME_PRICE_ID = #{timePriceId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <delete id="deleteForBatch" parameterType="java.util.List">
+        DELETE FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE WHERE
+        TIME_PRICE_ID in
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByPackageIds" parameterType="java.util.List">
+        DELETE FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE WHERE
+        PACKAGE_ID in
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+	        WHERE 
+		        TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="timePriceId != null and timePriceId !=''">
+				AND TIME_PRICE_ID = #{timePriceId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="packageId != null and packageId !=''">
+				AND PACKAGE_ID = #{packageId}
+	       	</if> 
+			<if test="packageBranchId != null and packageBranchId !=''">
+				AND PACKAGE_BRANCH_ID = #{packageBranchId}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+	       	</if> 
+			<if test="saleType != null and saleType !=''">
+				AND SALE_TYPE = #{saleType}
+	       	</if> 
+			<if test="adultNum != null and adultNum !=''">
+				AND ADULT_NUM = #{adultNum}
+	       	</if> 
+			<if test="childNum != null and childNum !=''">
+				AND CHILD_NUM = #{childNum}
+	       	</if> 
+			<if test="selectDate != null and selectDate !=''">
+				AND SELECT_DATE = #{selectDate}
+	       	</if> 
+			<if test="onsaleFlag != null and onsaleFlag !=''">
+				AND ONSALE_FLAG = #{onsaleFlag}
+	       	</if> 
+			<if test="stayDays != null and stayDays !=''">
+				AND STAY_DAYS = #{stayDays}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="auditPrice != null and auditPrice !=''">
+				AND AUDIT_PRICE = #{auditPrice}
+	       	</if> 
+			<if test="auditSettlePrice != null and auditSettlePrice !=''">
+				AND AUDIT_SETTLE_PRICE = #{auditSettlePrice}
+	       	</if> 
+			<if test="childPrice != null and childPrice !=''">
+				AND CHILD_PRICE = #{childPrice}
+	       	</if> 
+			<if test="childSettlePrice != null and childSettlePrice !=''">
+				AND CHILD_SETTLE_PRICE = #{childSettlePrice}
+	       	</if> 
+			<if test="differPrice != null and differPrice !=''">
+				AND DIFFER_PRICE = #{differPrice}
+	       	</if> 
+			<if test="differSettlePrice != null and differSettlePrice !=''">
+				AND DIFFER_SETTLE_PRICE = #{differSettlePrice}
+	       	</if> 
+			<if test="price != null and price !=''">
+				AND PRICE = #{price}
+	       	</if> 
+			<if test="settlePrice != null and settlePrice !=''">
+				AND SETTLE_PRICE = #{settlePrice}
+	       	</if> 
+			<if test="hasNotReservedRoom != null and hasNotReservedRoom !=''">
+				AND HAS_NOT_RESERVED_ROOM = #{hasNotReservedRoom}
+	       	</if> 
+			<if test="stockStatus != null and stockStatus !=''">
+				AND STOCK_STATUS = #{stockStatus}
+	       	</if> 
+			<if test="stockNum != null and stockNum !=''">
+				AND STOCK_NUM = #{stockNum}
+	       	</if> 
+			<if test="overSale != null and overSale !=''">
+				AND OVER_SALE = #{overSale}
+	       	</if> 
+			<if test="aheadHour != null and aheadHour !=''">
+				AND AHEAD_HOUR = #{aheadHour}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+			<if test="packHotelCount != null and packHotelCount !=''">
+				AND PACK_HOTEL_COUNT = #{packHotelCount}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.timePriceId != null and param.timePriceId !=''">
+				AND TIME_PRICE_ID = param.timePriceId
+	       	</if>
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = param.groupId
+	       	</if>
+			<if test="param.packageId != null and param.packageId !=''">
+				AND PACKAGE_ID = param.packageId
+	       	</if>
+			<if test="param.packageBranchId != null and param.packageBranchId !=''">
+				AND PACKAGE_BRANCH_ID = param.packageBranchId
+	       	</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = param.branchId
+	       	</if>
+			<if test="param.saleType != null and param.saleType !=''">
+				AND SALE_TYPE = param.saleType
+	       	</if>
+			<if test="param.adultNum != null and param.adultNum !=''">
+				AND ADULT_NUM = param.adultNum
+	       	</if>
+			<if test="param.childNum != null and param.childNum !=''">
+				AND CHILD_NUM = param.childNum
+	       	</if>
+			<if test="param.selectDate != null and param.selectDate !=''">
+				AND SELECT_DATE = param.selectDate
+	       	</if>
+			<if test="param.onsaleFlag != null and param.onsaleFlag !=''">
+				AND ONSALE_FLAG = param.onsaleFlag
+	       	</if>
+			<if test="param.stayDays != null and param.stayDays !=''">
+				AND STAY_DAYS = param.stayDays
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = param.goodsId
+	       	</if>
+			<if test="param.auditPrice != null and param.auditPrice !=''">
+				AND AUDIT_PRICE = param.auditPrice
+	       	</if>
+			<if test="param.auditSettlePrice != null and param.auditSettlePrice !=''">
+				AND AUDIT_SETTLE_PRICE = param.auditSettlePrice
+	       	</if>
+			<if test="param.childPrice != null and param.childPrice !=''">
+				AND CHILD_PRICE = param.childPrice
+	       	</if>
+			<if test="param.childSettlePrice != null and param.childSettlePrice !=''">
+				AND CHILD_SETTLE_PRICE = param.childSettlePrice
+	       	</if>
+			<if test="param.differPrice != null and param.differPrice !=''">
+				AND DIFFER_PRICE = param.differPrice
+	       	</if>
+			<if test="param.differSettlePrice != null and param.differSettlePrice !=''">
+				AND DIFFER_SETTLE_PRICE = param.differSettlePrice
+	       	</if>
+			<if test="param.price != null and param.price !=''">
+				AND PRICE = param.price
+	       	</if>
+			<if test="param.settlePrice != null and param.settlePrice !=''">
+				AND SETTLE_PRICE = param.settlePrice
+	       	</if>
+			<if test="param.hasNotReservedRoom != null and param.hasNotReservedRoom !=''">
+				AND HAS_NOT_RESERVED_ROOM = param.hasNotReservedRoom
+	       	</if>
+			<if test="param.stockStatus != null and param.stockStatus !=''">
+				AND STOCK_STATUS = param.stockStatus
+	       	</if>
+			<if test="param.stockNum != null and param.stockNum !=''">
+				AND STOCK_NUM = param.stockNum
+	       	</if>
+			<if test="param.overSale != null and param.overSale !=''">
+				AND OVER_SALE = param.overSale
+	       	</if>
+			<if test="param.aheadHour != null and param.aheadHour !=''">
+				AND AHEAD_HOUR = param.aheadHour
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = param.bookLimitType
+	       	</if>
+			<if test="param.packHotelCount != null and param.packHotelCount !=''">
+				AND PACK_HOTEL_COUNT = param.packHotelCount
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = param.createTime
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = param.updateTime
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranchTimePrice">
+        SELECT count(*) FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="getTntHotelPackageBranchTimePriceList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranchTimePrice">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		<include refid="where"/>
+    </select>
+    
+    <select id="getListByDuration" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_BRANCH_ID = #{packageBranchId}
+		AND SELECT_DATE <![CDATA[ >= ]]>  #{beginDate}
+		AND SELECT_DATE <![CDATA[ <= ]]>  #{endDate}
+    </select>
+    
+    <select id="getListAfterDate" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_BRANCH_ID = #{packageBranchId}
+		AND SELECT_DATE <![CDATA[ >= ]]>  #{beginDate}
+    </select>
+    
+    <select id="getListByDateList" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_BRANCH_ID = #{packageBranchId}
+		AND SELECT_DATE in 
+		<foreach collection="dateList" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    	</foreach> 
+    	
+    </select>
+    
+    <select id="getListByPackageBranchIdList" resultMap="baseResultMap" parameterType="java.util.List">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_BRANCH_ID in 
+		<foreach collection="list" separator="," open="(" close=")" index="index" item="id">
+            #{id}
+        </foreach>
+        ORDER BY PACKAGE_ID,GROUP_ID,SELECT_DATE
+    </select>
+    
+    <select id="getDurationListByPackageId" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_ID = #{packageId}
+		AND SELECT_DATE <![CDATA[ >= ]]>  #{beginDate}
+		AND SELECT_DATE <![CDATA[ <= ]]>  #{endDate}
+    </select>
+
+</mapper>
+

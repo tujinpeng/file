@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntOrderItemProdMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.vo.TntOrderItemProd">
+		<result property="orderItemProdId" column="TNT_ORDER_ITEM_PROD_ID" />
+		<result property="orderId" column="ORDER_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="prodBranchId" column="PRODUCT_BRANCH_ID" />
+		<result property="priceFormula" column="PRICE_FORMULA" />
+		<result property="distPrice" column="PRICE" />
+		<result property="commissionAmount" column="COMMISSION_AMOUNT" />
+		<result property="showFlag" column="SHOW_FLAG" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_ITEM_PROD_ID,ORDER_ID,PRODUCT_ID,PRODUCT_BRANCH_ID,PRICE_FORMULA,PRICE,COMMISSION_AMOUNT,SHOW_FLAG
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.order.vo.TntOrderItemProd">
+		<selectKey resultType="java.lang.Long" keyProperty="orderItemProdId"
+			order="BEFORE">
+			select TNT_ORDER_ITEM_PROD_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO tnt_order_item_prod (
+		TNT_ORDER_ITEM_PROD_ID ,
+		ORDER_ID ,
+		PRODUCT_ID ,
+		PRODUCT_BRANCH_ID ,
+		PRICE_FORMULA ,
+		PRICE,
+		COMMISSION_AMOUNT,
+		SHOW_FLAG
+		) VALUES (
+		#{orderItemProdId,jdbcType=DECIMAL} ,
+		#{orderId,jdbcType=DECIMAL} ,
+		#{productId,jdbcType=DECIMAL} ,
+		#{prodBranchId,jdbcType=DECIMAL} ,
+		#{priceFormula,jdbcType=VARCHAR} ,
+		#{distPrice,jdbcType=DECIMAL},
+		#{commissionAmount,jdbcType=DECIMAL},
+		#{showFlag,jdbcType=CHAR}
+		)
+	</insert>
+
+	<select id="queryByOrderIdAndProdId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.order.vo.TntOrderItemProd">
+		SELECT
+		<include refid="columns" />
+		FROM tnt_order_item_prod
+		WHERE
+		ORDER_ID = #{orderId}
+		<if test="prodBranchId !=null">
+            AND PRODUCT_BRANCH_ID=#{prodBranchId}
+        </if>
+		<if test="showFlag !=null">
+            AND SHOW_FLAG = #{showFlag}
+        </if>
+	</select>
+</mapper>
+

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.user.mapper.TntStoreUserMapper">
+	<resultMap id="baseResultMap" type="tntStoreUser">
+		<result property="tntStoreUserId" column="TNT_STORE_USER_ID" />
+		<result property="tntSubUserId" column="TNT_SUB_USER_ID" />
+		<result property="userNo" column="USER_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="channelCode" column="CHANNEL_CODE" />
+		<result property="registerDate" column="REGISTER_DATE" />
+		<result property="registerYear" column="REGISTER_YEAR" />
+		<result property="mobileNumber" column="MOBILE_NUMBER" />
+		<result property="valid" column="VALID" />
+		<result property="sycStatus" column="SYC_STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	
+	<resultMap id="storeUserResultMap" type="tntStoreUser">
+		<result property="channelCode" column="PRIMARY_CHANNEL" />
+		<result property="userNo" column="USER_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="mobileNumber" column="MOBILE_NUMBER" />
+		<result property="registerDate" column="CREATED_DATE" />
+	</resultMap>
+	
+	<resultMap id="mainUserMap" type="tntStoreUser">
+		<result property="tntStoreUserId" column="TNT_STORE_USER_ID" />
+		<result property="tntSubUserId" column="TNT_SUB_USER_ID" />
+		<result property="userNo" column="USER_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="channelCode" column="CHANNEL_CODE" />
+		<result property="registerDate" column="REGISTER_DATE" />
+		<result property="registerYear" column="REGISTER_YEAR" />
+		<result property="mobileNumber" column="MOBILE_NUMBER" />
+		<result property="valid" column="VALID" />
+		<result property="sycStatus" column="SYC_STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="subName" column="SUB_NAME" />
+		<result property="contactName" column="CONTACT_NAME" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="tntStoreUser">
+		<selectKey resultType="java.lang.Long" keyProperty="tntStoreUserId" order="BEFORE">
+			select
+			TNT_STORE_USER_ID_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO TNT_STORE_USER (
+        	TNT_STORE_USER_ID ,
+        	TNT_SUB_USER_ID ,
+        	CHANNEL_CODE ,
+        	USER_ID ,
+        	USER_NO ,
+        	REGISTER_DATE ,
+        	MOBILE_NUMBER ,
+        	REGISTER_YEAR ,
+        	VALID ,
+        	SYC_STATUS ,
+        	CREATE_TIME
+        ) VALUES (
+        	#{tntStoreUserId} ,
+        	#{tntSubUserId} ,
+        	#{channelCode} ,
+        	#{userId} ,
+        	#{userNo} ,
+        	#{registerDate} ,
+        	#{mobileNumber} ,
+        	#{registerYear} ,
+        	#{valid} ,
+        	#{sycStatus} ,
+        	sysdate
+        )
+    ]]>
+	</insert>
+	
+	<delete id="delete">
+    <![CDATA[
+        DELETE FROM TNT_STORE_USER WHERE USER_NO = #{userNo}
+    ]]>
+	</delete>
+	
+	
+<!-- 	<select id="getSourceStoreUserData"  resultMap="storeUserResultMap" parameterType="java.util.HashMap">
+        SELECT u.USER_NO, u.USER_ID, u.PRIMARY_CHANNEL, u.MOBILE_NUMBER, c.CREATED_DATE 
+        FROM USER_USER u
+		JOIN USER_ACTION_COLLECTION c
+		ON u.USER_ID = c.USER_ID
+		WHERE c.ACTION = 'REGISTER' 
+		AND u.GROUP_ID = 'O2O'
+		<if test="startTime != null and endTime !=null">
+			<![CDATA[ AND c.CREATED_DATE >= #{startTime} AND c.CREATED_DATE < #{endTime} ]]>
+		</if>
+		<if test="factor != null and compareValue !=null">
+			AND MOD(u.USER_ID, #{factor}) = #{compareValue}
+		</if>
+    </select>
+ -->    
+    <select id="getUnSycTntStoreUser"  resultMap="baseResultMap" parameterType="java.util.HashMap">
+        SELECT * FROM TNT_STORE_USER tsu WHERE tsu.VALID = 'N'
+        AND (tsu.SYC_STATUS = 'UNSYC' OR tsu.SYC_STATUS = 'DOING')
+        <if test="factor != null and compareValue !=null">
+			AND MOD(tsu.TNT_STORE_USER_ID, #{factor}) = #{compareValue}
+		</if>
+    </select>
+    
+    <select id="getStoreUserLoginAction"  resultType="Long" parameterType="java.util.HashMap">
+        SELECT count(uac.ACTION_COLLECTION_ID) from USER_ACTION_COLLECTION uac 
+        WHERE uac.USER_ID = #{userId}
+        AND uac.LOGIN_TYPE = 'MOBILE'
+        <if test="startTime != null and endTime !=null">
+			<![CDATA[ AND uac.CREATED_DATE >= #{startTime} AND uac.CREATED_DATE <= #{endTime} ]]>
+		</if>
+    </select>
+    
+    <update id="updateStatus" parameterType="tntStoreUser">
+    	UPDATE TNT_STORE_USER tsu
+    	SET tsu.VALID = #{valid, jdbcType=VARCHAR}
+    	, tsu.SYC_STATUS = #{sycStatus, jdbcType=VARCHAR}
+    	WHERE tsu.USER_NO = #{userNo}
+    </update>
+    
+    <select id="queryTntStoreUserByUserIdCount" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntSubUser">
+        select count(st.user_id) from tnt_store_user st,tnt_sub_user sb ,tnt_user u where u.user_id=sb.tnt_user_id and sb.tnt_sub_user_id=st.tnt_sub_user_id 
+        <if test="beginTime != null and endTime !=null">
+			<![CDATA[ AND st.register_date >= #{beginTime} AND st.register_date <= #{endTime} ]]>
+		</if>
+		<if test="userId != null">
+			and u.user_id = #{userId}
+		</if>
+		<if test="valid != null">
+			and st.valid = #{valid}
+		</if>
+		<if test="subName != null">
+			and sb.SUB_NAME = #{subName}
+		</if>    
+    </select>
+    
+    <select id="queryTntStoreUserByUserId"  resultMap="mainUserMap" parameterType="java.util.HashMap">
+   		<include refid="basic.pageSearchHead" />
+        select st.*,sb.SUB_NAME,sb.CONTACT_NAME from tnt_store_user st,tnt_sub_user sb ,tnt_user u where u.user_id=sb.tnt_user_id and sb.tnt_sub_user_id=st.tnt_sub_user_id 
+        <if test="param.beginTime != null and param.endTime !=null">
+			<![CDATA[ AND st.register_date >= #{param.beginTime} AND st.register_date <= #{param.endTime} ]]>
+		</if>
+		<if test="param.userId != null">
+			and u.user_id = #{param.userId}
+		</if>
+		<if test="param.valid != null">
+			and st.valid = #{param.valid}
+		</if>
+		<if test="param.subName != null">
+			and sb.SUB_NAME = #{param.subName}
+		</if>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="queryTntStoreUserBySubUserIdCount" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntSubUser">
+       select count(st.user_id) from tnt_store_user st where st.tnt_sub_user_id = #{tntSubUserId}
+        <if test="beginTime != null and endTime !=null">
+			<![CDATA[ AND st.register_date >= #{beginTime} AND st.register_date <= #{endTime} ]]>
+		</if>
+		<if test="valid != null">
+			and st.valid = #{valid}
+		</if>   
+    </select>
+	<select id="queryTntStoreUserBySubUserId"  resultMap="baseResultMap" parameterType="java.util.HashMap">
+        <include refid="basic.pageSearchHead" />
+        select st.* from tnt_store_user st where st.tnt_sub_user_id = #{param.tntSubUserId}
+        <if test="param.beginTime != null and param.endTime !=null">
+			<![CDATA[ AND st.register_date >= #{param.beginTime} AND st.register_date <= #{param.endTime} ]]>
+		</if>
+		<if test="param.valid != null">
+			and st.valid = #{param.valid}
+		</if>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+</mapper>
+

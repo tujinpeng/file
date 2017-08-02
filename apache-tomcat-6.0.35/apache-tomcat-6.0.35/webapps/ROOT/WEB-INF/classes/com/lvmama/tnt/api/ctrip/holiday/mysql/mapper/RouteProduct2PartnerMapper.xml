@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.api.ctrip.holiday.mysql.mapper.RouteProduct2PartnerMapper">
+	<resultMap id="tntPartnerProductResultMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+		<result property="id" column="ID" />
+		<result property="partnerId" column="PARTNER_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="tntPackageId" column="TNT_PACKAGE_ID" />
+		<result property="partnerPackageId" column="PARTNER_PACKAGE_ID" />
+		<result property="pushStatus" column="PUSH_STATUS" />
+		<result property="imagePushStatus" column="IMAGE_PUSH_STATUS" />
+		<result property="imgRelPushStatus" column="IMG_REL_PUSH_STATUS" />
+		<result property="featurePushStatus" column="FEATURE_PUSH_STATUS" />
+		<result property="tryTimes" column="TRY_TIMES" />
+		<result property="pushTime" column="PUSH_TIME" />
+		<result property="isClose" column="IS_CLOSE" />
+		<result property="pushType" column="PUSH_TYPE" />
+		<result property="managerName" column="MANAGER_NAME" />
+		<result property="isPushFlag" column="IS_PUSH_FLAG" />
+	</resultMap>
+
+	<sql id="where">
+		<where>
+			<if test="partnerId != null and partnerId != ''">
+				AND PARTNER_ID = #{partnerId}
+			</if>
+			<if test="productId != null">
+				AND PRODUCT_ID = #{productId}
+			</if>
+			<if test="tntPackageId != null">
+				AND TNT_PACKAGE_ID = #{tntPackageId}
+			</if>
+			<if test="partnerPackageId != null and partnerPackageId != ''">
+				AND PARTNER_PACKAGE_ID = #{partnerPackageId}
+			</if>
+			<if test="pushStatus != null and pushStatus != ''">
+				AND PUSH_STATUS = #{pushStatus}
+			</if>
+			<if test="imagePushStatus != null and imagePushStatus != ''">
+				AND IMAGE_PUSH_STATUS = #{imagePushStatus}
+			</if>
+			<if test="imgRelPushStatus != null and imgRelPushStatus != ''">
+				AND IMG_REL_PUSH_STATUS = #{imgRelPushStatus}
+			</if>
+			<if test="featurePushStatus != null and featurePushStatus != ''">
+				AND FEATURE_PUSH_STATUS = #{featurePushStatus}
+			</if>
+			<if test="pushType != null and pushType != ''">
+				AND PUSH_TYPE = #{pushType}
+			</if>
+			<if test="tryTimes != null">
+				AND TRY_TIMES = #{tryTimes}
+			</if>
+			<if test="isClose != null and isClose != ''">
+				AND IS_CLOSE = #{isClose}
+			</if>
+			<if test="isPushFlag != null and isPushFlag != ''">
+				AND IS_PUSH_FLAG = #{isPushFlag}
+			</if>
+		</where>
+	</sql>
+	
+	<insert id="insertPartnerProduct" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+
+		INSERT INTO
+		    TNT_PARTNER_PRODUCT_SYNC
+		    (PARTNER_ID, PRODUCT_ID, TNT_PACKAGE_ID, PARTNER_PACKAGE_ID, PUSH_STATUS, IMAGE_PUSH_STATUS,IMG_REL_PUSH_STATUS,FEATURE_PUSH_STATUS,PUSH_TYPE, TRY_TIMES, PUSH_TIME, IS_CLOSE, MANAGER_NAME, IS_PUSH_FLAG)
+		VALUES
+		    (#{partnerId}, #{productId}, #{tntPackageId}, #{partnerPackageId}, #{pushStatus},#{imagePushStatus},#{imgRelPushStatus},#{featurePushStatus}, #{pushType}, #{tryTimes}, #{pushTime}, #{isClose}, #{managerName}, #{isPushFlag})
+	</insert>
+	
+	<!-- 获取待推送产品信息 -->
+	<select id="queryUnpushedProductCount" resultType="Long" parameterType="java.util.Map">
+		SELECT  count(1) from TNT_PARTNER_PRODUCT_SYNC  TPPS
+		WHERE
+			TPPS.PARTNER_PACKAGE_ID IS NULL
+			 AND TPPS.IS_PUSH_FLAG='Y'
+		     AND TPPS.PUSH_STATUS in('NOT_PUSH','WAIT')
+		   	 AND TPPS.IMAGE_PUSH_STATUS ='PUSH_SUC'
+		   	 AND TPPS.FEATURE_PUSH_STATUS ='PUSH_SUC'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+	</select>
+	
+	<!-- 获取带推送产品 -->
+	<select id="queryUnpushedProductList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT TPPS.* FROM  TNT_PARTNER_PRODUCT_SYNC TPPS
+			 where 
+			 TPPS.PARTNER_PACKAGE_ID IS NULL
+			 AND TPPS.IS_PUSH_FLAG='Y'
+		     AND TPPS.PUSH_STATUS in('NOT_PUSH','WAIT')
+		     AND TPPS.IMAGE_PUSH_STATUS ='PUSH_SUC'
+		     AND TPPS.FEATURE_PUSH_STATUS ='PUSH_SUC'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+		   
+	</select>
+	
+	<!-- 获取待更新记录总数 -->
+	<select id="queryUpdateProductCount" resultType="Long" parameterType="java.util.Map">
+		SELECT count(1)  FROM  TNT_PARTNER_PRODUCT_SYNC TPPS
+		WHERE
+		TPPS.PARTNER_PACKAGE_ID IS NOT NULL
+		AND TPPS.IS_PUSH_FLAG='Y'
+		AND TPPS.PUSH_STATUS='WAIT'
+		AND TPPS.IMAGE_PUSH_STATUS ='PUSH_SUC'
+		AND TPPS.FEATURE_PUSH_STATUS ='PUSH_SUC'
+		AND TPPS.IMG_REL_PUSH_STATUS ='PUSH_SUC'
+		<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+		   
+	</select>
+	
+	
+	<!-- 获取待更新产品记录 -->
+	<select id="queryNeededUpdateProductList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT
+			TPPS.*
+		FROM
+			TNT_PARTNER_PRODUCT_SYNC TPPS
+		WHERE
+		TPPS.PARTNER_PACKAGE_ID IS NOT NULL
+		AND TPPS.IS_PUSH_FLAG='Y'
+		AND TPPS.PUSH_STATUS='WAIT'
+		AND TPPS.IMAGE_PUSH_STATUS ='PUSH_SUC'
+		AND TPPS.FEATURE_PUSH_STATUS ='PUSH_SUC'
+		AND TPPS.IMG_REL_PUSH_STATUS ='PUSH_SUC'
+		<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+		   
+	</select>
+	
+	<!-- 查询产品中间表 -->
+	<select id="queryPartnerProduct" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo" resultMap="tntPartnerProductResultMap">
+		SELECT TPPS.* FROM TNT_PARTNER_PRODUCT_SYNC TPPS
+		<include refid="where"/>
+	</select>
+	
+	<!-- 更新产品中间表信息 -->
+	<update id="updatePartnerProduct" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+
+		UPDATE
+		    TNT_PARTNER_PRODUCT_SYNC
+		<set>
+			<if test="partnerPackageId != null">
+				PARTNER_PACKAGE_ID = #{partnerPackageId},
+			</if>
+			<if test="pushStatus != null and pushStatus != ''">
+				PUSH_STATUS = #{pushStatus},
+			</if>
+			<if test="imagePushStatus != null and imagePushStatus != ''">
+				IMAGE_PUSH_STATUS = #{imagePushStatus},
+			</if>
+			<if test="imgRelPushStatus != null and imgRelPushStatus != ''">
+				IMG_REL_PUSH_STATUS = #{imgRelPushStatus},
+			</if>
+			<if test="featurePushStatus != null and featurePushStatus != ''">
+				FEATURE_PUSH_STATUS = #{featurePushStatus},
+			</if>
+			<if test="tryTimes != null">
+				TRY_TIMES = #{tryTimes},
+			</if>
+			<if test="pushTime != null">
+				PUSH_TIME = #{pushTime},
+			</if>
+			<if test="isClose != null and isClose != ''">
+				IS_CLOSE = #{isClose},
+			</if>
+			<if test="managerName != null and managerName != ''">
+				MANAGER_NAME = #{managerName},
+			</if>
+			<if test="isPushFlag != null and isPushFlag != ''">
+				IS_PUSH_FLAG = #{isPushFlag}
+			</if>
+		</set>
+		WHERE
+		    TNT_PACKAGE_ID = #{tntPackageId}
+		AND
+		    PARTNER_ID = #{partnerId}
+		<if test="pushType != null">
+		    AND PUSH_TYPE = #{pushType}
+		</if>
+
+	</update>
+
+	<!-- 更新同一套餐的所有记录 -->
+	<update id="updatePartnerTntPackage" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+
+		UPDATE
+		    TNT_PARTNER_PRODUCT_SYNC
+		<set>
+			<if test="imagePushStatus != null and imagePushStatus != ''">
+				IMAGE_PUSH_STATUS = #{imagePushStatus},
+			</if>
+			<if test="imgRelPushStatus != null and imgRelPushStatus != ''">
+				IMG_REL_PUSH_STATUS = #{imgRelPushStatus},
+			</if>
+			<if test="featurePushStatus != null and featurePushStatus != ''">
+				FEATURE_PUSH_STATUS = #{featurePushStatus},
+			</if>
+			<if test="isClose != null and isClose != ''">
+				IS_CLOSE = #{isClose},
+			</if>
+			<if test="managerName != null and managerName != ''">
+				MANAGER_NAME = #{managerName},
+			</if>
+			<if test="isPushFlag != null and isPushFlag != ''">
+				IS_PUSH_FLAG = #{isPushFlag}
+			</if>
+		</set>
+		WHERE
+			TNT_PACKAGE_ID = #{tntPackageId}
+		AND
+			PARTNER_ID = #{partnerId}
+	</update>
+
+
+	<!-- 更新关班字段 -->
+	<update id="updatePartnerIsClose" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+
+		UPDATE
+		    TNT_PARTNER_PRODUCT_SYNC
+		SET
+			IS_CLOSE = #{isClose}
+		WHERE
+		    TNT_PACKAGE_ID = #{tntPackageId}
+		AND
+		    PARTNER_ID = #{partnerId}
+	</update>
+
+
+	<!-- 批量更新推送状态 -->
+	<update id="updateBatchPushType" parameterType="java.util.Map">
+
+		UPDATE
+		    TNT_PARTNER_PRODUCT_SYNC
+		SET
+		    PUSH_STATUS = #{pushStatus}
+		WHERE
+		    ID IN
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND PUSH_STATUS = 'TEMP'
+
+	</update>
+
+	<!-- 查询未推送的价格库存记录总数 -->
+	<select id='queryUnpushedProductPriceStockCount'  resultType="Long" parameterType="java.util.Map">
+		SELECT count(1)  FROM  TNT_PARTNER_PRODUCT_SYNC TPPS
+		WHERE
+		TPPS.PUSH_STATUS in('NOT_PUSH','WAIT')
+		AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+	
+	</select>
+	
+	
+	<!-- 查询未推送的价格库存记录list -->
+	<select id='queryUnpushedProductPriceStockList' resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT TPPS.* FROM  TNT_PARTNER_PRODUCT_SYNC TPPS
+			 where 	 
+		     TPPS.PUSH_STATUS in('NOT_PUSH','WAIT')
+		     AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+	</select>
+	
+	
+	<select id='queryAuditSuccessProductCount'  resultType="Long" parameterType="java.util.Map">
+		SELECT count(1)  FROM  TNT_PARTNER_PRODUCT_SYNC TPPS,TNT_PARTNER_REVIEW_INFO TNRI
+		WHERE
+		TPPS.TNT_PACKAGE_ID=TNRI.PACKAGE_ID
+		AND TPPS.IS_PUSH_FLAG='Y'
+		AND TPPS.IMAGE_PUSH_STATUS='NOT_PUSH'
+		AND TPPS.IS_CLOSE='N'
+		AND TNRI.REVIEW_STATUS='Approved'
+		AND TNRI.REVIEW_TYPE='Product'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TNRI.ID, #{factor}) = #{compareValue}	
+			</if>
+	</select>
+	
+	
+	<select id="queryAuditSuccessProductList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT TPPS.* FROM TNT_PARTNER_PRODUCT_SYNC TPPS,TNT_PARTNER_REVIEW_INFO TNRI
+		WHERE
+		TPPS.TNT_PACKAGE_ID=TNRI.PACKAGE_ID
+		AND TPPS.IS_PUSH_FLAG='Y'
+		AND TPPS.IMAGE_PUSH_STATUS='NOT_PUSH'
+		AND TPPS.IS_CLOSE='N'
+		AND TNRI.REVIEW_STATUS='Approved'
+		AND TNRI.REVIEW_TYPE='Product'
+		<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+		   
+	</select>
+	
+	
+	<update id="updatePartnerProductImageStatus" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+		UPDATE TNT_PARTNER_PRODUCT_SYNC TPPS,TNT_PARTNER_REVIEW_INFO TNRI
+		SET TPPS.IMAGE_PUSH_STATUS = #{imagePushStatus}
+		WHERE TPPS.TNT_PACKAGE_ID = TNRI.PACKAGE_ID 
+		AND TPPS.IS_CLOSE = 'N' 
+		AND TPPS.PUSH_TYPE = 'PRODUCT'
+		AND TPPS.PUSH_STATUS = 'PUSH_SUC'
+		AND TPPS.TNT_PACKAGE_ID = #{tntPackageId}
+		AND TNRI.REVIEW_STATUS = 'Approved'
+		AND TNRI.REVIEW_TYPE = 'Product'
+	</update>
+	
+	
+	<select id="queryNeedPushProductMainImageCount" resultType="Long" parameterType="java.util.Map">
+		SELECT  count(1) from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.IMAGE_PUSH_STATUS IN('NOT_PUSH','WAIT')
+		   	AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+	</select>
+	
+	<select id="queryNeedPushProductMainImageList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT  TPPS.* from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.IMAGE_PUSH_STATUS IN('NOT_PUSH','WAIT')
+		   	AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+	</select>
+	
+	<select id="queryNeedPushProductMainImageRelationCount" resultType="Long" parameterType="java.util.Map">
+		SELECT  count(1) from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.IMG_REL_PUSH_STATUS IN('NOT_PUSH','WAIT') 
+		   	AND TPPS.IMAGE_PUSH_STATUS='PUSH_SUC' 
+		   	AND TPPS.PARTNER_PACKAGE_ID IS NOT NULL 
+		   	AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+	</select>
+	
+	<select id="queryNeedPushProductMainImageRelationList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT  TPPS.* from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.IMG_REL_PUSH_STATUS IN('NOT_PUSH','WAIT')
+		   	 AND TPPS.IMAGE_PUSH_STATUS='PUSH_SUC' 
+		   	 AND TPPS.PARTNER_PACKAGE_ID IS NOT NULL
+		   	 AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+	</select>
+	
+	<select id="queryNeedPushProductFeatureImageCount" resultType="Long" parameterType="java.util.Map">
+		SELECT  count(1) from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.FEATURE_PUSH_STATUS IN('NOT_PUSH','WAIT')
+		   	AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+	</select>
+	
+	
+	<select id="queryNeedPushProductFeatureImageList" resultMap="tntPartnerProductResultMap" parameterType="java.util.Map">
+		SELECT  TPPS.* from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		where 
+		   	TPPS.FEATURE_PUSH_STATUS IN('NOT_PUSH','WAIT')
+		   	AND TPPS.IS_PUSH_FLAG='Y'
+			<if test="partnerId != null">
+				and TPPS.PARTNER_ID=#{partnerId}	
+			</if>
+			<if test="pushType != null">
+				and TPPS.PUSH_TYPE=#{pushType}	
+			</if>
+			<if test="factor != null and compareValue !=null">
+				and  MOD(TPPS.ID, #{factor}) = #{compareValue}	
+			</if>
+			limit #{offset},#{pageSize}
+	</select>
+	
+	
+	<select id="queryPartnerProductByParam" resultMap="tntPartnerProductResultMap" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+		SELECT  TPPS.* from TNT_PARTNER_PRODUCT_SYNC  TPPS	
+		<include refid="where" />		
+	</select>
+
+
+	<update id="updatePartnerProductStatus" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerProductVo">
+
+		UPDATE
+		TNT_PARTNER_PRODUCT_SYNC
+		<set>
+			<if test="pushStatus != null and pushStatus != ''">
+				PUSH_STATUS = #{pushStatus},
+			</if>
+			<if test="imagePushStatus != null and imagePushStatus != ''">
+				IMAGE_PUSH_STATUS = #{imagePushStatus},
+			</if>
+			<if test="imgRelPushStatus != null and imgRelPushStatus != ''">
+				IMG_REL_PUSH_STATUS = #{imgRelPushStatus},
+			</if>
+			<if test="featurePushStatus != null and featurePushStatus != ''">
+				FEATURE_PUSH_STATUS = #{featurePushStatus},
+			</if>
+			<if test="tryTimes != null">
+				TRY_TIMES = #{tryTimes}
+			</if>
+		</set>
+		WHERE
+		TNT_PACKAGE_ID = #{tntPackageId}
+		AND
+		PARTNER_ID = #{partnerId}
+
+	</update>
+	
+	
+
+</mapper>
+

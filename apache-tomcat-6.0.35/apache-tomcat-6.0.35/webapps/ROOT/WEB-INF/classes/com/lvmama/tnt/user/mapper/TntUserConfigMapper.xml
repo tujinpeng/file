@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserConfigMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntUserConfig">
+		<result column="USER_CONFIG_ID" property="userConfigId" />
+		<result column="USER_ID" property="userId" />
+		<result column="REMARK" property="remark" />
+		<result column="ARG1" property="arg1" />
+		<result column="ARG2" property="arg2" />
+		<result column="CALLBACK" property="callback" />
+		<result column="CALLBACK_TYPE" property="callbackType" />
+		<result column="CALLBACK_TIMEOUT" property="callbackTimeout" />
+		<result column="CALLBACK_URL" property="callbackUrl" />
+		<result column="CALLBACK_DISTINCTIVE" property="callbackDistinctive" />
+		<result column="CALLBACK_TEMPLATE" property="callbackTemplate" />
+		<result column="SCRIPT" property="script" />
+		
+		<result column="URL_PRODUCT" property="urlProduct" />
+		<result column="URL_OFFLINE" property="urlOffline" />
+		<result column="URL_ORDER" property="urlOrder" />
+		<result column="URL_REFUND" property="urlRefund" />
+		<result column="URL_REFUND2" property="urlRefund2" />
+		<result column="PUSH_TYPE" property="pushType" />
+		<result column="AUTHORITY_LEVEL" property="authorityLevel"/>
+		
+	</resultMap>
+
+	<select id="selectTntUserConfigByParameters" resultMap="baseResultMap"
+		parameterType="page">
+		SELECT * FROM TNT_USER_CONFIG TUC 
+			<if test="userConfigId != null and userConfigId!=''">
+			AND TUC.USER_CONFIG_ID = #{userConfigId}
+		</if>
+		 <if test="userId != null and userId!=''">
+			AND TUC.USER_ID = #{userId}
+		</if> 
+	</select>
+
+	<select id="selectTntUserConfigByParametersCounts" resultType="Integer"
+		parameterType="com.lvmama.tnt.user.po.TntUserConfig">
+		SELECT COUNT(D.USER_CONFIG_ID) FROM TNT_USER_CONFIG TUC 
+			<if test="userConfigId != null and userConfigId!=''">
+			AND TUC.USER_CONFIG_ID = #{userConfigId}
+		</if>
+		 <if test="userId != null and userId!=''">
+			AND TUC.USER_ID = #{userId}
+		</if> 
+	</select>
+
+
+	<select id="getTntUserConfigById" resultMap="baseResultMap"
+		parameterType="java.lang.Long">
+		SELECT * FROM TNT_USER_CONFIG TUC WHERE TUC.USER_CONFIG_ID = #{userConfigId}
+	</select>
+
+	<select id="selectTntUserConfigByUserId" resultMap="baseResultMap"
+		parameterType="java.lang.Long">
+		SELECT * FROM TNT_USER_CONFIG TUC WHERE TUC.USER_ID = #{userId}
+	</select>
+	
+	<select id="selectTntUserConfigByCodeAndPushType" resultMap="baseResultMap" parameterType="java.util.HashMap">
+		SELECT CONFIG.* FROM TNT_USER_CONFIG CONFIG JOIN TNT_USER_DETAIL DETAIL 
+		on CONFIG.USER_ID = DETAIL.USER_ID 
+		where DETAIL.DISTRIBUTOR_CODE = #{distributorCode, jdbcType=VARCHAR}
+		and CONFIG.PUSH_TYPE = #{pushType, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getDistributorUrlByCodeAndUrlType" resultMap="baseResultMap"
+		parameterType="java.lang.String">
+		SELECT CONFIG.* FROM TNT_USER_CONFIG CONFIG JOIN TNT_USER_DETAIL DETAIL 
+		on CONFIG.USER_ID = DETAIL.USER_ID 
+		where DETAIL.DISTRIBUTOR_CODE = #{distributorCode, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntUserConfig">
+		<selectKey resultType="java.lang.Long" keyProperty="userConfigId" order="BEFORE">
+			SELECT TNT_USER_CONFIG_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO TNT_USER_CONFIG(USER_CONFIG_ID,USER_ID,ARG1,ARG2,CALLBACK,CALLBACK_TYPE,CALLBACK_TIMEOUT,
+									CALLBACK_URL,CALLBACK_DISTINCTIVE,CALLBACK_TEMPLATE,REMARK,SCRIPT,
+									URL_PRODUCT,URL_OFFLINE,URL_ORDER,URL_REFUND,URL_REFUND2,PUSH_TYPE,AUTHORITY_LEVEL)
+		VALUES
+		(#{userConfigId},#{userId,jdbcType=BIGINT},#{arg1,jdbcType=VARCHAR},#{arg2,jdbcType=VARCHAR},
+		#{callback,jdbcType=VARCHAR},#{callbackType,jdbcType=VARCHAR},#{callbackTimeout,jdbcType=VARCHAR},
+		#{callbackUrl,jdbcType=VARCHAR},#{callbackDistinctive,jdbcType=VARCHAR},#{callbackTemplate,jdbcType=CLOB},
+		#{remark,jdbcType=VARCHAR},#{script,jdbcType=CLOB},#{urlProduct,jdbcType=VARCHAR},#{urlOffline,jdbcType=VARCHAR},
+		#{urlOrder,jdbcType=VARCHAR},#{urlRefund,jdbcType=VARCHAR},#{urlRefund2,jdbcType=VARCHAR},#{pushType,jdbcType=VARCHAR},#{authorityLevel,jdbcType=VARCHAR})
+	</insert>
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntUserConfig">
+		UPDATE TNT_USER_CONFIG TUC
+		SET
+		USER_ID = #{userId},
+		ARG1 = #{arg1,jdbcType=VARCHAR},
+		ARG2 = #{arg2,jdbcType=VARCHAR},
+		CALLBACK = #{callback,jdbcType=VARCHAR},
+		CALLBACK_TYPE = #{callbackType,jdbcType=VARCHAR} ,
+		CALLBACK_TIMEOUT = #{callbackTimeout,jdbcType=VARCHAR},
+		CALLBACK_URL = #{callbackUrl,jdbcType=VARCHAR},
+		CALLBACK_DISTINCTIVE= #{callbackDistinctive,jdbcType=VARCHAR},
+		CALLBACK_TEMPLATE = #{callbackTemplate,jdbcType=CLOB},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		SCRIPT = #{script,jdbcType=CLOB},
+		PUSH_TYPE = #{pushType,jdbcType=VARCHAR},
+		AUTHORITY_LEVEL = #{authorityLevel,jdbcType=VARCHAR}
+		WHERE TUC.USER_CONFIG_ID = #{userConfigId}
+	</update>
+	<update id="updateUrl" parameterType="com.lvmama.tnt.user.po.TntUserConfig">
+		UPDATE TNT_USER_CONFIG 
+		SET
+		URL_PRODUCT = #{urlProduct,jdbcType=VARCHAR},
+		URL_OFFLINE = #{urlOffline,jdbcType=VARCHAR},
+		URL_ORDER = #{urlOrder,jdbcType=VARCHAR},
+		URL_REFUND = #{urlRefund,jdbcType=VARCHAR},
+		URL_REFUND2 = #{urlRefund2,jdbcType=VARCHAR}
+		WHERE USER_CONFIG_ID = #{userConfigId,jdbcType=NUMERIC}
+	</update>
+	<delete id="deleteTntUserConfigById" parameterType="java.lang.Long">
+		DELETE FROM TNT_USER_CONFIG TUC WHERE TUC.USER_CONFIG_ID = #{userConfigId} 
+	</delete>
+
+ 
+	
+	<select id="checkUnique" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT COUNT(TUC.USER_CONFIG_ID) FROM TNT_USER_CONFIG TUC WHERE 1=1
+	</select> 
+
+	<select id="queryRowCountByUser" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT COUNT(1) FROM TNT_USER_CONFIG WHERE PUSH_TYPE = #{pushType}  AND USER_ID = #{userId}
+	</select> 
+	
+	<!-- 根据分销商编号查询分销商配置 -->
+	<select id="queryTntUserConfigByDistributecode" parameterType="java.lang.String" resultMap="baseResultMap">
+		SELECT tc.*
+		FROM TNT_USER_CONFIG tc
+		JOIN TNT_USER_DETAIL td on tc.USER_ID = td.USER_ID
+		WHERE td.DISTRIBUTOR_CODE = #{distributecode}
+	</select>
+	
+	<!-- 查询分销商用户3级渠道代码   cps专用置 -->
+	<select id="getTntUserThreeChannelCodeForCps" parameterType="java.util.Map" resultType="java.lang.String">
+			    SELECT T.THREE_CODE
+				FROM (
+				    SELECT K.*, ROWNUM RN
+				    FROM (
+				         SELECT 
+				              DECODE(C3.THREE_TIME,NULL,DECODE(A.SECOND_TIME,NULL,A.FIRST_TIME,SECOND_TIME),C3.THREE_TIME) CREATE_TIME,
+				              DECODE(C3.THREE_ID,NULL,DECODE(A.SECOND_ID, NULL, A.FIRST_ID, SECOND_ID),C3.THREE_ID) CHANNEL_ID,
+				              FIRST_ID,
+				              FIRST_NAME,
+				              FIRST_CODE,
+				              SECOND_ID,
+				              SECOND_NAME,
+				              SECOND_CODE,
+				              THREE_ID,
+				              THREE_NAME,
+				              THREE_CODE,
+				              CHANNEL_COMMENT,
+				              RANGE,
+				              APPLICATION_TYPE,
+				              PROFIT_SHARING
+				        FROM (
+				             SELECT  C1.CHANNEL_ID   FIRST_ID,
+				                     C1.CHANNEL_NAME FIRST_NAME,
+				                     C1.CHANNEL_CODE FIRST_CODE,
+				                     C1.CREATE_TIME  FIRST_TIME,
+				                     C2.CHANNEL_ID   SECOND_ID,
+				                     C2.CHANNEL_NAME SECOND_NAME,
+				                     C2.CHANNEL_CODE SECOND_CODE,
+				                     C2.CREATE_TIME  SECOND_TIME
+				             FROM 
+				                   (SELECT CHANNEL_ID,
+				                           CHANNEL_NAME,
+				                           CHANNEL_CODE,
+				                           CREATE_TIME,
+				                           RANGE,
+				                            APPLICATION_TYPE
+				                     FROM MARK_CHANNEL
+				                     WHERE LAYER = 1
+				                     AND VALID = 'Y'
+				                     AND CHANNEL_NAME != '微游记作者') C1,
+				                   (SELECT CHANNEL_ID,
+				                           CHANNEL_NAME,
+				                           CHANNEL_CODE,
+				                           CREATE_TIME,
+				                           FATHER_ID,
+				                           RANGE,
+				                           APPLICATION_TYPE
+				                     FROM MARK_CHANNEL
+				                     WHERE LAYER = 2
+				                     AND VALID = 'Y') C2
+				             WHERE C1.CHANNEL_ID = C2.FATHER_ID(+)
+				             ) A,
+				             (
+				             SELECT CHANNEL_ID       THREE_ID,
+				                    CHANNEL_NAME     THREE_NAME,
+				                    CHANNEL_CODE     THREE_CODE,
+				                    CHANNEL_COMMENT,
+				                    CREATE_TIME      THREE_TIME,
+				                    FATHER_ID,
+				                    RANGE,
+				                    APPLICATION_TYPE,
+				                    PROFIT_SHARING
+				             FROM MARK_CHANNEL
+				             WHERE LAYER = 3
+				             AND VALID = 'Y'
+				             and range = 'OUTTER'
+				             and APPLICATION_TYPE = 'losc'
+				             ) C3
+				       WHERE A.SECOND_ID = C3.FATHER_ID(+)
+				       and C3.range = 'OUTTER'
+				       and C3.APPLICATION_TYPE = 'losc'
+				       ORDER BY CREATE_TIME DESC
+				    ) K
+					 <if test="threeName!=null and threeName!=''">
+					     WHERE K.THREE_NAME  LIKE '%'||#{threeName}||'%'
+					 </if>
+				) T
+	</select>
+	
+</mapper>
+

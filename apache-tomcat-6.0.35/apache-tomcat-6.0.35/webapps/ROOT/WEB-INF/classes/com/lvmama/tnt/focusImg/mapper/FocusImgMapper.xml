@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.focusImg.mapper.FocusImgMapper">
+	<insert id="insert" parameterType="com.lvmama.tnt.recommend.vo.FocusImgVO">
+	      INSERT INTO FOCUSIMG (
+	        	IMG_HEADLINE,
+	        	IMG_INDEX,
+	        	IMG_TYPE,
+	        	PHYSICAL_ADDRESS,
+	        	IMG_URL ,
+	        	UUID_NAME,
+	        	IMG_NAME ,
+	        	HTTP_LOCATION,
+	        	UPDATE_DATE,
+	        	UPLODER
+	        ) VALUES (
+	        	#{headLine,jdbcType=VARCHAR},
+		        #{imgIndex,jdbcType=NUMERIC},
+		        #{imgType,jdbcType=VARCHAR},
+		        #{physicalAddress,jdbcType=VARCHAR},
+		        #{imgUrl,jdbcType=VARCHAR},
+		        #{uuidName,jdbcType=VARCHAR},
+		        #{imgName,jdbcType=VARCHAR},
+		        #{httpLocation,jdbcType=VARCHAR},
+		        sysdate,
+		        #{upLoder,jdbcType=VARCHAR}
+	        )
+	</insert>
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.recommend.vo.FocusImgVO">
+       <result property="headLine" column="IMG_HEADLINE"/>
+       <result property="imgIndex" column="IMG_INDEX"/>
+       <result property="imgType" column="IMG_TYPE"/>
+       <result property="physicalAddress" column="PHYSICAL_ADDRESS"/>
+       <result property="imgUrl" column="IMG_URL"/>
+       <result property="uuidName" column="UUID_NAME"/>
+       <result property="imgName" column="IMG_NAME"/>
+       <result property="httpLocation" column="HTTP_LOCATION"/>
+       <result property="updateDate" column="UPDATE_DATE"/>
+       <result property="upLoder" column="UPLODER"/>
+	</resultMap>
+	<select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.recommend.vo.FocusImgVO" >
+   	    SELECT * FROM FOCUSIMG WHERE 
+   	    		IMG_TYPE = #{imgType} 
+	    	<if test="imgIndex != null and imgIndex !=''">
+				AND  IMG_INDEX = #{imgIndex}
+			</if>
+   	    	ORDER BY IMG_INDEX ASC
+    </select>
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.recommend.vo.FocusImgVO" >
+   	    SELECT COUNT(1) FROM FOCUSIMG WHERE 
+   	    		IMG_TYPE = #{imgType} 
+   	    	<if test="imgIndex != null and imgIndex !=''">
+				AND  IMG_INDEX = #{imgIndex}
+			</if>
+    </select>
+    <update id="update" parameterType="com.lvmama.tnt.recommend.vo.FocusImgVO">
+        UPDATE  FOCUSIMG SET
+	        	IMG_HEADLINE=#{headLine,jdbcType=VARCHAR},
+	        	UPDATE_DATE=sysdate,
+	        	UPLODER=#{upLoder,jdbcType=VARCHAR}
+        WHERE 
+        	 UUID_NAME =  #{uuidName}
+	</update>
+    <delete id="delete" parameterType="com.lvmama.tnt.recommend.vo.FocusImgVO">
+		DELETE FROM FOCUSIMG
+		WHERE 
+        	  UUID_NAME =  #{uuidName}
+	</delete>
+</mapper>
+

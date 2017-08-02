@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntOrderRefundMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntOrderRefund">
+        <result property="tntOrderRefundId" column="TNT_ORDER_REFUND_ID"/>
+        <result property="refundStatus" column="REFUND_STATUS"/>
+        <result property="refundType" column="REFUND_TYPE"/>
+        <result property="refundAmount" column="REFUND_AMOUNT"/>
+        <result property="factorage" column="FACTORAGE"/>
+        <result property="remark" column="REMARK"/>
+        <result property="refundTime" column="REFUND_TIME"/>
+        <result property="partnerOrderId" column="PARTNER_ORDER_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="orderRefundStatus" column="ORDER_REFUND_STATUS"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_REFUND_ID,REFUND_STATUS,REFUND_TYPE,REFUND_AMOUNT,FACTORAGE,REMARK,REFUND_TIME,PARTNER_ORDER_ID,ORDER_ID,ORDER_REFUND_STATUS
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.order.po.TntOrderRefund">
+		<selectKey resultType="java.lang.Long" keyProperty="tntOrderRefundId"
+			order="BEFORE">
+			select  TNT_ORDER_REFUND_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_ORDER_REFUND (
+        	TNT_ORDER_REFUND_ID ,
+        	REFUND_STATUS ,
+        	REFUND_TYPE ,
+        	REFUND_AMOUNT ,
+        	FACTORAGE ,
+        	REMARK ,
+        	REFUND_TIME ,
+        	PARTNER_ORDER_ID,
+        	ORDER_ID,
+        	ORDER_REFUND_STATUS
+        ) VALUES (
+        	#{tntOrderRefundId,jdbcType=DECIMAL} ,
+        	#{refundStatus,jdbcType=VARCHAR} ,
+        	#{refundType,jdbcType=VARCHAR} ,
+        	#{refundAmount,jdbcType=DECIMAL} ,
+        	#{factorage,jdbcType=DECIMAL} ,
+        	#{remark,jdbcType=VARCHAR} ,
+        	SYSDATE ,
+        	#{partnerOrderId,jdbcType=VARCHAR},
+        	#{orderId,jdbcType=VARCHAR},
+        	#{orderRefundStatus,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntOrderRefund">
+        UPDATE TNT_ORDER_REFUND SET
+	        REFUND_STATUS = #{refundStatus,jdbcType=VARCHAR} ,
+	        REFUND_TYPE = #{refundType,jdbcType=VARCHAR} ,
+	        REFUND_AMOUNT = #{refundAmount,jdbcType=DECIMAL} ,
+	        FACTORAGE = #{factorage,jdbcType=DECIMAL} ,
+	        REMARK = #{remark,jdbcType=VARCHAR} ,
+	        REFUND_TIME = #{refundTime,jdbcType=TIMESTAMP} ,
+	        PARTNER_ORDER_ID = #{partnerOrderId,jdbcType=VARCHAR},
+	        ORDER_ID = #{orderId,jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="tntOrderRefundId !=null">
+	        	TNT_ORDER_REFUND_ID = #{tntOrderRefundId,jdbcType=DECIMAL} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ORDER_REFUND WHERE
+        TNT_ORDER_REFUND_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ORDER_REFUND 
+	        WHERE 
+		        TNT_ORDER_REFUND_ID = #{id} 
+	</select>
+	
+	
+	<select id="getByPartnerOrderId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_REFUND
+		WHERE
+		PARTNER_ORDER_ID = #{partnerOrderId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByOrderRefund" resultMap="baseResultMap" parameterType="com.lvmama.tnt.order.po.TntOrderRefund">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_REFUND
+		WHERE
+		PARTNER_ORDER_ID = #{partnerOrderId,jdbcType=VARCHAR}
+		AND 
+		ORDER_ID = #{orderId,jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntOrderRefundId != null and tntOrderRefundId !=''">
+				AND TNT_ORDER_REFUND_ID = #{tntOrderRefundId}
+	       	</if> 
+			<if test="refundStatus != null and refundStatus !=''">
+				AND REFUND_STATUS = #{refundStatus}
+	       	</if> 
+			<if test="refundType != null and refundType !=''">
+				AND REFUND_TYPE = #{refundType}
+	       	</if> 
+			<if test="refundAmount != null and refundAmount !=''">
+				AND REFUND_AMOUNT = #{refundAmount}
+	       	</if> 
+			<if test="factorage != null and factorage !=''">
+				AND FACTORAGE = #{factorage}
+	       	</if> 
+			<if test="remark != null and remark !=''">
+				AND REMARK = #{remark}
+	       	</if> 
+			<if test="refundTime != null and refundTime !=''">
+				AND REFUND_TIME = #{refundTime}
+	       	</if> 
+			<if test="partnerOrderId != null and partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = #{partnerOrderId}
+	       	</if> 
+	       	<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntOrderRefundId != null and param.tntOrderRefundId !=''">
+				AND TNT_ORDER_REFUND_ID = param.tntOrderRefundId
+	       	</if>
+			<if test="param.refundStatus != null and param.refundStatus !=''">
+				AND REFUND_STATUS = param.refundStatus
+	       	</if>
+			<if test="param.refundType != null and param.refundType !=''">
+				AND REFUND_TYPE = param.refundType
+	       	</if>
+			<if test="param.refundAmount != null and param.refundAmount !=''">
+				AND REFUND_AMOUNT = param.refundAmount
+	       	</if>
+			<if test="param.factorage != null and param.factorage !=''">
+				AND FACTORAGE = param.factorage
+	       	</if>
+			<if test="param.remark != null and param.remark !=''">
+				AND REMARK = param.remark
+	       	</if>
+			<if test="param.refundTime != null and param.refundTime !=''">
+				AND REFUND_TIME = param.refundTime
+	       	</if>
+			<if test="param.partnerOrderId != null and param.partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = param.partnerOrderId
+	       	</if>
+	       	<if test="param.orderId != null and param.orderId !=''">
+				AND ORDER_ID = param.orderId
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.order.po.TntOrderRefund">
+        SELECT count(*) FROM TNT_ORDER_REFUND 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_ORDER_REFUND 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+
+</mapper>
+

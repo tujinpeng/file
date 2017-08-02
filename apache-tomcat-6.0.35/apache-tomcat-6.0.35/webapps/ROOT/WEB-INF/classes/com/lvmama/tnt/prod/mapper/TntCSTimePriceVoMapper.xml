@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCSTimePriceVoMapper">
+	<resultMap id="distProductBranchVoResult" type="com.lvmama.tnt.prod.vo.DistProductBranchVo">
+		<result property="distGoodsBranchId" column="DIST_GOODS_BRANCH_ID" />
+		<result property="tntProductId" column="TNT_PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="branchName" column="BRANCH_NAME" />
+		<result property="branchType" column="BRANCH_TYPE" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	
+	<sql id="dgbColumns">
+		DISTINCT
+		DGB.DIST_GOODS_BRANCH_ID,DGB.TNT_PRODUCT_ID,DGB.GOODS_ID,DGB.BRANCH_NAME,DGB.BRANCH_TYPE,DGB.CREATE_TIME
+	</sql>
+	
+	<select id="findDistProdProductBranch" resultMap="distProductBranchVoResult" parameterType="Map">
+	  SELECT PB.*
+       FROM DIST_GOODS_BRANCH PB, TNT_PRODUCT P
+       WHERE PB.PRODUCT_ID = P.PRODUCT_ID
+       AND PB.BRANCH_TYPE = #distId#
+       AND P.PACK_TYPE = #packType#
+	   AND P.BRANCH_ID = #saleUnitId#
+	</select>
+
+	
+</mapper>

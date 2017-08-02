@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCruisePackageMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntCruisePackage">
+        <result property="tntCruisePackageId" column="TNT_CRUISE_PACKAGE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="goodsCancelFlag" column="GOODS_CANCEL_FLAG"/>
+        <result property="sysFlag" column="SYS_FLAG"/>
+        <result property="branchType" column="BRANCH_TYPE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="lastUpdateTime" column="LAST_UPDATE_TIME"/>
+        <result property="minOrderNum" column="MIN_ORDER_NUM"/>
+        <result property="maxOrderNum" column="MAX_ORDER_NUM"/>
+        <result property="integrity" column="INTEGRITY"/>
+        <result property="deleteFlag" column="DELETE_FLAG"/>
+        <result property="autoFlag" column="AUTO_FLAG"/>
+        <result property="updateNameFlag" column="UPDATE_NAME_FLAG"/>
+        <result property="goodsSaleFalg" column="GOODS_SALE_FALG"/>
+	</resultMap>
+	
+	<resultMap id="resultMap" type="com.lvmama.tnt.prod.po.TntCruisePackage">
+        <result property="tntCruisePackageId" column="TNT_CRUISE_PACKAGE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="goodsCancelFlag" column="GOODS_CANCEL_FLAG"/>
+        <result property="goodsSaleFalg" column="GOODS_SALE_FALG"/>
+        <result property="sysFlag" column="SYS_FLAG"/>
+        <result property="branchType" column="BRANCH_TYPE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="lastUpdateTime" column="LAST_UPDATE_TIME"/>
+        <result property="minOrderNum" column="MIN_ORDER_NUM"/>
+        <result property="maxOrderNum" column="MAX_ORDER_NUM"/>
+        <result property="integrity" column="INTEGRITY"/>
+        <result property="deleteFlag" column="DELETE_FLAG"/>
+        <result property="autoFlag" column="AUTO_FLAG"/>
+        <result property="updateNameFlag" column="UPDATE_NAME_FLAG"/>
+        <result property="goodsSaleFalg" column="GOODS_SALE_FALG"/>
+        <result property="tntProductId" column="TNT_PRODUCT_ID"/>
+        
+        <result property="cabinType" column="CABIN_TYPE"/>
+        <result property="cabinName" column="CABIN_NAME"/>
+        <result property="shipAdditionName" column="SHIP_ADDITION_NAME"/>
+        <result property="shoreName" column="SHORE_NAME"/>
+        
+        <result property="shipBranchId" column="SHIP_BRANCH_ID"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	    DISTINCT
+		TNT_CRUISE_PACKAGE_ID,PRODUCT_ID,GOODS_ID,GOODS_NAME,GOODS_CANCEL_FLAG,SYS_FLAG,BRANCH_TYPE,CREATE_TIME,LAST_UPDATE_TIME,MIN_ORDER_NUM,MAX_ORDER_NUM,INTEGRITY,
+		DELETE_FLAG,AUTO_FLAG,nvl(UPDATE_NAME_FLAG,1) UPDATE_NAME_FLAG,GOODS_SALE_FALG
+	    ]]>
+	</sql>
+	
+	<sql id="pagecolumns">
+	    <![CDATA[
+	    DISTINCT
+		PRODUCT_ID
+	    ]]>
+	</sql>
+	
+	<sql id="goodscolumns">
+	    <![CDATA[
+	    DISTINCT
+		PRODUCT_ID,GOODS_ID,GOODS_NAME,MIN_ORDER_NUM,MAX_ORDER_NUM,INTEGRITY,GOODS_CANCEL_FLAG
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCruisePackageId"
+			order="BEFORE">
+			select  TNT_CRUISE_PACKAGE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CRUISE_PACKAGE (
+        	TNT_CRUISE_PACKAGE_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	GOODS_NAME ,
+        	GOODS_CANCEL_FLAG ,
+        	SYS_FLAG ,
+        	BRANCH_TYPE ,
+        	CREATE_TIME ,
+        	LAST_UPDATE_TIME ,
+        	MIN_ORDER_NUM ,
+        	MAX_ORDER_NUM ,
+        	INTEGRITY ,
+        	DELETE_FLAG,
+        	AUTO_FLAG,
+        	UPDATE_NAME_FLAG,
+        	GOODS_SALE_FALG
+        ) VALUES (
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{productId,jdbcType=NUMERIC} ,
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{goodsName,jdbcType=VARCHAR} ,
+        	#{goodsCancelFlag,jdbcType=VARCHAR} ,
+        	#{sysFlag,jdbcType=VARCHAR} ,
+        	#{branchType,jdbcType=VARCHAR} ,
+        	SYSDATE,
+        	SYSDATE,
+        	#{minOrderNum,jdbcType=NUMERIC} ,
+        	#{maxOrderNum,jdbcType=NUMERIC} ,
+        	#{integrity,jdbcType=VARCHAR} ,
+        	#{deleteFlag,jdbcType=NUMERIC} ,
+        	#{autoFlag,jdbcType=NUMERIC}, 
+        	#{updateNameFlag,jdbcType=NUMERIC}, 
+        	#{goodsSaleFalg,jdbcType=VARCHAR} 
+        )
+	</insert>
+	
+	<insert id="insertWithId" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+        INSERT INTO TNT_CRUISE_PACKAGE (
+        	TNT_CRUISE_PACKAGE_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	GOODS_NAME ,
+        	GOODS_CANCEL_FLAG ,
+        	SYS_FLAG ,
+        	BRANCH_TYPE ,
+        	CREATE_TIME ,
+        	LAST_UPDATE_TIME ,
+        	MIN_ORDER_NUM ,
+        	MAX_ORDER_NUM ,
+        	INTEGRITY ,
+        	DELETE_FLAG,
+        	AUTO_FLAG,
+        	UPDATE_NAME_FLAG,
+        	GOODS_SALE_FALG
+        ) VALUES (
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{productId,jdbcType=NUMERIC} ,
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{goodsName,jdbcType=VARCHAR} ,
+        	#{goodsCancelFlag,jdbcType=VARCHAR} ,
+        	#{sysFlag,jdbcType=VARCHAR} ,
+        	#{branchType,jdbcType=VARCHAR} ,
+        	SYSDATE,
+        	SYSDATE,
+        	#{minOrderNum,jdbcType=NUMERIC} ,
+        	#{maxOrderNum,jdbcType=NUMERIC} ,
+        	#{integrity,jdbcType=VARCHAR} ,
+        	#{deleteFlag,jdbcType=NUMERIC} ,
+        	#{autoFlag,jdbcType=NUMERIC}, 
+        	#{updateNameFlag,jdbcType=NUMERIC}, 
+        	#{goodsSaleFalg,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+        UPDATE TNT_CRUISE_PACKAGE SET
+	        PRODUCT_ID = #{productId,jdbcType=NUMERIC} ,
+	        GOODS_ID = #{goodsId,jdbcType=NUMERIC} ,
+	        GOODS_NAME = #{goodsName,jdbcType=VARCHAR} ,
+	        GOODS_CANCEL_FLAG = #{goodsCancelFlag,jdbcType=VARCHAR} ,
+	        GOODS_SALE_FALG = #{goodsSaleFalg,jdbcType=VARCHAR} ,
+	        SYS_FLAG = #{sysFlag,jdbcType=VARCHAR} ,
+	        BRANCH_TYPE = #{branchType,jdbcType=VARCHAR} ,
+	        CREATE_TIME = #{createTime,jdbcType=DATE} ,
+	        LAST_UPDATE_TIME = sysdate ,
+	        MIN_ORDER_NUM = #{minOrderNum,jdbcType=NUMERIC} ,
+	        MAX_ORDER_NUM = #{maxOrderNum,jdbcType=NUMERIC} ,
+	        INTEGRITY = #{integrity,jdbcType=VARCHAR} ,
+	        DELETE_FLAG = #{deleteFlag,jdbcType=NUMERIC} ,
+	        UPDATE_NAME_FLAG = #{updateNameFlag,jdbcType=NUMERIC}
+        WHERE 
+        	<if test="tntCruisePackageId !=null">
+	        	TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId,jdbcType=NUMERIC} 
+	        </if>
+	</update>
+	
+	
+	<update id="updateGoods" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+        UPDATE TNT_CRUISE_PACKAGE 
+	        <set>
+				LAST_UPDATE_TIME = SYSDATE,
+			<if test="goodsName != null  and goodsName !=''">
+				GOODS_NAME = decode(update_name_flag,0,#{goodsName,jdbcType=VARCHAR},1,goods_name,goods_name),
+			</if>
+			<if test="goodsCancelFlag != null  and goodsCancelFlag !=''">
+				GOODS_CANCEL_FLAG = #{goodsCancelFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="minOrderNum != null  and minOrderNum !=''">
+				MIN_ORDER_NUM = #{minOrderNum,jdbcType=DECIMAL},
+			</if>
+			<if test="maxOrderNum != null  and maxOrderNum !=''">
+				MAX_ORDER_NUM = #{maxOrderNum,jdbcType=DECIMAL},
+			</if>
+			<if test="integrity != null  and integrity !=''">
+				INTEGRITY = #{integrity,jdbcType=VARCHAR},
+			</if>
+			<if test="deleteFlag != null and deleteFlag !=''">
+				 DELETE_FLAG = #{deleteFlag,jdbcType=NUMERIC},
+	       	</if>
+			<if test="autoFlag != null and autoFlag !=''">
+				 AUTO_FLAG = #{autoFlag,jdbcType=NUMERIC},
+	       	</if>
+			<if test="updateNameFlag != null and updateNameFlag !=''">
+				 UPDATE_NAME_FLAG = #{updateNameFlag,jdbcType=NUMERIC},
+	       	</if>
+			<if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+				 GOODS_SALE_FALG = #{goodsSaleFalg,jdbcType=VARCHAR},
+	       	</if>
+		</set>
+       <where>
+        	<if test="productId !=null and productId !=''">
+	        	AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+	        </if>
+        	<if test="goodsId !=null and goodsId !=''">
+	        	AND GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+	        </if>
+	    </where>    
+	</update>
+	
+	
+	<update id="updateIntegrity" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+        UPDATE TNT_CRUISE_PACKAGE 
+        <set>
+			<if test="integrity != null">
+				INTEGRITY = #{integrity,jdbcType=VARCHAR} ,
+			</if>
+	    </set>
+        <where>
+	        <if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+        	<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+	    </where>     
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CRUISE_PACKAGE WHERE
+        TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId,jdbcType=DECIMAL}
+    </delete>
+    
+    <delete id="deleteAll">
+        DELETE FROM TNT_CRUISE_PACKAGE
+    </delete>
+    
+    <update id="deletePackageGoods" parameterType="Long">
+        UPDATE TNT_CRUISE_PACKAGE
+        SET  DELETE_FLAG = 1,
+         GOODS_CANCEL_FLAG = 'N',
+         GOODS_SALE_FALG = 'N',
+         INTEGRITY = 'N',
+         LAST_UPDATE_TIME = SYSDATE
+         WHERE
+        TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId,jdbcType=DECIMAL}
+    </update>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE 
+	        WHERE 
+		        TNT_CRUISE_PACKAGE_ID = #{id} 
+	</select>
+	<select id="findPageByProductId" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT *
+	    FROM TNT_CRUISE_PACKAGE <include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+     <select id="countByProductId" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+	      SELECT  COUNT(1)
+	      FROM TNT_CRUISE_PACKAGE ,tnt_product
+	      WHERE TNT_CRUISE_PACKAGE.product_id = tnt_product.product_id
+	      AND TNT_CRUISE_PACKAGE.goods_id = tnt_product.branch_id
+	      AND tnt_product.BRANCH_TYPE='COMSHIP'
+	      AND TNT_CRUISE_PACKAGE.DELETE_FLAG=0
+	    <if test="productId != null and productId !=''">
+			AND TNT_CRUISE_PACKAGE.PRODUCT_ID = #{productId}
+       	</if>
+       	<if test="goodsId != null and goodsId !=''">
+			AND TNT_CRUISE_PACKAGE.goods_id = #{goodsId}
+       	</if>
+       	<if test="goodsName != null and goodsName !=''">
+       	   AND TNT_CRUISE_PACKAGE.GOODS_NAME LIKE
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goodsName}))),'%')
+       	
+       	</if>
+       	<if test="goodsCancelFlag != null and goodsCancelFlag !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG = #{goodsCancelFlag}
+       	</if>
+       	<if test="integrity != null and integrity !=''">
+			AND TNT_CRUISE_PACKAGE.INTEGRITY = #{integrity}
+       	</if>
+       	<if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_SALE_FALG = #{goodsSaleFalg}
+       	</if>
+       	
+       	<if test="cabinType != null and cabinType !=''">
+	      AND exists 
+	    (select   1
+	          from TNT_CRUISE_COMP_RELATION      tccr,
+	               lvmama_pet.tnt_cruise_product tcp
+	         WHERE tccr.sub_product_id = tcp.product_id
+	           and tccr.sub_goods_id = tcp.goods_id
+	           and tcp.CABIN_TYPE = #{cabinType}
+	           AND tcp.goods_id in
+	               (select rel.sub_goods_id
+	                  from tnt_cruise_package_product_rel rel
+	                 where rel.sub_category_id = 2
+	                   and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id))
+	     </if> 
+	     <if test="cabinName != null and cabinName !=''">            
+	           AND exists 
+				(select   1
+	          from TNT_CRUISE_COMP_RELATION      tccr,
+	               lvmama_pet.tnt_cruise_product tcp
+	         WHERE tccr.sub_product_id = tcp.product_id
+	           and tccr.sub_goods_id = tcp.goods_id
+	           and tcp.GOODS_NAME = #{cabinName}
+	           AND tcp.goods_id in
+	               (select rel.sub_goods_id
+	                  from tnt_cruise_package_product_rel rel
+	                 where rel.sub_category_id = 2
+	                   and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)) 
+       	</if>
+    </select>
+    
+     <select id="countByProdId" resultType="Integer" parameterType="Long">
+        
+       SELECT COUNT(*) FROM TNT_CRUISE_PACKAGE WHERE PRODUCT_ID = #{productId}
+    </select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntCruisePackageId != null and tntCruisePackageId !=''">
+				AND TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId}
+	       	</if> 
+
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				AND GOODS_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goodsName}))),'%')
+	       	</if> 
+			<if test="goodsCancelFlag != null and goodsCancelFlag !=''">
+				AND GOODS_CANCEL_FLAG = #{goodsCancelFlag}
+	       	</if> 
+			<if test="sysFlag != null and sysFlag !=''">
+				AND SYS_FLAG = #{sysFlag}
+	       	</if> 
+			<if test="branchType != null and branchType !=''">
+				AND BRANCH_TYPE = #{branchType}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="lastUpdateTime != null and lastUpdateTime !=''">
+				AND LAST_UPDATE_TIME = #{lastUpdateTime}
+	       	</if> 
+			<if test="minOrderNum != null and minOrderNum !=''">
+				AND MIN_ORDER_NUM = #{minOrderNum}
+	       	</if> 
+			<if test="maxOrderNum != null and maxOrderNum !=''">
+				AND MAX_ORDER_NUM = #{maxOrderNum}
+	       	</if> 
+			<if test="integrity != null and integrity !=''">
+				AND INTEGRITY = #{integrity}
+	       	</if> 
+	       	<if test="deleteFlag != null and deleteFlag !=''">
+				AND DELETE_FLAG = #{deleteFlag}
+	       	</if>
+	       	<if test="updateNameFlag != null and updateNameFlag !=''">
+				AND UPDATE_NAME_FLAG = #{updateNameFlag}
+	       	</if>
+	       	<if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+			AND GOODS_SALE_FALG = #{goodsSaleFalg}
+       	    </if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntCruisePackageId != null and param.tntCruisePackageId !=''">
+				AND TNT_CRUISE_PACKAGE_ID = #{param.tntCruisePackageId}
+	       	</if>
+
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = #{param.goodsId}
+	       	</if>
+			<if test="param.goodsName != null and param.goodsName !=''">
+				AND GOODS_NAME LIKE
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.goodsName}))),'%')
+	       	</if>
+			<if test="param.goodsCancelFlag != null and param.goodsCancelFlag !=''">
+				AND GOODS_CANCEL_FLAG = #{param.goodsCancelFlag}
+	       	</if>
+			<if test="param.sysFlag != null and param.sysFlag !=''">
+				AND SYS_FLAG = #{param.sysFlag}
+	       	</if>
+			<if test="param.branchType != null and param.branchType !=''">
+				AND BRANCH_TYPE = #{param.branchType}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+			<if test="param.lastUpdateTime != null and param.lastUpdateTime !=''">
+				AND LAST_UPDATE_TIME = #{param.lastUpdateTime}
+	       	</if>
+			<if test="param.minOrderNum != null and param.minOrderNum !=''">
+				AND MIN_ORDER_NUM = #{param.minOrderNum}
+	       	</if>
+			<if test="param.maxOrderNum != null and param.maxOrderNum !=''">
+				AND MAX_ORDER_NUM = #{param.maxOrderNum}
+	       	</if>
+			<if test="param.integrity != null and param.integrity !=''">
+				AND INTEGRITY = #{param.integrity}
+	       	</if>
+	       	<if test="param.deleteFlag != null and param.deleteFlag !=''">
+				AND DELETE_FLAG = #{param.deleteFlag}
+	       	</if>
+	       	<if test="param.goodsSaleFalg != null and param.goodsSaleFalg !=''">
+			  AND GOODS_SALE_FALG = #{param.goodsSaleFalg}
+       	    </if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+        
+       SELECT COUNT(*) FROM ( SELECT <include refid="pagecolumns" /> FROM TNT_CRUISE_PACKAGE <include refid="where"/>)
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="pagecolumns" />
+	    FROM TNT_CRUISE_PACKAGE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="goodsCount" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+          SELECT  COUNT(1)
+        FROM TNT_CRUISE_PACKAGE ,tnt_product
+	    WHERE TNT_CRUISE_PACKAGE.product_id = tnt_product.product_id
+	    AND TNT_CRUISE_PACKAGE.goods_id = tnt_product.branch_id
+	    AND tnt_product.BRANCH_TYPE='COMSHIP'
+	    AND TNT_CRUISE_PACKAGE.DELETE_FLAG=0
+        <if test="productId != null and productId !=''">
+			AND TNT_CRUISE_PACKAGE.PRODUCT_ID = #{productId}
+       	</if>
+       	
+       	<if test="goodsId != null and goodsId !=''">
+			AND TNT_CRUISE_PACKAGE.goods_id = #{goodsId}
+       	</if>
+       	<if test="goodsName != null and goodsName !=''">
+       	   AND TNT_CRUISE_PACKAGE.GOODS_NAME LIKE
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goodsName}))),'%')
+       	
+       	</if>
+       	<if test="goodsCancelFlag != null and goodsCancelFlag !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG = #{goodsCancelFlag}
+       	</if>
+       	<if test="integrity != null and integrity !=''">
+			AND TNT_CRUISE_PACKAGE.INTEGRITY = #{integrity}
+       	</if>
+       	<if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_SALE_FALG = #{goodsSaleFalg}
+       	</if>
+       	<if test="cabinTypes != null and cabinTypes !=''">
+       		and exists(
+       			select 1 from lvmama_pet.tnt_cruise_product tcp
+       			 WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 2 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+       			
+       			 AND tcp.CABIN_TYPE  in
+       			  <foreach collection="cabinTypes" item="cabinTypeItem" index="index"
+		            open="(" close=")" separator=",">
+       			  		#{cabinTypeItem}
+       			  </foreach> 
+       		)
+       	</if>
+    </select>
+    
+    <select id="findComGoodsList" resultMap="resultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+    	SELECT TNT_CRUISE_PACKAGE.Tnt_Cruise_Package_Id,
+              TNT_CRUISE_PACKAGE.PRODUCT_ID,
+              TNT_CRUISE_PACKAGE.GOODS_ID,
+              TNT_CRUISE_PACKAGE.GOODS_NAME,
+              nvl(TNT_CRUISE_PACKAGE.MIN_ORDER_NUM,0) MIN_ORDER_NUM,
+              nvl(TNT_CRUISE_PACKAGE.MAX_ORDER_NUM,0) MAX_ORDER_NUM,
+              TNT_CRUISE_PACKAGE.INTEGRITY,
+              TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG,
+              TNT_CRUISE_PACKAGE.GOODS_SALE_FALG,
+              TNT_CRUISE_PACKAGE.DELETE_FLAG,
+              tnt_product.TNT_PRODUCT_ID,
+              temp.CABIN_TYPE,
+              temp.SHIP_BRANCH_ID,
+              temp.CABIN_NAME
+       FROM 
+      (SELECT TCP.CABIN_TYPE AS CABIN_TYPE,
+                TCP.BRANCH_ID AS SHIP_BRANCH_ID,
+                TCP.GOODS_NAME||'('|| tcp.goods_id ||')' AS CABIN_NAME,
+                TCPPR.TNT_CRUISE_PACKAGE_ID
+           FROM LVMAMA_PET.TNT_CRUISE_PRODUCT TCP
+           LEFT JOIN LVMAMA_PET.TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR
+             ON (TCP.PRODUCT_ID = TCPPR.SUB_PRODUCT_ID AND
+                TCP.GOODS_ID = TCPPR.SUB_GOODS_ID)
+          WHERE TCPPR.Product_Id = #{productId}
+            AND TCPPR.SUB_CATEGORY_ID = 2) temp ,LVMAMA_PET.TNT_CRUISE_PACKAGE,lvmama_pet.tnt_product 
+            WHERE TNT_CRUISE_PACKAGE.TNT_CRUISE_PACKAGE_ID = temp.TNT_CRUISE_PACKAGE_ID 
+            AND TNT_CRUISE_PACKAGE.product_id = tnt_product.product_id
+            AND TNT_CRUISE_PACKAGE.goods_id = tnt_product.branch_id
+            AND TNT_CRUISE_PACKAGE.goods_id = tnt_product.branch_id
+            AND tnt_product.BRANCH_TYPE='COMSHIP'
+            AND TNT_CRUISE_PACKAGE.DELETE_FLAG=0
+       	<if test="goodsId != null and goodsId !=''">
+			AND TNT_CRUISE_PACKAGE.goods_id = #{goodsId}
+       	</if>
+       	<if test="goodsName != null and goodsName !=''">
+       	   AND TNT_CRUISE_PACKAGE.GOODS_NAME LIKE
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goodsName}))),'%')
+       	
+       	</if>
+       	<if test="goodsCancelFlag != null and goodsCancelFlag !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG = #{goodsCancelFlag}
+       	</if>
+       	<if test="integrity != null and integrity !=''">
+			AND TNT_CRUISE_PACKAGE.INTEGRITY = #{integrity}
+       	</if>
+       	<if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_SALE_FALG = #{goodsSaleFalg}
+       	</if>
+       	ORDER BY TNT_CRUISE_PACKAGE.INTEGRITY DESC, GOODS_CANCEL_FLAG DESC, GOODS_ID
+    </select>
+    
+    <select id="findGoodsPage" resultMap="resultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT  TNT_CRUISE_PACKAGE.Tnt_Cruise_Package_Id,
+    			TNT_CRUISE_PACKAGE.PRODUCT_ID,
+                        TNT_CRUISE_PACKAGE.GOODS_ID,
+                        TNT_CRUISE_PACKAGE.GOODS_NAME,
+                        nvl(TNT_CRUISE_PACKAGE.MIN_ORDER_NUM,0) MIN_ORDER_NUM,
+                        nvl(TNT_CRUISE_PACKAGE.MAX_ORDER_NUM,0) MAX_ORDER_NUM,
+                        TNT_CRUISE_PACKAGE.INTEGRITY,
+                        TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG,
+                        TNT_CRUISE_PACKAGE.GOODS_SALE_FALG,
+                        tnt_product.TNT_PRODUCT_ID,
+                        
+                     (select   tcp.CABIN_TYPE from lvmama_pet.tnt_cruise_product tcp
+             WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 2 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+               ) CABIN_TYPE ,  
+                 
+             (select   tcp.GOODS_NAME||'('|| tcp.goods_id ||')' from lvmama_pet.tnt_cruise_product tcp
+             WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 2 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+               ) CABIN_NAME ,
+               
+          (select   listagg(tcp.GOODS_NAME||'('|| tcp.goods_id ||')',',') within group(order by tcp.GOODS_NAME)
+             from lvmama_pet.tnt_cruise_product tcp
+             WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 10 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+               ) SHIP_ADDITION_NAME ,
+               
+        (select   tcp.GOODS_NAME||'('|| tcp.goods_id ||')'
+          from lvmama_pet.tnt_cruise_product tcp
+             WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 9 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+               ) SHORE_NAME
+	    FROM TNT_CRUISE_PACKAGE ,tnt_product
+	    WHERE TNT_CRUISE_PACKAGE.product_id = tnt_product.product_id
+	    AND TNT_CRUISE_PACKAGE.goods_id = tnt_product.branch_id
+	    AND tnt_product.BRANCH_TYPE='COMSHIP'
+	    AND TNT_CRUISE_PACKAGE.DELETE_FLAG=0
+		<if test="param.productId != null and param.productId !=''">
+			AND TNT_CRUISE_PACKAGE.PRODUCT_ID = #{param.productId}
+       	</if>
+       	<if test="param.goodsId != null and param.goodsId !=''">
+			AND TNT_CRUISE_PACKAGE.goods_id = #{param.goodsId}
+       	</if>
+       	<if test="param.goodsName != null and param.goodsName !=''">
+       	   AND TNT_CRUISE_PACKAGE.GOODS_NAME LIKE
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.goodsName}))),'%')
+       	
+       	</if>
+       	<if test="param.goodsCancelFlag != null and param.goodsCancelFlag !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_CANCEL_FLAG = #{param.goodsCancelFlag}
+       	</if>
+       	<if test="param.integrity != null and param.integrity !=''">
+			AND TNT_CRUISE_PACKAGE.INTEGRITY = #{param.integrity}
+       	</if>
+       	<if test="param.goodsSaleFalg != null and param.goodsSaleFalg !=''">
+			AND TNT_CRUISE_PACKAGE.GOODS_SALE_FALG = #{param.goodsSaleFalg}
+       	</if>
+       	<if test="param.cabinType != null and param.cabinType !=''">
+			AND exists 
+		(select   1
+          from TNT_CRUISE_COMP_RELATION      tccr,
+               lvmama_pet.tnt_cruise_product tcp
+         WHERE tccr.sub_product_id = tcp.product_id
+           and tccr.sub_goods_id = tcp.goods_id
+           and tcp.CABIN_TYPE = #{param.cabinType}
+           AND tcp.goods_id in
+               (select rel.sub_goods_id
+                  from tnt_cruise_package_product_rel rel
+                 where rel.sub_category_id = 2
+                   and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id))
+       	</if>
+       	
+       	<if test="param.cabinTypes != null and param.cabinTypes !=''">
+       		and exists(
+       			select 1 from lvmama_pet.tnt_cruise_product tcp
+       			 WHERE EXISTS (SELECT 1 FROM lvmama_pet.tnt_cruise_package_product_rel rel where rel.sub_category_id = 2 AND tcp.goods_id = rel.sub_goods_id  and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id)
+       			
+       			 AND tcp.CABIN_TYPE  in
+       			  <foreach collection="param.cabinTypes" item="cabinTypeItem" index="index"
+		            open="(" close=")" separator=",">
+       			  		#{cabinTypeItem}
+       			  </foreach> 
+       		)
+       	</if>
+       	
+       	<if test="param.cabinName != null and param.cabinName !=''">
+			AND exists 
+			(select   1
+          from TNT_CRUISE_COMP_RELATION      tccr,
+               lvmama_pet.tnt_cruise_product tcp
+         WHERE tccr.sub_product_id = tcp.product_id
+           and tccr.sub_goods_id = tcp.goods_id
+           and tcp.GOODS_NAME = #{param.cabinName}
+           AND tcp.goods_id in
+               (select rel.sub_goods_id
+                  from tnt_cruise_package_product_rel rel
+                 where rel.sub_category_id = 2
+                   and rel.goods_id = TNT_CRUISE_PACKAGE.Goods_Id))
+       	</if>
+		
+		order by TNT_CRUISE_PACKAGE.INTEGRITY desc,GOODS_CANCEL_FLAG desc,GOODS_ID
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="getByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE 
+		   <include refid="where"/>
+	</select>
+	
+	<select id="findList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+       SELECT <include refid="columns" /> 
+       FROM  TNT_CRUISE_PACKAGE 
+        <include refid="where"/>
+    </select>
+	<select id="getVoByProdId" resultMap="baseResultMap" parameterType="java.lang.Long">
+	 	SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE 
+		   where PRODUCT_ID = #{productId} and Rownum=1
+	</select>
+	
+	<select id="getInfoByPKId" resultMap="baseResultMap" parameterType="java.lang.Long">
+	 	SELECT *
+		    FROM TNT_CRUISE_PACKAGE 
+		   		WHERE TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId} 
+	</select>
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insertByParam" parameterType="com.lvmama.tnt.prod.po.TntCruisePackage">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCruisePackageId"
+			order="BEFORE">
+			select  TNT_CRUISE_PACKAGE_SEQ.nextval as ID from dual
+		</selectKey>
+        INSERT INTO TNT_CRUISE_PACKAGE (
+       	    GOODS_ID ,
+        	TNT_CRUISE_PACKAGE_ID,
+        	CREATE_TIME,
+        	LAST_UPDATE_TIME,
+
+	      <if test="productId != null and productId !=''">
+				PRODUCT_ID ,
+	      </if>
+	       <if test="goodsName != null and goodsName !=''">
+				GOODS_NAME ,
+	      </if>
+	       <if test="tntCruisePackageId != null and tntCruisePackageId !=''">
+				GOODS_CANCEL_FLAG ,
+	      </if>
+	       <if test="sysFlag != null and sysFlag !=''">
+				SYS_FLAG ,
+	      </if>
+         	<if test="branchType != null and branchType !=''">
+				BRANCH_TYPE ,
+	      </if>
+	      <if test="minOrderNum != null and minOrderNum !=''">
+				MIN_ORDER_NUM ,
+	      </if>
+	      <if test="maxOrderNum != null and maxOrderNum !=''">
+				MAX_ORDER_NUM ,
+	      </if>
+	      <if test="integrity != null and integrity !=''">
+				INTEGRITY ,
+	      </if>
+	      <if test="autoFlag != null and autoFlag !=''">
+				AUTO_FLAG ,
+	      </if>
+	      <if test="updateNameFlag != null and updateNameFlag !=''">
+				UPDATE_NAME_FLAG ,
+	      </if>
+	       <if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+				GOODS_SALE_FALG ,
+	      </if>
+	      
+		  DELETE_FLAG
+        ) VALUES (
+            #{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	sysdate,
+        	sysdate,
+	       <if test="productId != null and productId !=''">
+				#{productId,jdbcType=NUMERIC} ,
+	      </if>
+	       <if test="goodsName != null and goodsName !=''">
+				#{goodsName,jdbcType=VARCHAR} ,
+	      </if>
+	       <if test="tntCruisePackageId != null and tntCruisePackageId !=''">
+				#{goodsCancelFlag,jdbcType=VARCHAR} ,
+	      </if>
+	       <if test="sysFlag != null and sysFlag !=''">
+				#{sysFlag,jdbcType=VARCHAR} ,
+	      </if>
+          <if test="branchType != null and branchType !=''">
+				#{branchType,jdbcType=VARCHAR} ,
+	      </if>
+	      <if test="minOrderNum != null and minOrderNum !=''">
+				#{minOrderNum,jdbcType=NUMERIC} ,
+	      </if>
+	      <if test="maxOrderNum != null and maxOrderNum !=''">
+				#{maxOrderNum,jdbcType=NUMERIC} ,
+	      </if>
+	      <if test="integrity != null and integrity !=''">
+				#{integrity,jdbcType=VARCHAR} ,
+	      </if>
+	      <if test="autoFlag != null and autoFlag !=''">
+				#{autoFlag,jdbcType=NUMERIC} ,
+	      </if>
+	      
+	      <if test="updateNameFlag != null and updateNameFlag !=''">
+	         	#{updateNameFlag,jdbcType=NUMERIC} ,
+	      </if>
+	      <if test="goodsSaleFalg != null and goodsSaleFalg !=''">
+	      	 #{goodsSaleFalg,jdbcType=VARCHAR} ,
+	      </if>
+	      0
+        )
+	</insert>
+	
+	
+	<select id="findByMap" resultMap="baseResultMap" parameterType="map">
+	 	SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE 
+		 	<include refid="where"/>
+	</select>
+	
+	  <insert id="batchInsert"  parameterType="java.util.List">  
+         
+        INSERT INTO TNT_CRUISE_PACKAGE (
+       		TNT_CRUISE_PACKAGE_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	GOODS_NAME ,
+        	GOODS_CANCEL_FLAG ,
+        	SYS_FLAG ,
+        	BRANCH_TYPE ,
+        	CREATE_TIME ,
+        	LAST_UPDATE_TIME ,
+        	MIN_ORDER_NUM ,
+        	MAX_ORDER_NUM ,
+        	INTEGRITY ,
+        	DELETE_FLAG,
+        	AUTO_FLAG,
+        	UPDATE_NAME_FLAG,
+        	GOODS_SALE_FALG	
+        )
+        SELECT 
+        	TNT_CRUISE_PACKAGE_SEQ.nextval,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	GOODS_NAME ,
+        	GOODS_CANCEL_FLAG ,
+        	SYS_FLAG ,
+        	BRANCH_TYPE ,
+        	CREATE_TIME ,
+        	LAST_UPDATE_TIME ,
+        	MIN_ORDER_NUM ,
+        	MAX_ORDER_NUM ,
+        	INTEGRITY ,
+        	DELETE_FLAG,
+        	AUTO_FLAG,
+        	UPDATE_NAME_FLAG,
+        	GOODS_SALE_FALG
+			 FROM(
+        <foreach collection="list" item="item" index="index" separator="union all" >  
+            SELECT 
+        	#{productId,jdbcType=NUMERIC} AS      PRODUCT_ID ,           
+        	#{tntCruisePackageId,jdbcType=NUMERIC} AS  GOODS_ID ,             
+        	#{goodsName,jdbcType=VARCHAR} AS         GOODS_NAME ,           
+        	#{goodsCancelFlag,jdbcType=VARCHAR} AS   GOODS_CANCEL_FLAG ,    
+        	#{sysFlag,jdbcType=VARCHAR} AS       SYS_FLAG ,             
+        	#{branchType,jdbcType=VARCHAR} AS    BRANCH_TYPE ,          
+        	SYSDATE AS   CREATE_TIME ,          
+        	SYSDATE AS   LAST_UPDATE_TIME ,     
+        	#{minOrderNum,jdbcType=NUMERIC} AS     MIN_ORDER_NUM ,        
+        	#{maxOrderNum,jdbcType=NUMERIC} AS    MAX_ORDER_NUM ,        
+        	#{integrity,jdbcType=VARCHAR} AS   INTEGRITY ,                          
+        	#{deleteFlag,jdbcType=NUMERIC} AS  DELETE_FLAG,           
+        	#{autoFlag,jdbcType=NUMERIC} AS   AUTO_FLAG,             
+        	#{updateNameFlag,jdbcType=NUMERIC} AS  UPDATE_NAME_FLAG,      
+        	#{goodsSaleFalg,jdbcType=VARCHAR}  AS GOODS_SALE_FALG        
+ 			FROM DUAL
+        </foreach>  
+        )
+    </insert>  
+    
+    <select id="selectPkValue" resultType="long" flushCache="true">
+    	select  TNT_CRUISE_PACKAGE_SEQ.nextval from dual
+    </select>
+</mapper>
+

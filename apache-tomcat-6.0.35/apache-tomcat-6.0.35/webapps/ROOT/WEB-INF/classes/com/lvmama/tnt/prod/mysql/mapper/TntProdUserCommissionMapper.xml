@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.lvmama.tnt.prod.mysql.mapper.TntProdUserCommissionMapper">
+	<resultMap id="tntProductVoResult" type="com.lvmama.tnt.prod.po.TntProductUser">
+		<result property="tntProductUserId" column="TNT_PRODUCT_USER_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="type" column="TYPE" />
+		<result property="commissionMode" column="COMMISSION_MODE" />
+		<result property="commissionRate" column="COMMISSION_RATE" />
+		<result property="commissionStartDate" column="COMMISSION_STARTDATE" />
+		<result property="commissionEndDate" column="COMMISSION_ENDDATE" />
+		<result property="commissionVolid" column="COMMISSION_VOLID" />
+	</resultMap>
+	<sql id="columns">
+		*
+	</sql>
+	<sql id="where">
+		<if test="productId != null and productId !=''">
+			AND pu.PRODUCT_ID = #{productId}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND pu.GOODS_ID = #{goodsId}
+		</if>
+		<if test="userId != null and userId !=''">
+			AND pu.USER_ID = #{userId}
+		</if>
+		<if test="type != null and type !=''">
+			AND pu.TYPE = #{type}
+		</if>
+
+		<if test="commissionMode != null and commissionMode !=''">
+			AND pu.COMMISSION_MODE = #{commissionMode}
+
+		</if>
+		<if test="commissionRate != null">
+			AND pu.COMMISSION_RATE = #{commissionRate}
+		</if>
+		<if test="commissionVolid != null and commissionVolid !=''">
+			AND pu.COMMISSION_VOLID = #{commissionVolid}
+		</if>
+	</sql>
+	
+	
+	
+	<select id="selectOne" resultMap="tntProductVoResult" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		select
+		<include refid="columns" />
+		from TNT_PROD_USER_COMMISSION pu
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		INSERT INTO TNT_PROD_USER_COMMISSION (
+		TNT_PRODUCT_USER_ID,
+		PRODUCT_ID ,
+		GOODS_ID ,
+		USER_ID ,
+		CREATE_TIME,
+		TYPE,
+		COMMISSION_MODE,
+		COMMISSION_RATE,
+		COMMISSION_VOLID,
+		COMMISSION_STARTDATE,
+		COMMISSION_ENDDATE
+		) VALUES
+		(#{tntProductUserId,jdbcType=DECIMAL}
+		,
+		#{productId,jdbcType=DECIMAL}
+		,
+		#{goodsId,jdbcType=DECIMAL} ,
+		#{userId,jdbcType=DECIMAL},
+		now() ,
+		#{type,jdbcType=VARCHAR},
+		#{commissionMode,jdbcType=VARCHAR},
+		#{commissionRate,jdbcType=DECIMAL},
+		#{commissionVolid,jdbcType=VARCHAR},
+		#{commissionStartDate,jdbcType=TIMESTAMP},
+		#{commissionEndDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		UPDATE TNT_PROD_USER_COMMISSION
+		<set>
+			<if test="commissionMode != null">
+				COMMISSION_MODE = #{commissionMode,jdbcType=VARCHAR},
+			</if>
+			<if test="commissionVolid != null">
+				COMMISSION_VOLID = #{commissionVolid,jdbcType=VARCHAR},
+			</if>
+			<if test="commissionRate != null">
+				COMMISSION_RATE = #{commissionRate,jdbcType=VARCHAR},
+			</if>
+				COMMISSION_STARTDATE = #{commissionStartDate,jdbcType=TIMESTAMP},
+				COMMISSION_ENDDATE = #{commissionEndDate,jdbcType=TIMESTAMP}
+		</set>
+		<where>
+			USER_ID = #{userId,jdbcType=DECIMAL} and
+			GOODS_ID=#{goodsId,jdbcType=DECIMAL} and
+			TYPE=#{type,jdbcType=VARCHAR} 
+		</where>
+	</update>
+	<select id="queryByParams" resultMap="tntProductVoResult" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		select
+		<include refid="columns" />
+		from TNT_PROD_USER_COMMISSION pu
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+</mapper>

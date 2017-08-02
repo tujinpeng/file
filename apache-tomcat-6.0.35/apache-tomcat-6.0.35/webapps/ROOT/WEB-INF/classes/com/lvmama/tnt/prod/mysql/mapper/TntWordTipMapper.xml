@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.lvmama.tnt.prod.mysql.mapper.TntWordTipMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntWordTip">
+		<result property="id" column="ID" />
+		<result property="proId" column="PROID" />
+		<result property="proName" column="PRONAME" />
+		<result property="wordTip" column="WORDTIP" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+	</resultMap>
+	<sql id="columns">
+		<![CDATA[
+		ID,PROID,PRONAME,WORDTIP,CATEGORY_ID,CREATE_TIME,UPDATE_TIME
+	    ]]>
+	</sql>
+	<sql id="wherewordtipSQL">
+		<where>
+			<if test="param.proId!=null and param.proId!=''">
+				AND PROID = #{param.proId}
+			</if>
+			<if test="param.proName!=null and param.proName!=''">
+				AND PRONAME = #{param.proName}
+			</if>
+			<if test="param.wordTip!=null and param.wordTip!=''">
+				AND WORDTIP = #{param.wordTip}
+			</if>
+		</where>
+	</sql>
+	<sql id="wherewordtipSQLcount">
+		<where>
+			<if test="proId!=null and proId!=''">
+				AND PROID = #{proId}
+			</if>
+			<if test="proName!=null and proName!=''">
+				AND PRONAME = #{proName}
+			</if>
+			<if test="wordTip!=null and wordTip!=''">
+				AND WORDTIP = #{wordTip}
+			</if>
+		</where>
+	</sql>
+	
+	<insert id="insertWordTip" useGeneratedKeys="true" parameterType="com.lvmama.tnt.prod.po.TntWordTip">
+		INSERT INTO TNT_PRODUCT_WORDTIP (
+		PROID ,
+		PRONAME ,
+		WORDTIP,
+		CATEGORY_ID,
+		CREATE_TIME
+		) VALUES (
+		#{proId,jdbcType=DECIMAL},
+		#{proName,jdbcType=VARCHAR},
+		#{wordTip,jdbcType=VARCHAR},
+		#{categoryId,jdbcType=DECIMAL},
+		now()
+		)
+	</insert>
+	
+	<select id="queryWordTipList" resultMap="baseResultMap"
+		parameterType="page">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT_WORDTIP
+		LIMIT (#{currentPage}-1)*10,10
+	</select>
+	
+	<select id="fetchPageW" resultMap="baseResultMap"
+		parameterType="page">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT_WORDTIP
+		<include refid="wherewordtipSQL" />
+		LIMIT #{startRow},#{pageSize}
+	</select>
+	
+	<select id="selectByProId" resultMap="baseResultMap" 
+		parameterType="java.lang.Long">
+		SELECT *
+		FROM TNT_PRODUCT_WORDTIP
+		WHERE PROID = #{proId}
+	</select>
+	
+	<update id="queryWordupdate">
+		UPDATE TNT_PRODUCT_WORDTIP
+		<set>
+			UPDATE_TIME=now()
+			<if test="wordTip != null">
+				,WORDTIP = #{wordTip}
+			</if>
+		</set>
+		WHERE PROID = #{proId}
+	</update>
+	
+	<update id="categoryupdate">
+		UPDATE TNT_PRODUCT_WORDTIP
+		<set>
+			WORDTIP = #{wordTip}
+		</set>
+		WHERE CATEGORY_ID IN #{proId}
+	</update>
+	
+	<select id="wordtipCount" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.po.TntWordTip">
+		SELECT count(1) FROM TNT_PRODUCT_WORDTIP 
+		<include refid="wherewordtipSQLcount" />
+	</select>
+	
+	<update id="updateByCategoryList" parameterType="java.util.Map">
+		UPDATE TNT_PRODUCT_WORDTIP
+		<set>
+			UPDATE_TIME=now()
+			<if test="wordTip != null">
+				,WORDTIP = #{wordTip}
+			</if>
+		</set>
+		WHERE 
+		 1=1
+		 <if test="categoryList != null and categoryList.size>0">
+			AND CATEGORY_ID in
+			<foreach item="item" index="index" collection="categoryList" open="(" separator="," close=")">
+				 #{item} 
+			</foreach>
+		</if> 
+	</update>
+	
+	<delete id="todelete" parameterType="Long">
+		DELETE FROM TNT_PRODUCT_WORDTIP
+		WHERE PROID = #{proId}
+	 </delete> 
+</mapper>

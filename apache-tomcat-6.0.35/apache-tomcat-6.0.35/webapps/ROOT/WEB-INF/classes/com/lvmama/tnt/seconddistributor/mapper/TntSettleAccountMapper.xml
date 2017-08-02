@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.seconddistributor.mapper.TntSettleAccountMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.seconddistributor.po.TntSettleAccount">
+        <result property="settleAccountId" column="SETTLE_ACCOUNT_ID"/>
+        <result property="settleAccountNum" column="SETTLE_ACCOUNT_NUM"/>
+        <result property="settleAccountStatus" column="SETTLE_ACCOUNT_STATUS"/>
+        <result property="settleOrderStatus" column="SETTLE_ORDER_STATUS"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="submitTime" column="SUBMIT_TIME"/>
+        <result property="settleTime" column="SETTLE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="settleMoney" column="SETTLE_MONEY"/>
+        <result property="remark" column="REMARK"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		SETTLE_ACCOUNT_ID,SETTLE_ACCOUNT_NUM,SETTLE_ACCOUNT_STATUS,SETTLE_ORDER_STATUS,USER_ID,SUBMIT_TIME,SETTLE_TIME,CREATE_TIME,
+		UPDATE_TIME,SETTLE_MONEY,REMARK
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.seconddistributor.po.TntSettleAccount">
+        <selectKey resultType="java.lang.Long" keyProperty="settleAccountId" order="BEFORE">
+			select  TNT_SETTLE_ACCOUNT_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_SETTLE_ACCOUNT (
+        	SETTLE_ACCOUNT_ID ,
+        	SETTLE_ACCOUNT_NUM ,
+        	SETTLE_ACCOUNT_STATUS ,
+        	SETTLE_ORDER_STATUS ,
+        	USER_ID ,
+        	SUBMIT_TIME ,
+        	SETTLE_TIME ,
+        	CREATE_TIME ,
+        	UPDATE_TIME ,
+        	SETTLE_MONEY,
+        	REMARK
+        ) VALUES (
+        	#{settleAccountId} ,
+        	#{settleAccountNum,jdbcType=VARCHAR} ,
+        	#{settleAccountStatus,jdbcType=VARCHAR} ,
+        	#{settleOrderStatus,jdbcType=VARCHAR} ,
+        	#{userId,jdbcType=INTEGER} ,
+        	#{submitTime,jdbcType=VARCHAR} ,
+        	#{settleTime,jdbcType=TIMESTAMP} ,
+        	#{createTime,jdbcType=TIMESTAMP} ,
+        	#{updateTime,jdbcType=TIMESTAMP} ,
+        	#{settleMoney,jdbcType=INTEGER},
+        	#{remark,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.seconddistributor.po.TntSettleAccount">
+        UPDATE TNT_SETTLE_ACCOUNT 
+        	<set>
+        		<if test="settleAccountNum != null and settleAccountNum !='' ">
+			        SETTLE_ACCOUNT_NUM = #{settleAccountNum,jdbcType=VARCHAR},
+        		</if>
+        		<if test="settleAccountStatus != null and settleAccountStatus !='' ">
+			        SETTLE_ACCOUNT_STATUS = #{settleAccountStatus,jdbcType=VARCHAR} ,
+        		</if>
+        		<if test="settleOrderStatus != null and settleOrderStatus !='' ">
+			        SETTLE_ORDER_STATUS = #{settleOrderStatus,jdbcType=VARCHAR} ,
+        		</if>
+        		<if test="userId !=null and userId !='' ">
+			        USER_ID = #{userId,jdbcType=DECIMAL} ,
+        		</if>
+        		<if test="submitTime != null and submitTime !='' ">
+			        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP} ,
+        		</if>
+        		<if test="settleTime !=null and settleTime !='' ">
+			        SETTLE_TIME = #{settleTime,jdbcType=TIMESTAMP} ,
+        		</if>
+        		<if test="createTime !=null and createTime !='' ">
+			        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP} ,
+        		</if>
+        		<if test="updateTime !=null and updateTime !='' ">
+			        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP} ,
+        		</if>
+        		<if test="settleMoney !=null and settleMoney !='' ">
+			        SETTLE_MONEY = #{settleMoney,jdbcType=DECIMAL},
+        		</if>
+        		<if test="remark !=null and remark !='' ">
+        			REMARK = #{remark,jdbcType=VARCHAR}
+        		</if>
+        	</set>
+        WHERE 
+        	<if test="settleAccountId !=null">
+	        	SETTLE_ACCOUNT_ID = #{settleAccountId}
+	        </if>
+	</update>
+
+	<update id="subtractSettleBySettleAccountNum" parameterType="com.lvmama.tnt.seconddistributor.po.TntSettleAccount">
+		UPDATE TNT_SETTLE_ACCOUNT 
+        	<set>
+        		<if test="settleMoney !=null and settleMoney !='' ">
+			        SETTLE_MONEY = SETTLE_MONEY-#{settleMoney,jdbcType=DECIMAL},
+        		</if>
+        		<if test="updateTime !=null and updateTime !='' ">
+			        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP} ,
+        		</if>
+        	</set>
+        WHERE 
+        	<if test="settleAccountNum !=null and settleAccountNum !=''">
+	        	SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+	        </if>
+	</update>
+	
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_SETTLE_ACCOUNT WHERE
+        SETTLE_ACCOUNT_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_SETTLE_ACCOUNT 
+	        WHERE 
+		        SETTLE_ACCOUNT_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="settleAccountId != null and settleAccountId !=''">
+				AND SETTLE_ACCOUNT_ID = #{settleAccountId}
+	       	</if> 
+			<if test="settleAccountNum != null and settleAccountNum !=''">
+				AND SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+	       	</if> 
+			<if test="settleAccountStatus != null and settleAccountStatus !=''">
+				AND SETTLE_ACCOUNT_STATUS = #{settleAccountStatus}
+	       	</if> 
+			<if test="settleOrderStatus != null and settleOrderStatus !=''">
+				AND SETTLE_ORDER_STATUS = #{settleOrderStatus}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="submitTime != null and submitTime !=''">
+				AND SUBMIT_TIME &gt;= #{submitTime}
+	       	</if> 
+	       	<if test="submitTimeEnd != null and submitTimeEnd !=''">
+				AND SUBMIT_TIME &lt;= #{submitTimeEnd}
+	       	</if> 
+			<if test="settleTime != null and settleTime !=''">
+				AND SETTLE_TIME = #{settleTime}
+	       	</if> 
+	       	
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+			<if test="settleMoney != null and settleMoney !=''">
+				AND SETTLE_MONEY = #{settleMoney}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.settleAccountId != null and param.settleAccountId !=''">
+				AND SETTLE_ACCOUNT_ID = #{param.settleAccountId}
+	       	</if> 
+			<if test="param.settleAccountNum != null and param.settleAccountNum !=''">
+				AND SETTLE_ACCOUNT_NUM = #{param.settleAccountNum}
+	       	</if> 
+			<if test="param.settleAccountStatus != null and param.settleAccountStatus !=''">
+				AND SETTLE_ACCOUNT_STATUS = #{param.settleAccountStatus}
+	       	</if> 
+			<if test="param.settleOrderStatus != null and param.settleOrderStatus !=''">
+				AND SETTLE_ORDER_STATUS = #{param.settleOrderStatus}
+	       	</if> 
+			<if test="param.userId != null and param.userId !=''">
+				AND USER_ID = #{param.userId}
+	       	</if> 
+			<if test="param.submitTime != null and param.submitTime !=''">
+				AND SUBMIT_TIME &gt;= #{param.submitTime}
+	       	</if> 
+	       	<if test="param.submitTimeEnd != null and param.submitTimeEnd !=''">
+				AND SUBMIT_TIME &lt;= #{param.submitTimeEnd}
+	       	</if> 
+			<if test="param.settleTime != null and param.settleTime !=''">
+				AND SETTLE_TIME = #{param.settleTime}
+	       	</if> 
+	       	
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if> 
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if> 
+			<if test="param.settleMoney != null and param.settleMoney !=''">
+				AND SETTLE_MONEY = #{param.settleMoney}
+	       	</if> 
+		</where>
+		
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.seconddistributor.po.TntSettleAccount">
+        SELECT count(*) FROM TNT_SETTLE_ACCOUNT 
+		<include refid="where"/>    
+    </select>
+    
+    <!--  mysql分页查询-->
+    <select id="getSettleAccountList" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+    	FROM TNT_SETTLE_ACCOUNT 
+    	<include refid="where"/>
+    	ORDER BY SUBMIT_TIME DESC
+    	LIMIT #{startRow},#{pageSize}
+    </select>
+    
+    <!-- oracle分页查询 -->
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+		SELECT <include refid="columns" />
+	    FROM TNT_SETTLE_ACCOUNT 	
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

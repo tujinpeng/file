@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mysql.mapper.TntDistCategoryMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntDistCategory">
+        <result property="tntDistCategoryId" column="TNT_DIST_CATEGORY_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="subProductTypeId" column="SUB_PRODUCT_TYPE_ID"/>
+        <result property="productTypeId" column="PRODUCT_TYPE_ID"/>
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="subProductType" column="SUB_PRODUCT_TYPE"/>
+        <result property="payOnline" column="PAY_ONLINE"/>
+        <result property="packageType" column="PACKAGE_TYPE"/>
+        <result property="productClassId" column="PRODUCT_CLASS_ID"/>
+        <result property="productClassCode" column="PRODUCT_CLASS_CODE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_DIST_CATEGORY_ID,USER_ID,SUB_PRODUCT_TYPE_ID,PRODUCT_TYPE_ID,PRODUCT_TYPE,SUB_PRODUCT_TYPE,PAY_ONLINE,PACKAGE_TYPE,PRODUCT_CLASS_ID,PRODUCT_CLASS_CODE
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntDistCategory">
+        INSERT INTO TNT_DIST_CATEGORY (
+        	TNT_DIST_CATEGORY_ID ,
+        	USER_ID ,
+        	SUB_PRODUCT_TYPE_ID ,
+        	PRODUCT_TYPE_ID ,
+        	PRODUCT_TYPE ,
+        	SUB_PRODUCT_TYPE ,
+        	PAY_ONLINE ,
+        	PACKAGE_TYPE,
+        	PRODUCT_CLASS_CODE,
+        	PRODUCT_CLASS_ID
+        ) VALUES (
+        	#{tntDistCategoryId} ,
+        	#{userId} ,
+        	#{subProductTypeId} ,
+        	#{productTypeId} ,
+        	#{productType},
+        	#{subProductType},
+        	#{payOnline},
+        	#{packageType},
+        	#{productClassCode},
+        	#{productClassId}
+        )
+    </insert>
+	
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntDistCategory">
+        UPDATE TNT_DIST_CATEGORY SET
+	        USER_ID = #{userId} ,
+	        SUB_PRODUCT_TYPE_ID = #{subProductTypeId} ,
+	        PRODUCT_TYPE_ID = #{productTypeId} ,
+	        PRODUCT_TYPE = #{productType} ,
+	        SUB_PRODUCT_TYPE = #{subProductType} ,
+	        PAY_ONLINE = #{payOnline} ,
+	        PACKAGE_TYPE = #{packageType} ,
+	        PRODUCT_CLASS_ID = #{productClassId} ,
+	        PRODUCT_CLASS_CODE = #{productClassCode} 
+        WHERE 
+        	<if test="tntDistCategoryId !=null">
+	        	TNT_DIST_CATEGORY_ID = #{tntDistCategoryId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_DIST_CATEGORY WHERE
+        TNT_DIST_CATEGORY_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_DIST_CATEGORY 
+	        WHERE 
+		        TNT_DIST_CATEGORY_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntDistCategoryId != null and tntDistCategoryId !=''">
+				AND TNT_DIST_CATEGORY_ID = #{tntDistCategoryId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="subProductTypeId != null and subProductTypeId !=''">
+				AND SUB_PRODUCT_TYPE_ID = #{subProductTypeId}
+	       	</if> 
+			<if test="productTypeId != null and productTypeId !=''">
+				AND PRODUCT_TYPE_ID = #{productTypeId}
+	       	</if> 
+			<if test="productType != null and productType !=''">
+				AND PRODUCT_TYPE = #{productType}
+	       	</if> 
+			<if test="subProductType != null and subProductType !=''">
+				AND SUB_PRODUCT_TYPE = #{subProductType}
+	       	</if> 
+			<if test="payOnline != null and payOnline !=''">
+				AND PAY_ONLINE = #{payOnline}
+	       	</if> 
+			<if test="packageType != null and packageType !=''">
+				AND PACKAGE_TYPE = #{packageType}
+	       	</if>
+	       	<if test="productClassId != null and productClassId !=''">
+				AND PRODUCT_CLASS_ID = #{productClassId}
+	       	</if>
+	       	<if test="productClassCode != null and productClassCode !=''">
+				AND PRODUCT_CLASS_CODE = #{productClassCode}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntDistCategoryId != null and param.tntDistCategoryId !=''">
+				AND TNT_DIST_CATEGORY_ID = param.tntDistCategoryId
+	       	</if>
+			<if test="param.userId != null and param.userId !=''">
+				AND USER_ID = param.userId
+	       	</if>
+			<if test="param.subProductTypeId != null and param.subProductTypeId !=''">
+				AND SUB_PRODUCT_TYPE_ID = param.subProductTypeId
+	       	</if>
+			<if test="param.productTypeId != null and param.productTypeId !=''">
+				AND PRODUCT_TYPE_ID = param.productTypeId
+	       	</if>
+			<if test="param.productType != null and param.productType !=''">
+				AND PRODUCT_TYPE = param.productType
+	       	</if>
+			<if test="param.subProductType != null and param.subProductType !=''">
+				AND SUB_PRODUCT_TYPE = param.subProductType
+	       	</if>
+			<if test="param.payOnline != null and param.payOnline !=''">
+				AND PAY_ONLINE = param.payOnline
+	       	</if>
+			<if test="param.packageType != null and param.packageType !=''">
+				AND PACKAGE_TYPE = param.packageType
+	       	</if>
+	       	<if test="param.productClassId != null and param.productClassId !=''">
+				AND PRODUCT_CLASS_ID = param.productClassId
+	       	</if>
+	       	<if test="param.productClassCode != null and param.productClassCode !=''">
+				AND PRODUCT_CLASS_CODE = param.productClassCode
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntDistCategory">
+        SELECT count(*) FROM TNT_DIST_CATEGORY 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_DIST_CATEGORY 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntDistCategory">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_DIST_CATEGORY
+		<include refid="where" />
+	</select>
+
+</mapper>
+

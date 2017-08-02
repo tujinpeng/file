@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCruiseProductMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntCruiseProduct">
+        <result property="tntCruiseProductId" column="TNT_CRUISE_PRODUCT_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="productCancelFlag" column="PRODUCT_CANCEL_FLAG"/>
+        <result property="productSaleFlag" column="PRODUCT_SALE_FLAG"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="branchCancelFlag" column="BRANCH_CANCEL_FLAG"/>
+        <result property="branchSaleFlag" column="BRANCH_SALE_FLAG"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="goodsCancelFlag" column="GOODS_CANCEL_FLAG"/>
+        <result property="goodsSaleFlag" column="GOODS_SALE_FLAG"/>
+        <result property="minOrderNum" column="MIN_ORDER_NUM"/>
+        <result property="maxOrderNum" column="MAX_ORDER_NUM"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="maxOccupantNumber" column="MAX_OCCUPANT_NUMBER"/>
+        <result property="minOccupantNumber" column="MIN_OCCUPANT_NUMBER"/>
+        <result property="branchName" column="BRANCH_NAME"/>
+        <result property="cabinType" column="CABIN_TYPE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_CRUISE_PRODUCT_ID,PRODUCT_ID,PRODUCT_NAME,PRODUCT_CANCEL_FLAG,PRODUCT_SALE_FLAG,BRANCH_ID,BRANCH_CANCEL_FLAG,BRANCH_SALE_FLAG,GOODS_ID,GOODS_NAME,GOODS_CANCEL_FLAG,GOODS_SALE_FLAG,MIN_ORDER_NUM,MAX_ORDER_NUM,CATEGORY_ID,
+		MAX_OCCUPANT_NUMBER,MIN_OCCUPANT_NUMBER,BRANCH_NAME,CABIN_TYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCruiseProductId"
+			order="BEFORE">
+			select  TNT_CRUISE_PRODUCT_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CRUISE_PRODUCT (
+        	TNT_CRUISE_PRODUCT_ID ,
+        	PRODUCT_ID ,
+        	PRODUCT_NAME ,
+        	PRODUCT_CANCEL_FLAG ,
+        	PRODUCT_SALE_FLAG ,
+        	BRANCH_ID ,
+        	BRANCH_CANCEL_FLAG ,
+        	BRANCH_SALE_FLAG ,
+        	GOODS_ID ,
+        	GOODS_NAME ,
+        	GOODS_CANCEL_FLAG ,
+        	GOODS_SALE_FLAG ,
+        	MIN_ORDER_NUM ,
+        	MAX_ORDER_NUM ,
+        	BRANCH_NAME,
+        	CABIN_TYPE
+        ) VALUES (
+        	#{tntCruiseProductId,jdbcType=DECIMAL} ,
+        	#{productId,jdbcType=DECIMAL} ,
+        	#{productName,jdbcType=VARCHAR} ,
+        	#{productCancelFlag,jdbcType=VARCHAR} ,
+        	#{productSaleFlag,jdbcType=VARCHAR} ,
+        	#{branchId,jdbcType=DECIMAL} ,
+        	#{branchCancelFlag,jdbcType=VARCHAR} ,
+        	#{branchSaleFlag,jdbcType=VARCHAR} ,
+        	#{goodsId,jdbcType=DECIMAL} ,
+        	#{goodsName,jdbcType=VARCHAR} ,
+        	#{goodsCancelFlag,jdbcType=VARCHAR} ,
+        	#{goodsSaleFlag,jdbcType=VARCHAR} ,
+        	#{minOrderNum,jdbcType=DECIMAL} ,
+        	#{maxOrderNum,jdbcType=DECIMAL} 
+        	#{branchName,jdbcType=VARCHAR} 
+        	#{cabinType,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+        UPDATE TNT_CRUISE_PRODUCT SET
+	        PRODUCT_ID = #{productId,jdbcType=DECIMAL} ,
+	        PRODUCT_NAME = #{productName,jdbcType=VARCHAR} ,
+	        PRODUCT_CANCEL_FLAG = #{productCancelFlag,jdbcType=VARCHAR} ,
+	        PRODUCT_SALE_FLAG = #{productSaleFlag,jdbcType=VARCHAR} ,
+	        BRANCH_ID = #{branchId,jdbcType=DECIMAL} ,
+	        BRANCH_CANCEL_FLAG = #{branchCancelFlag,jdbcType=VARCHAR} ,
+	        BRANCH_SALE_FLAG = #{branchSaleFlag,jdbcType=VARCHAR} ,
+	        GOODS_ID = #{goodsId,jdbcType=DECIMAL} ,
+	        GOODS_NAME = #{goodsName,jdbcType=VARCHAR} ,
+	        GOODS_CANCEL_FLAG = #{goodsCancelFlag,jdbcType=VARCHAR} ,
+	        GOODS_SALE_FLAG = #{goodsSaleFlag,jdbcType=VARCHAR} ,
+	        MIN_ORDER_NUM = #{minOrderNum,jdbcType=DECIMAL} ,
+	        MAX_ORDER_NUM = #{maxOrderNum,jdbcType=DECIMAL} 
+        WHERE 
+        	<if test="tntCruiseProductId !=null">
+	        	TNT_CRUISE_PRODUCT_ID = #{tntCruiseProductId} 
+	        </if>
+	</update>
+	
+	<update id="updateGoods" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+        UPDATE TNT_CRUISE_PRODUCT 
+	        <set>
+			<if test="productName != null and productName !=''">
+				PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productCancelFlag != null and productCancelFlag !=''">
+				PRODUCT_CANCEL_FLAG = #{productCancelFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="productSaleFlag != null and productSaleFlag !=''">
+				PRODUCT_SALE_FLAG = #{productSaleFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="branchCancelFlag != null and branchCancelFlag !=''">
+				BRANCH_CANCEL_FLAG = #{branchCancelFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="branchSaleFlag != null and branchSaleFlag !=''">
+				BRANCH_SALE_FLAG = #{branchSaleFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsName != null  and goodsName !=''">
+				GOODS_NAME = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsCancelFlag != null  and goodsCancelFlag !=''">
+				GOODS_CANCEL_FLAG = #{goodsCancelFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSaleFlag != null  and goodsSaleFlag !=''">
+				GOODS_SALE_FLAG = #{goodsSaleFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="minOrderNum != null  and minOrderNum !=''">
+				MIN_ORDER_NUM = #{minOrderNum,jdbcType=DECIMAL},
+			</if>
+			<if test="maxOrderNum != null  and maxOrderNum !=''">
+				MAX_ORDER_NUM = #{maxOrderNum,jdbcType=DECIMAL},
+			</if>
+			<if test="branchId !=null and branchId !=''">
+	        	BRANCH_ID = #{branchId,jdbcType=DECIMAL},
+	        </if>
+			<if test="maxOccupantNumber !=null and maxOccupantNumber !=''">
+	        	MAX_OCCUPANT_NUMBER = #{maxOccupantNumber,jdbcType=DECIMAL},
+	        </if>
+			<if test="minOccupantNumber !=null and minOccupantNumber !=''">
+	        	MIN_OCCUPANT_NUMBER = #{minOccupantNumber,jdbcType=DECIMAL},
+	        </if>
+			<if test="branchName !=null and branchName !=''">
+	        	BRANCH_NAME = #{branchName,jdbcType=VARCHAR},
+	        </if>
+			<if test="cabinType !=null and cabinType !=''">
+	        	CABIN_TYPE = #{cabinType,jdbcType=VARCHAR},
+	        </if>
+		</set>
+       <where>
+        	<if test="productId !=null and productId !=''">
+	        	AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+	        </if>
+        	<if test="goodsId !=null and goodsId !=''">
+	        	AND GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+	        </if>
+        	<if test="categoryId !=null and categoryId !=''">
+	        	AND CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+	        </if>
+	    </where>    
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CRUISE_PRODUCT WHERE
+        TNT_CRUISE_PRODUCT_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PRODUCT 
+	        WHERE 
+		        TNT_CRUISE_PRODUCT_ID = #{id} 
+	</select>
+	
+    <select id="findList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PRODUCT 
+			<include refid="where"/>		        
+	</select>
+	<select id="findListByGoodsIds" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PRODUCT 
+			where 	        goods_id in   
+				<foreach item="item" index="index" collection="subGoodsIds" open="(" separator="," close=")">  
+		       #{item}  
+	        </foreach>  
+	</select>
+	
+	<select id="findCruiseAdditionListByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT TCP.* FROM TNT_CRUISE_COMP_RELATION TCCR , TNT_CRUISE_PRODUCT TCP 
+			WHERE TCCR.SUB_GOODS_ID = TCP.GOODS_ID 
+			AND TCCR.PRODUCT_ID = #{productId} 
+			AND TCP.CATEGORY_ID = #{cateGroyId} 
+			AND TCCR.COMB_OPTION_TYPE = 'NONE'		        
+	</select>
+	
+	<select id="findCruiseComProdByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT TCP.* FROM TNT_CRUISE_COMP_RELATION TCCR , TNT_CRUISE_PRODUCT TCP 
+			WHERE TCCR.SUB_GOODS_ID = TCP.GOODS_ID 
+			AND TCCR.PRODUCT_ID = #{productId} 
+			AND TCP.CATEGORY_ID = #{cateGroyId} 
+			AND TCCR.COMB_OPTION_TYPE = #{combOptionType}		        
+	</select>
+	
+	<select id="findCruiseProductByProductId" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT TCP.GOODS_NAME FROM TNT_CRUISE_PACKAGE TCPG,TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR,TNT_CRUISE_PRODUCT TCP 
+			WHERE TCPG.PRODUCT_ID  = TCPPR.PRODUCT_ID AND TCPPR.SUB_GOODS_ID = TCP.GOODS_ID 
+			AND TCPG.DELETE_FLAG = 0 AND TCPG.INTEGRITY = 'Y' 
+			AND TCPPR.SUB_CATEGORY_ID = 2 AND TCPG.PRODUCT_ID = #{productId} GROUP BY TCP.GOODS_NAME
+	</select>
+	
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntCruiseProductId != null and tntCruiseProductId !=''">
+				AND TNT_CRUISE_PRODUCT_ID = #{tntCruiseProductId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME = #{productName}
+	       	</if> 
+			<if test="productCancelFlag != null and productCancelFlag !=''">
+				AND PRODUCT_CANCEL_FLAG = #{productCancelFlag}
+	       	</if> 
+			<if test="productSaleFlag != null and productSaleFlag !=''">
+				AND PRODUCT_SALE_FLAG = #{productSaleFlag}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+	       	</if> 
+			<if test="branchCancelFlag != null and branchCancelFlag !=''">
+				AND BRANCH_CANCEL_FLAG = #{branchCancelFlag}
+	       	</if> 
+			<if test="branchSaleFlag != null and branchSaleFlag !=''">
+				AND BRANCH_SALE_FLAG = #{branchSaleFlag}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				AND GOODS_NAME = #{goodsName}
+	       	</if> 
+			<if test="goodsCancelFlag != null and goodsCancelFlag !=''">
+				AND GOODS_CANCEL_FLAG = #{goodsCancelFlag}
+	       	</if> 
+			<if test="goodsSaleFlag != null and goodsSaleFlag !=''">
+				AND GOODS_SALE_FLAG = #{goodsSaleFlag}
+	       	</if> 
+			<if test="minOrderNum != null and minOrderNum !=''">
+				AND MIN_ORDER_NUM = #{minOrderNum}
+	       	</if> 
+			<if test="maxOrderNum != null and maxOrderNum !=''">
+				AND MAX_ORDER_NUM = #{maxOrderNum}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntCruiseProductId != null and param.tntCruiseProductId !=''">
+				AND TNT_CRUISE_PRODUCT_ID = param.tntCruiseProductId
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = param.productId
+	       	</if>
+			<if test="param.productName != null and param.productName !=''">
+				AND PRODUCT_NAME = param.productName
+	       	</if>
+			<if test="param.productCancelFlag != null and param.productCancelFlag !=''">
+				AND PRODUCT_CANCEL_FLAG = param.productCancelFlag
+	       	</if>
+			<if test="param.productSaleFlag != null and param.productSaleFlag !=''">
+				AND PRODUCT_SALE_FLAG = param.productSaleFlag
+	       	</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = param.branchId
+	       	</if>
+			<if test="param.branchCancelFlag != null and param.branchCancelFlag !=''">
+				AND BRANCH_CANCEL_FLAG = param.branchCancelFlag
+	       	</if>
+			<if test="param.branchSaleFlag != null and param.branchSaleFlag !=''">
+				AND BRANCH_SALE_FLAG = param.branchSaleFlag
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = param.goodsId
+	       	</if>
+			<if test="param.goodsName != null and param.goodsName !=''">
+				AND GOODS_NAME = param.goodsName
+	       	</if>
+			<if test="param.goodsCancelFlag != null and param.goodsCancelFlag !=''">
+				AND GOODS_CANCEL_FLAG = param.goodsCancelFlag
+	       	</if>
+			<if test="param.goodsSaleFlag != null and param.goodsSaleFlag !=''">
+				AND GOODS_SALE_FLAG = param.goodsSaleFlag
+	       	</if>
+			<if test="param.minOrderNum != null and param.minOrderNum !=''">
+				AND MIN_ORDER_NUM = param.minOrderNum
+	       	</if>
+			<if test="param.maxOrderNum != null and param.maxOrderNum !=''">
+				AND MAX_ORDER_NUM = param.maxOrderNum
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+        SELECT count(*) FROM TNT_CRUISE_PRODUCT 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_CRUISE_PRODUCT 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="selectOne" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+    	SELECT <include refid="columns" />
+	    FROM TNT_CRUISE_PRODUCT 
+		<include refid="where"/>
+    </select>
+    
+    <resultMap id="resultVoMap" type="com.lvmama.tnt.prod.po.TntCruiseProduct">
+        <result property="parentProductId" column="PARENT_PRODUCT_ID"/>
+         <result property="categoryId" column="CATEGORY_ID"/>
+         <result property="combOptionType" column="COMB_OPTION_TYPE"/>
+         <result property="productId" column="PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="productCancelFlag" column="PRODUCT_CANCEL_FLAG"/>
+        <result property="productSaleFlag" column="PRODUCT_SALE_FLAG"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="branchCancelFlag" column="BRANCH_CANCEL_FLAG"/>
+        <result property="branchSaleFlag" column="BRANCH_SALE_FLAG"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="goodsCancelFlag" column="GOODS_CANCEL_FLAG"/>
+        <result property="goodsSaleFlag" column="GOODS_SALE_FLAG"/>
+        <result property="minOrderNum" column="MIN_ORDER_NUM"/>
+        <result property="maxOrderNum" column="MAX_ORDER_NUM"/>
+         
+	</resultMap>
+	
+	<resultMap id="resultListVoMap" type="com.lvmama.tnt.prod.compship.vo.TntCruiseCompRelationVo">
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subCategoryId" column="CATEGORY_ID"/>
+        <result property="combOptionType" column="COMB_OPTION_TYPE"/>
+        <collection property="subGoods" ofType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+            <result property="subProductId" column="SUB_PRODUCT_ID"/>
+         	<result property="subProductName" column="PRODUCT_NAME"/>
+	        <result property="subProductStatus" column="PRODUCT_CANCEL_FLAG"/>
+	        <result property="subBranchId" column="BRANCH_ID"/>
+	        <result property="subBranchName" column="branch_name"/>
+	        <result property="subBranchStatus" column="BRANCH_CANCEL_FLAG"/>
+	        <result property="subGoodsId" column="GOODS_ID"/>
+	        <result property="subGoodsName" column="GOODS_NAME"/>
+	        <result property="subgoodsStatus" column="GOODS_CANCEL_FLAG"/>
+	        <result property="subMinOrderNum" column="MIN_ORDER_NUM"/>
+	        <result property="subMaxOrderNum" column="MAX_ORDER_NUM"/>
+       		<result property="subMinOccupantNum" column="MIN_OCCUPANT_NUMBER"/>
+       		<result property="subMaxOccupantNum" column="MAX_OCCUPANT_NUMBER"/>
+       		<result property="cabinType" column="CABIN_TYPE"/>
+       		<result property="subGoodsSaleFlag" column="GOODS_SALE_FLAG"/>
+       		<result property="subProductSaleFlag" column="PRODUCT_SALE_FLAG"/>
+       		<result property="subBranchSaleFlag" column="BRANCH_SALE_FLAG"/>
+       		
+       		
+        </collection>
+	</resultMap>
+	
+    
+    
+    <select id="findListByParam" resultMap="resultVoMap" parameterType="com.lvmama.tnt.prod.po.TntCruiseProduct">
+    	select tccr.product_id PRODUCT_ID,
+       tcp.category_id CATEGORY_ID,
+       tccr.sub_product_id SUB_PRODUCT_ID,
+       TCCR.COMB_OPTION_TYPE,
+       tcp.PRODUCT_NAME,
+       tcp.PRODUCT_CANCEL_FLAG,
+       tcp.BRANCH_ID,
+       tcp.BRANCH_CANCEL_FLAG,
+       tcp.GOODS_ID,
+       tcp.GOODS_NAME,
+      tcp.GOODS_CANCEL_FLAG,
+      tcp.MIN_ORDER_NUM,
+       tcp.MAX_ORDER_NUM
+  from TNT_CRUISE_COMP_RELATION tccr,
+       lvmama_pet.tnt_cruise_product       tcp
+ WHERE  tccr.sub_product_id = tcp.product_id
+		<if test="parentProductId != null and parentProductId !=''">
+			AND tccr.product_id = #{parentProductId}
+       	</if>
+    	<if test="categoryId != null and categoryId !=''">
+			AND tcp.category_id = #{categoryId}
+       	</if>
+    </select>
+    <sql id="containsSql">
+    	select DISTINCT tccr.product_id PRODUCT_ID,
+       tcp.category_id CATEGORY_ID,
+       tccr.sub_product_id SUB_PRODUCT_ID,
+       TCCR.COMB_OPTION_TYPE,
+       tcp.PRODUCT_NAME,
+       tcp.PRODUCT_CANCEL_FLAG,
+       tcp.PRODUCT_SALE_FLAG,
+       tcp.BRANCH_ID,
+       tcp.branch_name,
+       tcp.BRANCH_CANCEL_FLAG,
+       tcp.BRANCH_SALE_FLAG,
+       tcp.GOODS_ID,
+       tcp.GOODS_NAME,
+      tcp.GOODS_CANCEL_FLAG,
+      tcp.GOODS_SALE_FLAG,
+      tcp.MIN_ORDER_NUM,
+       tcp.MAX_ORDER_NUM,
+       tcp.MAX_OCCUPANT_NUMBER,
+       tcp.MIN_OCCUPANT_NUMBER,
+       tcp.CABIN_TYPE
+  from TNT_CRUISE_COMP_RELATION tccr,
+      tnt_cruise_product       tcp
+ WHERE  tccr.sub_product_id = tcp.product_id
+  and tccr.sub_category_id=tcp.category_id
+ and tccr.sub_branch_id=tcp.branch_id
+ and tccr.sub_goods_id=tcp.goods_id
+	
+    
+    </sql>
+    
+    
+    
+    <select id="newFindListByParam" resultMap="resultListVoMap" parameterType="java.util.Map">
+     	<include refid="containsSql" />
+     		<if test="parentProductId != null and parentProductId !=''">
+				AND tccr.product_id = #{parentProductId}
+	       	</if>
+	    	<if test="categoryId != null and categoryId !=''">
+				AND tcp.category_id = #{categoryId}
+	       	</if>
+    </select>
+    
+    
+    
+    <select id="findshipPage" resultMap="resultListVoMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+   		<include refid="containsSql" />
+   			<if test="param.productId != null and param.productId !=''">
+				AND tccr.product_id = #{param.productId}
+	       	</if>
+	    	<if test="param.subCategoryId != null and param.subCategoryId !=''">
+				AND tcp.category_id = #{param.subCategoryId}
+	       	</if>
+	       	
+	       	<if test="param.subGoodsId != null and param.subGoodsId !=''">
+				AND tcp.GOODS_ID = #{param.subGoodsId}
+	       	</if>
+	    	<if test="param.subGoodsName != null and param.subGoodsName !=''">
+		    	AND tcp.GOODS_NAME like
+					CONCAT(CONCAT('%',ltrim(rtrim(#{param.subGoodsName}))),'%')
+	       	</if>
+	       	<if test="param.subgoodsStatus != null and param.subgoodsStatus !=''">
+				AND tcp.GOODS_CANCEL_FLAG = #{param.subgoodsStatus}
+	       	</if>
+	       	
+	       	<if test="param.subBranchId != null and param.subBranchId !=''">
+				AND tcp.BRANCH_ID = #{param.subBranchId}
+	       	</if>
+	    	<if test="param.subBranchName != null and param.subBranchName !=''">
+		    	AND tcp.branch_name like
+					CONCAT(CONCAT('%',ltrim(rtrim(#{param.subBranchName}))),'%')
+	       	</if>
+	       	<if test="param.subBranchStatus != null and param.subBranchStatus !=''">
+				AND tcp.BRANCH_CANCEL_FLAG = #{param.subBranchStatus}
+	       	</if>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+     <select id="shipCount" resultType="Integer" parameterType="com.lvmama.tnt.prod.compship.vo.TntCruiseCompRelationVo">
+    	select count(*) from (
+       
+           	<include refid="containsSql" />
+   			<if test="productId != null and productId !=''">
+				AND tccr.product_id = #{productId}
+	       	</if>
+	    	<if test="subCategoryId != null and subCategoryId !=''">
+				AND tcp.category_id = #{subCategoryId}
+	       	</if>
+	       	<if test="subGoodsId != null and subGoodsId !=''">
+				AND tcp.GOODS_ID = #{subGoodsId}
+	       	</if>
+	    	<if test="subGoodsName != null and subGoodsName !=''">
+		    	AND tcp.GOODS_NAME like
+					CONCAT(CONCAT('%',ltrim(rtrim(#{subGoodsName}))),'%')
+	       	</if>
+	       	<if test="subgoodsStatus != null and subgoodsStatus !=''">
+				AND tcp.GOODS_CANCEL_FLAG = #{subgoodsStatus}
+	       	</if>
+	       	
+	       	<if test="subBranchId != null and subBranchId !=''">
+				AND tcp.BRANCH_ID = #{subBranchId}
+	       	</if>
+	    	<if test="subBranchName != null and subBranchName !=''">
+		    	AND tcp.branch_name like
+					CONCAT(CONCAT('%',ltrim(rtrim(#{subBranchName}))),'%')
+	       	</if>
+	       	<if test="subBranchStatus != null and subBranchStatus !=''">
+				AND tcp.BRANCH_CANCEL_FLAG = #{subBranchStatus}
+	       	</if>
+	       	
+	       	)
+    </select>
+    
+     <select id="shipSubProdIdByProdId" resultType="Long" parameterType="Long">
+    	 select DISTINCT tcp.product_id
+			  from lvmama_pet.TNT_CRUISE_COMP_RELATION tccr,
+			      lvmama_pet.tnt_cruise_product       tcp
+			 WHERE  tccr.sub_product_id = tcp.product_id
+			  and tccr.sub_category_id=tcp.category_id
+			 and tccr.sub_branch_id=tcp.branch_id
+			 and tccr.sub_goods_id=tcp.goods_id
+			  AND tcp.category_id = 2
+			  AND tccr.product_id = #{productId}
+    </select>
+    
+      <select id="findTntCruiseProductByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+     	  SELECT <include refid="columns" />
+     		  FROM TNT_CRUISE_PRODUCT 
+			<include refid="where"/>
+    </select>
+    
+</mapper>
+

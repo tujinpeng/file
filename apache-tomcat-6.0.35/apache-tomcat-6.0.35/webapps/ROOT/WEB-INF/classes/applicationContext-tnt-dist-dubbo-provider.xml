@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+<dubbo:service ref="tntUserService" interface="com.lvmama.tnt.user.service.TntUserService" />
+<dubbo:service ref="tntCompanyTypeService" interface="com.lvmama.tnt.user.service.TntCompanyTypeService" />
+<dubbo:service ref="tntOperatingSpecialistService" interface="com.lvmama.tnt.user.service.TntOperatingSpecialistService" />
+<dubbo:service ref="tntCompanyTypeUserService" interface="com.lvmama.tnt.user.service.TntCompanyTypeUserService" />
+<dubbo:service ref="tntContractService" interface="com.lvmama.tnt.user.service.TntContractService" />
+<dubbo:service ref="tntAnnouncementService" interface="com.lvmama.tnt.user.service.TntAnnouncementService" />
+<dubbo:service ref="tntFAQService" interface="com.lvmama.tnt.user.service.TntFAQService" />
+<dubbo:service ref="tntFeedBackService" interface="com.lvmama.tnt.user.service.TntFeedBackService" />
+<dubbo:service ref="tntUserMaterialService" interface="com.lvmama.tnt.user.service.TntUserMaterialService" />
+<dubbo:service ref="tntCommissionRuleService" interface="com.lvmama.tnt.user.service.TntCommissionRuleService" />
+<dubbo:service ref="readyMessageService" interface="com.lvmama.tnt.user.service.ReadyMessageService" />
+<dubbo:service ref="tntRecognizanceService" interface="com.lvmama.tnt.recognizance.service.TntRecognizanceService" />
+<dubbo:service ref="tntCashaccountService" interface="com.lvmama.tnt.cashaccount.service.TntCashaccountService" />
+<dubbo:service ref="tntCertCodeService" interface="com.lvmama.tnt.comm.service.TntCertCodeService" />
+<dubbo:service ref="tntUserClient" interface="com.lvmama.tnt.comm.service.UserClient" />
+<dubbo:service ref="tntAccountService" interface="com.lvmama.tnt.recognizance.service.TntAccountService" />
+<dubbo:service ref="tntChannelService" interface="com.lvmama.tnt.user.service.TntChannelService" />
+<dubbo:service ref="tntProdPolicyService" interface="com.lvmama.tnt.prod.service.TntProdPolicyService" />
+<dubbo:service ref="tntProdProductService" interface="com.lvmama.tnt.prod.service.TntProdProductService" />
+<dubbo:service ref="tntProductService" interface="com.lvmama.tnt.prod.service.TntProductService" />
+<dubbo:service ref="routePreviewDetailService" interface="com.lvmama.tnt.prod.service.RoutePreviewDetailService" />
+<dubbo:service ref="tntProductTicketService" interface="com.lvmama.tnt.prod.service.TntProductVstService" />
+<dubbo:service ref="tntTicketGoodsService" interface="com.lvmama.tnt.prod.service.TntGoodsService" group="ticket" />
+<dubbo:service ref="tntDestRelService" interface="com.lvmama.tnt.prod.service.TntDestRelService" />
+<dubbo:service ref="tntCouponService" interface="com.lvmama.tnt.coupon.service.TntCouponService" />
+<dubbo:service ref="routeProductByVstService" interface="com.lvmama.tnt.prod.service.RouteProductByVstService" />
+<dubbo:service ref="tntVstCouponService" interface="com.lvmama.tnt.coupon.service.TntVstCouponService" />
+<dubbo:service ref="tntGoodsChannelCouponService" interface="com.lvmama.comm.tnt.service.TntGoodsChannelCouponService" />
+<dubbo:service ref="tntProductGoodsPreviewService" interface="com.lvmama.comm.tnt.service.TntProductGoodsPreviewService" />
+<dubbo:service ref="tntProductCommonService" interface="com.lvmama.comm.tnt.service.TntProductCommonService" />
+<dubbo:service ref="tntCouponRuleService" interface="com.lvmama.tnt.coupon.service.TntCouponRuleService" />
+<dubbo:service ref="tntProductUserService" interface="com.lvmama.tnt.prod.service.TntProductUserService" />
+<dubbo:service ref="tntCategoryService" interface="com.lvmama.tnt.comm.service.biz.TntCategoryService" />
+<dubbo:service ref="tntUserDistributorIPService" interface="com.lvmama.tnt.user.service.TntUserDistributorIPService" />
+<dubbo:service ref="tntUserDistributorRateService" interface="com.lvmama.tnt.user.service.TntUserDistributorRateService" />
+<dubbo:service ref="tntOrderService" interface="com.lvmama.tnt.order.service.TntOrderService" />
+<dubbo:service ref="tntFlightOrderService" interface="com.lvmama.tnt.order.service.TntFlightOrderService" />
+<dubbo:service ref="tntOrderItemProdService" interface="com.lvmama.tnt.order.service.TntOrderItemProdService" />
+<dubbo:service ref="tntOrderRefundService" interface="com.lvmama.tnt.order.service.TntOrderRefundService" />
+<dubbo:service ref="orderCreateService" interface="com.lvmama.tnt.order.service.OrderCreateService" />
+<dubbo:service ref="buildTntBuyInfoService" interface="com.lvmama.tnt.order.service.BuildTntBuyInfoService" />
+<dubbo:service ref="orderPayService" interface="com.lvmama.tnt.order.service.OrderPayService" />
+<dubbo:service ref="tntPayService" interface="com.lvmama.pay.service.TntPayService" />
+<dubbo:service ref="tntDistributionMessageService" interface="com.lvmama.tnt.pushplatform.service.TNTDistributionMessageService" />
+<!-- 充值service -->
+<dubbo:service ref="tntCashRechargeService" interface="com.lvmama.pay.service.CashRechargeService" />
+<!-- 价格 佣金 -->
+<dubbo:service ref="tntTimePriceService" interface="com.lvmama.tnt.order.service.TntTimePriceService" />
+<dubbo:service ref="tntCommissionService" interface="com.lvmama.tnt.prod.service.TntCommissionService" />
+<dubbo:service ref="tntTimePriceQueryService" interface="com.lvmama.tnt.order.service.TntTimePriceQueryService" />
+<dubbo:service ref="tntLogService" interface="com.lvmama.tnt.comm.service.TntLogService" />
+<dubbo:service ref="searchApiService" interface="com.lvmama.tnt.search.service.SearchApiService" />
+<dubbo:service ref="versionService" interface="com.lvmama.tnt.comm.service.VersionService" />
+
+<!-- excel export -->
+<dubbo:service ref="orderExcelReportService" interface="com.lvmama.tnt.report.ReportService" group="tntOrderExcel"/>
+<dubbo:service ref="cashAccountExcelReportService" interface="com.lvmama.tnt.report.ReportService" group="tntCashAccount"/>
+<dubbo:service ref="tntCreditExportService" interface="com.lvmama.tnt.report.ReportService" group="tntCredit"/>
+
+<dubbo:service ref="tntCashRechargeExportService" interface="com.lvmama.tnt.report.ReportService" group="tntCashRecharge"/>
+
+<dubbo:service ref="verificateExportService" interface="com.lvmama.tnt.report.ReportService" group="apiOrderVerificate"/>
+
+
+<!-- partner dubbo service -->
+<dubbo:service ref="hotelProductService" interface="com.lvmama.tnt.partner.hotel.service.ProductService" />
+<dubbo:service ref="hotelOrderQueryService" interface="com.lvmama.tnt.partner.hotel.service.OrderQueryService" />
+<dubbo:service ref="hotelOrderCheckService" interface="com.lvmama.tnt.partner.hotel.service.HotelOrderCheckService" />
+<dubbo:service ref="hotelDistrictService" interface="com.lvmama.tnt.partner.biz.service.DistrictService" />
+<dubbo:service ref="hotelDistrictSignService" interface="com.lvmama.tnt.partner.biz.service.DistrictSignService" />
+<dubbo:service ref="hotelGoodsCheckService" interface="com.lvmama.tnt.partner.hotel.service.GoodsCheckService" />
+<dubbo:service ref="hotelGoodsService" interface="com.lvmama.tnt.partner.hotel.service.GoodsService" />
+<dubbo:service ref="hotelCreditCardService" interface="com.lvmama.tnt.partner.biz.service.CreditCardService" />
+<dubbo:service ref="hotelVstProductPushService" interface="com.lvmama.vst.api.hotel.push.service.VstProductPushService" />
+<dubbo:service ref="hotelOrderManageService" interface="com.lvmama.tnt.partner.hotel.service.OrderManageService" />
+<dubbo:service ref="compshipOrderManageService" interface="com.lvmama.tnt.partner.compship.service.CompshipOrderManageService" />
+<dubbo:service ref="compshipOrderQueryService" interface="com.lvmama.tnt.partner.compship.service.CompshipOrderQueryService" />
+<dubbo:service ref="compShipService" interface="com.lvmama.tnt.partner.compship.service.CompShipService" />
+<dubbo:service ref="comShipGoodsCheckService" interface="com.lvmama.tnt.partner.compship.service.ComShipGoodsCheckService" />
+<dubbo:service ref="ticketGoodsCheckService" interface="com.lvmama.tnt.partner.ticket.service.TicketGoodsCheckService" />
+<dubbo:service ref="ticketGoodsService" interface="com.lvmama.tnt.partner.ticket.service.TicketGoodsService" />
+<dubbo:service ref="ticketCircusGoodsService" interface="com.lvmama.tnt.partner.ticket.service.TicketCircusGoodsService" />
+<dubbo:service ref="ticketProductService" interface="com.lvmama.tnt.partner.ticket.service.TicketProductService" />
+<dubbo:service ref="commOrderManageService" interface="com.lvmama.tnt.partner.ticket.service.TicketOrderManageService" />
+<dubbo:service ref="commOrderQueryService" interface="com.lvmama.tnt.partner.ticket.service.TicketOrderQueryService" />
+<dubbo:service ref="transitOrderPerformService" interface="com.lvmama.tnt.partner.ticket.service.TransitOrderPerformService" />
+<dubbo:service ref="orderRequiredService" interface="com.lvmama.tnt.partner.ticket.service.TicketOrderRequiredService" />
+<dubbo:service ref="orderSmsSendService" interface="com.lvmama.tnt.partner.ticket.service.OrderSmsSendService" />
+<dubbo:service ref="destService" interface="com.lvmama.tnt.partner.biz.service.DestService" />
+<dubbo:service ref="dictInfoService" interface=" com.lvmama.tnt.partner.biz.service.DictInfoService" />
+<dubbo:service ref="categoryService" interface="com.lvmama.tnt.partner.biz.service.CategoryService" />
+<dubbo:service ref="flightService" interface="com.lvmama.tnt.partner.biz.service.FlightService" />
+<dubbo:service ref="trainService" interface="com.lvmama.tnt.partner.biz.service.TrainService" />
+<dubbo:service ref="visaDocService" interface="com.lvmama.tnt.partner.biz.service.VisaDocService" />
+<dubbo:service ref="shipGoodsService" interface="com.lvmama.tnt.partner.ship.service.ShipGoodsService" />
+<dubbo:service ref="shipService" interface="com.lvmama.tnt.partner.ship.service.ShipService" />
+<dubbo:service ref="promotionService" interface="com.lvmama.tnt.partner.prom.service.PromotionService" />
+<dubbo:service ref="commentService" interface="com.lvmama.tnt.partner.comment.service.CommentService" />
+<dubbo:service ref="tntDistributorService" interface="com.lvmama.comm.tnt.service.TntDistributorService" />
+<dubbo:service ref="tntDistOrderService" interface="com.lvmama.comm.tnt.service.TntDistOrderService" />
+<dubbo:service ref="tntDistProductService" interface="com.lvmama.comm.tnt.service.TntDistProductService" />
+<dubbo:service ref="shipAdditionGoodsService" interface="com.lvmama.tnt.partner.shipaddition.service.ShipAdditionGoodsService" />
+<dubbo:service ref="shipAdditionService" interface="com.lvmama.tnt.partner.shipaddition.service.ShipAdditionService" />
+<dubbo:service ref="shoreExcursionsGoodsService" interface="com.lvmama.tnt.partner.shoreexcursions.service.ShoreExcursionsGoodsService" />
+<dubbo:service ref="shoreExcursionsService" interface="com.lvmama.tnt.partner.shoreexcursions.service.ShoreExcursionsService" />
+<dubbo:service ref="visaGoodsService" interface="com.lvmama.tnt.partner.visa.service.VisaGoodsService" />
+<dubbo:service ref="visaService" interface="com.lvmama.tnt.partner.visa.service.VisaService" />
+<dubbo:service ref="cpsCookieService" interface="com.lvmama.comm.tnt.service.CpsCookieService" />
+<dubbo:service ref="tntRouteProductSyncProxy" interface="com.lvmama.comm.tnt.service.TntRouteProductSyncProxy" />
+<dubbo:service ref="routeGoodsCheckService" interface="com.lvmama.tnt.partner.route.service.RouteGoodsCheckService" />
+<dubbo:service ref="routeGoodsService" interface="com.lvmama.tnt.partner.route.service.RouteGoodsService" />
+<dubbo:service ref="routeService" interface="com.lvmama.tnt.partner.route.service.RouteService" />
+<dubbo:service ref="commOrderManageService" interface="com.lvmama.tnt.partner.route.service.RouteOrderManageService" />
+<dubbo:service ref="commOrderQueryService" interface="com.lvmama.tnt.partner.route.service.RouteOrderQueryService" />
+<dubbo:service ref="orderRequiredService" interface="com.lvmama.tnt.partner.route.service.RouteOrderRequiredService" />
+<dubbo:service ref="suppGoodsService" interface="com.lvmama.tnt.partner.prod.service.SuppGoodsService" />
+<dubbo:service ref="wifiOrderQueryService" interface="com.lvmama.tnt.partner.wifi.service.OrderQueryService" />
+<dubbo:service ref="wifiOrderService" interface="com.lvmama.tnt.partner.wifi.service.WifiOrderService" />
+<dubbo:service ref="wifiGoodsService" interface="com.lvmama.tnt.partner.wifi.service.WifiGoodsService" />
+
+
+<dubbo:service ref="commOrderQueryService" interface="com.lvmama.tnt.partner.comm.order.CommOrderQueryService" />
+<dubbo:service ref="hotelVstOrderPushService" interface="com.lvmama.vst.api.hotel.push.service.VstOrderPushService" />
+<dubbo:service ref="subjectService" interface="com.lvmama.tnt.partner.biz.service.SubjectService" />
+<dubbo:service ref="prodGroupDateService" interface="com.lvmama.tnt.partner.biz.service.ProdGroupDateService" />
+<dubbo:service ref="commonProductService" interface="com.lvmama.tnt.partner.common.service.CommonProductService" />
+<dubbo:service ref="yuyueFlowFacade" interface="com.lvmama.tnt.partner.yuyue.YuyueFlowFacade" />
+<dubbo:service ref="routeYuyueService" interface="com.lvmama.tnt.partner.yuyue.RouteYuyueService" />
+<dubbo:service ref="visaApprovalStatusService" interface="com.lvmama.tnt.partner.biz.service.VisaApprovalStatusService" />
+<dubbo:service ref="buyPresentService" interface="com.lvmama.tnt.partner.biz.service.BuyPresentService" />
+<dubbo:service ref="intentionOrderService" interface="com.lvmama.tnt.partner.biz.service.IntentionOrderService" />
+<dubbo:service ref="compShipBatchJDBCService" interface="com.lvmama.tnt.partner.compship.service.CompShipBatchJDBCService" timeout="600000"/>
+
+
+<dubbo:service ref="tntUserConfigService" interface="com.lvmama.tnt.user.service.TntUserConfigService" />
+<dubbo:service ref="tntUserConfigPostService" interface="com.lvmama.tnt.user.service.TntUserConfigPostService" />
+<dubbo:service ref="tntRouteProductService" interface="com.lvmama.tnt.prod.service.TntRouteProductService" />
+<dubbo:service ref="tntPackageRouteProductService" interface="com.lvmama.tnt.prod.service.TntPackageRouteProductService" />
+<dubbo:service ref="cKTicketOrderService" interface="com.lvmama.comm.tnt.service.CKTicketOrderService" />
+<dubbo:service ref="tntSellPackageService" interface="com.lvmama.comm.tnt.service.TntSellPackageService" />
+<dubbo:service ref="tntSellPackageRelationService" interface="com.lvmama.tnt.prod.service.TntSellPackageRelationService" />
+<dubbo:service ref="tntOrderManageService" interface="com.lvmama.comm.tnt.service.TntOrderManageService" />
+<dubbo:service ref="tntRequestInfoService" interface="com.lvmama.tnt.order.service.TntRequestInfoService" />
+<dubbo:service ref="tntOrderDiscountInfoService" interface="com.lvmama.tnt.order.service.TntOrderDiscountInfoService" />
+<dubbo:service ref="tntVisaGoodsService" interface="com.lvmama.tnt.prod.service.TntVisaGoodsService" />
+<dubbo:service ref="apiTntOrderService" interface="com.lvmama.tnt.api.service.ApiTntOrderService" />
+<dubbo:service ref="apiTntOrderForMeituanService" interface="com.lvmama.tnt.api.service.ApiTntOrderForMeituanService"/>
+<dubbo:service ref="apiTntFlightOrderService" interface="com.lvmama.tnt.flight.service.ApiTntFlightOrderService" />
+<dubbo:service ref="apiTntProductService" interface="com.lvmama.tnt.api.service.ApiTntProductService" />
+<dubbo:service ref="pushService" interface="com.lvmama.tnt.comm.service.PushService" />
+<dubbo:service ref="noticeService" interface="com.lvmama.tnt.notice.service.NoticeService" />
+<dubbo:service ref="tntHotelProductService" interface="com.lvmama.tnt.prod.service.TntHotelProductService" />
+<dubbo:service ref="tntHotelGoodsService" interface="com.lvmama.tnt.prod.service.TntGoodsService" group="hotel" />
+<dubbo:service ref="distributionPushLogService" interface="com.lvmama.tnt.comm.service.DistributionPushLogService" />
+<dubbo:service ref="tntSubUserService" interface="com.lvmama.tnt.user.service.TntSubUserService" />
+<dubbo:service ref="searchSpeicalTicketService" interface="com.lvmama.tnt.search.service.SearchSpeicalTicketService" />
+<dubbo:service ref="searchSpeicalRouteService" interface="com.lvmama.tnt.search.service.SearchSpeicalRouteService" />
+<dubbo:service ref="searchSpeicalHotelService" interface="com.lvmama.tnt.search.service.SearchSpeicalHotelService" />
+<dubbo:service ref="hotelPreviewDetailService" interface="com.lvmama.tnt.prod.service.HotelPreviewDetailService" />
+<!-- B2B酒店分销 推荐页 -->
+<dubbo:service ref="hotelRecommendService" interface="com.lvmama.tnt.prod.service.HotelRecommendService" timeout="600000" />
+<dubbo:service ref="tntRecommendService" interface="com.lvmama.tnt.prod.service.TntRecommendService" timeout="600000" />
+<!-- B2B分销邮轮 -->
+<dubbo:service ref="tntComShipPreviewDetailService" interface="com.lvmama.tnt.prod.service.TntComShipPreviewDetailService" timeout="600000" />
+<!-- B2B酒店线路相关产品搜索 -->
+<dubbo:service ref="tntRelatedSearchService" interface="com.lvmama.tnt.prod.service.TntRelatedSearchService" timeout="600000"/>
+<dubbo:service ref="subjectService" interface="com.lvmama.tnt.partner.biz.service.SubjectService" />
+<dubbo:service ref="prodGroupDateService" interface="com.lvmama.tnt.partner.biz.service.ProdGroupDateService" />
+<dubbo:service ref="tntReturnRuleService" interface="com.lvmama.tnt.prod.service.TntReturnRuleService" />
+<dubbo:service ref="tntRouteOrderService" interface="com.lvmama.tnt.order.service.TntRouteOrderService" />
+<dubbo:service ref="tntMessageProcessService" interface="com.lvmama.comm.tnt.service.TntMessageProcessService" />
+<dubbo:service ref="tntGodNotTimePriceQueryService" interface="com.lvmama.tnt.timeprice.service.TntGodTimePriceQueryService" group="notTimePrice"/>
+<dubbo:service ref="tntSampleTimePriceFilter" interface="com.lvmama.tnt.timeprice.service.TntTimePriceFilter" />
+<dubbo:service ref="tntNotTimePriceWapperService" interface="com.lvmama.tnt.timeprice.service.ticket.TntNotTimePriceWapperService" />
+<dubbo:service ref="tntCompShipSyncService" interface="com.lvmama.comm.tnt.service.TntCompShipSyncService" />
+<dubbo:service ref="tntCompShipTimePriceSyncService" interface="com.lvmama.comm.tnt.service.TntCompShipTimePriceSyncService" />
+<dubbo:service ref="tntCompShipCMSCal" interface="com.lvmama.comm.tnt.service.TntCompShipCMSCal"/>
+<dubbo:service ref="onlineRefundService" interface="com.lvmama.tnt.order.service.OrderOnlineRefundService" />
+<dubbo:service ref="onlineRefundApplyService" interface="com.lvmama.tnt.order.service.OnlineRefundApplyService" />
+
+
+<!-- 多行程线路日期  -->
+<dubbo:service ref="tntRouteProductLineDateService" interface="com.lvmama.tnt.prod.service.TntRouteProductLineDateService" timeout="100000"/>
+
+
+<dubbo:service ref="tntCompshipProductService" interface="com.lvmama.tnt.prod.service.TntCompshipProductService" />
+<dubbo:service ref="tntCSTimePriceService" interface="com.lvmama.tnt.order.service.TntCSTimePriceService" />
+
+<!-- 分销酒店时间价格表 -->
+<dubbo:service ref="tntHotelTimePriceService" interface="com.lvmama.tnt.order.service.TntHotelTimePriceService" />
+
+<!--10分钟超时-->
+<dubbo:service ref="tntCruiseFacadeService" interface="com.lvmama.tnt.prod.service.TntCruiseFacadeService" timeout="600000"/>
+<dubbo:service ref="tntCheckCompShipService" interface="com.lvmama.tnt.prod.compship.service.TntCheckCompShipService" />
+<!--10分钟超时-->
+<dubbo:service ref="tntCruiseAutoPackageService" interface="com.lvmama.tnt.prod.compship.service.TntCruisePackageService" timeout="600000"/>
+<dubbo:service ref="tntCruisePackageProductRelService" interface="com.lvmama.tnt.prod.compship.service.TntCruisePackageProductRelService" />
+<dubbo:service ref="tntCruiseProductService" interface="com.lvmama.tnt.prod.compship.service.TntCruiseProductService" />
+<dubbo:service ref="tntCruiseCompRelationService" interface="com.lvmama.tnt.prod.compship.service.TntCruiseCompRelationService" timeout="600000"/>
+<dubbo:service ref="tntCruiseAutoPackageService" interface="com.lvmama.tnt.prod.compship.service.TntCruisePackageService"/>
+<!--10分钟超时-->
+<dubbo:service ref="tntCruisePackageLogicService" interface="com.lvmama.tnt.prod.compship.service.TntCruisePackageLogicService" timeout="600000" />
+
+
+<dubbo:service ref="tntInsuranceProductService" interface="com.lvmama.tnt.prod.service.TntInsuranceProductService" />
+<dubbo:service ref="tntInsuranceGoodsService" interface="com.lvmama.tnt.prod.service.TntInsuranceGoodsService" />
+<dubbo:service ref="tntInsuranceNotTimePriceQueryService" interface="com.lvmama.tnt.timeprice.service.TntGodTimePriceQueryService" group="insurance"/>
+
+<dubbo:service ref="tntSyncHotelMetaTimePriceService" interface="com.lvmama.tnt.sync.frame.service.TntSyncHotelTimePriceService" />
+
+<dubbo:service ref="tntSyncTrafficMetaTimePriceService" interface="com.lvmama.tnt.sync.frame.service.TntSyncTrafficTimePriceService" />
+
+<dubbo:service ref="tntSyncRouteTimePriceService" interface="com.lvmama.comm.tnt.service.TntSyncRouteTimePriceService" />
+<dubbo:service ref="tntSyncBaseService" interface="com.lvmama.tnt.sync.frame.service.TntSyncBaseService"/>
+<!-- 分销酒店通用返佣 -->
+<dubbo:service ref="tntHotelComCommissionService" interface="com.lvmama.comm.tnt.service.TntHotelComCommissionService" />
+
+<dubbo:service ref="tntUserChannelService" interface="com.lvmama.tnt.order.service.TntUserChannelService" />
+<dubbo:service ref="tntAppCommissionBackService" interface="com.lvmama.tnt.user.service.TntAppCommissionBackService"/>
+<!--10分钟超时 -->
+<dubbo:service ref="tntStoreUserService" interface="com.lvmama.tnt.user.service.TntStoreUserService" timeout="600000" />
+<dubbo:service ref="tntStoreUserOrderService" interface="com.lvmama.tnt.user.service.TntStoreUserOrderService" timeout="600000" />
+
+<dubbo:service ref="tntHotelOrderManagerService" interface="com.lvmama.tnt.order.service.TntHotelOrderManagerService"/>
+
+<!--分销开放平台 -->
+<dubbo:service ref="openPlatFormService" interface="com.lvmama.tnt.open.service.OpenPlatFormService" />
+<!--分销焦点图 -->
+<dubbo:service ref="focusImgService" interface="com.lvmama.tnt.recommend.service.FocusImgService" />
+<dubbo:service ref="tntCpsMaterialService" interface="com.lvmama.tnt.cps.service.TntCpsMaterialService" />
+<!--轮播焦点图 -->
+<dubbo:service ref="carouselFocusImgService" interface="com.lvmama.tnt.channel.service.CarouselFocusImgService" />
+<!-- 分销主题推荐 -->
+<dubbo:service interface="com.lvmama.tnt.channel.service.TopicImgService" ref="topicImgService"></dubbo:service>
+
+
+
+<dubbo:service ref="visaApprovalStatusService" interface="com.lvmama.tnt.partner.biz.service.VisaApprovalStatusService" />
+<dubbo:service ref="tntADPromoteService" interface="com.lvmama.tnt.prod.service.TntADPromoteService" />
+
+<dubbo:service ref="tntSellBranchService" interface="com.lvmama.tnt.prod.service.TntSellBranchService" />
+<dubbo:service ref="tntSellBranchRelationService" interface="com.lvmama.tnt.prod.service.TntSellBranchRelationService" />
+
+
+<dubbo:service ref="productMonitorJobService" interface="com.lvmama.tnt.eagleeye.ProductMonitorJobService" />
+<dubbo:service ref="distributionAgreementService" interface="com.lvmama.tnt.distribution.DistributionAgreementService" />
+<dubbo:service ref="tntProductMonitorMongoService" interface="com.lvmama.comm.tnt.service.TntProductMonitorMongoService"/>
+
+<dubbo:service ref="tntRouteRuleService" interface="com.lvmama.tnt.routeTimePrice.service.TntRouteRuleService"/>
+<dubbo:service ref="tntRouteTimePriceService" interface="com.lvmama.tnt.routeTimePrice.service.TntRouteTimePriceService"/>
+<dubbo:service ref="tntRouteSuppVstTimePriceService" interface="com.lvmama.tnt.routeTimePrice.service.TntRouteSuppVstTimePriceService"/>
+<dubbo:service ref="routeGoodsTimePriceService" interface="com.lvmama.tnt.routeTimePrice.service.RouteGoodsTimePriceService"/>
+
+<dubbo:service ref="biggerTntComlogService" interface="com.lvmama.tnt.common.service.BiggerTntComlogService"/>
+<dubbo:service ref="tntSyncRouteSuppVstTimePriceService" interface="com.lvmama.comm.tnt.service.TntSyncRouteSuppVstTimePriceService" />
+<dubbo:service ref="tntRouteTimePriceSyncService" interface="com.lvmama.comm.tnt.service.TntRouteTimePriceSyncService"/>
+
+<dubbo:service ref="tntPartnerProdRelService" interface="com.lvmama.tnt.scourroad.service.TntPartnerProdRelService" />
+
+<dubbo:service ref="tntHandlePackageStatusService" interface="com.lvmama.comm.tnt.service.TntHandlePackageStatusService"/>
+
+
+<!-- 线路打包酒店  -->
+<dubbo:service ref="tntFreeLinePackageHotelService" interface="com.lvmama.tnt.prod.service.TntFreeLinePackageHotelService" timeout="600000" />
+<dubbo:service ref="tntFreeLinePackageService" interface="com.lvmama.comm.tnt.service.TntFreeLinePackageService" timeout="600000" />
+<dubbo:service ref="routePackageHotelService" interface="com.lvmama.tnt.prod.service.RoutePackageHotelService" />
+<dubbo:service ref="tntFreeLineProductService" interface="com.lvmama.tnt.prod.service.TntFreeLineProductService"  />
+
+<dubbo:service ref="tntSpeHotelSearch" interface="com.lvmama.comm.tnt.service.TntSpeHotelSearch"/>
+
+<dubbo:service ref="tntRoutPackHotelService" interface="com.lvmama.comm.tnt.service.TntRoutPackHotelService"/>
+<dubbo:service ref="hotelPackageService" interface="com.lvmama.tnt.pack.HotelPackageService"/>
+<dubbo:service ref="hotelPackageStockAndPriceService" interface="com.lvmama.tnt.pack.HotelPackageStockAndPriceService"/>
+
+<dubbo:service ref="tntFreedomHotelPackageService" interface="com.lvmama.tnt.freedom.service.TntFreedomHotelPackageService"/>
+<dubbo:service ref="tntFreedomTrafficPackageService" interface="com.lvmama.tnt.freedom.service.TntFreedomTrafficPackageService"/>
+<dubbo:service ref="tntFreedomTrafficPackageBranchTimePriceService" interface="com.lvmama.tnt.freedom.service.TntFreedomTrafficPackageBranchTimePriceService"/>
+<dubbo:service ref="tntFreedomHotelPackageBranchTimePriceService" interface="com.lvmama.tnt.freedom.service.TntFreedomHotelPackageBranchTimePriceService"/>
+
+<!-- 通用分销品类 -->
+<dubbo:service ref="tntDistCategoryService" interface="com.lvmama.tnt.user.service.TntDistCategoryService" />
+
+<dubbo:service ref="tntChannelManagementService" interface="com.lvmama.vst.distributor.service.TntChannelManagementService"/>
+<dubbo:service ref="tntCouponRelManagementService" interface="com.lvmama.vst.prom.service.TntCouponRelManagementService"/>
+<dubbo:service ref="tntDistQueryService" interface="com.lvmama.vst.distributor.service.TntDistributorQueryService"/>
+<!-- 分销api dubbo-->
+<dubbo:service ref="apiTntRouteProductService" interface="com.lvmama.tnt.api.service.ApiTntRouteProductService"/>
+
+<!-- 酒店分销查问题用 -->
+<dubbo:service ref="hotelCheckIssueService" interface="com.lvmama.tnt.checkissue.HotelCheckIssueService"/>
+<!-- 邮轮第二版 -->
+<dubbo:service ref="tntCompShipTimePriceService" interface="com.lvmama.tnt.order.service.TntCompShipTimePriceService" />
+<dubbo:service ref="tntSyncCompShipTimePriceService" interface="com.lvmama.tnt.sync.service.TntSyncCompShipTimePriceService" />
+
+<!-- 分销授信 -->
+<dubbo:service ref="tntCreditAccountService" interface="com.lvmama.tnt.creditaccount.service.TntCreditAccountService"/>
+<dubbo:service ref="tntCreditRecordService" interface="com.lvmama.tnt.creditaccount.service.TntCreditRecordService"/>
+<dubbo:service ref="tntCreditConsumeService" interface="com.lvmama.tnt.creditaccount.service.TntCreditTradeService" group="tntCreditConsume"/>
+<dubbo:service ref="tntCreditRefundService" interface="com.lvmama.tnt.creditaccount.service.TntCreditTradeService" group="tntCreditRefund"/>
+
+<!-- 二级分销商 -->
+<dubbo:service ref="tntSettleAccountService"  interface="com.lvmama.tnt.seconddistributor.service.TntSettleAccountService"/>
+<dubbo:service ref="tntMarkupRuleService"  interface="com.lvmama.tnt.seconddistributor.service.TntMarkupRuleService"/>
+<dubbo:service ref="tntOrderSubService"  interface="com.lvmama.tnt.seconddistributor.service.TntOrderSubService"/>
+
+
+<!-- 频道页-->
+<!-- 热门目的地-->
+<dubbo:service ref="tntHotDestService" interface="com.lvmama.tnt.channel.service.TntHotDestService"/>
+
+<!--公共|如门票,出境游,..  -->
+<dubbo:service ref="tntCommChannelService" interface="com.lvmama.tnt.prod.service.TntCommChannelService"/>
+<dubbo:service ref="tntCommFillwhiteService" interface="com.lvmama.tnt.prod.service.TntCommFillwhiteService"/>
+
+<dubbo:service ref="tntChannelCommService" interface="com.lvmama.tnt.channel.service.TntChannelCommService"/>
+<dubbo:service ref="tntPayAgainService" interface="com.lvmama.tnt.pay.service.TntPayAgainService"/>
+
+<!-- bigger mongo service -->
+<dubbo:service ref="tntApiErrorService" interface="com.lvmama.comm.tnt.service.TntApiErrorService">
+	<dubbo:method name="insert" timeout="5000"/>
+</dubbo:service>
+
+<dubbo:service ref="tntApiErrorEsService" interface="com.lvmama.comm.tnt.service.TntApiErrorService" group="es">
+	<dubbo:method name="insert" timeout="5000"/>
+</dubbo:service>
+
+<dubbo:service ref="tntApiTransferMongoService" interface="com.lvmama.tnt.common.service.TntApiTransferMongoService">
+</dubbo:service>
+<dubbo:service ref="tntComLogService" interface="com.lvmama.tnt.common.service.TntComLogService" >
+	<dubbo:method name="insert" timeout="5000"/>
+	<dubbo:method name="addComLog" timeout="5000"/>
+</dubbo:service>
+
+
+<!-- 出境频道页-->
+<dubbo:service ref="tntFrontChannelCommService" interface="com.lvmama.tnt.channel.service.TntFrontChannelCommService"/>
+
+<!-- bigger mongo service -->
+<dubbo:service ref="tntApiErrorService" interface="com.lvmama.comm.tnt.service.TntApiErrorService">
+	<dubbo:method name="insert" timeout="5000"/>
+</dubbo:service>
+<dubbo:service ref="tntComLogService" interface="com.lvmama.tnt.common.service.TntComLogService" >
+	<dubbo:method name="insert" timeout="5000"/>
+	<dubbo:method name="addComLog" timeout="5000"/>
+</dubbo:service>
+<dubbo:service ref="tntApiPushLogService" interface="com.lvmama.tnt.api.service.ApiTntPushLogService">
+	<dubbo:method name="insert" timeout="5000"/>
+</dubbo:service>
+<!-- 超游玩日核销订单 -->
+<dubbo:service ref="cancelAfterVerificationService" interface="com.lvmama.tnt.order.service.CancelAfterVerificationService"/>
+
+<!-- 携程度假国内赔款 -->
+<dubbo:service ref="routeProduct2PartnerService" interface="com.lvmama.tnt.api.service.ctrip.holiday.RouteProduct2PartnerService"/>
+<dubbo:service ref="tntPartnerReviewInfoService" interface="com.lvmama.tnt.api.service.ctrip.holiday.TntPartnerReviewInfoService"/>
+<dubbo:service ref="tntPartnerOrderSyncService" interface="com.lvmama.tnt.api.service.ctrip.holiday.TntPartnerOrderSyncService"/>
+<dubbo:service ref="tntPartnerImageSyncService" interface="com.lvmama.tnt.api.service.ctrip.holiday.TntPartnerImageSyncService"/>
+<dubbo:service ref="tntRepartOrderService" interface="com.lvmama.tnt.api.service.ctrip.holiday.TntRepartOrderService"/>
+<dubbo:service ref="tntPartnerRefundInfoService" interface="com.lvmama.tnt.api.service.ctrip.holiday.TntPartnerRefundInfoService"/>
+
+<!-- 查询品类信息相关-->
+<dubbo:service ref="bizCategoryQueryService" interface="com.lvmama.tnt.common.service.BizCategoryQueryService"/>
+<!--查询CPS产品佣金信息  -->
+<dubbo:service ref="tntCpsProdCommissionService" interface="com.lvmama.tnt.cps.service.TntCpsProdCommissionService"/>
+
+<!-- 查询CPS媒体广告位信息 -->
+<dubbo:service ref="tntCpsMediaMaterialService" interface="com.lvmama.tnt.cps.service.TntCpsMediaMaterialService"/>
+
+<!--产品文字提醒服务-->
+<dubbo:service ref="tntWordTipService" interface="com.lvmama.tnt.prod.service.TntWordTipService"  />
+
+<!-- Freedom Line Product related -->
+<dubbo:service ref="tntFreedomRelatedInfoFilterService" interface="com.lvmama.tnt.freedom.service.TntFreedomRelatedInfoFilterService"/>
+<dubbo:service ref="tntFreedomPackageDetailChangeService" interface="com.lvmama.tnt.freedom.service.TntFreedomPackageDetailChangeService"/>
+<dubbo:service ref="tntFreedomDBService" interface="com.lvmama.tnt.freedom.service.TntFreedomDBService"/>
+
+<!-- 酒店、交通一次打包信息接口 -->
+<dubbo:service ref="trafficFirstPackageInfoService" interface="com.lvmama.tnt.freedom.service.TrafficFirstPackageInfoService"/>
+<dubbo:service ref="hotelFirstPackageInfoService" interface="com.lvmama.tnt.freedom.service.HotelFirstPackageInfoService"/>
+
+<!-- 自由行线路打包相关service               begin-->
+<dubbo:service ref="tntRouteCombineSyncService" interface="com.lvmama.tnt.freedom.service.TntRouteCombineSyncService"/>
+<dubbo:service ref="tntRoutePackageCombinationService" interface="com.lvmama.tnt.freedom.service.TntRoutePackageCombinationService"/>
+<dubbo:service ref="tntRoutePackageService" interface="com.lvmama.tnt.freedom.service.TntRoutePackageService"/>
+<dubbo:service ref="tntRoutePackageGoodsService" interface="com.lvmama.tnt.freedom.service.TntRoutePackageGoodsService"/>
+<dubbo:service ref="tntRouteGroupService" interface="com.lvmama.tnt.freedom.service.TntRouteGroupService"/>
+<dubbo:service ref="tntRouteGroupBranchService" interface="com.lvmama.tnt.freedom.service.TntRouteGroupBranchService"/>
+<dubbo:service ref="tntFreedomProdPackInfoService" interface="com.lvmama.tnt.freedom.service.TntFreedomProdPackInfoService"/>
+<dubbo:service ref="tntRouteCombineTimePriceService" interface="com.lvmama.tnt.freedom.service.TntRouteCombineTimePriceService"/>
+<dubbo:service ref="tntSecondaryPackageService" interface="com.lvmama.tnt.freedom.service.TntSecondaryPackageService"/>
+<dubbo:service ref="tntRouteTriggerService" interface="com.lvmama.tnt.routesync.service.TntRouteTriggerService"/>
+<dubbo:service ref="tntSecondaryPackageRelationService" interface="com.lvmama.tnt.freedom.service.TntSecondaryPackageRelationService"/>
+<dubbo:service ref="tntTrafficPackageService" interface="com.lvmama.tnt.freedom.service.TntTrafficPackageService" />
+<dubbo:service ref="tntHotelPackageService" interface="com.lvmama.tnt.freedom.service.TntHotelPackageService"  />
+<dubbo:service ref="routeSecondPackgInfoService" interface="com.lvmama.tnt.freedom.service.RouteSecondPackgInfoService"  />
+<dubbo:service ref="routeCommissionTimePriceService" interface="com.lvmama.tnt.routeTimePrice.service.RouteCommissionTimePriceService"  />
+
+<!-- 自由行线路打包相关service               end-->
+<dubbo:service ref="freedomSecondaryPackageSyncService" interface="com.lvmama.tnt.freedom.service.FreedomSecondaryPackageSyncService"/>
+<dubbo:service ref="freedomSecondPackageService" interface="com.lvmama.tnt.freedom.service.TntFreedomSecondPackageService"/>
+<dubbo:service ref="tntOrderManageNewService" interface="com.lvmama.tnt.order.service.TntOrderManageNewService"/>
+
+<!--扫码隐藏商品-->
+<dubbo:service ref="tntGoodsQrcodeUnsellService" interface="com.lvmama.tnt.qrcode.comm.service.ITntGoodsQrcodeUnsellService"/>
+
+<!--扫码下单推广-->
+<dubbo:service ref="tntProdQrcodeService" interface="com.lvmama.tnt.qrcode.comm.service.TntProdQrcodeService"/>
+
+<!--扫码订单管理-->
+<dubbo:service ref="qrCodeTicketOrderManageService" interface="com.lvmama.tnt.qrcode.ticket.service.QrCodeTicketOrderManageService"/>
+
+<!--根据productId获取同一目的地(destId)下的GoodsList-->
+<dubbo:service ref="b2BTicketGoodsService" interface="com.lvmama.tnt.product.service.B2BTicketGoodsService"/>
+<!--扫码结算-->
+<dubbo:service ref="tntOrderQrCodeSettleService" interface="com.lvmama.tnt.qrcode.comm.service.TntOrderQrCodeSettleService"/>
+
+<!--扫码结算记录-->
+<dubbo:service ref="tntOrderQrCodeSubService" interface="com.lvmama.tnt.qrcode.comm.service.TntOrderQrCodeSubService"/>
+
+<!--JOB扫码结算处理逻辑-->
+<dubbo:service ref="tntOrderQrCodeService" interface="com.lvmama.tnt.qrcode.comm.service.TntOrderQrCodeService"/>
+<dubbo:service ref="tntOrderQrCodeCashService" interface="com.lvmama.tnt.qrcode.comm.service.TntOrderQrCodeCashService"/>
+
+<!--携程订单与lvmama订单映射关系 -->
+<dubbo:service ref="tntHotelPartnerOrderRelService" interface="com.lvmama.tnt.api.service.ctrip.hotel.TntHotelPartnerOrderRelService" />
+
+<!-- 携程和lvmama产品相关 -->
+<dubbo:service ref="tntHotel2PartnerService" interface="com.lvmama.tnt.api.service.ctrip.hotel.TntHotel2PartnerService"/>
+<dubbo:service ref="tntHotelPartnerProductRelService" interface="com.lvmama.tnt.api.service.ctrip.hotel.TntHotelPartnerProductRelService"/>
+<dubbo:service ref="tntSyncCtripHotelPartnerSyncService" interface="com.lvmama.tnt.sync.frame.service.TntSyncCtripHotelPartnerSyncService"/>
+
+<!-- 签证详情 -->
+<dubbo:service ref="visaPreviewDetailService" interface="com.lvmama.tnt.prod.service.VisaPreviewDetailService"/>
+
+<dubbo:service ref="tntTicketChannelDistPriceService" interface="com.lvmama.tnt.channel.service.TntTicketChannelDistPriceService"/>
+<!-- 分销商产品返佣设置 -->
+<dubbo:service ref="tntProdUserCommissionService" interface="com.lvmama.tnt.prod.service.TntProdUserCommissionService"/>
+<!-- Vst分销订单信息查询接口 -->
+<dubbo:service ref="tntOrderQueryService" interface="com.lvmama.vst.distributor.service.TntOrderQueryService"/>
+<!-- 运营备注-->
+<dubbo:service ref="tntOrderRemarkService" interface="com.lvmama.tnt.order.service.TntOrderRemarkService"/>
+<!-- 手动更改推送库消息状态，用于重新推送 -->
+<dubbo:service ref="tntManualMessageService" interface="com.lvmama.tnt.order.service.TntManualMessageService"/>
+<!-- 分销签证价格同步 -->
+<dubbo:service ref="syncTntVisaTimePriceService" interface="com.lvmama.tnt.timeprice.service.visa.SyncTntVisaTimePriceService"/>
+
+
+<dubbo:service ref="ltsEventTypeService" interface="com.lvmama.tnt.lts.service.LtsEventTypeService"/>
+</beans>

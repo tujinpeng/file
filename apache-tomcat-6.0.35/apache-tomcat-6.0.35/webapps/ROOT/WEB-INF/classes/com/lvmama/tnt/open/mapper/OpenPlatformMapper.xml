@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.open.mapper.OpenPlatformMapper">
+	<insert id="insert" parameterType="com.lvmama.tnt.open.vo.OpenPlatformVO">
+		<selectKey resultType="java.lang.Long" keyProperty="openPlatformId"
+			order="BEFORE">
+			select  OPEN_PLATFORM_SEQ.nextval from dual
+		</selectKey>
+	         INSERT INTO OPEN_PLATFORM (
+	        	OPEN_PLATFORM_ID,
+	        	THE_SAME_FILE_NUM,
+	        	FILE_ID,
+	        	FILENAME,
+	        	HEADLINE,
+	        	CATEGORY,
+	        	VERSION,
+	        	BRIEFINTRODUCTION,
+	        	PATH,
+	        	UPLOADTYPE,
+	        	UPLODER,
+				ISPREVIOUSVERSION,
+	        	UUIDNAME,
+	        	UPDATE_DATE,
+	        	FILEORDER,
+	        	CHANGERECORD
+	        ) VALUES (
+	        	#{openPlatformId},
+	        	<if test="theSameFileNum !=null and theSameFileNum !='' and theSameFileNum !='0'">
+		        	#{theSameFileNum},
+		        </if>
+		        <if test="theSameFileNum ==null or theSameFileNum =='0'">
+		        	#{openPlatformId},
+		        </if>
+		        #{fileId,jdbcType=NUMERIC},
+	        	#{fileName,jdbcType=VARCHAR},
+	        	#{headLine,jdbcType=VARCHAR},
+	        	#{category,jdbcType=VARCHAR},
+	        	#{version,jdbcType=VARCHAR},
+	        	#{briefIntroduction,jdbcType=VARCHAR},
+	        	#{path,jdbcType=VARCHAR},
+	        	#{uploadType,jdbcType=VARCHAR},
+	        	#{uploder,jdbcType=VARCHAR},
+	        	#{isPreviousVersion,jdbcType=VARCHAR},
+	        	#{uuidName,jdbcType=VARCHAR},
+	        	sysdate,
+	        	#{fileOrder, jdbcType=NUMERIC},
+	        	#{changeRecord,jdbcType=VARCHAR}
+	        )
+	</insert>
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.open.vo.OpenPlatformVO">
+        <result property="openPlatformId" column="OPEN_PLATFORM_ID"/>
+        <result property="fileId" column="FILE_ID"/>
+        <result property="theSameFileNum" column="THE_SAME_FILE_NUM"/>
+        <result property="headLine" column="HEADLINE"/>
+        <result property="category" column="CATEGORY"/>
+        <result property="version" column="VERSION"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="briefIntroduction" column="BRIEFINTRODUCTION"/>
+        <result property="path" column="PATH"/>
+        <result property="uploder" column="UPLODER"/>
+        <result property="fileName" column="FILENAME"/>
+        <result property="isPreviousVersion" column="ISPREVIOUSVERSION"/>
+        <result property="uuidName" column="UUIDNAME"/>
+        <result property="uploadType" column="UPLOADTYPE"/>
+        <result property="fileOrder" column="FILEORDER"/>
+        <result property="changeRecord" column="CHANGERECORD"/>
+	</resultMap>
+	<select id="query" resultMap="baseResultMap" parameterType="java.lang.String" >
+   	    select * from OPEN_PLATFORM where OPEN_PLATFORM_ID = #{openPlatformId}
+    </select>
+    
+    <select id="queryThelatestOne" resultMap="baseResultMap" parameterType="java.lang.String" >
+   	    SELECT * FROM (
+ 						SELECT * FROM OPEN_PLATFORM WHERE CATEGORY = #{CATEGORY}   ORDER BY UPDATE_DATE DESC ) 
+ 		WHERE ROWNUM = 1
+    </select>
+
+	<select id="queryPageList" resultMap="baseResultMap" 
+	    parameterType="page">
+	    <include refid="basic.pageSearchHead"/>
+       		SELECT * FROM (
+      			SELECT O.*,ROW_NUMBER() OVER(PARTITION BY THE_SAME_FILE_NUM ORDER BY UPDATE_DATE DESC) CN FROM OPEN_PLATFORM O)
+      		WHERE CN = 1 ORDER BY UPDATE_DATE DESC
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	
+	<select id="count" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.open.vo.OpenPlatformVO" >
+   	     SELECT COUNT(1) FROM ( SELECT THE_SAME_FILE_NUM FROM OPEN_PLATFORM GROUP BY THE_SAME_FILE_NUM)
+    </select>
+	<delete id="delete" parameterType="Long">
+		DELETE FROM OPEN_PLATFORM
+		WHERE
+		OPEN_PLATFORM_ID = #{openPlatformId}
+	</delete>
+	<update id="update" parameterType="com.lvmama.tnt.open.vo.OpenPlatformVO">
+        UPDATE  OPEN_PLATFORM SET
+	        	THE_SAME_FILE_NUM=#{theSameFileNum,jdbcType=NUMERIC},
+	        	fileName=#{fileName,jdbcType=VARCHAR},
+	        	HEADLINE=#{headLine,jdbcType=VARCHAR},
+	        	CATEGORY=#{category,jdbcType=VARCHAR},
+	        	VERSION=#{version,jdbcType=VARCHAR},
+	        	BRIEFINTRODUCTION=#{briefIntroduction,jdbcType=VARCHAR},
+	        	PATH=#{path,jdbcType=VARCHAR},
+	        	UPLOADTYPE=#{uploadType,jdbcType=VARCHAR},
+	        	UPLODER=#{uploder,jdbcType=VARCHAR},
+	        	ISPREVIOUSVERSION=#{isPreviousVersion,jdbcType=VARCHAR},
+	        	UUIDNAME=#{uuidName,jdbcType=VARCHAR},
+	        	UPDATE_DATE=sysdate,
+	        	FILEORDER=#{fileOrder,jdbcType=NUMERIC},
+	        	CHANGERECORD=#{changeRecord,jdbcType=VARCHAR}
+        WHERE 
+        	 OPEN_PLATFORM_ID=#{openPlatformId}
+	</update>
+	
+	<select id="queryFileDetail" resultMap="baseResultMap" parameterType="java.lang.String">
+		 SELECT * FROM OPEN_PLATFORM WHERE THE_SAME_FILE_NUM = #{THESAMEFILENUM} 
+		 		ORDER BY UPDATE_DATE DESC
+	</select>
+	
+</mapper>
+

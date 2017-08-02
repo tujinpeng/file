@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCruisePackageProductRelMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+        <result property="tntCruisePackProdRelId" column="TNT_CRUISE_PACK_PROD_REL_ID"/>
+        <result property="tntCruisePackageId" column="TNT_CRUISE_PACKAGE_ID"/>
+        <result property="tntProductId" column="TNT_PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subGoodsId" column="SUB_GOODS_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+	</resultMap>
+	
+	<resultMap id="goodsResultMap" type="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		<result property="tntCruisePackProdRelId" column="TNT_CRUISE_PACK_PROD_REL_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <collection property="subGoodsList" ofType="com.lvmama.tnt.prod.vo.TntGoodsVo">
+	        <result property="goodsId" column="SUB_GOODS_ID"/>
+	        <result property="productId" column="SUB_PRODUCT_ID"/>
+	        <result property="categoryId" column="SUB_CATEGORY_ID"/>
+        </collection>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_CRUISE_PACK_PROD_REL_ID,TNT_CRUISE_PACKAGE_ID,TNT_PRODUCT_ID,GOODS_ID,PRODUCT_ID,SUB_GOODS_ID,SUB_PRODUCT_ID,CREATE_TIME,SUB_CATEGORY_ID,SUB_BRANCH_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCruisePackProdRelId"
+			order="BEFORE">
+			select  TNT_CRUISE_PACK_PROD_REL_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CRUISE_PACKAGE_PRODUCT_REL (
+        	TNT_CRUISE_PACK_PROD_REL_ID ,
+        	TNT_CRUISE_PACKAGE_ID ,
+        	TNT_PRODUCT_ID ,
+        	GOODS_ID ,
+        	PRODUCT_ID ,
+        	SUB_GOODS_ID ,
+        	SUB_PRODUCT_ID ,
+        	CREATE_TIME ,
+        	SUB_CATEGORY_ID ,
+        	SUB_BRANCH_ID
+        ) VALUES (
+        	#{tntCruisePackProdRelId,jdbcType=NUMERIC} ,
+        	#{tntCruisePackageId,jdbcType=NUMERIC} ,
+        	#{tntProductId,jdbcType=NUMERIC} ,
+        	#{goodsId,jdbcType=NUMERIC} ,
+        	#{productId,jdbcType=NUMERIC} ,
+        	#{subGoodsId,jdbcType=NUMERIC} ,
+        	#{subProductId,jdbcType=NUMERIC} ,
+        	SYSDATE,
+        	#{subCategoryId,jdbcType=NUMERIC} ,
+        	#{subBranchId,jdbcType=NUMERIC} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+        UPDATE TNT_CRUISE_PACKAGE_PRODUCT_REL SET
+	        TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId} ,
+	        TNT_PRODUCT_ID = #{tntProductId} ,
+	        GOODS_ID = #{goodsId} ,
+	        PRODUCT_ID = #{productId} ,
+	        SUB_GOODS_ID = #{subGoodsId} ,
+	        SUB_PRODUCT_ID = #{subProductId} ,
+	        CREATE_TIME = #{createTime} ,
+	        SUB_CATEGORY_ID = #{subCategoryId} 
+        WHERE 
+        	<if test="tntCruisePackProdRelId !=null">
+	        	TNT_CRUISE_PACK_PROD_REL_ID = #{tntCruisePackProdRelId} 
+	        </if>
+	</update>
+	
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+        <include refid="where"/>
+    </delete>
+    <delete id="removeSubGoods" parameterType="java.util.Map">
+        DELETE FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+        where goods_id = #{goodsId}
+        and sub_goods_id in  
+        <foreach item="item" index="index" collection="list"
+				open="(" separator="," close=")">
+				#{item}
+		</foreach>
+    </delete>
+    
+    <delete id="deleteAll" >
+        DELETE FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+	        WHERE 
+		        TNT_CRUISE_PACK_PROD_REL_ID = #{id} 
+	</select>
+	
+    <select id="findList" resultMap="goodsResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		     <include refid="where"/>
+	</select>
+	<select id="findListByCruisePackageId" resultMap="baseResultMap" parameterType="java.lang.Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		     WHERE TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId}
+	</select>
+    <select id="findDetailList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		     <include refid="where"/>
+		     order by sub_category_id
+	</select>
+	
+	<!-- 根据子商品Id查询对应的完整的商品 -->
+	<select id="findAllGoodsBySubGoodsId" resultMap="baseResultMap" parameterType="Map">
+		SELECT rr.* FROM  TNT_CRUISE_PACKAGE_PRODUCT_REL rr,tnt_cruise_package p
+		 where p.goods_id = rr.goods_id
+		 and p.integrity = 'Y'
+		 and rr.SUB_GOODS_ID = #{subGoodsId}
+	</select>
+	
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntCruisePackProdRelId != null and tntCruisePackProdRelId !=''">
+				AND TNT_CRUISE_PACK_PROD_REL_ID = #{tntCruisePackProdRelId}
+	       	</if> 
+			<if test="tntCruisePackageId != null and tntCruisePackageId !=''">
+				AND TNT_CRUISE_PACKAGE_ID = #{tntCruisePackageId}
+	       	</if> 
+			<if test="tntProductId != null and tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{tntProductId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="subGoodsId != null and subGoodsId !=''">
+				AND SUB_GOODS_ID = #{subGoodsId}
+	       	</if> 
+			<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="subCategoryId != null and subCategoryId !=''">
+				AND SUB_CATEGORY_ID = #{subCategoryId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				AND SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+	       	<if test="notsubGoodsIds != null">
+	       	    AND SUB_GOODS_ID not in
+		       	<foreach collection="notsubGoodsIds" item="notsubGoodsid" index="index"
+		            open="(" close=")" separator=",">
+		            #{notsubGoodsid}
+		        </foreach>
+	     	</if>  
+	       	
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntCruisePackProdRelId != null and param.tntCruisePackProdRelId !=''">
+				AND TNT_CRUISE_PACK_PROD_REL_ID = ${param.tntCruisePackProdRelId}
+	       	</if>
+			<if test="param.tntCruisePackageId != null and param.tntCruisePackageId !=''">
+				AND TNT_CRUISE_PACKAGE_ID = ${param.tntCruisePackageId}
+	       	</if>
+			<if test="param.tntProductId != null and param.tntProductId !=''">
+				AND TNT_PRODUCT_ID = ${param.tntProductId}
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = ${param.goodsId}
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = ${param.productId}
+	       	</if>
+			<if test="param.subGoodsId != null and param.subGoodsId !=''">
+				AND SUB_GOODS_ID = ${param.subGoodsId}
+	       	</if>
+			<if test="param.subProductId != null and param.subProductId !=''">
+				AND SUB_PRODUCT_ID = ${param.subProductId}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = ${param.createTime}
+	       	</if>
+			<if test="param.subCategoryId != null and param.subCategoryId !=''">
+				AND SUB_CATEGORY_ID = ${param.subCategoryId}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+        SELECT count(*) FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead"/>
+    	SELECT <include refid="columns" />
+	    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+  
+     <select id="queryByParams" resultMap="baseResultMap" parameterType="Map">
+    	SELECT *
+	    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+	    WHERE GOODS_ID = #{goodsId}
+     </select>
+     
+     <select id="queryCountByParams" resultType="Integer" parameterType="Map">
+    	SELECT count(*)
+	    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+	    WHERE GOODS_ID = #{goodsId}
+     </select>
+     
+       
+    <select id="getByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		      <include refid="where"/>    
+	</select>
+	
+	 <select id="getCountByParam" resultType="Integer" parameterType="Map">
+		SELECT count(*)
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		   WHERE 
+		   PRODUCT_ID = #{productId}
+		   AND GOODS_ID = #{goodsId}
+		   AND SUB_GOODS_ID = #{subGoodsId}
+		   AND SUB_PRODUCT_ID = #{subProductId}
+		   AND SUB_CATEGORY_ID = #{subCategoryId}
+		   AND SUB_BRANCH_ID = #{subBranchId}
+		   
+	</select>
+	
+    <select id="findGoodsList" resultMap="goodsResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		SELECT TCPPR.*
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR,TNT_CRUISE_PACKAGE TCP
+		    WHERE TCPPR.TNT_CRUISE_PACKAGE_ID=TCP.TNT_CRUISE_PACKAGE_ID
+		    <if test="productId != null and productId !=''">
+				AND TCPPR.PRODUCT_ID=#{productId}
+	       	</if>  
+		    <if test="integrity != null and integrity !=''">
+				 AND TCP.INTEGRITY=#{integrity}  
+	       	</if>  
+		    <if test="subGoodsId != null and subGoodsId !=''">
+				AND TCPPR.SUB_GOODS_ID=#{subGoodsId}
+	       	</if>  
+		    <if test="subProductId != null and subProductId !=''">
+				AND TCPPR.SUB_PRODUCT_ID=#{subProductId}
+	       	</if>  
+		    <if test="subBranchId != null and subBranchId !=''">
+				AND TCPPR.SUB_BRANCH_ID=#{subBranchId}
+	       	</if>  
+	</select>
+	
+	<select id="findGoodsListByIdList" resultMap="goodsResultMap" parameterType="java.util.Map">
+		SELECT TCPPR.*
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR
+		    WHERE TCPPR.tnt_cruise_pack_prod_rel_id in 
+		    <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">  
+		       #{item}  
+	        </foreach>  
+	</select>
+    
+    <sql id="rulecolumns">
+	    <![CDATA[
+		TNT_PRODUCT_ID,GOODS_ID,PRODUCT_ID,SUB_GOODS_ID,SUB_PRODUCT_ID,SUB_CATEGORY_ID,sub_branch_id
+	    ]]>
+	</sql>
+	
+		
+	<resultMap id="ruleResultMap" type="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="tntProductId" column="TNT_PRODUCT_ID"/>
+        <collection property="subGoodsRuleList" ofType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+	        <result property="subGoodsId" column="SUB_GOODS_ID"/>
+	        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+	        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+	        <result property="subBranchId" column="sub_branch_id"/>
+        </collection>
+	</resultMap>
+	
+	<select id="getRuleListByParam" resultMap="ruleResultMap" parameterType="Long">
+		SELECT <include refid="rulecolumns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL 
+		   WHERE PRODUCT_ID = #{productId}
+		   AND GOODS_ID IN (SELECT GOODS_ID 
+		   						FROM tnt_cruise_package 
+		   						where PRODUCT_ID = #{productId} 
+		   						AND DELETE_FLAG=0 
+		   						AND INTEGRITY='Y' )
+	</select>
+    
+    <insert id="batchInsert"  parameterType="java.util.List">  
+         
+        INSERT INTO TNT_CRUISE_PACKAGE_PRODUCT_REL (
+       		TNT_CRUISE_PACK_PROD_REL_ID ,
+        	TNT_CRUISE_PACKAGE_ID ,
+        	TNT_PRODUCT_ID ,
+        	GOODS_ID ,
+        	PRODUCT_ID ,
+        	SUB_GOODS_ID ,
+        	SUB_PRODUCT_ID ,
+        	CREATE_TIME ,
+        	SUB_CATEGORY_ID ,
+        	SUB_BRANCH_ID
+        )
+        SELECT 
+        	TNT_CRUISE_PACK_PROD_REL_SEQ.nextval,
+      		TNT_CRUISE_PACKAGE_ID ,
+        	TNT_PRODUCT_ID ,
+        	GOODS_ID ,
+        	PRODUCT_ID ,
+        	SUB_GOODS_ID ,
+        	SUB_PRODUCT_ID ,
+        	CREATE_TIME ,
+        	SUB_CATEGORY_ID ,
+        	SUB_BRANCH_ID
+			 FROM(
+        <foreach collection="list" item="item" index="index" separator="union all" >  
+            SELECT 
+        	#{tntCruisePackageId,jdbcType=NUMERIC}  AS TNT_CRUISE_PACKAGE_ID ,  
+        	#{tntProductId,jdbcType=NUMERIC}   AS TNT_PRODUCT_ID ,         
+        	#{goodsId,jdbcType=NUMERIC}    AS GOODS_ID ,               
+        	#{productId,jdbcType=NUMERIC}  AS PRODUCT_ID ,             
+        	#{subGoodsId,jdbcType=NUMERIC}    AS SUB_GOODS_ID ,           
+        	#{subProductId,jdbcType=NUMERIC}  AS SUB_PRODUCT_ID ,         
+        	SYSDATE    AS CREATE_TIME ,            
+        	#{subCategoryId,jdbcType=NUMERIC}   AS SUB_CATEGORY_ID ,        
+        	#{subBranchId,jdbcType=NUMERIC}    AS SUB_BRANCH_ID            
+ 			FROM DUAL
+        </foreach>  
+        )
+    </insert>  
+    <select id="findListByParam" resultType="long" parameterType="map">
+		select DISTINCT TCPPR.PRODUCT_ID from TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR,TNT_COMPSHIP_PRODUCT TCP
+			WHERE   TCPPR.PRODUCT_ID=TCP.PRODUCT_ID
+			AND TCPPR.Sub_Category_Id= #{subCategoryId} 
+			AND TCPPR.SUB_PRODUCT_ID=#{subProductId} 
+			AND ( TCP.CRUISE_COMPANY <![CDATA[ <> ]]> #{cruiseCompany} or TCP.CRUISE_COMPANY is null) 
+	</select>
+    
+    <select id="findAutoTntPackProdRelListList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruisePackageProductRel">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_PACKAGE_PRODUCT_REL  t 
+		   where 1=1
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 		   
+	       	<if test="integrity != null and integrity !=''">
+				and exists (select 1 from tnt_cruise_package pack where pack.tnt_cruise_package_id = t.tnt_cruise_package_id 
+				                      and pack.auto_flag = 0 and pack.integrity = #{integrity})
+	       	</if> 
+	</select>
+</mapper>
+

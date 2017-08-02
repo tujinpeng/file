@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntRoutePackageGoodsMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+        <result property="tntRoutePackageGoodsId" column="TNT_ROUTE_PACKAGE_GOODS_ID"/>
+        <result property="tntRoutePackageId" column="TNT_ROUTE_PACKAGE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="startDay" column="START_DAY"/>
+        <result property="day" column="DAY"/>
+        <result property="night" column="NIGHT"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="valid" column="VALID"/>
+        <result property="price" column="PRICE"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="maxGuests" column="MAX_GUESTS"/>
+        <result property="adult" column="ADULT"/>
+        <result property="child" column="CHILD"/>
+        <result property="adultCnt" column="ADULT_CNT"/>
+        <result property="childCnt" column="CHILD_CNT"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ROUTE_PACKAGE_GOODS_ID,TNT_ROUTE_PACKAGE_ID,PRODUCT_ID,SUB_PRODUCT_ID,SUB_BRANCH_ID,
+		GOODS_ID,GOODS_NAME,START_DAY,DAY,NIGHT,GROUP_ID,DETAIL_ID,VALID,PRICE,PRICE_TYPE,MAX_GUESTS,
+		ADULT,CHILD,ADULT_CNT,CHILD_CNT,UPDATE_TIME,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+        INSERT INTO TNT_ROUTE_PACKAGE_GOODS (
+        	TNT_ROUTE_PACKAGE_GOODS_ID,
+			TNT_ROUTE_PACKAGE_ID,
+			PRODUCT_ID,
+			SUB_PRODUCT_ID,
+			SUB_BRANCH_ID,
+			GOODS_ID,
+			GOODS_NAME,
+			START_DAY,
+			DAY,
+			NIGHT,
+			GROUP_ID,
+			DETAIL_ID,
+			VALID,
+			PRICE,
+			PRICE_TYPE,
+			MAX_GUESTS,
+			ADULT,
+			CHILD,
+			ADULT_CNT,
+			CHILD_CNT,
+			UPDATE_TIME,
+			CREATE_TIME
+        ) VALUES (
+        	#{tntRoutePackageGoodsId},
+        	#{tntRoutePackageId},
+        	#{productId},
+        	#{subProductId},
+        	#{subBranchId},
+        	#{goodsId},
+        	#{goodsName},
+        	#{startDay},
+        	#{day},
+        	#{night},
+        	#{groupId},
+        	#{detailId},
+        	#{valid},
+        	#{price},
+        	#{priceType},
+        	#{maxGuests},
+        	#{adult},
+        	#{child},
+        	#{adultCnt},
+        	#{childCnt},
+        	now(),
+        	now()
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+      	UPDATE TNT_ROUTE_PACKAGE_GOODS
+    	<set>
+    	   	UPDATE_TIME = now()
+    	   	<if test="tntRoutePackageId != null and tntRoutePackageId !=''">
+				, TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				, PRODUCT_ID = #{productId}
+	       	</if> 
+	       	<if test="subProductId != null and subProductId !=''">
+				, SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				, SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				, GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				, GOODS_NAME = #{goodsName}
+	       	</if> 
+			<if test="startDay != null and startDay !=''">
+				, START_DAY = #{startDay}
+	       	</if> 
+			<if test="day != null and day !=''">
+				, DAY = #{day}
+	       	</if>
+	       	<if test="night != null and night !=''">
+				, NIGHT = #{night}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				, GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="detailId != null and detailId !=''">
+				, DETAIL_ID = #{detailId}
+	       	</if> 
+			<if test="valid != null and valid !=''">
+				, VALID = #{valid}
+	       	</if> 
+			<if test="price != null and price !=''">
+				, PRICE = #{price}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				, PRICE_TYPE = #{priceType}
+	       	</if>
+			<if test="maxGuests != null and maxGuests !=''">
+				, MAX_GUESTS = #{maxGuests}
+	       	</if> 
+			<if test="adult != null and adult !=''">
+				, ADULT = #{adult}
+	       	</if>
+	       	<if test="child != null and child !=''">
+				, CHILD = #{child}
+	       	</if>
+	       	<if test="adultCnt != null">
+				, ADULT_CNT = #{adultCnt}
+	       	</if>
+	       	<if test="childCnt != null">
+				, CHILD_CNT = #{childCnt}
+	       	</if>      
+    	</set>
+    	WHERE
+    	<if test="tntRoutePackageGoodsId !=null">
+	        	TNT_ROUTE_PACKAGE_GOODS_ID = #{tntRoutePackageGoodsId} 
+	     </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ROUTE_PACKAGE_GOODS WHERE
+        TNT_ROUTE_PACKAGE_GOODS_ID = #{tntRoutePackageGoodsId} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_PACKAGE_GOODS 
+	        WHERE 
+		        TNT_ROUTE_PACKAGE_GOODS_ID = #{tntRoutePackageGoodsId} 
+	</select>
+	
+    <select id="findByRoutePackageId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_PACKAGE_GOODS 
+	        WHERE 
+		        TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntRoutePackageGoodsId != null and tntRoutePackageGoodsId !=''">
+				AND TNT_ROUTE_PACKAGE_GOODS_ID = #{tntRoutePackageGoodsId}
+	       	</if> 
+			<if test="tntRoutePackageId != null and tntRoutePackageId !=''">
+				AND TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+	       	<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				AND SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				AND GOODS_NAME = #{goodsName}
+	       	</if> 
+			<if test="startDay != null and startDay !=''">
+				AND START_DAY = #{startDay}
+	       	</if> 
+			<if test="day != null and day !=''">
+				AND DAY = #{day}
+	       	</if>
+	       	<if test="night != null and night !=''">
+				AND NIGHT = #{night}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="detailId != null and detailId !=''">
+				AND DETAIL_ID = #{detailId}
+	       	</if> 
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+	       	</if> 
+			<if test="price != null and price !=''">
+				AND PRICE = #{price}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				AND PRICE_TYPE = #{priceType}
+	       	</if>
+			<if test="maxGuests != null and maxGuests !=''">
+				AND MAX_GUESTS = #{maxGuests}
+	       	</if> 
+			<if test="adult != null and adult !=''">
+				AND ADULT = #{adult}
+	       	</if>
+	       	<if test="child != null and child !=''">
+				AND CHILD = #{child}
+	       	</if>
+	       	<if test="adultCnt != null and adultCnt !=''">
+				AND ADULT_CNT = #{adultCnt}
+	       	</if>
+	       	<if test="childCnt != null and childCnt !=''">
+				AND CHILD_CNT = #{childCnt}
+	       	</if>
+	       	<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if>	       	    
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+	        <if test="param.tntRoutePackageGoodsId != null and param.tntRoutePackageGoodsId !=''">
+				AND TNT_ROUTE_PACKAGE_GOODS_ID = #{param.tntRoutePackageGoodsId}
+	       	</if> 
+			<if test="param.tntRoutePackageId != null and param.tntRoutePackageId !=''">
+				AND TNT_ROUTE_PACKAGE_ID = #{param.tntRoutePackageId}
+	       	</if> 
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if> 
+	       	<if test="param.subProductId != null and param.subProductId !=''">
+				AND SUB_PRODUCT_ID = #{param.subProductId}
+	       	</if>  
+			<if test="param.subBranchId != null and param.subBranchId !=''">
+				AND SUB_BRANCH_ID = #{param.subBranchId}
+	       	</if> 
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = #{param.goodsId}
+	       	</if> 
+			<if test="param.goodsName != null and param.goodsName !=''">
+				AND GOODS_NAME = #{param.goodsName}
+	       	</if> 
+			<if test="param.startDay != null and param.startDay !=''">
+				AND START_DAY = #{param.startDay}
+	       	</if> 
+			<if test="param.day != null and param.day !=''">
+				AND DAY = #{param.day}
+	       	</if>
+	       	<if test="param.night != null and param.night !=''">
+				AND NIGHT = #{param.night}
+	       	</if> 
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = #{param.groupId}
+	       	</if> 
+			<if test="param.detailId != null and param.detailId !=''">
+				AND DETAIL_ID = #{param.detailId}
+	       	</if> 
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+	       	</if> 
+			<if test="param.price != null and param.price !=''">
+				AND PRICE = #{param.price}
+	       	</if> 
+			<if test="param.priceType != null and param.priceType !=''">
+				AND PRICE_TYPE = #{param.priceType}
+	       	</if>
+			<if test="param.maxGuests != null and param.maxGuests !=''">
+				AND MAX_GUESTS = #{param.maxGuests}
+	       	</if> 
+			<if test="param.adult != null and param.adult !=''">
+				AND ADULT = #{param.adult}
+	       	</if>
+	       	<if test="param.child != null and param.child !=''">
+				AND CHILD = #{param.child}
+	       	</if>
+	       	<if test="param.adultCnt != null and param.adultCnt !=''">
+				AND ADULT_CNT = #{param.adultCnt}
+	       	</if>
+	       	<if test="param.childCnt != null and param.childCnt !=''">
+				AND CHILD_CNT = #{param.childCnt}
+	       	</if>       
+	       	<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if>
+	       	<if test="param.createTime != null and param.createTime !=''">
+	       		AND CREATE_TIME = #{param.createTime}
+	       	</if>	       	 
+		</where>
+	</sql>
+	
+	<delete id="deleteByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+        DELETE FROM TNT_ROUTE_PACKAGE_GOODS
+        <include refid="where"/>
+    </delete>
+    
+    <update id="updateByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+    	UPDATE TNT_ROUTE_PACKAGE_GOODS
+    	<set>
+    	   	UPDATE_TIME = now()
+    	   	<if test="tntRoutePackageId != null and tntRoutePackageId !=''">
+				, TNT_ROUTE_PACKAGE_ID = #{tntRoutePackageId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				, PRODUCT_ID = #{productId}
+	       	</if> 
+	       	<if test="subProductId != null and subProductId !=''">
+				, SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				, SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				, GOODS_NAME = #{goodsName}
+	       	</if> 
+			<if test="startDay != null and startDay !=''">
+				, START_DAY = #{startDay}
+	       	</if> 
+			<if test="day != null and day !=''">
+				, DAY = #{day}
+	       	</if>
+	       	<if test="night != null and night !=''">
+				, NIGHT = #{night}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				, GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="detailId != null and detailId !=''">
+				, DETAIL_ID = #{detailId}
+	       	</if> 
+			<if test="valid != null and valid !=''">
+				, VALID = #{valid}
+	       	</if> 
+			<if test="price != null and price !=''">
+				, PRICE = #{price}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				, PRICE_TYPE = #{priceType}
+	       	</if>
+			<if test="maxGuests != null and maxGuests !=''">
+				, MAX_GUESTS = #{maxGuests}
+	       	</if> 
+			<if test="adult != null and adult !=''">
+				, ADULT = #{adult}
+	       	</if>
+	       	<if test="child != null and child !=''">
+				, CHILD = #{child}
+	       	</if>
+	       	<if test="adultCnt != null">
+				, ADULT_CNT = #{adultCnt}
+	       	</if>
+	       	<if test="childCnt != null">
+				, CHILD_CNT = #{childCnt}
+	       	</if>     
+    	</set>
+    	WHERE
+    		<if test="goodsId != null and goodsId !=''">
+				GOODS_ID = #{goodsId}
+	       	</if> 
+    </update>
+    
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRoutePackageGoods">
+        SELECT count(*) FROM TNT_ROUTE_PACKAGE_GOODS 
+		<include refid="where"/>    
+    </select>
+    
+      <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_PACKAGE_GOODS
+	    <include refid="pageWhere"/> 
+	    <include refid="mysqlPageSearchFoot"/> 
+    </select>
+    
+	
+	<sql id="mysqlPageSearchFoot">
+    	LIMIT #{startRowsForMySql},#{pageSize}
+    </sql>
+    
+    <select id ="findByGoodsId" resultMap="baseResultMap" parameterType="Long">
+    	SELECT <include refid="columns" />
+		FROM TNT_ROUTE_PACKAGE_GOODS 
+	    WHERE 
+				GOODS_ID = #{goodsId}
+    </select>
+    
+    <!-- 批量插入tntRoutePackageGoods表  by baojiawei -->
+    <insert id="insertPackageGoodsByList" parameterType="java.util.List">
+    	INSERT INTO TNT_ROUTE_PACKAGE_GOODS(
+    		TNT_ROUTE_PACKAGE_GOODS_ID,
+			TNT_ROUTE_PACKAGE_ID,
+			PRODUCT_ID,
+			SUB_PRODUCT_ID,
+			SUB_BRANCH_ID,
+			GOODS_ID,
+			GOODS_NAME,
+			START_DAY,
+			DAY,
+			NIGHT,
+			GROUP_ID,
+			DETAIL_ID,
+			VALID,
+			PRICE,
+			PRICE_TYPE,
+			MAX_GUESTS,
+			ADULT,
+			CHILD,
+			ADULT_CNT,
+			CHILD_CNT,
+			UPDATE_TIME,			
+			CREATE_TIME
+        ) VALUES 
+      	<foreach collection="list" item="item" index="index" separator=",">
+      		(#{item.tntRoutePackageGoodsId},
+      		#{item.tntRoutePackageId},
+      		#{item.productId},
+      		#{item.subProductId},
+      		#{item.subBranchId},
+      		#{item.goodsId},
+      		#{item.goodsName},
+      		#{item.startDay},
+      		#{item.day},
+      		#{item.night},
+      		#{item.groupId},
+      		#{item.detailId},
+      		#{item.valid},
+      		#{item.price},
+      		#{item.priceType},
+      		#{item.maxGuests},
+      		#{item.adult},
+      		#{item.child},
+      		#{item.adultCnt},
+      		#{item.childCnt},
+      		now(),
+      		now())
+      	</foreach>
+    </insert>
+    
+     <!-- 按照条件查询数据 -->
+     <select id="findByParams" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_PACKAGE_GOODS 
+		        <include refid="where"/>
+	</select>
+</mapper>
+

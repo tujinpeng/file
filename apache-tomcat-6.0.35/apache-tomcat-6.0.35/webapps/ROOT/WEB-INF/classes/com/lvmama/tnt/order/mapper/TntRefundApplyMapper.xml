@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.lvmama.tnt.order.mapper.TntRefundApplyMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntRefundApply">
+        <result property="tntRefundApplyId" column="TNT_REFUND_APPLY_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="refundmentId" column="REFUNDMENT_ID"/>
+        <result property="refundReason" column="REFUND_REASON"/>
+        <result property="refundStatus" column="REFUND_STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="refundMoney" column="REFUND_MONEY"/>
+        <result property="operatorName" column="OPERATOR_NAME"/>
+        <result property="refundType" column="REFUND_TYPE"/>
+        <result property="refundFrom" column="REFUND_FROM"/>
+        <result property="returnFrom" column="RETURN_FROM"/>
+        <result property="rejectReason" column="REJECT_REASON"/>
+        <result property="refundIdentify" column="REFUND_IDENTIFY"/>
+        <result property="refundCharge" column="REFUND_CHARGE"/>
+        <result property="refundRemarks" column="REFUND_REMARKS"/>
+        <result property="disposeStatus" column="DISPOSE_STATUS"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_REFUND_APPLY_ID,ORDER_ID,REFUNDMENT_ID,REFUND_REASON,REFUND_STATUS,CREATE_TIME,REFUND_MONEY,OPERATOR_NAME,REFUND_TYPE,REFUND_FROM,RETURN_FROM,REJECT_REASON,REFUND_IDENTIFY,REFUND_CHARGE,REFUND_REMARKS,DISPOSE_STATUS
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.order.po.TntRefundApply">
+		<selectKey resultType="java.lang.Long" keyProperty="tntRefundApplyId"
+			order="BEFORE">
+			select  TNT_REFUND_APPLY_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_REFUND_APPLY (
+        	TNT_REFUND_APPLY_ID ,
+        	ORDER_ID ,
+        	REFUND_REASON ,
+        	REFUND_STATUS ,
+        	CREATE_TIME ,
+        	REFUND_MONEY ,
+        	OPERATOR_NAME ,
+        	REFUND_TYPE ,
+        	REFUND_FROM ,
+        	RETURN_FROM ,
+        	REJECT_REASON ,
+        	REFUND_IDENTIFY ,
+        	REFUND_CHARGE ,
+        	REFUND_REMARKS ,
+        	DISPOSE_STATUS
+        ) VALUES (
+        	#{tntRefundApplyId,jdbcType=DECIMAL} ,
+        	#{orderId,jdbcType=DECIMAL} ,
+        	#{refundReason,jdbcType=VARCHAR} ,
+        	#{refundStatus,jdbcType=VARCHAR} ,
+        	sysdate,
+        	#{refundMoney,jdbcType=VARCHAR} ,
+        	#{operatorName,jdbcType=VARCHAR} ,
+        	#{refundType,jdbcType=VARCHAR} ,
+        	#{refundFrom,jdbcType=VARCHAR} ,
+        	#{returnFrom,jdbcType=VARCHAR} ,
+        	#{rejectReason,jdbcType=VARCHAR} ,
+        	#{refundIdentify,jdbcType=VARCHAR} ,
+        	#{refundCharge,jdbcType=VARCHAR} ,
+        	#{refundRemarks,jdbcType=VARCHAR} ,
+        	#{disposeStatus,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntRefundApply">
+        UPDATE TNT_REFUND_APPLY SET
+	        ORDER_ID = #{orderId,jdbcType=DECIMAL} ,
+	        REFUNDMENT_ID = #{refundmentId,jdbcType=DECIMAL} ,
+	        REFUND_REASON = #{refundReason,jdbcType=VARCHAR} ,
+	        REFUND_STATUS = #{refundStatus,jdbcType=VARCHAR} ,
+	        REFUND_MONEY = #{refundMoney,jdbcType=VARCHAR} ,
+	        OPERATOR_NAME = #{operatorName,jdbcType=VARCHAR} ,
+	        REFUND_TYPE = #{refundType,jdbcType=VARCHAR} ,
+	        REFUND_FROM = #{refundFrom,jdbcType=VARCHAR} ,
+	        RETURN_FROM = #{returnFrom,jdbcType=VARCHAR} ,
+	        REJECT_REASON = #{rejectReason,jdbcType=VARCHAR} ,
+	        REFUND_IDENTIFY = #{refundIdentify,jdbcType=VARCHAR} ,
+	        REFUND_CHARGE = #{refundCharge,jdbcType=VARCHAR} ,
+	        REFUND_REMARKS = #{refundRemarks,jdbcType=VARCHAR} ,
+	        DISPOSE_STATUS = #{disposeStatus,jdbcType=VARCHAR} 
+	        
+        WHERE 
+        	<if test="tntRefundApplyId !=null">
+	        	TNT_REFUND_APPLY_ID = #{tntRefundApplyId,jdbcType=DECIMAL} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_REFUND_APPLY WHERE
+        TNT_REFUND_APPLY_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_REFUND_APPLY 
+	        WHERE 
+		        TNT_REFUND_APPLY_ID = #{id} 
+	</select>
+	
+	<select id="getByOrderId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_REFUND_APPLY 
+	        WHERE 
+		        ORDER_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntRefundApplyId != null and tntRefundApplyId !=''">
+				AND TNT_REFUND_APPLY_ID = #{tntRefundApplyId}
+	       	</if> 
+			<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+	       	</if> 
+			<if test="refundmentId != null and refundmentId !=''">
+				AND REFUNDMENT_ID = #{refundmentId}
+	       	</if> 
+			<if test="refundReason != null and refundReason !=''">
+				AND REFUND_REASON = #{refundReason}
+	       	</if> 
+			<if test="refundStatus != null and refundStatus !=''">
+				AND REFUND_STATUS = #{refundStatus}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="refundMoney != null and refundMoney !=''">
+				AND REFUND_MONEY = #{refundMoney}
+	       	</if> 
+			<if test="operatorName != null and operatorName !=''">
+				AND OPERATOR_NAME = #{operatorName}
+	       	</if> 
+			<if test="refundType != null and refundType !=''">
+				AND REFUND_TYPE = #{refundType}
+	       	</if> 
+			<if test="refundFrom != null and refundFrom !=''">
+				AND REFUND_FROM = #{refundFrom}
+	       	</if> 
+			<if test="returnFrom != null and returnFrom !=''">
+				AND RETURN_FROM = #{returnFrom}
+	       	</if> 
+			<if test="rejectReason != null and rejectReason !=''">
+				AND REJECT_REASON = #{rejectReason}
+	       	</if> 
+			<if test="refundIdentify != null and refundIdentify !=''">
+				AND REFUND_IDENTIFY = #{refundIdentify}
+	       	</if> 
+			<if test="refundCharge != null and refundCharge !=''">
+				AND REFUND_CHARGE = #{refundCharge}
+	       	</if> 
+			<if test="refundRemarks != null and refundRemarks !=''">
+				AND REFUND_REMARKS = #{refundRemarks}
+	       	</if> 
+	       	<if test="disposeStatus != null and disposeStatus !=''">
+				AND DISPOSE_STATUS = #{disposeStatus}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntRefundApplyId != null and param.tntRefundApplyId !=''">
+				AND TNT_REFUND_APPLY_ID = param.tntRefundApplyId
+	       	</if>
+			<if test="param.orderId != null and param.orderId !=''">
+				AND ORDER_ID = param.orderId
+	       	</if>
+			<if test="param.refundmentId != null and param.refundmentId !=''">
+				AND REFUNDMENT_ID = param.refundmentId
+	       	</if>
+			<if test="param.refundReason != null and param.refundReason !=''">
+				AND REFUND_REASON = param.refundReason
+	       	</if>
+			<if test="param.refundStatus != null and param.refundStatus !=''">
+				AND REFUND_STATUS = param.refundStatus
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = param.createTime
+	       	</if>
+			<if test="param.refundMoney != null and param.refundMoney !=''">
+				AND REFUND_MONEY = param.refundMoney
+	       	</if>
+			<if test="param.operatorName != null and param.operatorName !=''">
+				AND OPERATOR_NAME = param.operatorName
+	       	</if>
+			<if test="param.refundType != null and param.refundType !=''">
+				AND REFUND_TYPE = param.refundType
+	       	</if>
+			<if test="param.refundFrom != null and param.refundFrom !=''">
+				AND REFUND_FROM = param.refundFrom
+	       	</if>
+			<if test="param.returnFrom != null and param.returnFrom !=''">
+				AND RETURN_FROM = param.returnFrom
+	       	</if>
+			<if test="param.rejectReason != null and param.rejectReason !=''">
+				AND REJECT_REASON = param.rejectReason
+	       	</if>
+			<if test="param.refundIdentify != null and param.refundIdentify !=''">
+				AND REFUND_IDENTIFY = param.refundIdentify
+	       	</if>
+			<if test="param.refundCharge != null and param.refundCharge !=''">
+				AND REFUND_CHARGE = param.refundCharge
+	       	</if>
+			<if test="param.refundRemarks != null and param.refundRemarks !=''">
+				AND REFUND_REMARKS = param.refundRemarks
+	       	</if>
+	       	<if test="param.disposeStatus != null and param.disposeStatus !=''">
+				AND DISPOSE_STATUS = param.disposeStatus
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.order.po.TntRefundApply">
+        SELECT count(*) FROM TNT_REFUND_APPLY 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_REFUND_APPLY 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+  
+	  <select id="queryRefundApplyByParam" parameterType="java.util.HashMap" resultMap="baseResultMap">
+	  		select <include refid="columns" /> from TNT_REFUND_APPLY refund where 1=1
+	  		<if test="disposeStatus != null and disposeStatus !=''">
+					AND refund.DISPOSE_STATUS = #{disposeStatus}
+		    </if>
+		    <if test="refundType != null and refundType !=''">
+					AND refund.REFUND_TYPE = #{refundType}
+		    </if>
+		    <if test="createTime != null and createTime !=''">
+		     <![CDATA[
+				AND refund.CREATE_TIME <= to_date(#{createTime},'yyyy-MM-dd hh24:mi:ss')
+			]]>
+	       	</if>
+		    <if test="orderId != null and orderId !=''">
+					AND refund.ORDER_ID = #{orderId}
+		    </if>
+			 order by refund.tnt_refund_apply_id desc 
+	  </select>
+
+</mapper>
+

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.api.ctrip.holiday.mysql.mapper.TntPartnerRefundInfoMapper" >
+  <resultMap id="TntPartnerRefundResultMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerRefundOrderVo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="VST_ORDER_ID" property="vstOrderId"/>
+    <result column="PARTNER_CODE" property="partnerCode" />
+    <result column="PARTNER_ORDER_ID" property="partnerOrderId" />
+    <result column="CONTACT_NAME" property="contactName" />
+    <result column="CONTACT_MOBILE" property="contactMobile"/>
+    <result column="PRODUCT_ID" property="productId"  />
+    <result column="PRODUCT_NAME" property="productName"/>
+    <result column="QUANTITY" property="quantity"  />
+    <result column="ORDER_TOTAL" property="orderTotal" />
+    <result column="REFUND_AMOUNT" property="refundAmount"  />
+    <result column="PENALTY_AMOUNT" property="penaltyAmount" />
+    <result column="ORDER_CREATE_TIME" property="orderCreateTime"/>
+    <result column="ORDER_PAY_TIME" property="orderPayTime"/>
+    <result column="ORDER_REFUND_TIME" property="orderRefundTime"/>
+    <result column="CREATE_TIME" property="createTime"/>
+  </resultMap>
+
+  
+  <sql id="where">
+  	<where>
+  		<if test="vstOrderId != null and vstOrderId != ''">
+				VST_ORDER_ID = #{vstOrderId}
+		</if>
+		<if test="partnerCode != null and partnerCode != ''">
+				AND PARTNER_CODE = #{partnerCode}
+		</if>
+		<if test="partnerOrderId != null and partnerOrderId != ''">
+				AND PARTNER_ORDER_ID = #{partnerOrderId}
+		</if>
+		<if test="contactName != null and contactName != ''">
+				AND CONTACT_NAME = #{contactName}
+		</if>
+		<if test="contactMobile != null and contactMobile != ''">
+				AND CONTACT_MOBILE = #{contactMobile}
+		</if>
+		<if test="productId != null and productId != ''">
+				AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="productName != null and productName != ''">
+				AND PRODUCT_NAME = #{productName}
+		</if>
+		<if test="quantity != null and quantity != ''">
+				AND QUANTITY = #{quantity}
+		</if>
+		<if test="orderTotal != null and orderTotal != ''">
+				AND ORDER_TOTAL = #{orderTotal}
+		</if>
+		<if test="refundAmount != null and refundAmount != ''">
+				AND REFUND_AMOUNT = #{refundAmount}
+		</if>
+		<if test="penaltyAmount != null and penaltyAmount != ''">
+				AND PENALTY_AMOUNT = #{penaltyAmount}
+		</if>
+		<if test="orderCreateTime != null and orderCreateTime != ''">
+				AND ORDER_CREATE_TIME = #{orderCreateTime}
+		</if>
+		<if test="orderPayTime != null and orderPayTime != ''">
+				AND ORDER_PAY_TIME = #{orderPayTime}
+		</if>
+		<if test="orderRefundTime != null and orderRefundTime != ''">
+				AND ORDER_REFUND_TIME = #{orderRefundTime}
+		</if>
+		<if test="createTime != null and createTime != ''">
+				AND CREATE_TIME = #{createTime}
+		</if>
+  	</where>
+  </sql>
+  
+
+  <insert id="insert" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerRefundOrderVo" >
+    insert into TNT_PARTNER_REFUND_ORDER_INFO (VST_ORDER_ID,PARTNER_CODE,PARTNER_ORDER_ID,CONTACT_NAME,CONTACT_MOBILE,PRODUCT_ID,PRODUCT_NAME,QUANTITY,ORDER_TOTAL,REFUND_AMOUNT,
+    PENALTY_AMOUNT,ORDER_CREATE_TIME,ORDER_PAY_TIME,ORDER_REFUND_TIME,CREATE_TIME)
+    values ( #{vstOrderId},#{partnerCode},#{partnerOrderId},#{contactName},#{contactMobile},#{productId},#{productName},#{quantity},#{orderTotal},#{refundAmount},
+    #{penaltyAmount},
+    #{orderCreateTime},
+    #{orderPayTime},
+    #{orderRefundTime},
+    #{createTime}
+      )
+  </insert>
+</mapper>

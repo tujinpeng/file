@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserDistributorIPMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntUserDistributorIP">
+		<result property="userDistributorIpId" column="USER_DISTRIBUTOR_IP_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="ip" column="IP" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		USER_DISTRIBUTOR_IP_ID,USER_ID,IP,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="userDistributorIpId"
+			order="BEFORE">
+			select TNT_COMPANY_TYPE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO USER_DISTRIBUTOR_IP (
+		USER_DISTRIBUTOR_IP_ID ,
+		USER_ID ,
+		IP,
+		CREATE_TIME
+		) VALUES (
+		#{userDistributorIpId} ,
+		#{userId,jdbcType=VARCHAR} ,
+		#{ip,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE USER_DISTRIBUTOR_IP
+		<set>
+			<if test="userId != null">
+				USER_ID = #{userId} ,
+			</if>
+			<if test="ip != null">
+				IP = #{ip}
+			</if>
+		</set>
+		WHERE USER_DISTRIBUTOR_IP_ID = #{userDistributorIpId}
+	</update>
+
+	<delete id="del" parameterType="Long">
+		DELETE FROM USER_DISTRIBUTOR_IP
+		WHERE
+		USER_DISTRIBUTOR_IP_ID =
+		#{id}
+	</delete>
+
+	<select id="findById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM USER_DISTRIBUTOR_IP
+		WHERE
+		USER_DISTRIBUTOR_IP_ID = #{id}
+	</select>
+
+	<select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntUserDistributorIP">
+		SELECT
+		<include refid="columns" />
+		FROM USER_DISTRIBUTOR_IP
+		<include refid="whereSQL" />
+	</select>
+	
+	<select id="queryByDistributorCode" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntUserDistributorIP">
+		SELECT IP.*
+		  FROM USER_DISTRIBUTOR_IP IP, TNT_USER_DETAIL TU
+		 WHERE IP.USER_ID = TU.USER_ID
+		   AND TU.DISTRIBUTOR_CODE = #{distributorCode}
+		   AND IP = #{ip}
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="ip!=null and ip!=''">
+				AND IP = #{ip}
+			</if>
+		</where>
+	</sql>
+</mapper>
+

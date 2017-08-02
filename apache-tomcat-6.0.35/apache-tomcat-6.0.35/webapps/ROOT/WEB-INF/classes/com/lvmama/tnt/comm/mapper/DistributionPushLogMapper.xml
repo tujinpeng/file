@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.comm.mapper.DistributionPushLogMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.comm.vo.DistributionPushLog">
+        <result property="logId" column="LOG_ID"/>
+        <result property="distributorId" column="DISTRIBUTOR_ID"/>
+        <result property="messageId" column="MESSAGE_ID"/>
+        <result property="objectId" column="OBJECT_ID"/>
+        <result property="objectType" column="OBJECT_TYPE"/>
+        <result property="eventType" column="EVENT_TYPE"/>
+        <result property="code" column="CODE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createDate" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.lvmama.tnt.comm.vo.DistributionPushLog">
+		<selectKey resultType="java.lang.Long" keyProperty="logId"
+			order="BEFORE">
+			select  distribution_push_log_id_seq.nextval from dual
+		</selectKey>
+        INSERT INTO DISTRIBUTION_PUSH_LOG (
+        	LOG_ID,
+        	DISTRIBUTOR_ID,
+        	MESSAGE_ID,
+        	OBJECT_ID,
+        	OBJECT_TYPE,
+        	EVENT_TYPE,
+        	CODE,
+        	CONTENT,
+        	CREATE_TIME
+        ) VALUES (
+        	#{logId},
+        	#{distributorId},
+        	#{messageId},
+        	#{objectId},
+        	#{objectType},
+        	#{eventType},
+        	#{code},
+        	#{content},
+        	#{createDate}
+        )
+	</insert>
+	
+	<select id="queryLogsByParam" resultMap="baseResultMap" parameterType="java.util.HashMap">
+		select
+		a.*
+		from DISTRIBUTION_PUSH_LOG a
+		<where>
+			<if test="factor != null and factor != ''">
+				MOD(LOG_ID, #factor#) = #compareValue#
+			</if>
+			<if test="createTimeBegin != null and createTimeBegin != ''">
+			 <![CDATA[ AND a.CREATE_TIME >= #{createTimeBegin}]]>
+			</if>
+			<if test="createTimeEnd != null and createTimeEnd != ''">
+			 <![CDATA[ AND a.CREATE_TIME <= #{createTimeEnd}]]>
+			</if>
+       </where>
+	</select>
+
+</mapper>
+

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.pushplatform.mysql.mapper.TNTDistributionMessageMapper">
+	  <resultMap id="BaseResultMap" type="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+        <result property="messageId" column="MESSAGE_ID"/>
+        <result property="objectId" column="OBJECT_ID"/>
+        <result property="objectType" column="OBJECT_TYPE"/>
+        <result property="eventType" column="EVENT_TYPE"/>
+        <result property="distributorChannel" column="DISTRIBUTOR_CHANNEL"/>
+		<result property="status" column="STATUS"/>
+		<result property="reapplyTime" column="REAPPLYTIME"/>
+		<result property="nextPushDate" column="NEXT_PUSH_DATE"/>
+		<result property="pushingTime" column="PUSHING_TIME"/>
+    </resultMap>
+
+	<sql id="columns">
+         d.MESSAGE_ID ,d.OBJECT_ID ,d.OBJECT_TYPE ,d.EVENT_TYPE ,d.DISTRIBUTOR_CHANNEL ,d.STATUS ,d.REAPPLYTIME ,d.NEXT_PUSH_DATE
+	</sql>
+	
+    <insert id="insert" parameterType="com.lvmama.comm.bee.po.distribution.DistributionMessage" >
+        INSERT INTO DISTRIBUTION_MESSAGE (
+        	OBJECT_ID ,
+        	OBJECT_TYPE ,
+        	EVENT_TYPE ,
+        	DISTRIBUTOR_CHANNEL ,
+        	STATUS ,
+        	REAPPLYTIME,
+        	PUSHING_TIME
+        ) VALUES (
+        	#{objectId},
+        	#{objectType},
+        	#{eventType},
+        	#{distributorChannel},
+        	#{status},
+        	#{reapplyTime},
+        	#{pushingTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+        UPDATE DISTRIBUTION_MESSAGE d SET
+	       d.STATUS = #{status},
+	       d.REAPPLYTIME = #{reapplyTime},
+	       d.NEXT_PUSH_DATE = #{nextPushDate},
+	       d.PUSHING_TIME = #{pushingTime}
+        WHERE 
+	       d.MESSAGE_ID = #{messageId}
+    </update>
+
+    <select id="getByMsg" resultMap="BaseResultMap" parameterType="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+	    SELECT * FROM DISTRIBUTION_MESSAGE d
+	          WHERE d.OBJECT_ID = #{objectId}
+	       <if test="objectType != null">
+	         	AND  d.OBJECT_TYPE = #{objectType}
+	       </if>
+	       <if test="eventType != null">
+	           AND  d.EVENT_TYPE = #{eventType}
+	       </if>
+	       <if test="distributorChannel != null">
+	           AND  d.DISTRIBUTOR_CHANNEL = #{distributorChannel}
+	       </if>
+    </select>
+
+	<sql id="where">
+		<where>
+		       <if test="messageId != null">
+		           AND d.MESSAGE_ID = #{messageId}
+		       </if>
+		       <if test="objectId != null">
+		           AND d.OBJECT_ID = #{objectId}
+		       </if>
+		       <if test="objectType != null">
+		           AND   d.OBJECT_TYPE = #{objectType}
+		       </if>
+		       <if test="eventType != null">
+		           AND   d.EVENT_TYPE = #{eventType}
+		       </if>
+		       <if test="eventTypes != null">
+		       	AND   d.EVENT_TYPE IN
+		       	<foreach collection="eventTypes" item="item" index="index" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+		       </if>
+		       <if test="specificDistributor != null">
+		           AND   d.DISTRIBUTOR_CHANNEL  like CONCAT(CONCAT('%',#{specificDistributor}),'%')
+		       </if>
+		       <if test="distributorChannel != null">
+		           AND   d.DISTRIBUTOR_CHANNEL = #{distributorChannel}
+		       </if>
+		       <if test="status != null">
+		       	   AND d.STATUS = #{status}
+				</if>
+		       <!--  new distribution api-->
+		       <if test="reapplyTime != null">
+		      	   AND d.REAPPLYTIME <![CDATA[ < ]]> #{reapplyTime}
+		       </if>
+		       <if test="nextPushDate != null">
+		      	   AND d.NEXT_PUSH_DATE <![CDATA[ < ]]> DATE_FORMAT(#{nextPushDate},'%Y-%m-%d %T')
+		       </if>
+		       <if test="factor != null">
+		      	   AND MOD(d.MESSAGE_ID,#{factor}) = #{compareValue}
+		       </if>
+		</where>
+	</sql>
+	 
+    <select id="findByParamsCount" parameterType="java.util.HashMap" resultType="java.lang.Long">
+        SELECT count(*) FROM DISTRIBUTION_MESSAGE d   <include refid="where"/>
+    </select>
+    
+    <select id="findByParams" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+	    	SELECT <include refid="columns"/> FROM DISTRIBUTION_MESSAGE  d
+			<include refid="where"/>
+			order by PUSHING_TIME asc
+		<if test="start != null">
+			LIMIT #{start} , #{pageSize}
+		</if>
+    </select>
+	
+</mapper>
+

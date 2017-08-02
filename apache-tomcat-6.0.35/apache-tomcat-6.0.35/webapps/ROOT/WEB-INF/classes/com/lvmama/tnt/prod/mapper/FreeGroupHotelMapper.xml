@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.FreeGroupHotelMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.FreeGroupHotel">
+        <result property="freeGroupHotelId" column="FREE_GROUP_HOTEL_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		FREE_GROUP_HOTEL_ID,PRODUCT_ID,SUB_PRODUCT_ID,SUB_BRANCH_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.FreeGroupHotel">
+		<selectKey resultType="java.lang.Long" keyProperty="freeGroupHotelId"
+			order="BEFORE">
+			select  FREE_GROUP_HOTEL_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO FREE_GROUP_HOTEL (
+        	FREE_GROUP_HOTEL_ID ,
+        	PRODUCT_ID ,
+        	SUB_PRODUCT_ID ,
+        	SUB_BRANCH_ID 
+        ) VALUES (
+        	#{freeGroupHotelId,jdbcType=NUMERIC} ,
+        	#{productId,jdbcType=NUMERIC} ,
+        	#{subProductId,jdbcType=NUMERIC} ,
+        	#{subBranchId,jdbcType=NUMERIC} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.FreeGroupHotel">
+        UPDATE FREE_GROUP_HOTEL SET
+	        PRODUCT_ID = #{productId} ,
+	        SUB_PRODUCT_ID = #{subProductId} ,
+	        SUB_BRANCH_ID = #{subBranchId} 
+        WHERE 
+        	<if test="freeGroupHotelId !=null">
+	        	FREE_GROUP_HOTEL_ID = #{freeGroupHotelId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM FREE_GROUP_HOTEL WHERE
+        FREE_GROUP_HOTEL_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM FREE_GROUP_HOTEL 
+	        WHERE 
+		        FREE_GROUP_HOTEL_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="freeGroupHotelId != null and freeGroupHotelId !=''">
+				AND FREE_GROUP_HOTEL_ID = #{freeGroupHotelId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				AND SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.freeGroupHotelId != null and param.freeGroupHotelId !=''">
+				AND FREE_GROUP_HOTEL_ID = param.freeGroupHotelId
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = param.productId
+	       	</if>
+			<if test="param.subProductId != null and param.subProductId !=''">
+				AND SUB_PRODUCT_ID = param.subProductId
+	       	</if>
+			<if test="param.subBranchId != null and param.subBranchId !=''">
+				AND SUB_BRANCH_ID = param.subBranchId
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.FreeGroupHotel">
+        SELECT count(*) FROM FREE_GROUP_HOTEL 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM FREE_GROUP_HOTEL 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    
+    <select id="getByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.FreeGroupHotel">
+		SELECT <include refid="columns" />
+		    FROM FREE_GROUP_HOTEL 
+	        <include refid="where"/>    
+	</select>
+    
+    <insert id="insertBatch"  parameterType="java.util.List"  useGeneratedKeys="true" > 
+		
+       INSERT INTO FREE_GROUP_HOTEL  (
+        	FREE_GROUP_HOTEL_ID ,
+        	PRODUCT_ID ,
+        	SUB_PRODUCT_ID ,
+        	SUB_BRANCH_ID 
+        )  
+            SELECT 
+	        	FREE_GROUP_HOTEL_ID_SEQ.nextval AS FREE_GROUP_HOTEL_ID,
+	        	PRODUCT_ID ,
+	        	SUB_PRODUCT_ID ,
+	        	SUB_BRANCH_ID     FROM (
+	        	  
+        <foreach collection="list" item="item" index="index" separator="  union   all  " >  
+            SELECT 
+	      	    #{item.productId,jdbcType=NUMERIC}      AS     PRODUCT_ID,
+	        	#{item.subProductId,jdbcType=NUMERIC}   AS    SUB_PRODUCT_ID,
+	        	#{item.subBranchId,jdbcType=NUMERIC}    AS    SUB_BRANCH_ID 
+	        	
+ 			FROM DUAL
+        </foreach>  
+         ) 
+       
+    </insert>  
+    
+    
+    <select id="findProductIdList"  resultType="long" parameterType="map">
+	    	SELECT  A.PRODUCT_ID FROM  FREE_GROUP_HOTEL A 
+	    	<where>
+	    	<if test="productId != null and productId !=''">
+						AND A.PRODUCT_ID =  #{productId} 
+	       	</if>
+       		<if test="subProductId != null and subProductId !=''">
+						AND A.SUB_PRODUCT_ID  = #{subProductId}
+	       	</if>
+	       	
+	       	<if test="subBranchId != null and subBranchId !=''">
+						AND A.SUB_BRANCH_ID  = #{subBranchId}
+	       	</if>
+	       
+    	  </where>
+    </select>
+
+</mapper>
+

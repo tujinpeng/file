@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.coupon.mapper.TntCouponUserRelMapper">
+
+	<resultMap id="tntCouponUserRelResult" type="com.lvmama.tnt.coupon.pojo.TntCouponUserRel">
+		<result property="tntCouponUserId" column="TNT_COUPON_USER_ID" />
+		<result property="couponId" column="COUPON_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	
+	<sql id="columns">
+		*
+	</sql>
+
+	<sql id="where">
+		<if test="couponId != null and couponId !=''">
+			AND COUPON_ID = #{couponId}
+		</if>
+		<if test="userId != null  and userId !=''">
+			AND USER_ID = #{userId}
+		</if>
+	</sql>
+
+	<select id="listByCouponId" resultMap="tntCouponUserRelResult" parameterType="java.lang.Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COUPON_USER_REL
+		where COUPON_ID = #{couponId}
+	</select>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponUserRel">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCouponUserId" order="BEFORE">
+			select
+			TNT_COUPON_USER_ID_SEQ.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_COUPON_USER_REL (
+		TNT_COUPON_USER_ID,
+		COUPON_ID ,
+		CHANNEL_ID ,
+		USER_ID ,
+		CREATE_TIME
+		) VALUES
+		(#{tntCouponUserId,jdbcType=DECIMAL}
+		,
+		#{couponId,jdbcType=DECIMAL}
+		,
+		#{channelId,jdbcType=DECIMAL}
+		,
+		#{userId,jdbcType=DECIMAL} ,
+		sysdate
+		)
+	</insert>
+
+	<delete id="delete" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponUserRel">
+		delete from TNT_COUPON_USER_REL where COUPON_ID =
+		#{couponId,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="listByUserId" resultMap="tntCouponUserRelResult" parameterType="java.lang.Long">
+		SELECT 
+		<include refid="columns" />
+		FROM TNT_COUPON_USER_REL
+		where USER_ID = #{userId}
+	</select>
+	
+	<select id="listByCouponIds" resultMap="tntCouponUserRelResult" parameterType="java.util.ArrayList">
+		SELECT 
+		distinct(COUPON_ID)
+		FROM TNT_COUPON_USER_REL
+		where COUPON_ID in
+        <foreach item="item" index="" collection="tbdCouponIds"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+</mapper>
+

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.ctrip.mysql.mapper.TntHotelPartnerSyncMapper">
+
+	<resultMap id="tntHotelPartnerSyncResultMap" type="com.lvmama.tnt.api.vo.ctrip.hotel.TntHotelPartnerSyncVO">
+        <result property="syncId" column="SYNC_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodId" column="GOOD_ID"/>
+        <result property="syncMode" column="SYNC_MODE"/>
+        <result property="pushStatus" column="PUSH_STATUS"/>
+        <result property="tryNum" column="TRY_NUM"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="valid" column="VALID"/>
+	</resultMap>
+	
+	<select id="queryPartnerSync"  resultMap="tntHotelPartnerSyncResultMap" parameterType="java.util.Map">
+		SELECT
+			THPS.*
+		FROM
+			TNT_HOTEL_PARTNER_SYNC THPS
+			WHERE THPS.PUSH_STATUS = #{pushStatus}
+			<if test="startDate != null">
+				AND START_DATE <![CDATA[>=]]> #{startDate}
+			</if>
+			<if test="endDate != null">
+				AND END_DATE <![CDATA[<=]]> #{endDate}
+			</if>
+			<if test="syncMode != null">
+				AND SYNC_MODE = #{syncMode}
+			</if>
+			<if test="goodId != null">
+				AND GOOD_ID = #{goodId}
+			</if>
+	</select>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		SYNC_ID,PRODUCT_ID,GOOD_ID,SYNC_MODE,PUSH_STATUS,TRY_NUM,START_DATE,END_DATE,CREATE_TIME,UPDATE_TIME,VALID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.api.vo.ctrip.hotel.TntHotelPartnerSyncVO">
+        INSERT INTO TNT_HOTEL_PARTNER_SYNC (
+        	PRODUCT_ID ,
+        	GOOD_ID ,
+        	SYNC_MODE ,
+        	PUSH_STATUS ,
+        	TRY_NUM ,
+        	START_DATE ,
+        	END_DATE ,
+        	CREATE_TIME ,
+        	UPDATE_TIME ,
+        	VALID
+        ) VALUES (
+        	#{productId} ,
+        	#{goodId} ,
+        	#{syncMode} ,
+        	#{pushStatus} ,
+        	#{tryNum} ,
+        	#{startDate} ,
+        	#{endDate} ,
+        	#{createTime} ,
+        	#{updateTime} ,
+        	#{valid}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.api.vo.ctrip.hotel.TntHotelPartnerSyncVO">
+        UPDATE TNT_HOTEL_PARTNER_SYNC
+        	<set>
+        		<if test="productId != null">
+        			PRODUCT_ID = #{productId} ,		
+        		</if>
+        		<if test="goodId != null">
+        			GOOD_ID = #{goodId} ,		
+        		</if>
+        		<if test="syncMode != null">
+        			SYNC_MODE = #{syncMode} ,		
+        		</if>
+        		<if test="pushStatus != null">
+        			PUSH_STATUS = #{pushStatus} ,
+        		</if>
+        		<if test="pushStatus != null">
+        			PUSH_STATUS = #{pushStatus} ,		
+        		</if>
+        		<if test="tryNum != null">
+        			TRY_NUM = #{tryNum} ,		
+        		</if>
+        		<if test="startDate != null">
+					START_DATE = #{startDate} ,        			
+        		</if>
+        		<if test="endDate != null">
+        			END_DATE = #{endDate} ,		
+        		</if>
+        		<if test="createTime != null">
+					CREATE_TIME = #{createTime} ,        			
+        		</if>
+        		<if test="updateTime != null">
+        			UPDATE_TIME = #{updateTime} ,		
+        		</if>
+        		<if test="valid != null">
+					VALID = #{valid},        			
+        		</if>
+        	</set>
+        WHERE 1=1
+        	<if test="startDate != null">
+				AND START_DATE<![CDATA[>=]]>#{startDate}       			
+       		</if>
+       		<if test="endDate != null">
+       			AND END_DATE<![CDATA[<=]]>#{endDate}	
+       		</if>
+       		<if test="goodId != null">
+				AND GOOD_ID = #{goodId}
+			</if>
+			<if test="pushStatus != null and pushStatus !=''">
+				AND PUSH_STATUS = #{pushStatus}
+	       	</if> 
+       		
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_PARTNER_SYNC WHERE
+        SYNC_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="tntHotelPartnerSyncResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_PARTNER_SYNC 
+	        WHERE 
+		        SYNC_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="syncId != null and syncId !=''">
+				AND SYNC_ID = #{syncId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodId != null and goodId !=''">
+				AND GOOD_ID = #{goodId}
+	       	</if> 
+			<if test="syncMode != null and syncMode !=''">
+				AND SYNCMODE = #{syncMode}
+	       	</if> 
+			<if test="pushStatus != null and pushStatus !=''">
+				AND PUSH_STATUS = #{pushStatus}
+	       	</if> 
+			<if test="tryNum != null and tryNum !=''">
+				AND TRY_NUM = #{tryNum}
+	       	</if> 
+			<if test="startDate != null and startDate !=''">
+				AND START_DATE = #{startDate}
+	       	</if> 
+			<if test="endDate != null and endDate !=''">
+				AND END_DATE = #{endDate}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+	       	<if test="valid != null and valid != ''">
+	       		AND VALID = #{valid}
+	       	</if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.syncId != null and param.syncId !=''">
+				AND SYNC_ID = #{param.syncId}
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.goodId != null and param.goodId !=''">
+				AND GOOD_ID = #{param.goodId}
+	       	</if>
+			<if test="param.syncMode != null and param.syncMode !=''">
+				AND SYNC_MODE = #{param.syncMode}
+	       	</if>
+			<if test="param.pushStatus != null and param.pushStatus !=''">
+				AND PUSH_STATUS = #{param.pushStatus}
+	       	</if>
+			<if test="param.tryNum != null and param.tryNum !=''">
+				AND TRY_NUM = #{param.tryNum}
+	       	</if>
+			<if test="param.startDate != null and param.startDate !=''">
+				AND START_DATE = #{param.startDate}
+	       	</if>
+			<if test="param.endDate != null and param.endDate !=''">
+				AND END_DATE = #{param.endDate}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if>
+	       	<if test="param.valid != null and param.valid != ''">
+	       		AND VALID = #{param.valid}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.api.vo.ctrip.hotel.TntHotelPartnerSyncVO">
+        SELECT count(*) FROM TNT_HOTEL_PARTNER_SYNC 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="tntHotelPartnerSyncResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PARTNER_SYNC 
+		<include refid="pageWhere"/>
+		ORDER BY SYNC_ID DESC
+		LIMIT #{startRowsForMySql},#{pageSize}
+    </select>
+
+	<select id="queryUnpushListByParam" resultMap="tntHotelPartnerSyncResultMap" parameterType="java.util.Map">	   
+	    SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PARTNER_SYNC
+	    WHERE PUSH_STATUS = ${pushStatus}
+			<if test="goodId != null">
+				AND GOOD_ID = ${goodId}
+			</if>
+	    	<if test="startDate != null">
+	    		AND START_DATE<![CDATA[<=]]>DATE_FORMAT(#{startDate},'%Y-%m-%d')
+	    	</if>
+	    	<if test="endDate != null">
+	    		AND END_DATE<![CDATA[>=]]>DATE_FORMAT(#{endDate},'%Y-%m-%d')
+	    	</if>
+	    	<if test="syncMode != null">
+	    		AND SYNC_MODE = ${syncMode}
+	    	</if>
+	</select>
+	
+	<!-- 查询未推送记录总数 -->
+	<select id="queryUnpushTimePriceCount"  resultType="Long" parameterType="java.util.Map">
+		SELECT count(1)  FROM  TNT_HOTEL_PARTNER_SYNC THPS
+			WHERE THPS.PUSH_STATUS = #{pushStatus}
+			<if test="productId != null">
+				AND TPPS.PRODUCT_ID=#{productId}	
+			</if>
+			<if test="syncMode != null">
+				AND SYNC_MODE = ${syncMode}
+			</if>
+	
+	</select>
+	
+	<!-- 查询未推送的时间价格记录list -->
+	<select id='queryUnpushTimePriceList' resultMap="tntHotelPartnerSyncResultMap" parameterType="java.util.Map">
+		SELECT THPS.* FROM  TNT_HOTEL_PARTNER_SYNC THPS
+			 WHERE THPS.PUSH_STATUS = #{pushStatus}
+			<if test="productId != null">
+				AND THPS.PRODUCT_ID=#{productId}	
+			</if>
+			<if test="syncMode != null">
+				AND THPS.SYNC_MODE = ${syncMode}
+			</if>
+			LIMIT #{offset},#{pageSize}
+	</select>
+	
+	<!-- 修改推送状态 -->
+	<update id="updatePatnerSyncPushStatus" parameterType="java.util.Map">
+		UPDATE TNT_HOTEL_PARTNER_SYNC
+			<set>
+				<if test="pushStatus != null">
+					PUSH_STATUS = #{pushStatus},
+				</if>
+		        <if test="tryNum != null">
+		        	TRY_NUM = #{tryNum},
+		        </if>
+		        <if test="updateTime != null">
+        			UPDATE_TIME = #{updateTime} ,		
+        		</if>
+			</set>
+        WHERE 1=1
+	        <if test="syncId != null">
+	        	AND SYNC_ID = #{syncId}
+	        </if>
+	        <!-- <if test="startDate != null">
+				AND START_DATE <![CDATA[>=]]> #{startDate}
+			</if>
+			<if test="endDate != null">
+				AND END_DATE <![CDATA[<=]]> #{endDate}
+			</if> -->
+	</update>
+	
+	<select id="queryUnPushRoomQuantityList" parameterType="java.util.Map" resultMap="tntHotelPartnerSyncResultMap">
+		SELECT * FROM TNT_HOTEL_PARTNER_SYNC WHERE 
+		PUSH_STATUS = #{pushStatus} AND SYNC_MODE = #{syncMode}  AND 
+		PRODUCT_ID IN (
+		SELECT product_id  FROM (SELECT product_id FROM (SELECT product_id,COUNT(1) size FROM 
+		TNT_HOTEL_PARTNER_SYNC WHERE PUSH_STATUS = #{pushStatus} AND SYNC_MODE = #{syncMode}) temp1 ORDER BY temp1.size DESC LIMIT 10 ) temp2
+		) LIMIT 100
+	</select>
+</mapper>
+

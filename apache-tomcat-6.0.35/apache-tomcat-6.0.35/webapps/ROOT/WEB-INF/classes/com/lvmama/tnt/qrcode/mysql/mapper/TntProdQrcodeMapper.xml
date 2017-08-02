@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.qrcode.mysql.mapper.TntProdQrcodeMapper">
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.qrcode.comm.vo.TntProdQrcode">
+		<result property="qrcodeId" column="QRCODE_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="productName" column="PRODUCT_NAME"/>
+		<result property="qrcodeUrl" column="QRCODE_URL"/>
+		<result property="status" column="STATUS"/>
+		<result property="createDate" column="CREATE_DATE"/>
+		<result property="updateDate" column="UPDATE_DATE"/>
+	</resultMap>
+	
+    <sql id="columns">
+    	tpq.QRCODE_ID, tpq.USER_ID, tpq.USER_NAME, tpq.PRODUCT_ID, tpq.PRODUCT_NAME, tpq.QRCODE_URL,tpq.STATUS, tpq.CREATE_DATE, tpq.UPDATE_DATE
+    </sql>
+    
+    <sql id="where">
+    	<where>
+    		<if test="productName != null">
+    			AND tpq.PRODUCT_NAME like #{productName}
+    		</if>
+    		<if test="qrcodeSelect != null">
+    			AND tpq.STATUS = #{qrcodeSelect} 
+    		</if>
+			<if test="userId != null">
+				AND tpq.USER_ID = #{userId}
+			</if>
+    		<if test="productId != null">
+    			AND tpq.PRODUCT_ID = #{productId} 
+    		</if>
+    	</where>
+    </sql>
+    
+    <insert id="save" parameterType="com.lvmama.tnt.qrcode.comm.vo.TntProdQrcode">
+		INSERT INTO TNT_PROD_QRCODE (
+			QRCODE_ID, 
+			USER_ID, 
+			USER_NAME, 
+			PRODUCT_ID, 
+			PRODUCT_NAME, 
+			QRCODE_URL, 
+			STATUS, 
+			CREATE_DATE, 
+			UPDATE_DATE
+		) VALUES (
+			#{qrcodeId}, 
+			#{userId}, 
+			#{userName}, 
+			#{productId}, 
+			#{productName}, 
+			#{qrcodeUrl}, 
+			#{status}, 
+			#{createDate}, 
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="updateQrcodeStatus">
+		UPDATE 
+			TNT_PROD_QRCODE tpq 
+		SET 
+			tpq.STATUS = #{0} 
+		WHERE 
+			tpq.QRCODE_ID = #{1}
+	</update>
+	
+    <select id="getTntProdQrcodesByParams" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    	SELECT 
+    		<include refid="columns"/> 
+    	FROM 
+    		TNT_PROD_QRCODE  tpq 
+    	<include refid="where"/> 
+    	<if test="start != null">
+    		LIMIT #{start}, #{pageSize}
+    	</if>
+    </select>
+    
+    <select id="getTntProdQrcodesByParamsCount" resultType="java.lang.Long" parameterType="java.util.HashMap">
+    	SELECT 
+    		count(tpq.QRCODE_ID) 
+    	FROM 
+    		TNT_PROD_QRCODE tpq 
+    	<include refid="where"/>
+    </select>
+    
+    <select id="getTntProdQrcodeByProductId" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    	SELECT 
+    		<include refid="columns"/> 
+    	FROM 
+    		TNT_PROD_QRCODE  tpq 
+    	WHERE 
+    		tpq.PRODUCT_ID = #{productId} 
+    </select>
+    
+	<select id="getQrcodeQty" resultType="com.lvmama.tnt.qrcode.comm.vo.TntProdQrcode" parameterType="com.lvmama.tnt.qrcode.comm.vo.TntProdQrcode" >
+		SELECT 'Y' AS status
+		<if test="userId!=null">
+			,(SELECT COUNT(1) FROM TNT_PROD_QRCODE WHERE user_id=#{userId} AND STATUS='Y') AS userQrcodeQty
+		</if>
+		<if test="productId!=null">
+			,(SELECT COUNT(1) FROM TNT_PROD_QRCODE WHERE product_id=#{productId} AND STATUS='Y') AS prodQrcodeQty
+		</if>
+	</select>
+
+	<select id="getQrcodeList" resultMap="BaseResultMap" parameterType="com.lvmama.tnt.qrcode.comm.vo.TntProdQrcode" >
+		SELECT * FROM TNT_PROD_QRCODE
+		WHERE QRCODE_URL IS NOT NULL
+		<if test="userId!=null">
+			AND user_id=#{userId}
+		</if>
+		<if test="productId!=null">
+			AND product_id=#{productId}
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

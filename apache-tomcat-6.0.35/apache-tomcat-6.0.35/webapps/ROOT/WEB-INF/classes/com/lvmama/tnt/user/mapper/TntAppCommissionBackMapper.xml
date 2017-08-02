@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.user.mapper.TntAppCommissionBackMapper">
+	<resultMap id="baseResultMap" type="tntAppCommissionBack">
+		<result property="tntAppCommissionBackId" column="TNT_APP_COMMISSION_BACK_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="year" column="YEAR" />
+		<result property="proportion" column="PROPORTION" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+
+	<insert id="insert" parameterType="tntAppCommissionBack">
+		<selectKey resultType="java.lang.Long" keyProperty="tntAppCommissionBackId" order="BEFORE">
+			select
+			TNT_APP_COMMISSION_BACK_ID_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO TNT_APP_COMMISSION_BACK (
+        	TNT_APP_COMMISSION_BACK_ID ,
+        	USER_ID ,
+        	YEAR ,
+        	PROPORTION
+        ) VALUES (
+        	#{tntAppCommissionBackId} ,
+        	#{userId} ,
+        	#{year} ,
+        	#{proportion}
+        )
+    ]]>
+	</insert>
+
+	<update id="update" parameterType="tntAppCommissionBack">
+		UPDATE TNT_APP_COMMISSION_BACK
+		<set>
+			<if test="year != null">
+				YEAR = #{year,jdbcType=BIGINT} ,
+			</if>
+			<if test="proportion != null">
+				PROPORTION = #{proportion,jdbcType=BIGINT}
+			</if>
+		</set>
+		where TNT_APP_COMMISSION_BACK_ID = #{tntAppCommissionBackId}  and  USER_ID = #{userId}
+	</update>
+
+	<delete id="delete">
+    <![CDATA[
+        DELETE FROM TNT_APP_COMMISSION_BACK WHERE
+        TNT_APP_COMMISSION_BACK_ID = #{id} 
+    ]]>
+	</delete>
+
+	<select id="getCommissionBackListByUserId"  resultMap="baseResultMap" parameterType="java.lang.Long">
+        select *
+        from TNT_APP_COMMISSION_BACK 
+        where USER_ID = #{userId} order by TNT_APP_COMMISSION_BACK_ID
+    </select>
+    
+    <select id="getCommissionBackById"  resultMap="baseResultMap" parameterType="java.lang.Long">
+        select *
+        from TNT_APP_COMMISSION_BACK 
+        where TNT_APP_COMMISSION_BACK_ID = #{id}
+    </select>
+	
+</mapper>
+

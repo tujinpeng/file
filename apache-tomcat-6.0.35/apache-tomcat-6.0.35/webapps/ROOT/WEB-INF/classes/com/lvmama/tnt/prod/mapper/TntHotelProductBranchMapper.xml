@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntHotelProductBranchMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.TntHotelProductBranch">
+        <result property="prodBranchId" column="PROD_BRANCH_ID"/>
+        <result property="branchName" column="BRANCH_NAME"/>
+        <result property="branchType" column="BRANCH_TYPE"/>
+        <result property="generalPriceRule" column="GENERAL_PRICE_RULE"/>
+        <result property="generalPriceStandard" column="GENERAL_PRICE_STANDARD"/>
+        <result property="generalPriceModel" column="GENERAL_PRICE_MODEL"/>
+        <result property="generalPriceValue" column="GENERAL_PRICE_VALUE"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="commissionMode" column="COMMISSION_MODE"/>
+        <result property="discountRate" column="DISCOUNT_RATE"/>
+        <result property="cmsType" column="CMS_TYPE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		PROD_BRANCH_ID,BRANCH_NAME,BRANCH_TYPE,GENERAL_PRICE_RULE,GENERAL_PRICE_STANDARD,GENERAL_PRICE_MODEL,GENERAL_PRICE_VALUE,PRODUCT_ID,GOODS_ID,COMMISSION_MODE,DISCOUNT_RATE,CMS_TYPE,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductBranch">
+		<selectKey resultType="java.lang.Long" keyProperty="prodBranchId"
+			order="BEFORE">
+			select  TNT_HOTEL_PRODUCT_BRANCH_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_HOTEL_PRODUCT_BRANCH (
+        	PROD_BRANCH_ID ,
+        	BRANCH_NAME ,
+        	BRANCH_TYPE ,
+        	GENERAL_PRICE_RULE ,
+        	GENERAL_PRICE_STANDARD ,
+        	GENERAL_PRICE_MODEL ,
+        	GENERAL_PRICE_VALUE ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	COMMISSION_MODE ,
+        	DISCOUNT_RATE ,
+        	CMS_TYPE ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{prodBranchId jdbcType=NUMERIC} ,
+        	#{branchName jdbcType=VARCHAR} ,
+        	#{branchType jdbcType=VARCHAR} ,
+        	#{generalPriceRule jdbcType=VARCHAR} ,
+        	#{generalPriceStandard jdbcType=VARCHAR} ,
+        	#{generalPriceModel jdbcType=VARCHAR} ,
+        	#{generalPriceValue jdbcType=VARCHAR} ,
+        	#{productId jdbcType=NUMERIC} ,
+        	#{goodsId jdbcType=NUMERIC} ,
+        	#{commissionMode jdbcType=VARCHAR} ,
+        	#{discountRate jdbcType=NUMERIC} ,
+        	#{cmsType jdbcType=VARCHAR} ,
+        	#{createTime jdbcType=TIMESTAMP} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductBranch">
+        UPDATE TNT_HOTEL_PRODUCT_BRANCH SET
+	        BRANCH_NAME = #{branchName jdbcType=VARCHAR} ,
+	        BRANCH_TYPE = #{branchType jdbcType=VARCHAR} ,
+	        GENERAL_PRICE_RULE = #{generalPriceRule jdbcType=VARCHAR} ,
+	        GENERAL_PRICE_STANDARD = #{generalPriceStandard jdbcType=VARCHAR} ,
+	        GENERAL_PRICE_MODEL = #{generalPriceModel jdbcType=VARCHAR} ,
+	        GENERAL_PRICE_VALUE = #{generalPriceValue jdbcType=VARCHAR} ,
+	        PRODUCT_ID = #{productId jdbcType=NUMERIC} ,
+	        GOODS_ID = #{goodsId jdbcType=NUMERIC} ,
+	        COMMISSION_MODE = #{commissionMode jdbcType=VARCHAR} ,
+	        DISCOUNT_RATE = #{discountRate jdbcType=NUMERIC} ,
+	        CMS_TYPE = #{cmsType jdbcType=VARCHAR} ,
+	        CREATE_TIME = #{createTime jdbcType=TIMESTAMP} 
+        WHERE 
+        	<if test="prodBranchId !=null">
+	        	PROD_BRANCH_ID = #{prodBranchId jdbcType=NUMERIC} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_PRODUCT_BRANCH WHERE
+        PROD_BRANCH_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_PRODUCT_BRANCH 
+	        WHERE 
+		        PROD_BRANCH_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="prodBranchId != null and prodBranchId !=''">
+				AND PROD_BRANCH_ID = #{prodBranchId}
+	       	</if> 
+			<if test="branchName != null and branchName !=''">
+				AND BRANCH_NAME = #{branchName}
+	       	</if> 
+			<if test="branchType != null and branchType !=''">
+				AND BRANCH_TYPE = #{branchType}
+	       	</if> 
+			<if test="generalPriceRule != null and generalPriceRule !=''">
+				AND GENERAL_PRICE_RULE = #{generalPriceRule}
+	       	</if> 
+			<if test="generalPriceStandard != null and generalPriceStandard !=''">
+				AND GENERAL_PRICE_STANDARD = #{generalPriceStandard}
+	       	</if> 
+			<if test="generalPriceModel != null and generalPriceModel !=''">
+				AND GENERAL_PRICE_MODEL = #{generalPriceModel}
+	       	</if> 
+			<if test="generalPriceValue != null and generalPriceValue !=''">
+				AND GENERAL_PRICE_VALUE = #{generalPriceValue}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="commissionMode != null and commissionMode !=''">
+				AND COMMISSION_MODE = #{commissionMode}
+	       	</if> 
+			<if test="discountRate != null and discountRate !=''">
+				AND DISCOUNT_RATE = #{discountRate}
+	       	</if> 
+			<if test="cmsType != null and cmsType !=''">
+				AND CMS_TYPE = #{cmsType}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.prodBranchId != null and param.prodBranchId !=''">
+				AND PROD_BRANCH_ID = param.prodBranchId
+	       	</if>
+			<if test="param.branchName != null and param.branchName !=''">
+				AND BRANCH_NAME = param.branchName
+	       	</if>
+			<if test="param.branchType != null and param.branchType !=''">
+				AND BRANCH_TYPE = param.branchType
+	       	</if>
+			<if test="param.generalPriceRule != null and param.generalPriceRule !=''">
+				AND GENERAL_PRICE_RULE = param.generalPriceRule
+	       	</if>
+			<if test="param.generalPriceStandard != null and param.generalPriceStandard !=''">
+				AND GENERAL_PRICE_STANDARD = param.generalPriceStandard
+	       	</if>
+			<if test="param.generalPriceModel != null and param.generalPriceModel !=''">
+				AND GENERAL_PRICE_MODEL = param.generalPriceModel
+	       	</if>
+			<if test="param.generalPriceValue != null and param.generalPriceValue !=''">
+				AND GENERAL_PRICE_VALUE = param.generalPriceValue
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = param.productId
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = param.goodsId
+	       	</if>
+			<if test="param.commissionMode != null and param.commissionMode !=''">
+				AND COMMISSION_MODE = param.commissionMode
+	       	</if>
+			<if test="param.discountRate != null and param.discountRate !=''">
+				AND DISCOUNT_RATE = param.discountRate
+	       	</if>
+			<if test="param.cmsType != null and param.cmsType !=''">
+				AND CMS_TYPE = param.cmsType
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = param.createTime
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductBranch">
+        SELECT count(*) FROM TNT_HOTEL_PRODUCT_BRANCH 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_PRODUCT_BRANCH 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="findTntHotelProductBranchByProduct" resultMap="baseResultMap" parameterType="Map">
+	  SELECT PB.*
+       FROM tnt_hotel_product_branch PB, TNT_PRODUCT P
+       WHERE PB.GOODS_ID = P.BRANCH_ID
+       AND PB.BRANCH_TYPE = #{distId}
+       AND P.CATEGORY_ID = #{categoryId}
+	   AND P.BRANCH_ID = #{goodsId}
+	   AND P.branch_type = 'GOODS'
+	   AND P.PRODUCT_TYPE = 'HOTEL'
+	   AND P.SYS_FLAG = 'VST'
+	</select>
+
+</mapper>
+

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.distribution.mapper.DistributionAgreementMapper">
+	<resultMap id="BaseResultMap" type="com.lvmama.comm.bee.po.distribution.DistributorAgreementInfo" >
+    <result column="DISTRIBUTOR_ID" property="distributorId" />
+    <result column="DISTRIBUTOR_NAME" property="distributorName" />
+    <result column="DISTRIBUTOR_CODE" property="distributorCode" />
+    <result column="CHANNEL_CODE" property="channelCode" />
+    <result column="APPLY_REMARK" property="applyRemark" />
+    <result column="APPLY_TIME" property="applyTime" />
+    <result column="APPLY_OPTION" property="applyOption" />
+    <result column="APPLY_USER_ID" property="applyUserId" />
+    <result column="APPROVE_REMARK" property="approveRemark"/>
+    <result column="APPROVE_TIME" property="approveTime" />
+    <result column="APPROVE_USER_ID" property="approveUserId" />
+    <result column="STATUS" property="status" />
+    <result column="IN_USE" property="inUse" />
+  </resultMap>
+  
+	<resultMap id="resultsMap" type="com.lvmama.comm.bee.po.distribution.DistributorInfo">
+		<result column="USER_ID" property="distributorInfoId" />
+	    <result column="DISTRIBUTOR_CODE" property="distributorCode" />
+	    <result column="COMPANY_NAME" property="distributorName" />
+	    <result column="CHANNEL_CODE" property="channelCode" />
+	</resultMap>
+  
+  
+  <select id="searchListAgreementByParams" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT dad.* FROM DISTRIBUTOR_AGREEMENT_DETAIL dad 
+	WHERE 1=1
+		<if test="distributorId!=null and distributorId!=''">
+			AND dad.DISTRIBUTOR_ID =#{distributorId}
+		</if>
+		<if test="distributorName!=null and distributorName!=''" >
+			AND dad.DISTRIBUTOR_NAME like '%'||#{distributorName}||'%'
+		</if>
+		<if test="inUse!=null and inUse!=''" >
+			AND dad.IN_USE = #{inUse}
+		</if>
+		<if test="status!=null and status!=''">
+			AND dad.STATUS = #{status}
+		</if>
+	
+		
+  </select>
+  
+  <select id="searchListAgreementCountByParams" parameterType="java.util.Map" resultType="java.lang.Integer">
+	SELECT count(1) FROM DISTRIBUTOR_AGREEMENT_DETAIL dad 
+	WHERE 1=1
+		<if test="distributorId!=null and distributorId !=''">
+			AND dad.DISTRIBUTOR_ID = #{distributorId}
+		</if>
+		<if test="distributorName!=null and distributorName!=''" >
+			AND dad.DISTRIBUTOR_NAME like '%'||#{distributorName}||'%'
+		</if>
+		<if test="inUse!=null and inUse!=''">
+			AND dad.IN_USE = #{inUse}
+		</if>
+		<if test="status!=null and status!=''" >
+			AND dad.STATUS = #{status}
+		</if>
+  </select>
+  
+  <update id="update" parameterType="java.util.Map">
+  	update DISTRIBUTOR_AGREEMENT_DETAIL
+  	<set>
+  		<if test="status!=null and status!=''">
+  			STATUS = #{status},
+  		</if>
+  		<if test="applyRemark!=null and applyRemark!=''">
+			APPLY_REMARK = #{applyRemark},
+		</if>
+		<if test="applyRemark!=null and applyRemark!=''">
+			APPLY_TIME = sysdate,
+		</if>
+		<if test="applyOption!=null and applyOption!=''" >
+			APPLY_OPTION = #{applyOption},
+		</if>
+		<if test="applyUserId!=null and applyUserId!=''">
+			APPLY_USER_ID = #{applyUserId},
+		</if>
+		<if test="approveRemark!=null and approveRemark!=''">
+			APPROVE_REMARK = #{approveRemark},
+			APPROVE_TIME = sysdate,
+			APPROVE_USER_ID = #{approveUserId},
+		</if>
+		<if test="inUse!=null and inUse!=''" >
+			IN_USE = #{inUse}
+		</if>
+	</set>
+  	where 
+  		DISTRIBUTOR_ID = #{distributorId}
+  </update>
+  
+  <insert id="insert" parameterType="com.lvmama.comm.bee.po.distribution.DistributorAgreementInfo">
+  	insert into DISTRIBUTOR_AGREEMENT_DETAIL
+  		(DISTRIBUTOR_ID,DISTRIBUTOR_NAME,DISTRIBUTOR_CODE,CHANNEL_CODE,APPLY_REMARK,
+		APPLY_TIME,APPLY_OPTION,APPLY_USER_ID,APPROVE_REMARK,APPROVE_TIME,
+		APPROVE_USER_ID,STATUS,IN_USE)
+	values(
+		#{distributorId,jdbcType=DECIMAL},
+		#{distributorName,jdbcType=VARCHAR},
+		#{distributorCode,jdbcType=VARCHAR},
+		#{channelCode,jdbcType=VARCHAR},
+		#{applyRemark,jdbcType=VARCHAR},
+		sysdate,
+		#{applyOption,jdbcType=VARCHAR},
+		#{applyUserId,jdbcType=DECIMAL},
+		null,
+		null,
+		null,
+		#{status,jdbcType=VARCHAR},
+		#{inUse,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="searchListAgreementByDistributorId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	SELECT dad.* FROM DISTRIBUTOR_AGREEMENT_DETAIL dad 
+	WHERE 
+		dad.DISTRIBUTOR_ID =#{distributorId}
+  </select>
+  
+  <select id="selectByDistributorId" resultMap="resultsMap" parameterType="java.lang.Long">
+  	select t.USER_ID,t.DISTRIBUTOR_CODE,t.COMPANY_NAME,t.CHANNEL_CODE 
+  	from lvmama_pet.tnt_user_detail t
+  	where t.user_id = #{distributorId} and t.final_status = 'DOING'
+  </select>
+  
+  <select id="searchDistributors" resultMap="resultsMap" parameterType="java.util.Map">
+  	select t.USER_ID,t.DISTRIBUTOR_CODE,t.COMPANY_NAME,t.CHANNEL_CODE 
+  	from lvmama_pet.tnt_user_detail t
+  	where t.COMPANY_NAME like '%'|| #{distributorName} ||'%'
+  	and t.final_status = 'DOING'
+  	and t.CHANNEL_CODE = 'DISTRIBUTOR_API'
+  </select>
+
+</mapper>

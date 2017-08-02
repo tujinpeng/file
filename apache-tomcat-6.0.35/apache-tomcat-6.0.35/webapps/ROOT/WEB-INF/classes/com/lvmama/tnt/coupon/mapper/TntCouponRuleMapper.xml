@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.coupon.mapper.TntCouponRuleMapper">
+
+	<resultMap id="tntCouponRuleResult" type="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		<result property="tntCouponRuleId" column="TNT_COUPON_RULE_ID" />
+		<result property="couponId" column="COUPON_ID" />
+		<result property="parentCategoryId" column="PARENT_CATEGORY_ID" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="productStatus" column="PRODUCT_STATUS" />
+		<result property="goodsStatus" column="GOODS_STATUS" />
+		<result property="goodsSpec" column="GOODS_SPEC" />
+		<result property="payTarget" column="PAY_TARGET" />
+	</resultMap>
+
+	<resultMap id="withCouponResult" type="com.lvmama.tnt.coupon.pojo.TntCouponRule" extends="tntCouponRuleResult">
+		<association property="coupon" javaType="com.lvmama.tnt.coupon.pojo.TntCoupon">
+			<id property="tntCouponId" column="COUPON_ID" />
+			<result property="channelId" column="CHANNEL_ID" />
+		</association>
+	</resultMap>
+
+	<sql id="columns">
+		rule.*
+	</sql>
+
+	<sql id="where">
+		<if test="tntCouponRuleId != null and tntCouponRuleId !=''">
+			AND TNT_COUPON_RULE_ID = #{tntCouponRuleId}
+		</if>
+		<if test="couponId != null and couponId !=''">
+			AND COUPON_ID = #{couponId}
+		</if>
+		<if test="parentCategoryId != null and parentCategoryId !=''">
+			AND PARENT_CATEGORY_ID = #{parentCategoryId}
+		</if>
+		<if test="categoryId != null and categoryId !=''">
+			AND CATEGORY_ID = #{categoryId}
+		</if>
+		<if test="productStatus != null and productStatus !=''">
+			AND PRODUCT_STATUS = #{productStatus}
+		</if>
+		<if test="goodsStatus != null and goodsStatus !=''">
+			AND GOODS_STATUS = #{goodsStatus}
+		</if>
+		<if test="goodsSpec != null and goodsSpec !=''">
+			AND GOODS_SPEC = #{goodsSpec}
+		</if>
+		<if test="payTarget != null and payTarget !=''">
+			AND PAY_TARGET = #{payTarget}
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.tntCouponRuleId != null and param.tntCouponRuleId !=''">
+			AND TNT_COUPON_RULE_ID = #{param.tntCouponRuleId}
+		</if>
+		<if test="param.couponId != null and param.couponId !=''">
+			AND COUPON_ID = #{param.couponId}
+		</if>
+		<if test="param.parentCategoryId != null and param.parentCategoryId !=''">
+			AND PARENT_CATEGORY_ID = #{param.parentCategoryId}
+		</if>
+		<if test="param.categoryId != null and param.categoryId !=''">
+			AND CATEGORY_ID = #{param.categoryId}
+		</if>
+		<if test="param.productStatus != null and param.productStatus !=''">
+			AND PRODUCT_STATUS = #{param.productStatus}
+		</if>
+		<if test="param.goodsStatus != null and param.goodsStatus !=''">
+			AND GOODS_STATUS = #{param.goodsStatus}
+		</if>
+		<if test="param.goodsSpec != null and param.goodsSpec !=''">
+			AND GOODS_SPEC = #{param.goodsSpec}
+		</if>
+		<if test="param.payTarget != null and param.payTarget !=''">
+			AND PAY_TARGET = #{param.payTarget}
+		</if>
+	</sql>
+
+	<select id="count" resultType="Long" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		SELECT count(1) FROM TNT_COUPON_RULE
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="queryPage" resultMap="tntCouponRuleResult" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COUPON_RULE rule
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCouponRuleId" order="BEFORE">
+			select
+			TNT_COUPON_RULE_ID_SEQ.nextval
+			from
+			dual
+		</selectKey>
+		INSERT INTO TNT_COUPON_RULE (
+		TNT_COUPON_RULE_ID ,
+		COUPON_ID ,
+		PARENT_CATEGORY_ID ,
+		CATEGORY_ID ,
+		PRODUCT_STATUS ,
+		GOODS_STATUS ,
+		GOODS_SPEC ,
+		PAY_TARGET
+		)
+		VALUES
+		(
+		#{tntCouponRuleId,jdbcType=DECIMAL} ,
+		#{couponId,jdbcType=DECIMAL} ,
+		#{parentCategoryId,jdbcType=DECIMAL} ,
+		#{categoryId,jdbcType=DECIMAL},
+		#{productStatus,jdbcType=VARCHAR},
+		#{goodsStatus,jdbcType=VARCHAR} ,
+		#{goodsSpec,jdbcType=VARCHAR} ,
+		#{payTarget,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="deleteById" parameterType="Long">
+		delete from TNT_COUPON_RULE WHERE TNT_COUPON_RULE_ID =
+		#{tntCouponRuleId,jdbcType=DECIMAL}
+	</delete>
+
+	<update id="update" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		UPDATE TNT_COUPON_RULE
+		<set>
+			<if test="parentCategoryId != null">
+				PARENT_CATEGORY_ID = #{parentCategoryId,jdbcType=DECIMAL},
+			</if>
+			<if test="categoryId != null">
+				CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+			</if>
+			<if test="productStatus != null">
+				PRODUCT_STATUS = #{productStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsStatus != null">
+				GOODS_STATUS = #{goodsStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpec != null">
+				GOODS_SPEC = #{goodsSpec,jdbcType=VARCHAR},
+			</if>
+			<if test="payTarget != null">
+				PAY_TARGET = #{payTarget,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE TNT_COUPON_RULE_ID = #{tntCouponRuleId,jdbcType=DECIMAL}
+	</update>
+
+	<select id="selectWithCoupon" resultMap="withCouponResult" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		select * from TNT_COUPON_RULE r,TNT_COUPON c
+		<where>
+			r.COUPON_ID = c.TNT_COUPON_ID
+			<if test="tntCouponRuleId != null and tntCouponRuleId !=''">
+				AND r.TNT_COUPON_RULE_ID = #{tntCouponRuleId}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectList" resultMap="tntCouponRuleResult" parameterType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+		select * from TNT_COUPON_RULE
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+	<select id="selectByParam" resultMap="tntCouponRuleResult" parameterType="java.util.Map">
+		SELECT *
+		  FROM LVMAMA_PET.TNT_COUPON_RULE TCR, LVMAMA_PET.TNT_COUPON TC
+		 WHERE TC.TNT_COUPON_ID = TCR.COUPON_ID
+		   AND TC.CHANNEL_ID = #{channelId}
+		   AND TC.STATUS = 'Y'
+		   AND TCR.CATEGORY_ID= #{categoryId}
+		   AND TCR.PAY_TARGET= #{payTarget}
+	</select>
+</mapper>
+

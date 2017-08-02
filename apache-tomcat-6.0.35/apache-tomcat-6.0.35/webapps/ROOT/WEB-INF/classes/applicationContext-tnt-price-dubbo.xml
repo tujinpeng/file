@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://code.alibabatech.com/schema/dubbo 
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd" default-autowire="byName">
+	
+	<dubbo:reference id="tntTicketTimePriceService" interface="com.lvmama.tnt.price.ticket.service.TntTicketTimePriceService"/>
+	<dubbo:reference id="ticketPriceLowestPriceService" interface="com.lvmama.tnt.price.ticket.service.TicketPriceLowestPriceService"/>
+	
+	<!---->
+	<dubbo:reference id="tntTicketTimePriceForB2BService" interface="com.lvmama.tnt.price.ticket.service.TntTicketTimePriceForB2BService"/>
+	<dubbo:reference id="tntSecondRouteTimePriceService" interface="com.lvmama.tnt.price.route.service.TntSecondRouteTimePriceService"/>
+	<dubbo:reference id="routeLowestPriceService" interface="com.lvmama.tnt.price.route.service.RouteLowestPriceService"/>
+	<dubbo:reference id="routeHighestCommissionService" interface="com.lvmama.tnt.price.route.service.RouteHighestCommissionService"/>
+	<dubbo:reference id="routePackageGoodsAddPriceService" interface="com.lvmama.tnt.price.route.service.RoutePackageGoodsAddPriceService"/>
+	<dubbo:reference id="routeLowestMetaPriceService" interface="com.lvmama.tnt.price.route.service.RouteLowestMetaPriceService"/>
+	<dubbo:reference id="routePriceQueryService" interface="com.lvmama.tnt.price.route.service.RoutePriceQueryService"/>
+	<dubbo:reference id="routeRuleQueryService" interface="com.lvmama.tnt.price.route.service.RouteRuleQueryService"/>
+	<!-- visa -->
+	<dubbo:reference id="tntVisaTimePriceService" interface="com.lvmama.tnt.price.visa.service.TntVisaTimePriceService"/>
+	<dubbo:reference id="syncVisaPriceDataService" interface="com.lvmama.tnt.price.visa.service.SyncVisaPriceDataService"/>
+	<dubbo:reference id="visaPriceLowestPriceService" interface="com.lvmama.tnt.price.visa.service.VisaPriceLowestPriceService"/>
+</beans>

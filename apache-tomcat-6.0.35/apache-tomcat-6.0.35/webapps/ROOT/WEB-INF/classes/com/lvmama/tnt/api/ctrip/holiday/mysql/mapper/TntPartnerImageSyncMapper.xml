@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.api.ctrip.holiday.mysql.mapper.TntPartnerImageSyncMapper" >
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerImageSync" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="PARTNER_ID" property="partnerId" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+    <result column="PACKAGE_ID" property="packageId" jdbcType="VARCHAR" />
+    <result column="IMAGE_URL" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="IMAGE_TYPE" property="imageType" jdbcType="VARCHAR" />
+    <result column="PARTNER_URL" property="partnerUrl" jdbcType="VARCHAR" />
+    <result column="IMAGE_CODE" property="imageCode" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PARTNER_ID, PRODUCT_ID, PACKAGE_ID, IMAGE_URL,PARTNER_URL,IMAGE_TYPE, IMAGE_CODE, CREATE_TIME
+  </sql>
+  
+  <sql id="where">
+  	<where>
+  		<if test="partnerId != null and partnerId != ''">
+				PARTNER_ID = #{partnerId}
+		</if>
+		<if test="productId != null and productId != ''">
+				AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="packageId != null and packageId != ''">
+				AND PACKAGE_ID = #{packageId}
+		</if>
+		<if test="imageUrl != null and imageUrl != ''">
+				AND IMAGE_URL = #{imageUrl}
+		</if>
+		<if test="imageType != null and imageType != ''">
+				AND IMAGE_TYPE = #{imageType}
+		</if>
+		<if test="partnerUrl != null and partnerUrl != ''">
+				AND PARTNER_URL = #{partnerUrl}
+		</if>
+		<if test="imageCode != null and imageCode != ''">
+				AND IMAGE_CODE = #{imageCode}
+		</if>
+		
+  	</where>
+  
+  </sql>
+  
+
+  <insert id="insert" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerImageSync" >
+    insert into TNT_PARTNER_IMAGE_SYNC (ID,PARTNER_ID, PRODUCT_ID, PACKAGE_ID, IMAGE_URL, IMAGE_CODE, CREATE_TIME,PARTNER_URL,IMAGE_TYPE
+      )
+    values (#{id,jdbcType=INTEGER},#{partnerId,jdbcType=INTEGER}, #{productId,jdbcType=VARCHAR}, #{packageId,jdbcType=VARCHAR}, 
+      #{imageUrl,jdbcType=VARCHAR}, #{imageCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{partnerUrl,jdbcType=VARCHAR}, #{imageType,jdbcType=VARCHAR}
+      )
+  </insert>
+ 
+  
+  <select id="selectByImageCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/> 
+  	from TNT_PARTNER_IMAGE_SYNC t 
+  	WHERE t.IMAGE_CODE = #{imageCode} 
+  	AND t.PARTNER_ID = #{partnerId}
+  </select>
+  
+  <select id="queryPartnerImageList" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerImageSync" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/> 
+  	from TNT_PARTNER_IMAGE_SYNC t 
+  	<include refid="where"/>
+  </select>
+</mapper>

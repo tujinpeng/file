@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+           default-lazy-init="true">
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <context:annotation-config/>
+
+    <context:component-scan base-package="com.lvmama.tnt">
+        <!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/> -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:const.properties</value>
+                <value>classpath:jms.properties</value>
+                <value>classpath:dubbo.properties</value>
+                <value>classpath:jobClient.properties</value>
+				<value>classpath:zk.properties</value>
+				<value>classpath:memcached.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!-- memcached 客户端 -->
+    <bean id="tntMemcachedClientBuilder" class="com.lvmama.tnt.comm.memcache.TntMemcachedClientBuilder">
+	    <property name="servers" value="${cache.server}"/>
+	    <!-- <property name="failover" value="${memcached.failover}"/> -->
+	</bean>
+	<bean id="tntMemcachedClient" factory-bean="tntMemcachedClientBuilder" factory-method="build" destroy-method="shutdown"/>
+    <!-- memcached end -->
+    
+    <import resource="classpath:applicationContext-tnt-dist-database.xml"/>
+    <!-- 时间价格数据源 -->
+    <import resource="classpath:applicationContext-tnt-timeprice-database.xml"/>
+    <import resource="classpath:applicationContext-lvmama-comm-client.xml"/>
+    <import resource="classpath:applicationContext-lvmama-comm-jms.xml"/>
+	
+	
+	<!-- Dubbo start -->
+    <import resource="classpath:applicationContext-prism-web-remote.xml"/>
+    <import resource="classpath:applicationContext-tnt-cmt-dubbo.xml"/>
+	<import resource="classpath:applicationContext-tnt-pet-dubbo.xml"/>
+	<import resource="classpath:applicationContext-tnt-price-dubbo.xml"/>
+    <import resource="classpath:applicationContext-tnt-super-dubbo.xml"/>
+    <import resource="applicationContext-lvmama-tnt-sorder-dubbo.xml"/>
+	<import resource="classpath:applicationContext-lvmama-tnt-clutter-dubbo.xml"/>
+    <import resource="classpath:applicationContext-vst-api-remote-dubbo.xml"/>
+	<!-- Dubbo end -->
+	
+	<!-- lts -->
+	<import resource="classpath:applicationContext-lts-jobClient.xml"/>
+
+	
+    <!-- provider start-->
+    <import resource="classpath:applicationContext-tnt-dist-dubbo-provider.xml"/>
+    <import resource="classpath:applicationContext-lvmama-comm-dubbo-provider.xml"/>
+    <!-- provider end-->
+      <!-- 读写分离 -->
+    <import resource="applicationContext-lvmama-dataSource-hold.xml"/>
+      <!-- Aop相关 -->
+    <import resource="applicationContext-tnt-dist-aop.xml"/>
+</beans>

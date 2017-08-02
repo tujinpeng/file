@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.DistGoodsBranchMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.DistGoodsBranch">
+        <result property="distGoodsBranchId" column="DIST_GOODS_BRANCH_ID"/>
+        <result property="tntProductId" column="TNT_PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="branchName" column="BRANCH_NAME"/>
+        <result property="branchType" column="BRANCH_TYPE" />
+        <result property="discountRate" column="DISCOUNT_RATE"/>
+        <result property="commissionMode" column="COMMISSION_MODE" />
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="cmsType" column="CMSTYPE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		DIST_GOODS_BRANCH_ID,TNT_PRODUCT_ID,GOODS_ID,BRANCH_NAME,BRANCH_TYPE,DISCOUNT_RATE,COMMISSION_MODE,CREATE_TIME,CMSTYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.DistGoodsBranch">
+	<selectKey resultType="java.lang.Long" keyProperty="distGoodsBranchId"
+			order="BEFORE">
+			select  dist_goods_branch_seq.nextval from dual
+		</selectKey>
+        INSERT INTO DIST_GOODS_BRANCH (
+        	DIST_GOODS_BRANCH_ID ,
+        	TNT_PRODUCT_ID ,
+        	GOODS_ID ,
+        	BRANCH_NAME ,
+        	BRANCH_TYPE ,
+        	DISCOUNT_RATE ,
+        	COMMISSION_MODE ,
+        	CREATE_TIME,
+        	CMSTYPE 
+        ) VALUES (
+        	#{distGoodsBranchId jdbcType=NUMERIC} ,
+        	#{tntProductId jdbcType=NUMERIC} ,
+        	#{goodsId jdbcType=NUMERIC} ,
+        	#{branchName jdbcType=VARCHAR} ,
+        	#{branchType jdbcType=VARCHAR} ,
+        	#{discountRate jdbcType=NUMERIC} ,
+        	#{commissionMode jdbcType=VARCHAR} ,
+        	#{createTime jdbcType=DATE},
+        	#{cmsType jdbcType=VARCHAR}  
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.DistGoodsBranch">
+        UPDATE DIST_GOODS_BRANCH SET
+	        TNT_PRODUCT_ID = #{tntProductId jdbcType=NUMERIC} ,
+	        GOODS_ID = #{goodsId jdbcType=NUMERIC} ,
+	        BRANCH_NAME = #{branchName jdbcType=VARCHAR} ,
+	        BRANCH_TYPE = #{branchType jdbcType=VARCHAR} ,
+	        DISCOUNT_RATE = #{discountRate jdbcType=NUMERIC} ,
+	        COMMISSION_MODE = #{commissionMode jdbcType=VARCHAR} ,
+	        CREATE_TIME = #{createTime jdbcType=DATE},
+	        CMSTYPE = #{cmsType jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="distGoodsBranchId !=null">
+	        	DIST_GOODS_BRANCH_ID = #{distGoodsBranchId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM DIST_GOODS_BRANCH WHERE
+        DIST_GOODS_BRANCH_ID = #{id} 
+    </delete>
+    
+    <delete id="deleteAll" >
+        DELETE FROM DIST_GOODS_BRANCH 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM DIST_GOODS_BRANCH 
+	        WHERE 
+		        DIST_GOODS_BRANCH_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="distGoodsBranchId != null and distGoodsBranchId !=''">
+				AND DIST_GOODS_BRANCH_ID = #{distGoodsBranchId}
+	       	</if> 
+			<if test="tntProductId != null and tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{tntProductId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="branchName != null and branchName !=''">
+				AND BRANCH_NAME = #{branchName}
+	       	</if> 
+			<if test="branchType != null and branchType !=''">
+				AND BRANCH_TYPE = #{branchType}
+	       	</if> 
+			<if test="discountRate != null and discountRate !=''">
+				AND DISCOUNT_RATE = #{discountRate}
+	       	</if> 
+			<if test="commissionMode != null and commissionMode !=''">
+				AND COMMISSION_MODE = #{commissionMode}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if>
+	       	<if test="cmsType != null and cmsType !=''">
+				AND CMSTYPE = #{cmsType}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.distGoodsBranchId != null and param.distGoodsBranchId !=''">
+				AND DIST_GOODS_BRANCH_ID = #{param.distGoodsBranchId}
+	       	</if>
+			<if test="param.tntProductId != null and param.tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{param.tntProductId}
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = #{param.goodsId}
+	       	</if>
+			<if test="param.branchName != null and param.branchName !=''">
+				AND BRANCH_NAME = #{param.branchName}
+	       	</if>
+			<if test="param.branchType != null and param.branchType !=''">
+				AND BRANCH_TYPE = #{param.branchType}
+	       	</if>
+			<if test="param.discountRate != null and param.discountRate !=''">
+				AND DISCOUNT_RATE = #{param.discountRate}
+	       	</if>
+			<if test="param.commissionMode != null and param.commissionMode !=''">
+				AND COMMISSION_MODE = #{param.commissionMode}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+	       	<if test="param.cmsType != null and param.cmsType !=''">
+				AND CMSTYPE = #{param.cmsType}
+	       	</if>
+		</where>
+	</sql>
+	
+	<select id="findDistGoodsBranchByParameter" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.vo.DistGoodsBranch">
+	SELECT <include refid="columns" />
+	    FROM DIST_GOODS_BRANCH
+	    <include refid="where"/>
+	</select>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.DistGoodsBranch">
+        SELECT count(*) FROM DIST_GOODS_BRANCH 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM DIST_GOODS_BRANCH 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="findDistGoodsBranchByProduct" resultMap="baseResultMap" parameterType="Map">
+	  SELECT PB.*
+       FROM dist_goods_branch PB, TNT_PRODUCT P
+       WHERE PB.TNT_PRODUCT_ID = P.TNT_PRODUCT_ID
+       AND PB.BRANCH_TYPE = #{distId}
+       AND P.CATEGORY_ID = #{categoryId}
+	   AND P.BRANCH_ID = #{goodsId}
+	   AND P.branch_type = 'COMSHIP'
+	   AND P.PRODUCT_TYPE = 'COMBCRUISE'
+	   AND P.SYS_FLAG = 'VST'
+	</select>
+
+</mapper>
+

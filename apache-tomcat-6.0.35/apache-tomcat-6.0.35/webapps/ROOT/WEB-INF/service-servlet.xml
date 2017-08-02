@@ -1,0 +1,1071 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- User -->
+	<bean name="/tntUserService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.user.service.TntUserService" />
+	</bean>
+	<bean name="/tntCompanyTypeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompanyTypeService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCompanyTypeService" />
+	</bean>
+	<bean name="/tntOperatingSpecialistService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOperatingSpecialistService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntOperatingSpecialistService" />
+	</bean>
+	<bean name="/tntCompanyTypeUserService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompanyTypeUserService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCompanyTypeUserService" />
+	</bean>
+	<bean name="/tntContractService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntContractService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntContractService" />
+	</bean>
+	<bean name="/tntAnnouncementService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntAnnouncementService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntAnnouncementService" />
+	</bean>
+	<bean name="/tntFAQService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntFAQService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.user.service.TntFAQService" />
+	</bean>
+	<bean name="/tntUserMaterialService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserMaterialService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserMaterialService" />
+	</bean>
+	<bean name="/tntCommissionRuleService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCommissionRuleService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCommissionRuleService" />
+	</bean>
+	<bean name="/readyMessageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="readyMessageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.ReadyMessageService" />
+	</bean>
+
+	<!-- CashAccount -->
+	<bean name="/tntRecognizanceService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRecognizanceService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.recognizance.service.TntRecognizanceService" />
+	</bean>
+	<bean name="/tntCashaccountService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCashaccountService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.cashaccount.service.TntCashaccountService" />
+	</bean>
+	<bean name="/tntCertCodeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCertCodeService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.comm.service.TntCertCodeService" />
+	</bean>
+	<bean name="/tntUserClient"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserClient" />
+		<property name="serviceInterface" value="com.lvmama.tnt.comm.service.UserClient" />
+	</bean>
+	<bean name="/tntAccountService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntAccountService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.recognizance.service.TntAccountService" />
+	</bean>
+	<!-- channel -->
+	<bean name="/tntChannelService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntChannelService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntChannelService" />
+	</bean>
+	<!-- product -->
+	<bean name="/tntProdPolicyService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProdPolicyService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProdPolicyService" />
+	</bean>
+	<bean name="/tntProdProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProdProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProdProductService" />
+	</bean>
+	<bean name="/tntProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProductService" />
+	</bean>
+	<bean name="/routePreviewDetailService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="routePreviewDetailService" />
+        <property name="serviceInterface"
+            value="com.lvmama.tnt.prod.service.RoutePreviewDetailService" />
+    </bean>
+	<bean name="/tntProductTicketService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProductTicketService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProductVstService" />
+	</bean>
+	<bean name="/tntTicketGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntTicketGoodsService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntGoodsService" />
+	</bean>
+	<bean name="/tntDestRelService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntDestRelService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntDestRelService" />
+	</bean>
+	<bean name="/tntCouponService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCouponService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.coupon.service.TntCouponService" />
+	</bean>
+	<bean name="/tntVstCouponService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntVstCouponService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.coupon.service.TntVstCouponService" />
+	</bean>
+	<bean name="/tntGoodsChannelCouponService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntGoodsChannelCouponService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntGoodsChannelCouponService" />
+	</bean>
+	<bean name="/tntProductGoodsPreviewService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntProductGoodsPreviewService" />
+        <property name="serviceInterface"
+            value="com.lvmama.comm.tnt.service.TntProductGoodsPreviewService" />
+    </bean>
+	<bean name="/tntProductCommonService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProductCommonService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntProductCommonService" />
+	</bean>
+
+	<bean name="/tntCouponRuleService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCouponRuleService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.coupon.service.TntCouponRuleService" />
+	</bean>
+	<bean name="/tntProductUserService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntProductUserService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProductUserService" />
+	</bean>
+	<bean name="/tntCategoryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCategoryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.comm.service.biz.TntCategoryService" />
+	</bean>
+
+	<bean name="/tntUserDistributorIPService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserDistributorIPService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserDistributorIPService" />
+	</bean>
+	<bean name="/tntUserDistributorRateService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserDistributorRateService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserDistributorRateService" />
+	</bean>
+	<!-- order -->
+	<bean name="/tntOrderService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOrderService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.order.service.TntOrderService" />
+	</bean>
+	<bean name="/tntOrderItemProdService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOrderItemProdService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntOrderItemProdService" />
+	</bean>
+	<bean name="/tntOrderRefundService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOrderRefundService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntOrderRefundService" />
+	</bean>
+	<bean name="/onlineRefundService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="onlineRefundService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.OrderOnlineRefundService" />
+	</bean>
+	<bean name="/onlineRefundApplyService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="onlineRefundApplyService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.OnlineRefundApplyService" />
+	</bean>
+	<bean name="/tntRefundApplyService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRefundApplyService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntRefundApplyService" />
+	</bean>
+	<bean name="/orderCreateService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderCreateService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.OrderCreateService" />
+	</bean>
+	<bean name="/buildTntBuyInfoService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="buildTntBuyInfoService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.BuildTntBuyInfoService" />
+	</bean>
+	<bean name="/orderPayService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderPayService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.order.service.OrderPayService" />
+	</bean>
+	<bean name="/tntPayService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntPayService" />
+        <property name="serviceInterface" value="com.lvmama.pay.service.TntPayService" />
+    </bean>
+    <!-- 充值service -->
+     <bean name="/tntCashRechargeService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntCashRechargeService" />
+        <property name="serviceInterface" value="com.lvmama.pay.service.CashRechargeService" />
+    </bean>
+	<bean name="/tntTimePriceService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntTimePriceService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntTimePriceService" />
+	</bean>
+	<bean name="/tntTimePriceQueryService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntTimePriceQueryService" />
+        <property name="serviceInterface"
+            value="com.lvmama.tnt.order.service.TntTimePriceQueryService" />
+    </bean>
+	<bean name="/orderExcelReportService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderExcelReportService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.report.ReportService" />
+	</bean>
+	<bean name="/cashAccountExcelReportService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="cashAccountExcelReportService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.report.ReportService" />
+	</bean>
+
+	<bean name="/tntLogService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntLogService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.comm.service.TntLogService" />
+	</bean>
+	<!-- <bean name="/tntSearchService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntSearchService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.search.service.SearchService" />
+	</bean> -->
+	<bean name="/searchApiService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="searchApiService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.search.service.SearchApiService" />
+	</bean>
+	<bean name="/versionService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="versionService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.comm.service.VersionService" />
+	</bean>
+	<!-- partner hotel -->
+	<bean name="/hotelProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.ProductService" />
+	</bean>
+	<bean name="/hotelOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelOrderQueryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.OrderQueryService" />
+	</bean>
+	<bean name="/hotelOrderCheckService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelOrderCheckService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.HotelOrderCheckService" />
+	</bean>
+
+	<bean name="/hotelDistrictService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelDistrictService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.DistrictService" />
+	</bean>
+	<bean name="/hotelDistrictSignService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelDistrictSignService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.DistrictSignService" />
+	</bean>
+	<bean name="/hotelGoodsCheckService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelGoodsCheckService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.GoodsCheckService" />
+	</bean>
+	<bean name="/hotelGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.GoodsService" />
+	</bean>
+	<bean name="/hotelCreditCardService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelCreditCardService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.CreditCardService" />
+	</bean>
+	<bean name="/hotelVstProductPushService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelVstProductPushService" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.push.service.VstProductPushService" />
+	</bean>
+	<bean name="/hotelOrderManageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelOrderManageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.hotel.service.OrderManageService" />
+	</bean>
+	<bean name="/hotelVstOrderPushService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelVstOrderPushService" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.push.service.VstOrderPushService" />
+	</bean>
+
+	<!-- partner compship -->
+	<bean name="/compshipOrderManageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="compshipOrderManageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.compship.service.CompshipOrderManageService" />
+	</bean>
+
+	<bean name="/compshipOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="compshipOrderQueryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.compship.service.CompshipOrderQueryService" />
+	</bean>
+
+	<bean name="/compShipService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="compShipService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.compship.service.CompShipService" />
+	</bean>
+
+	<bean name="/comShipGoodsCheckService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comShipGoodsCheckService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.compship.service.ComShipGoodsCheckService" />
+	</bean>
+
+	<!-- partner ticket goods -->
+	<bean name="/ticketGoodsCheckService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ticketGoodsCheckService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketGoodsCheckService" />
+	</bean>
+
+	<bean name="/ticketGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ticketGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketGoodsService" />
+	</bean>
+
+	<bean name="/ticketProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ticketProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketProductService" />
+	</bean>
+
+	<!-- partner ticket order -->
+	<bean name="/ticketOrderManageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commOrderManageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketOrderManageService" />
+	</bean>
+
+	<bean name="/ticketOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commOrderQueryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketOrderQueryService" />
+	</bean>
+
+	<bean name="/transitOrderPerformService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="transitOrderPerformService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TransitOrderPerformService" />
+	</bean>
+
+	<bean name="/ticketOrderRequiredService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderRequiredService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.TicketOrderRequiredService" />
+	</bean>
+
+	<bean name="/orderSmsSendService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderSmsSendService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ticket.service.OrderSmsSendService" />
+	</bean>
+
+	<!-- partner biz -->
+	<bean name="/destService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="destService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.DestService" />
+	</bean>
+	<bean name="/dictInfoService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="dictInfoService" />
+		<property name="serviceInterface"
+	value=" com.lvmama.tnt.partner.biz.service.DictInfoService" />
+	</bean>
+
+	<bean name="/categoryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="categoryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.CategoryService" />
+	</bean>
+
+	<bean name="/flightService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="flightService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.FlightService" />
+	</bean>
+
+	<bean name="/trainService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="trainService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.TrainService" />
+	</bean>
+
+	<bean name="/visaDocService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="visaDocService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.biz.service.VisaDocService" />
+	</bean>
+
+	<!-- partner ship -->
+
+	<bean name="/shipGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shipGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ship.service.ShipGoodsService" />
+	</bean>
+
+	<bean name="/shipService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shipService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.ship.service.ShipService" />
+	</bean>
+
+	<!-- partner prom -->
+	<bean name="/promotionService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="promotionService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.prom.service.PromotionService" />
+	</bean>
+
+	<!-- partner comment -->
+	<bean name="/commentService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commentService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.comment.service.CommentService" />
+	</bean>
+
+	<!-- partner Super distributor -->
+	<bean name="/tntDistributorService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntDistributorService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntDistributorService" />
+	</bean>
+	<bean name="/tntDistOrderService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntDistOrderService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntDistOrderService" />
+	</bean>
+	<bean name="/tntDistProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntDistProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntDistProductService" />
+	</bean>
+
+	<!--partner shipaddition -->
+	<bean name="/shipAdditionGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shipAdditionGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.shipaddition.service.ShipAdditionGoodsService" />
+	</bean>
+
+	<bean name="/shipAdditionService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shipAdditionService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.shipaddition.service.ShipAdditionService" />
+	</bean>
+
+	<!--partner shoreexcursions -->
+	<bean name="/shoreExcursionsGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shoreExcursionsGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.shoreexcursions.service.ShoreExcursionsGoodsService" />
+	</bean>
+
+	<bean name="/shoreExcursionsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="shoreExcursionsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.shoreexcursions.service.ShoreExcursionsService" />
+	</bean>
+
+	<!--partner visa -->
+	<bean name="/visaGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="visaGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.visa.service.VisaGoodsService" />
+	</bean>
+
+	<bean name="/visaService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="visaService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.visa.service.VisaService" />
+	</bean>
+
+	<!-- cps cookie -->
+	<bean name="/cpsCookieService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="cpsCookieService" />
+		<property name="serviceInterface" value="com.lvmama.comm.tnt.service.CpsCookieService" />
+	</bean>
+
+	<bean name="/tntRouteProductSyncProxy"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRouteProductSyncProxy" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntRouteProductSyncProxy" />
+	</bean>
+
+	<!--partner route -->
+	<bean name="/routeGoodsCheckService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="routeGoodsCheckService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteGoodsCheckService" />
+	</bean>
+
+	<bean name="/routeGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="routeGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteGoodsService" />
+	</bean>
+
+	<bean name="/routeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="routeService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteService" />
+	</bean>
+
+	<bean name="/routeOrderManageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commOrderManageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteOrderManageService" />
+	</bean>
+
+	<bean name="/routeOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commOrderQueryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteOrderQueryService" />
+	</bean>
+
+	<bean name="/routeOrderRequiredService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderRequiredService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.route.service.RouteOrderRequiredService" />
+	</bean>
+
+	<!--partner prod -->
+	<bean name="/suppGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="suppGoodsService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.prod.service.SuppGoodsService" />
+	</bean>
+
+	<!-- cps -->
+	<bean name="/tntUserConfigService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserConfigService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserConfigService" />
+	</bean>
+	<bean name="/tntUserConfigPostService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntUserConfigPostService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserConfigPostService" />
+	</bean>
+
+
+	<!-- route product -->
+	<bean name="/tntRouteProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRouteProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntRouteProductService" />
+	</bean>
+	
+	<!-- 2015.2.4 zhaojia start-->
+	<bean name="/tntPackageRouteProductService" 
+	     class="org.springframework.remoting.caucho.HessianServiceExporter">
+	    <property name="service" ref="tntPackageRouteProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntPackageRouteProductService" />
+	</bean>
+	<!-- 2015.2.4 zhaojia end-->
+
+	<!-- common order query -->
+	<bean name="/commOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commOrderQueryService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.partner.comm.order.CommOrderQueryService" />
+	</bean>
+
+	<!-- 自由设备接口 -->
+	<bean name="/cKTicketOrderService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="cKTicketOrderService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.CKTicketOrderService" />
+	</bean>
+
+	<!--分销线路打包套餐 -->
+	<bean name="/tntSellPackageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntSellPackageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntSellPackageService" />
+	</bean>
+
+	<!--分销线路打包套餐关联 -->
+	<bean name="/tntSellPackageRelationService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntSellPackageRelationService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntSellPackageRelationService" />
+	</bean>
+    <bean name="/tntOrderManageService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOrderManageService" />
+		<property name="serviceInterface" value="com.lvmama.comm.tnt.service.TntOrderManageService" />
+	</bean>
+	
+	<!-- 订单关联 -->
+	<bean name="/tntRequestInfoService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRequestInfoService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntRequestInfoService" />
+	</bean>
+    <bean name="/tntOrderDiscountInfoService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntOrderDiscountInfoService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.order.service.TntOrderDiscountInfoService" />
+	</bean>
+	<!-- 通用产品查询接口 -->
+	<bean name="/commonProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="commonProductService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.partner.common.service.CommonProductService" />
+	</bean>
+
+	<!-- 签证商品 -->
+	<bean name="/tntVisaGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntVisaGoodsService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntVisaGoodsService" />
+	</bean>
+
+	<!-- api相关接口 -->
+	<bean name="/apiTntOrderService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="apiTntOrderService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.api.service.ApiTntOrderService" />
+	</bean>
+	
+	<bean name="/apiTntProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="apiTntProductService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.api.service.ApiTntProductService" />
+	</bean>
+	<!-- new distribution api -->
+	<bean name="/pushService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="pushService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.comm.service.PushService" />
+	</bean>
+
+	<!-- notice -->
+	<bean name="/noticeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="noticeService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.notice.service.NoticeService" />
+	</bean>
+
+	<!--tntHotelProductService-->
+	<bean name="/tntHotelProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntHotelProductService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntHotelProductService" />
+	</bean>
+
+	<!--tntHotelGoodsService-->
+	<bean name="/tntHotelGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntHotelGoodsService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntGoodsService" />
+	</bean>
+	
+	<bean name="/tntInsuranceProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntInsuranceProductService"/>
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntInsuranceProductService"/>
+	</bean>
+	
+	<!-- tntInsuranceGoodsService -->
+	<bean name="/tntInsuranceGoodsService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntInsuranceGoodsService"/>
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntInsuranceGoodsService"/>
+	</bean>
+
+	<!-- 提供给驴途预约接口 -->
+	<bean name="/yuyueFlowFacade"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="yuyueFlowFacade" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.yuyue.YuyueFlowFacade" />
+    </bean>
+    
+    <!-- 提供给驴途的线路预约接口 -->
+	<bean name="/routeYuyueService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="routeYuyueService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.yuyue.RouteYuyueService" />
+    </bean>
+
+	<!-- yuyue push -->
+	<bean name="/distributionPushLogService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionPushLogService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.comm.service.DistributionPushLogService" />
+	</bean>
+
+	<!-- subUser -->
+    <bean name="/tntSubUserService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntSubUserService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.user.service.TntSubUserService" />
+    </bean>
+    <bean name="/searchSpeicalTicketService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="searchSpeicalTicketService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.search.service.SearchSpeicalTicketService" />
+	</bean>
+    <bean name="/searchSpeicalRouteService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="searchSpeicalRouteService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.search.service.SearchSpeicalRouteService" />
+	</bean>
+	
+	<bean name="/searchSpeicalHotelService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="searchSpeicalHotelService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.search.service.SearchSpeicalHotelService" />
+	</bean>
+	
+	<!--hotelPreviewDetailService-->
+	<bean name="/hotelPreviewDetailService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelPreviewDetailService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.HotelPreviewDetailService" />
+	</bean>
+	
+	<!-- B2B酒店分销 推荐页 -->
+	<bean name="/hotelRecommendService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hotelRecommendService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.HotelRecommendService" />
+	</bean>
+	
+	<!-- B2B分销邮轮 -->
+	<bean name="/tntComShipPreviewDetailService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntComShipPreviewDetailService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntComShipPreviewDetailService" />
+	</bean>
+	
+	<!-- B2B酒店 线路相关产品搜索 -->
+	<bean name="/tntRelatedSearchService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntRelatedSearchService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntRelatedSearchService" />
+	</bean>
+	
+	<bean name="/subjectService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="subjectService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.biz.service.SubjectService" />
+    </bean>
+    
+    <bean name="/prodGroupDateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="prodGroupDateService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.biz.service.ProdGroupDateService" />
+    </bean>
+    
+    <!--tntReturnRuleService-->
+    
+    <bean name="/tntRouteProductLineDateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntRouteProductLineDateService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntRouteProductLineDateService" />
+    </bean>
+    
+
+<bean name="/tntRouteOrderService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+	    <property name="service" ref="tntRouteOrderService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.order.service.TntRouteOrderService" />
+</bean>
+    <bean name="/tntMessageProcessService"
+	class="org.springframework.remoting.caucho.HessianServiceExporter">
+	  <property name="service" ref="tntMessageProcessService" />
+	  <property name="serviceInterface"
+		value="com.lvmama.comm.tnt.service.TntMessageProcessService" />
+   </bean>
+	<!--tntReturnRuleService -->
+	<bean name="/tntReturnRuleService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntReturnRuleService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntReturnRuleService" />
+	</bean>
+	
+	<!-- 邮轮时间价格表 -->
+	<bean name="/tntCSTimePriceService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntCSTimePriceService" />
+        <property name="serviceInterface"
+            value="com.lvmama.tnt.order.service.TntCSTimePriceService" />
+    </bean>
+    
+    <!-- 分销酒店时间价格表 -->
+	<bean name="/tntHotelTimePriceService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntHotelTimePriceService" />
+        <property name="serviceInterface"
+            value="com.lvmama.tnt.order.service.TntHotelTimePriceService" />
+    </bean>
+    
+     <!--tntCompshipService-->
+	 <bean name="/tntCompshipProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompshipProductService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntCompshipProductService" />
+	</bean>
+	
+	 <!--tntCompShipSyncService-->
+	 <bean name="/tntCompShipSyncService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompShipSyncService" />
+		<property name="serviceInterface" value="com.lvmama.comm.tnt.service.TntCompShipSyncService" />
+	</bean>
+	
+	 <bean name="/tntCruiseFacadeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCruiseFacadeService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntCruiseFacadeService" />
+	</bean>
+	
+		
+	<!-- 邮轮商品基本信息，查询最大最小入住人数-->
+	<bean name="/tntCheckCompShipService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCheckCompShipService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.compship.service.TntCheckCompShipService" />
+	</bean>
+	
+	<bean name="/tntCruisePackageService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCruiseAutoPackageService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.compship.service.TntCruisePackageService" />
+	</bean>
+	<bean name="/tntCruisePackageProductRelService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCruisePackageProductRelService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.compship.service.TntCruisePackageProductRelService" />
+	</bean>
+	<bean name="/tntCruiseProductService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCruiseProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.compship.service.TntCruiseProductService" />
+	</bean>
+	
+	<!-- 邮轮单品返佣值计算 -->
+	<bean name="/tntCMSServiceImpl"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCMSServiceImpl" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntCMSService" />
+	</bean>
+	
+	<!-- 邮轮通用返佣值计算 -->
+	<bean name="/tntCompShipCMSCal"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompShipCMSCal" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntCompShipCMSCal" />
+	</bean>	
+	
+	<!-- 邮轮组合中组合商品时间价格表同步-->
+	<bean name="/tntCompShipTimePriceSyncService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntCompShipTimePriceSyncService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.tnt.service.TntCompShipTimePriceSyncService" />
+	</bean>
+	
+
+    <bean name="/tntInsuranceNotTimePriceQueryService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntInsuranceNotTimePriceQueryService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.timeprice.service.TntGodTimePriceQueryService" />
+    </bean>
+     <bean name="/tntSampleTimePriceFilter"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntSampleTimePriceFilter" />
+        <property name="serviceInterface" value="com.lvmama.tnt.timeprice.service.TntTimePriceFilter" />
+    </bean>
+    <bean name="/tntNotTimePriceWapperService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntNotTimePriceWapperService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.timeprice.service.ticket.TntNotTimePriceWapperService" />
+    </bean>
+	
+	<bean name="/buyPresentService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="buyPresentService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.biz.service.BuyPresentService" />
+    </bean>
+	<bean name="/intentionOrderService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="intentionOrderService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.partner.biz.service.IntentionOrderService" />
+    </bean>
+	
+	<bean name="/tntADPromoteService"
+        class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="tntADPromoteService" />
+        <property name="serviceInterface" value="com.lvmama.tnt.prod.service.TntADPromoteService" />
+    </bean>
+
+    
+	<bean name="/tntSellBranchService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntSellBranchService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntSellBranchService" />
+	</bean>
+	  
+	<bean name="/tntSellBranchRelationService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="tntSellBranchRelationService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntSellBranchRelationService" />
+	</bean>
+
+    
+    <bean name="/distributionAgreementService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionAgreementService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.distribution.DistributionAgreementService" />
+	</bean>
+
+</beans>

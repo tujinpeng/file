@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.qrcode.mapper.TntOrderQrCodeSubMapper" >
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    <id column="ORDER_QRCODE_SUB_ID" property="orderQrcodeSubId" jdbcType="DECIMAL" />
+    <result column="ORDER_ID" property="orderId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="DECIMAL" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="SETTLE_ORDER_STATUS" property="settleOrderStatus" jdbcType="VARCHAR" />
+    <result column="COMMISSION" property="commission" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORDER_QRCODE_SUB_ID, ORDER_ID, USER_ID, PRODUCT_ID, PRODUCT_NAME, CATEGORY_ID, CREATE_TIME, 
+    UPDATE_TIME, SETTLE_ORDER_STATUS, COMMISSION
+  </sql>
+
+  <sql id="queryWhere">
+    <where>
+      <if test="orderQrcodeSubId != null and orderQrcodeSubId != ''">
+        and ORDER_QRCODE_SUB_ID = #{orderQrcodeSubId}
+      </if>
+      <if test="orderId != null and orderId != ''">
+        and ORDER_ID = #{orderId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and USER_ID = #{userId}
+      </if>
+      <if test="productId != null and productId != ''">
+        and PRODUCT_ID = #{productId}
+      </if>
+      <if test="productName != null and productName != ''">
+        and PRODUCT_NAME = #{productName}
+      </if>
+      <if test="categoryId != null and categoryId != ''">
+        and CATEGORY_ID = #{categoryId}
+      </if>
+      <if test="createTime != null and createTime != ''">
+        and CREATE_TIME = #{createTime}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and UPDATE_TIME = #{updateTime}
+      </if>
+      <if test="settleOrderStatus != null and settleOrderStatus != ''">
+        and SETTLE_ORDER_STATUS = #{settleOrderStatus}
+      </if>
+      <if test="commission != null and commission != ''">
+        and COMMISSION = #{commission}
+      </if>
+    </where>
+  </sql>
+
+  <sql id="queryPageWhere">
+    <where>
+      <if test="param.orderQrcodeSubId != null and param.orderQrcodeSubId != ''">
+        and ORDER_QRCODE_SUB_ID = #{param.orderQrcodeSubId}
+      </if>
+      <if test="param.orderId != null and param.orderId != ''">
+        and ORDER_ID = #{param.orderId}
+      </if>
+      <if test="param.userId != null and param.userId != ''">
+        and USER_ID = #{param.userId}
+      </if>
+      <if test="param.productId != null and param.productId != ''">
+        and PRODUCT_ID = #{param.productId}
+      </if>
+      <if test="param.productName != null and param.productName != ''">
+        and PRODUCT_NAME = #{param.productName}
+      </if>
+      <if test="param.categoryId != null and param.categoryId != ''">
+        and CATEGORY_ID = #{param.categoryId}
+      </if>
+      <if test="param.createTime != null and param.createTime != ''">
+        and CREATE_TIME = #{param.createTime}
+      </if>
+      <if test="param.updateTime != null and param.updateTime != ''">
+        and UPDATE_TIME = #{param.updateTime}
+      </if>
+      <if test="param.settleOrderStatus != null and param.settleOrderStatus != ''">
+        and SETTLE_ORDER_STATUS = #{param.settleOrderStatus}
+      </if>
+      <if test="param.commission != null and param.commission != ''">
+        and COMMISSION = #{param.commission}
+      </if>
+    </where>
+  </sql>
+
+  <sql id="queryTntOrderWhere">
+    <where>
+      torder.order_id = toqs.order_id
+      and torder.payment_status='PAYED'
+      and torder.order_status='NORMAL'
+      <if test="tntOrderStatus!= null and tntOrderStatus != ''">
+      and torder.perform_status =#{tntOrderStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="tntOrderStatuss != null">
+        AND   torder.perform_status IN
+        <foreach collection="tntOrderStatuss" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="expireDays!= null and expireDays != ''">
+        and floor(SYSDATE-torder.visit_time)> #{expireDays,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from TNT_ORDER_QRCODE_SUB
+    where ORDER_QRCODE_SUB_ID = #{orderQrcodeSubId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TNT_ORDER_QRCODE_SUB
+    where ORDER_QRCODE_SUB_ID = #{orderQrcodeSubId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    <selectKey resultType="java.lang.Long" keyProperty="orderQrcodeSubId" order="BEFORE" >
+      SELECT TNT_ORDER_QRCODE_SUB_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into TNT_ORDER_QRCODE_SUB (ORDER_QRCODE_SUB_ID, ORDER_ID, USER_ID, 
+      PRODUCT_ID, PRODUCT_NAME, CATEGORY_ID, 
+      CREATE_TIME, UPDATE_TIME, SETTLE_ORDER_STATUS, 
+      COMMISSION)
+    values (#{orderQrcodeSubId,jdbcType=DECIMAL}, #{orderId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, 
+      #{productId,jdbcType=DECIMAL}, #{productName,jdbcType=VARCHAR}, #{categoryId,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{settleOrderStatus,jdbcType=VARCHAR}, 
+      #{commission,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    <selectKey resultType="java.lang.Long" keyProperty="orderQrcodeSubId" order="BEFORE" >
+      SELECT TNT_ORDER_QRCODE_SUB_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into TNT_ORDER_QRCODE_SUB
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ORDER_QRCODE_SUB_ID,
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="productId != null" >
+        PRODUCT_ID,
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME,
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="settleOrderStatus != null" >
+        SETTLE_ORDER_STATUS,
+      </if>
+      <if test="commission != null" >
+        COMMISSION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{orderQrcodeSubId,jdbcType=DECIMAL},
+      <if test="orderId != null" >
+        #{orderId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=DECIMAL},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleOrderStatus != null" >
+        #{settleOrderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="commission != null" >
+        #{commission,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    update TNT_ORDER_QRCODE_SUB
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="productId != null" >
+        PRODUCT_ID = #{productId,jdbcType=DECIMAL},
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleOrderStatus != null" >
+        SETTLE_ORDER_STATUS = #{settleOrderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="commission != null" >
+        COMMISSION = #{commission,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ORDER_QRCODE_SUB_ID = #{orderQrcodeSubId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    update TNT_ORDER_QRCODE_SUB
+    set ORDER_ID = #{orderId,jdbcType=DECIMAL},
+      USER_ID = #{userId,jdbcType=DECIMAL},
+      PRODUCT_ID = #{productId,jdbcType=DECIMAL},
+      PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      SETTLE_ORDER_STATUS = #{settleOrderStatus,jdbcType=VARCHAR},
+      COMMISSION = #{commission,jdbcType=DECIMAL}
+    where ORDER_QRCODE_SUB_ID = #{orderQrcodeSubId,jdbcType=DECIMAL}
+  </update>
+
+  <select id="queryByCondition" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from TNT_ORDER_QRCODE_SUB
+    <include refid="queryWhere"/>
+  </select>
+
+  <select id="queryPageByCondition" parameterType="page" resultMap="BaseResultMap">
+    <include refid="basic.pageSearchHead"/>
+    select
+    <include refid="Base_Column_List"/>
+    from TNT_ORDER_QRCODE_SUB
+    <include refid="queryPageWhere"/>
+    <include refid="basic.pageSearchFoot"/>
+  </select>
+
+  <select id="queryTotalCount" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" resultType="java.lang.Integer">
+    select count(1) from TNT_ORDER_QRCODE_SUB <include refid="queryWhere"/>
+  </select>
+
+  <select id="findPageWithExample" resultMap="BaseResultMap" parameterType="java.util.Map">
+		<include refid="basic.pageSearchHead" />
+        select toqs.*
+        from tnt_order_qrcode_sub toqs
+        where toqs.settle_order_status = 'QRCODE_ORDER_WAIT'
+        and exists (select 1
+        from tnt_order torder
+        <include refid="queryTntOrderWhere" />
+        )
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="countWithExample" resultType="Integer" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub">
+      select count(1)
+      from tnt_order_qrcode_sub toqs
+      where toqs.settle_order_status = 'QRCODE_ORDER_WAIT'
+      and exists (select 1
+      from tnt_order torder
+        <include refid="queryTntOrderWhere" />
+      )
+	</select>
+
+
+   <update id="updateStatusByOrderIdSelective" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSub" >
+    update TNT_ORDER_QRCODE_SUB
+    <set >
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleOrderStatus != null" >
+        SETTLE_ORDER_STATUS = #{settleOrderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="commission != null">
+        COMMISSION = #{commission},
+      </if>
+    </set>
+    where ORDER_ID = #{orderId,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+       SELECT
+       <include refid="Base_Column_List"/>
+       FROM TNT_ORDER_QRCODE_SUB T
+       WHERE
+        T.ORDER_ID = #{orderId}
+  </select>
+</mapper>

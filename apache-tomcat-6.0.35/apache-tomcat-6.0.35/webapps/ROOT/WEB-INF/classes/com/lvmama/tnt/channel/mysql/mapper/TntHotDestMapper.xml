@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.channel.mysql.mapper.TntHotDestMapper">
+	<!-- 目的地查询结果 -->
+	<resultMap id="DestResultMap" type="com.lvmama.tnt.channel.vo.HotDest" >
+	    <result column="ID" property="id" />
+	    <result column="DEST_ID" property="destId" />
+	    <result column="CATEGORY_ID" property="categoryId" />
+	    <result column="CATEGORY_NAME" property="categoryName" />
+	    <result column="DEST_NAME" property="destName" />
+	    <result column="PREVIEW_URL" property="previewUrl" />
+	    <result column="IS_RECOMMEND" property="isRecommend" />
+	    <result column="UPDATE_TIME" property="updateTime" />
+  	</resultMap>
+  	<!-- 目的地分类查询结果 -->
+  	<resultMap id="CategoryResultMap" type="com.lvmama.tnt.channel.vo.DestCategory" >
+	    <result column="ID" property="id" />
+	    <result column="CATEGORY_ID" property="categoryId" />
+	    <result column="CATEGORY_NAME" property="categoryName" />
+	    <result column="VALID_NUM" property="validNum" />
+	    <result column="MODE_TYPE" property="modeType" />
+	    <result column="CATEGORY_TYPE" property="categoryType" />
+	    <result column="REMARK" property="remark" />
+	    <result column="FLAG" property="flag" />
+	    <result column="UPDATE_TIME" property="updateTime" />
+  	</resultMap>
+  	<!-- 目的地查询条件 -->
+  	<sql id="destwhere">
+  		<where>
+	  		<if test="id != null and id !=''">
+				AND des.ID = #{id}
+			</if>
+			<if test="destId != null and destId !=''">
+				AND des.DEST_ID = #{destId}
+			</if>
+			<if test="categoryId != null and categoryId !=''">
+				AND des.CATEGORY_ID = #{categoryId}
+			</if>
+			<if test="categoryName != null and categoryName !=''">
+				AND des.CATEGORY_NAME = #{categoryName}
+			</if>
+			<if test="destName != null and destName !=''">
+				AND des.DEST_NAME = #{destName}
+			</if>
+			<if test="previewUrl != null and previewUrl !=''">
+				AND des.PREVIEW_URL = #{previewUrl}
+			</if>
+			<if test="isRecommend != null and isRecommend !=''">
+				AND des.IS_RECOMMEND = #{isRecommend}
+			</if>
+  		</where>
+			
+	</sql>
+	<!-- 目的地分类查询条件 -->
+  	<sql id="categorywhere">
+	  	<where>
+	  		<if test="id != null and id !=''">
+				AND cat.ID = #{id}
+			</if>
+			<if test="categoryId != null and categoryId !=''">
+				AND cat.CATEGORY_ID = #{categoryId}
+			</if>
+			<if test="categoryName != null and categoryName !=''">
+				AND cat.CATEGORY_NAME = #{categoryName}
+			</if>
+			<if test="validNum != null and validNum !=''">
+				AND cat.VALID_NUM = #{validNum}
+			</if>
+			<if test="categoryType != null and categoryType !=''">
+				AND cat.CATEGORY_TYPE = #{categoryType}
+			</if>	
+	  	</where>			
+	</sql>
+	<!-- 根据目的地分类id查询目的地列表 -->
+	<select id="findHotDestByCategoryId" resultMap="DestResultMap" parameterType="java.lang.Long">
+	   select distinct des.*  from  TNT_DEST_DETAIL des where des.CATEGORY_ID=#{categoryId}  and des.is_recommend='Y' order by des.ID 
+	</select>
+	
+	<!-- 根据条件查询目的地 -->
+	<select id="findHotDestByExample" resultMap="DestResultMap" parameterType="com.lvmama.tnt.channel.vo.HotDest">
+	   select distinct des.*  from  TNT_DEST_DETAIL des 
+	   <include refid="destwhere"/>   
+	</select>
+		
+	<!-- 根据id查询目的地 -->
+	<select id="findHotDestById" resultMap="DestResultMap" parameterType="java.lang.Long">
+	   select distinct des.*  from  TNT_DEST_DETAIL des  
+	   <where>
+			 1=0
+			 <if test="destId !=null and  destId !=''">
+		        or	des.DEST_ID = #{destId} 
+		     </if>
+	   </where>    
+	</select>
+	
+	<!-- 根据分类id查询此分类下的所有有效记录 -->
+	<select id="queryCountDestByCategory" resultType="java.lang.Long" parameterType="java.lang.Long">
+	   select  count(*)  from TNT_DEST_DETAIL  des where des.is_recommend='Y'  and des.CATEGORY_ID=#{categoryId}
+	</select>
+	
+	<!-- 根据条件更新目的地名称 -->
+	<update id="updateHotDestByExample" parameterType="com.lvmama.tnt.channel.vo.HotDest">
+		 update TNT_DEST_DETAIL des  
+		 <trim prefix="set" prefixOverrides=",">
+			<if test="destName !=null and destName!=''">
+				 des.DEST_NAME=#{destName},
+			</if>
+			
+			<if test="categoryName !=null and categoryName !=''">
+				 des.CATEGORY_NAME=#{categoryName},
+			</if>
+			<if test="isRecommend != null and isRecommend !=''">
+				 des.IS_RECOMMEND = #{isRecommend},
+			</if>
+			<if test="previewUrl != null and previewUrl !=''">
+				 des.PREVIEW_URL = #{previewUrl},
+			</if>	 
+		 	des.UPDATE_TIME=now()	 
+		 </trim>
+		 where 
+		 <if test="destId !=null and destId !=''">
+	        	des.DEST_ID = #{destId} 
+	     </if>
+	</update>
+	
+	<!-- 插入目的地信息 -->
+	<insert id="insertHotDestByExample" parameterType="com.lvmama.tnt.channel.vo.HotDest"  useGeneratedKeys="true" keyProperty="destId">
+		insert into  TNT_DEST_DETAIL (
+		ID,
+		CATEGORY_ID,
+		CATEGORY_NAME,
+		DEST_NAME,
+		PREVIEW_URL,
+		IS_RECOMMEND,
+		UPDATE_TIME		
+		) 
+		select IFNULL(MAX(ID),0)+1 ,
+		#{categoryId},
+		#{categoryName},
+		#{destName},
+		#{previewUrl},
+		'Y',
+		now()
+		from  TNT_DEST_DETAIL	
+	</insert>
+	
+	
+	<!-- 目的地排序功能 -->
+	<update id="sortHotDest" parameterType="java.util.Map"> 
+	    UPDATE TNT_DEST_DETAIL
+		SET ID = CASE ID 
+		WHEN #{id1}  THEN #{id2} 
+		WHEN #{id2}  THEN #{id1} 
+		END
+		WHERE ID in(#{id1} ,#{id2}) and CATEGORY_ID=#{categoryId}
+		
+    </update>
+	
+	<!-- 根据目的地分类查询目的地分类列表 -->
+	<select id="findCategoryListByCategoryType" resultMap="CategoryResultMap" parameterType="String">
+	   select distinct cat.*  from  TNT_DEST_CATEGORY cat where cat.CATEGORY_TYPE=#{categoryType} and cat.FLAG='Y'  order by cat.ID 
+	</select>
+	
+	<!-- 根据map目的地分类列表 -->
+	<select id="findCategoryListByParam" resultMap="CategoryResultMap" parameterType="java.util.Map">
+	   select distinct cat.*  from  TNT_DEST_CATEGORY cat where cat.FLAG='Y'  
+	   <if test="modeType !=null and modeType !=''">
+	    and cat.MODE_TYPE=#{modeType}
+	   </if>
+	   <if test="categoryType !=null and categoryType !=''">
+	    and cat.CATEGORY_TYPE=#{categoryType}
+	   </if>
+	    order by cat.ID 
+	</select>
+	
+	<!-- 根据条件查找目的地分类 -->
+	<select id="findDestCategoryByExample" resultMap="CategoryResultMap" parameterType="com.lvmama.tnt.channel.vo.DestCategory">
+	   select distinct cat.*  from  TNT_DEST_CATEGORY cat 
+	   <include refid="categorywhere"/>   
+	</select>
+	
+	<!-- 根据categoryId查找目的地分类 -->
+	<select id="findDestCategoryById" resultMap="CategoryResultMap" parameterType="java.lang.Long">
+	   select distinct cat.*  from  TNT_DEST_CATEGORY cat 
+	    <where>
+			 1=0
+			 <if test="categoryId !=null and categoryId !=''">
+		        or	cat.CATEGORY_ID = #{categoryId} 
+		     </if>
+	     </where>
+	     
+	</select>
+	
+	<!-- 根据modeType与categoryType查找此分类下的所有记录数-->
+	<select id="queryCountDestCategory" resultType="java.lang.Long" parameterType="com.lvmama.tnt.channel.vo.DestCategory">
+	   select  count(*)  from TNT_DEST_CATEGORY  cat  where cat.FLAG='Y'
+	   
+		 <if test="modeType !=null and modeType !=''">
+	       and 	cat.MODE_TYPE = #{modeType}
+	     </if>
+	     <if test="categoryType !=null and categoryType !=''">
+	       and	cat.CATEGORY_TYPE = #{categoryType}
+	     </if>
+	    
+	</select>
+	
+	<!-- 根据条件更新目的地分类名称  -->
+	<update id="updateDestCategoryByExample" parameterType="com.lvmama.tnt.channel.vo.DestCategory">
+		 update TNT_DEST_CATEGORY cat
+			 <trim prefix="set" prefixOverrides=",">
+			 	<if test="categoryName !=null and categoryName !=''">
+	        		cat.CATEGORY_NAME = #{categoryName}, 
+	     		</if>
+	     		<if test="validNum !=null and validNum !=''">
+	        		cat.VALID_NUM = #{validNum}, 
+	     		</if>
+			 
+			 cat.UPDATE_TIME=now()
+			 </trim>
+		 where 
+		 <if test="categoryId !=null and categoryId !=''">
+	        	cat.CATEGORY_ID = #{categoryId} 
+	     </if>
+	</update>
+	
+	<!-- 插入目的地分类信息 -->
+	<insert id="insertDestCategoryByExample" parameterType="com.lvmama.tnt.channel.vo.DestCategory"  useGeneratedKeys="true" keyProperty="categoryId">
+		insert into  TNT_DEST_CATEGORY (
+		ID,
+		CATEGORY_NAME,
+		VALID_NUM,
+		MODE_TYPE,
+		CATEGORY_TYPE,
+		REMARK,
+		FLAG,
+		UPDATE_TIME	
+		) 
+		select IFNULL(MAX(ID),0)+1 ,
+		#{categoryName},
+		#{validNum},
+		#{modeType},
+		#{categoryType},
+		NULL,
+		'Y',
+		now()
+		from  TNT_DEST_CATEGORY	
+	</insert>
+	
+	<!-- 删除目的地分类信息 ,只更改状态状态不做实际删除-->
+		<update id="deleteCategoryById" parameterType="java.lang.Long">
+		 update TNT_DEST_CATEGORY cat set 
+		 cat.FLAG='N',
+		 cat.UPDATE_TIME=now()
+		 <where>
+			 1=0
+			 <if test="categoryId !=null and categoryId !=''">
+		        or	cat.CATEGORY_ID = #{categoryId} 
+		     </if>
+	     </where>
+	</update>
+	
+	<!-- 目的地分类排序功能 -->
+		<update id="sortDestCategory" parameterType="java.util.Map"> 
+	    UPDATE TNT_DEST_CATEGORY
+		SET ID = CASE ID 
+		WHEN #{id1}  THEN #{id2} 
+		WHEN #{id2}  THEN #{id1} 
+		END
+		WHERE ID in(#{id1} ,#{id2}) and CATEGORY_TYPE=#{categoryType}
+		
+    </update>
+
+	<select id="getHotDestForTicketByMap" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT
+		tdd.DEST_NAME
+		FROM
+		TNT_DEST_DETAIL tdd ,
+		TNT_DEST_CATEGORY tdc
+		WHERE
+		tdd.CATEGORY_ID=tdc.CATEGORY_ID
+		AND tdc.CATEGORY_NAME=#{categoryName}
+		AND tdc.CATEGORY_TYPE='hotDest'
+		AND tdc.MODE_TYPE='TICKET'
+		AND tdc.FLAG='Y'
+		AND tdd.IS_RECOMMEND='Y'
+		ORDER BY
+		tdd.ID
+	</select>
+
+</mapper>
+

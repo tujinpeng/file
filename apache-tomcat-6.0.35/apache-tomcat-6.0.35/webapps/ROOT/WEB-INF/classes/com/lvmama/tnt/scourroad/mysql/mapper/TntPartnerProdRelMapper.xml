@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.scourroad.mysql.mapper.TntPartnerProdRelMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel">
+        <result property="id" column="ID"/>
+        <result property="partnerProdId" column="PARTNER_PROD_ID"/>
+        <result property="partnerGoodsName" column="PARTNER_GOODS_NAME"/>
+        <result property="partnerGoodsId" column="PARTNER_GOODS_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+        <result property="syncInfo" column="SYNC_INFO"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="isUpdate" column="IS_UPDATE"/>
+        <result property="mark" column="MARK"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="distributorId" column="DISTRIBUTOR_ID"/>
+        <result property="distributorCode" column="DISTRIBUTOR_CODE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="appStoreId" column="APP_STORE_ID"/>
+        <result property="lvmamaType" column="LVMAMA_TYPE"/>
+        <result property="setMealName" column="SET_MEAL_NAME"/>
+        <result property="isOnline" column="IS_ONLINE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID ID,PARTNER_PROD_ID PARTNER_PROD_ID,PARTNER_GOODS_NAME PARTNER_GOODS_NAME,PARTNER_GOODS_ID PARTNER_GOODS_ID,GOODS_ID GOODS_ID,GOODS_NAME GOODS_NAME,SYNC_INFO SYNC_INFO,PRODUCT_ID PRODUCT_ID,IS_UPDATE IS_UPDATE,MARK MARK,OPERATOR OPERATOR,DISTRIBUTOR_ID DISTRIBUTOR_ID,DISTRIBUTOR_CODE DISTRIBUTOR_CODE,CREATE_TIME CREATE_TIME,UPDATE_TIME UPDATE_TIME,PRODUCT_TYPE PRODUCT_TYPE,APP_STORE_ID APP_STORE_ID,LVMAMA_TYPE LVMAMA_TYPE,SET_MEAL_NAME SET_MEAL_NAME,IS_ONLINE IS_ONLINE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel" keyProperty="id">
+        INSERT INTO TNT_PARTNER_PROD_REL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="partnerProdId != null">
+                PARTNER_PROD_ID,
+            </if>
+            <if test="partnerGoodsName != null">
+                PARTNER_GOODS_NAME,
+            </if>
+            <if test="partnerGoodsId != null">
+                PARTNER_GOODS_ID,
+            </if>
+            <if test="goodsId != null">
+                GOODS_ID,
+            </if>
+            <if test="goodsName != null">
+                GOODS_NAME,
+            </if>
+            <if test="syncInfo != null">
+                SYNC_INFO,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="isUpdate != null">
+                IS_UPDATE,
+            </if>
+            <if test="mark != null">
+                MARK,
+            </if>
+            <if test="operator != null">
+                OPERATOR,
+            </if>
+            <if test="distributorId != null">
+                DISTRIBUTOR_ID,
+            </if>
+            <if test="distributorCode != null">
+                DISTRIBUTOR_CODE,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="productType != null">
+                PRODUCT_TYPE,
+            </if>
+            <if test="appStoreId != null">
+                APP_STORE_ID,
+            </if>
+            <if test="lvmamaType != null">
+                LVMAMA_TYPE,
+            </if>
+       	    <if test="setMealName != null">
+                SET_MEAL_NAME,
+            </if>
+            <if test="isOnline != null">
+                IS_ONLINE,
+            </if>
+        
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+        	<if test="partnerProdId != null">
+               #{partnerProdId} ,
+            </if>
+            <if test="partnerGoodsName != null">
+                #{partnerGoodsName} ,
+            </if>
+            <if test="partnerGoodsId != null">
+                #{partnerGoodsId} ,
+            </if>
+            <if test="goodsId != null">
+                #{goodsId} ,
+            </if>
+            <if test="goodsName != null">
+                #{goodsName} ,
+            </if>
+            <if test="syncInfo != null">
+               #{syncInfo} ,
+            </if>
+            <if test="productId != null">
+                #{productId} ,
+            </if>
+            <if test="isUpdate != null">
+                #{isUpdate} ,
+            </if>
+            <if test="mark != null">
+                #{mark} ,
+            </if>
+            <if test="operator != null">
+                #{operator} ,
+            </if>
+            <if test="distributorId != null">
+                #{distributorId} ,
+            </if>
+            <if test="distributorCode != null">
+                #{distributorCode} ,
+            </if>
+            <if test="createTime != null">
+                #{createTime} ,
+            </if>
+            <if test="updateTime != null">
+               #{updateTime},
+            </if>
+            <if test="productType != null">
+                #{productType},
+            </if>
+            <if test="appStoreId != null">
+                #{appStoreId},
+            </if>
+            <if test="lvmamaType != null">
+                #{lvmamaType},
+            </if>
+            <if test="setMealName != null">
+                #{setMealName},
+            </if>
+            <if test="isOnline != null">
+                #{isOnline}
+            </if>
+        </trim>
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel">
+        UPDATE TNT_PARTNER_PROD_REL 
+ 			<trim prefix="set" suffixOverrides=",">
+	          <if test="partnerGoodsName != null">PARTNER_GOODS_NAME = #{partnerGoodsName} ,</if>
+	          <if test="partnerGoodsId != null">PARTNER_GOODS_ID = #{partnerGoodsId},</if>
+	          <if test="goodsId != null">GOODS_ID = #{goodsId},</if>
+	          <if test="goodsName != null">GOODS_NAME = #{goodsName} ,</if>
+	          <if test="syncInfo != null"> SYNC_INFO = #{syncInfo},</if>
+	          <if test="operator != null">OPERATOR = #{operator} ,</if>
+	          <if test="productId != null">PRODUCT_ID = #{productId},</if>
+	          <if test="updateTime != null">UPDATE_TIME=#{updateTime},</if>
+	          <if test="isOnline != null">IS_ONLINE=#{isOnline},</if>
+	          <if test="mark != null">MARK=#{mark}</if>
+	         </trim>
+        WHERE 
+            DISTRIBUTOR_CODE = #{distributorCode}
+	        AND PARTNER_PROD_ID = #{partnerProdId} 
+	        AND PARTNER_GOODS_ID = #{partnerGoodsId}
+	</update>
+	
+	
+	
+	<update id="updateTao117IsSync" parameterType="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel">
+        UPDATE TNT_PARTNER_PROD_REL SET
+	        IS_UPDATE = #{isUpdate},
+	        UPDATE_TIME=#{updateTime}
+        WHERE 
+            1=1
+            <if test="id !=null">
+	        	AND ID = #{id} 
+	        </if>
+        	<if test="partnerProdId !=null">
+	        	AND PARTNER_PROD_ID = #{partnerProdId} 
+	        </if>
+	</update>
+    
+    <select id="getQuery" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_PARTNER_PROD_REL  
+	        <include refid="where"/> 
+	        ORDER BY SYNC_INFO,CREATE_TIME DESC
+	</select>
+	
+	
+	<select id="getQueryTntPartnerProdRel" resultMap="baseResultMap" parameterType="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel">
+		SELECT <include refid="columns" />
+		    FROM TNT_PARTNER_PROD_REL  
+	        <include refid="where"/> 
+	        ORDER BY SYNC_INFO,CREATE_TIME DESC
+	</select>
+	
+	<select id="queryByPartnerProdId" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*) FROM TNT_PARTNER_PROD_REL  
+		WHERE 
+			PARTNER_PROD_ID = #{partnerProdId}
+			AND PARTNER_GOODS_ID = #{partnerGoodsId}
+	</select>
+	
+	<sql id="where">
+		<where>
+			<if test="distributorCode != null and distributorCode !=''">
+		    	AND DISTRIBUTOR_CODE = #{distributorCode}     
+	       	</if> 
+			<if test="partnerProdId != null and partnerProdId !=''">
+				AND PARTNER_PROD_ID = #{partnerProdId}
+	       	</if> 
+			<if test="partnerGoodsName != null and partnerGoodsName !=''">
+				AND PARTNER_GOODS_NAME LIKE CONCAT(CONCAT('%', #{partnerGoodsName}), '%')
+	       	</if> 
+			<if test="partnerGoodsId != null and partnerGoodsId !=''">
+				AND PARTNER_GOODS_ID = #{partnerGoodsId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				AND GOODS_NAME LIKE CONCAT(CONCAT('%', #{goodsName}), '%')
+	       	</if> 
+			<if test="syncInfo != null and syncInfo !=''">
+				AND SYNC_INFO = #{syncInfo}
+	       	</if>
+	       	<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+	       	<if test="isOnline != null and isOnline !=''">
+				AND IS_ONLINE = #{isOnline}
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="getQueryCount" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.scourroad.vo.TntPartnerProdRel">
+        SELECT COUNT(1) FROM TNT_PARTNER_PROD_REL 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPageByMap" resultMap="baseResultMap" parameterType="java.util.Map">
+    SELECT A.*
+	FROM (
+    	SELECT <include refid="columns" />
+	    FROM TNT_PARTNER_PROD_REL 
+		<include refid="where"/> 
+		ORDER BY SYNC_INFO,CREATE_TIME DESC
+		) A
+	limit  #{startRow},10
+    </select>
+</mapper>
+

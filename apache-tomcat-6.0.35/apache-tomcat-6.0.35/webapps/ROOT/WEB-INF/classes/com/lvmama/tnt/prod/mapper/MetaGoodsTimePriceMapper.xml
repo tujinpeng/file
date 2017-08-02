@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.MetaGoodsTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+        <result property="metaGoodsTimePriceId" column="META_GOODS_TIME_PRICE_ID"/>
+        <result property="suppGoodsId" column="SUPP_GOODS_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="stock" column="STOCK"/>
+        <result property="totalStock" column="TOTAL_STOCK"/>
+        <result property="fstSettlementPrice" column="FST_SETTLEMENT_PRICE"/>
+        <result property="fstPrice" column="FST_PRICE"/>
+        <result property="secSettlementPrice" column="SEC_SETTLEMENT_PRICE"/>
+        <result property="secPrice" column="SEC_PRICE"/>
+        <result property="childSettlementPrice" column="CHILD_SETTLEMENT_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="fstMarketPrice" column="FST_MARKET_PRICE"/>
+        <result property="secMarketPrice" column="SEC_MARKET_PRICE"/>
+        <result property="childMarketPrice" column="CHILD_MARKET_PRICE"/>
+        <result property="restoreFlag" column="RESTORE_FLAG"/>
+        <result property="onsaleFlag" column="ONSALE_FLAG"/>
+        <result property="cancelStrategy" column="CANCEL_STRATEGY"/>
+        <result property="stockType" column="STOCK_TYPE"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="aheadBookTime" column="AHEAD_BOOK_TIME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="gapPrice" column="GAP_PRICE"/>
+        <result property="gapSettlementPrice" column="GAP_SETTLEMENT_PRICE"/>
+        <result property="gapMarketPrice" column="GAP_MARKET_PRICE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		META_GOODS_TIME_PRICE_ID,GAP_PRICE,GAP_SETTLEMENT_PRICE,GAP_MARKET_PRICE,SUPP_GOODS_ID,SPEC_DATE,STOCK,TOTAL_STOCK,FST_SETTLEMENT_PRICE,FST_PRICE,SEC_SETTLEMENT_PRICE,SEC_PRICE,CHILD_SETTLEMENT_PRICE,CHILD_PRICE,FST_MARKET_PRICE,SEC_MARKET_PRICE,CHILD_MARKET_PRICE,RESTORE_FLAG,ONSALE_FLAG,CANCEL_STRATEGY,STOCK_TYPE,BOOK_LIMIT_TYPE,AHEAD_BOOK_TIME,CATEGORY_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+		<selectKey resultType="java.lang.Long" keyProperty="metaGoodsTimePriceId"
+			order="BEFORE">
+			select  META_GOODS_TIME_PRICE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO META_GOODS_TIME_PRICE (
+        	META_GOODS_TIME_PRICE_ID ,
+        	SUPP_GOODS_ID ,
+        	SPEC_DATE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	FST_SETTLEMENT_PRICE ,
+        	FST_PRICE ,
+        	SEC_SETTLEMENT_PRICE ,
+        	SEC_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	FST_MARKET_PRICE ,
+        	SEC_MARKET_PRICE ,
+        	CHILD_MARKET_PRICE ,
+        	RESTORE_FLAG ,
+        	ONSALE_FLAG ,
+        	CANCEL_STRATEGY ,
+        	STOCK_TYPE ,
+        	BOOK_LIMIT_TYPE ,
+        	AHEAD_BOOK_TIME ,
+        	CATEGORY_ID,
+        	GAP_PRICE,
+        	GAP_SETTLEMENT_PRICE,
+        	GAP_MARKET_PRICE
+        ) VALUES (
+        	#{metaGoodsTimePriceId,jdbcType=NUMERIC} ,
+        	#{suppGoodsId,jdbcType=NUMERIC} ,
+        	#{specDate,jdbcType=DATE} ,
+        	#{stock,jdbcType=NUMERIC} ,
+        	#{totalStock,jdbcType=NUMERIC} ,
+        	#{fstSettlementPrice,jdbcType=NUMERIC} ,
+        	#{fstPrice,jdbcType=NUMERIC} ,
+        	#{secSettlementPrice,jdbcType=NUMERIC} ,
+        	#{secPrice,jdbcType=NUMERIC} ,
+        	#{childSettlementPrice,jdbcType=NUMERIC} ,
+        	#{childPrice,jdbcType=NUMERIC} ,
+        	#{fstMarketPrice,jdbcType=NUMERIC} ,
+        	#{secMarketPrice,jdbcType=NUMERIC} ,
+        	#{childMarketPrice,jdbcType=NUMERIC} ,
+        	#{restoreFlag,jdbcType=VARCHAR} ,
+        	#{onsaleFlag,jdbcType=VARCHAR} ,
+        	#{cancelStrategy,jdbcType=VARCHAR} ,
+        	#{stockType,jdbcType=VARCHAR} ,
+        	#{bookLimitType,jdbcType=VARCHAR} ,
+        	#{aheadBookTime,jdbcType=NUMERIC} ,
+        	#{categoryId,jdbcType=NUMERIC},
+        	#{gapPrice,jdbcType=NUMERIC},
+        	#{gapSettlementPrice,jdbcType=NUMERIC},
+        	#{gapMarketPrice,jdbcType=NUMERIC}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+        UPDATE META_GOODS_TIME_PRICE SET
+	        SUPP_GOODS_ID = #{suppGoodsId,jdbcType=NUMERIC} ,
+	        SPEC_DATE = #{specDate,jdbcType=DATE} ,
+	        STOCK = #{stock,jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{totalStock,jdbcType=NUMERIC} ,
+	        FST_SETTLEMENT_PRICE = #{fstSettlementPrice,jdbcType=NUMERIC} ,
+	        FST_PRICE = #{fstPrice,jdbcType=NUMERIC} ,
+	        SEC_SETTLEMENT_PRICE = #{secSettlementPrice,jdbcType=NUMERIC} ,
+	        SEC_PRICE = #{secPrice,jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice,jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{childPrice,jdbcType=NUMERIC} ,
+	        FST_MARKET_PRICE = #{fstMarketPrice,jdbcType=NUMERIC} ,
+	        SEC_MARKET_PRICE = #{secMarketPrice,jdbcType=NUMERIC} ,
+	        CHILD_MARKET_PRICE = #{childMarketPrice,jdbcType=NUMERIC} ,
+	        RESTORE_FLAG = #{restoreFlag,jdbcType=VARCHAR} ,
+	        ONSALE_FLAG = #{onsaleFlag,jdbcType=VARCHAR} ,
+	        CANCEL_STRATEGY = #{cancelStrategy,jdbcType=VARCHAR} ,
+	        STOCK_TYPE = #{stockType,jdbcType=VARCHAR} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType,jdbcType=VARCHAR} ,
+	        AHEAD_BOOK_TIME = #{aheadBookTime,jdbcType=NUMERIC} ,
+	        CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+	        GAP_PRICE = #{gapPrice,jdbcType=NUMERIC},
+        	GAP_SETTLEMENT_PRICE = #{gapSettlementPrice,jdbcType=NUMERIC},
+        	GAP_MARKET_PRICE = #{gapMarketPrice,jdbcType=NUMERIC}
+        WHERE 
+        	<if test="metaGoodsTimePriceId !=null">
+	        	META_GOODS_TIME_PRICE_ID = #{metaGoodsTimePriceId,jdbcType=NUMERIC} 
+	        </if>
+	</update>
+	
+	<update id="updateTimePrice" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+        UPDATE META_GOODS_TIME_PRICE 
+        <set>
+	        <if test="specDate != null and specDate !=''">
+				SPEC_DATE = #{specDate,jdbcType=DATE},
+			</if>
+	        <if test="stock != null">
+				STOCK = #{stock,jdbcType=NUMERIC},
+			</if>
+	        <if test="totalStock != null">
+				TOTAL_STOCK = #{totalStock,jdbcType=NUMERIC},
+			</if>
+	        <if test="fstSettlementPrice != null">
+				FST_SETTLEMENT_PRICE = #{fstSettlementPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="fstPrice != null ">
+				FST_PRICE = #{fstPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="secSettlementPrice != null">
+				SEC_SETTLEMENT_PRICE = #{secSettlementPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="secPrice != null ">
+				SEC_PRICE = #{secPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="childSettlementPrice != null">
+				CHILD_SETTLEMENT_PRICE = #{childSettlementPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="childPrice != null">
+				CHILD_PRICE = #{childPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="fstMarketPrice != null ">
+				FST_MARKET_PRICE = #{fstMarketPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="secMarketPrice != null">
+				SEC_MARKET_PRICE = #{secMarketPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="childMarketPrice != null">
+				CHILD_MARKET_PRICE = #{childMarketPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="restoreFlag != null">
+				RESTORE_FLAG = #{restoreFlag,jdbcType=NUMERIC},
+			</if>
+	        <if test="onsaleFlag != null and onsaleFlag !=''">
+				ONSALE_FLAG = #{onsaleFlag,jdbcType=VARCHAR},
+			</if>
+	        <if test="cancelStrategy != null and cancelStrategy !=''">
+				CANCEL_STRATEGY = #{cancelStrategy,jdbcType=VARCHAR},
+			</if>
+	        <if test="stockType != null and stockType !=''">
+				STOCK_TYPE = #{stockType,jdbcType=VARCHAR},
+			</if>
+	        <if test="bookLimitType != null and bookLimitType !=''">
+				BOOK_LIMIT_TYPE = #{bookLimitType,jdbcType=VARCHAR},
+			</if>
+	        <if test="aheadBookTime != null">
+				AHEAD_BOOK_TIME = #{aheadBookTime,jdbcType=NUMERIC},
+			</if>
+	        <if test="categoryId != null">
+				CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+			</if>
+	        <if test="gapPrice != null">
+				GAP_PRICE = #{gapPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="gapSettlementPrice != null">
+				GAP_SETTLEMENT_PRICE = #{gapSettlementPrice,jdbcType=NUMERIC},
+			</if>
+	        <if test="gapMarketPrice != null">
+				GAP_MARKET_PRICE = #{gapMarketPrice,jdbcType=NUMERIC},
+			</if>
+		</set>
+        <where>
+        	<if test="metaGoodsTimePriceId !=null">
+	        	META_GOODS_TIME_PRICE_ID = #{metaGoodsTimePriceId,jdbcType=NUMERIC} 
+	        </if>
+	     </where>   
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM META_GOODS_TIME_PRICE WHERE
+        META_GOODS_TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM META_GOODS_TIME_PRICE 
+	        WHERE 
+		        META_GOODS_TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="metaGoodsTimePriceId != null">
+				AND META_GOODS_TIME_PRICE_ID = #{metaGoodsTimePriceId}
+	       	</if> 
+			<if test="suppGoodsId != null">
+				AND SUPP_GOODS_ID = #{suppGoodsId}
+	       	</if> 
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if> 
+			<if test="stock != null">
+				AND STOCK = #{stock}
+	       	</if> 
+			<if test="totalStock != null">
+				AND TOTAL_STOCK = #{totalStock}
+	       	</if> 
+			<if test="fstSettlementPrice != null">
+				AND FST_SETTLEMENT_PRICE = #{fstSettlementPrice}
+	       	</if> 
+			<if test="fstPrice != null">
+				AND FST_PRICE = #{fstPrice}
+	       	</if> 
+			<if test="secSettlementPrice != null">
+				AND SEC_SETTLEMENT_PRICE = #{secSettlementPrice}
+	       	</if> 
+			<if test="secPrice != null">
+				AND SEC_PRICE = #{secPrice}
+	       	</if> 
+			<if test="childSettlementPrice != null ">
+				AND CHILD_SETTLEMENT_PRICE = #{childSettlementPrice}
+	       	</if> 
+			<if test="childPrice != null">
+				AND CHILD_PRICE = #{childPrice}
+	       	</if> 
+			<if test="fstMarketPrice != null">
+				AND FST_MARKET_PRICE = #{fstMarketPrice}
+	       	</if> 
+			<if test="secMarketPrice != null">
+				AND SEC_MARKET_PRICE = #{secMarketPrice}
+	       	</if> 
+			<if test="childMarketPrice != null">
+				AND CHILD_MARKET_PRICE = #{childMarketPrice}
+	       	</if> 
+			<if test="restoreFlag != null">
+				AND RESTORE_FLAG = #{restoreFlag}
+	       	</if> 
+			<if test="onsaleFlag != null and onsaleFlag !=''">
+				AND ONSALE_FLAG = #{onsaleFlag}
+	       	</if> 
+			<if test="cancelStrategy != null and cancelStrategy !=''">
+				AND CANCEL_STRATEGY = #{cancelStrategy}
+	       	</if> 
+			<if test="stockType != null and stockType !=''">
+				AND STOCK_TYPE = #{stockType}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+			<if test="aheadBookTime != null">
+				AND AHEAD_BOOK_TIME = #{aheadBookTime}
+	       	</if> 
+			<if test="categoryId != null">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.metaGoodsTimePriceId != null and param.metaGoodsTimePriceId !=''">
+				AND META_GOODS_TIME_PRICE_ID = #{param.metaGoodsTimePriceId}
+	       	</if>
+			<if test="param.suppGoodsId != null and param.suppGoodsId !=''">
+				AND SUPP_GOODS_ID = #{param.suppGoodsId}
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = #{param.specDate}
+	       	</if>
+			<if test="param.stock != null">
+				AND STOCK = #{param.stock}
+	       	</if>
+			<if test="param.totalStock != null">
+				AND TOTAL_STOCK = #{param.totalStock}
+	       	</if>
+			<if test="param.fstSettlementPrice != null">
+				AND FST_SETTLEMENT_PRICE = #{param.fstSettlementPrice}
+	       	</if>
+			<if test="param.fstPrice != null ">
+				AND FST_PRICE = #{param.fstPrice}
+	       	</if>
+			<if test="param.secSettlementPrice != null">
+				AND SEC_SETTLEMENT_PRICE = #{param.secSettlementPrice}
+	       	</if>
+			<if test="param.secPrice != null ">
+				AND SEC_PRICE = #{param.secPrice}
+	       	</if>
+			<if test="param.childSettlementPrice != null">
+				AND CHILD_SETTLEMENT_PRICE = #{param.childSettlementPrice}
+	       	</if>
+			<if test="param.childPrice != null ">
+				AND CHILD_PRICE = #{param.childPrice}
+	       	</if>
+			<if test="param.fstMarketPrice != null ">
+				AND FST_MARKET_PRICE = #{param.fstMarketPrice}
+	       	</if>
+			<if test="param.secMarketPrice != null ">
+				AND SEC_MARKET_PRICE = #{param.secMarketPrice}
+	       	</if>
+			<if test="param.childMarketPrice != null ">
+				AND CHILD_MARKET_PRICE = #{param.childMarketPrice}
+	       	</if>
+			<if test="param.restoreFlag != null and param.restoreFlag !=''">
+				AND RESTORE_FLAG = #{param.restoreFlag}
+	       	</if>
+			<if test="param.onsaleFlag != null and param.onsaleFlag !=''">
+				AND ONSALE_FLAG = #{param.onsaleFlag}
+	       	</if>
+			<if test="param.cancelStrategy != null and param.cancelStrategy !=''">
+				AND CANCEL_STRATEGY = #{param.cancelStrategy}
+	       	</if>
+			<if test="param.stockType != null and param.stockType !=''">
+				AND STOCK_TYPE = #{param.stockType}
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{param.bookLimitType}
+	       	</if>
+			<if test="param.aheadBookTime != null and param.aheadBookTime !=''">
+				AND AHEAD_BOOK_TIME = #{param.aheadBookTime}
+	       	</if>
+			<if test="param.categoryId != null and param.categoryId !=''">
+				AND CATEGORY_ID = #{param.categoryId}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+        SELECT count(*) FROM META_GOODS_TIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM META_GOODS_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="queryByDateGoodsId" resultMap="baseResultMap" parameterType="Map">
+    	SELECT <include refid="columns" />
+	    FROM META_GOODS_TIME_PRICE
+	    WHERE 
+    	SUPP_GOODS_ID = #{subGoodsId}
+    	AND SPEC_DATE = TO_DATE(#{specDate},'YYYY-MM-DD')
+    </select>
+    
+    <select id="queryByDates" resultMap="baseResultMap" parameterType="Map">
+    	SELECT <include refid="columns" />
+	    FROM META_GOODS_TIME_PRICE
+	    WHERE 
+    	SUPP_GOODS_ID = #{subGoodsId}
+    	AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+    </select>
+    
+    <select id="selectOne" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+    	SELECT <include refid="columns" />
+	    FROM META_GOODS_TIME_PRICE
+	    <include refid="where"/>
+    </select>
+    
+    <select id="selectList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+    	SELECT <include refid="columns" />
+	    FROM META_GOODS_TIME_PRICE
+	    <include refid="where"/>
+    </select>
+    
+    <insert id="batchInsert"  parameterType="java.util.List">  
+         
+        INSERT INTO META_GOODS_TIME_PRICE (
+        	META_GOODS_TIME_PRICE_ID ,
+        	SUPP_GOODS_ID ,
+        	SPEC_DATE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	FST_SETTLEMENT_PRICE ,
+        	FST_PRICE ,
+        	SEC_SETTLEMENT_PRICE ,
+        	SEC_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	FST_MARKET_PRICE ,
+        	SEC_MARKET_PRICE ,
+        	CHILD_MARKET_PRICE ,
+        	RESTORE_FLAG ,
+        	ONSALE_FLAG ,
+        	CANCEL_STRATEGY ,
+        	STOCK_TYPE ,
+        	BOOK_LIMIT_TYPE ,
+        	AHEAD_BOOK_TIME ,
+        	CATEGORY_ID,
+        	GAP_PRICE,
+        	GAP_SETTLEMENT_PRICE,
+        	GAP_MARKET_PRICE
+        )
+        SELECT 
+        	META_GOODS_TIME_PRICE_SEQ.nextval,
+			SUPP_GOODS_ID ,
+        	SPEC_DATE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	FST_SETTLEMENT_PRICE ,
+        	FST_PRICE ,
+        	SEC_SETTLEMENT_PRICE ,
+        	SEC_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	FST_MARKET_PRICE ,
+        	SEC_MARKET_PRICE ,
+        	CHILD_MARKET_PRICE ,
+        	RESTORE_FLAG ,
+        	ONSALE_FLAG ,
+        	CANCEL_STRATEGY ,
+        	STOCK_TYPE ,
+        	BOOK_LIMIT_TYPE ,
+        	AHEAD_BOOK_TIME ,
+        	CATEGORY_ID,
+        	GAP_PRICE,
+        	GAP_SETTLEMENT_PRICE,
+        	GAP_MARKET_PRICE FROM(
+        <foreach collection="list" item="item" index="index" separator="union all" >  
+            SELECT 
+			#{item.suppGoodsId,jdbcType=NUMERIC} AS SUPP_GOODS_ID,
+        	#{item.specDate,jdbcType=DATE} AS SPEC_DATE,
+        	#{item.stock,jdbcType=NUMERIC} AS STOCK,
+        	#{item.totalStock,jdbcType=NUMERIC} AS TOTAL_STOCK,
+        	#{item.fstSettlementPrice,jdbcType=NUMERIC} AS FST_SETTLEMENT_PRICE,
+        	#{item.fstPrice,jdbcType=NUMERIC} AS FST_PRICE,
+        	#{item.secSettlementPrice,jdbcType=NUMERIC} AS SEC_SETTLEMENT_PRICE,
+        	#{item.secPrice,jdbcType=NUMERIC} AS SEC_PRICE,
+        	#{item.childSettlementPrice,jdbcType=NUMERIC} AS CHILD_SETTLEMENT_PRICE,
+        	#{item.childPrice,jdbcType=NUMERIC} AS CHILD_PRICE,
+        	#{item.fstMarketPrice,jdbcType=NUMERIC} AS FST_MARKET_PRICE,
+        	#{item.secMarketPrice,jdbcType=NUMERIC} AS SEC_MARKET_PRICE,
+        	#{item.childMarketPrice,jdbcType=NUMERIC} AS CHILD_MARKET_PRICE,
+        	#{item.restoreFlag,jdbcType=VARCHAR} AS RESTORE_FLAG,
+        	#{item.onsaleFlag,jdbcType=VARCHAR} AS ONSALE_FLAG,
+        	#{item.cancelStrategy,jdbcType=VARCHAR} AS CANCEL_STRATEGY,
+        	#{item.stockType,jdbcType=VARCHAR} AS  STOCK_TYPE,
+        	#{item.bookLimitType,jdbcType=VARCHAR} AS BOOK_LIMIT_TYPE,
+        	#{item.aheadBookTime,jdbcType=NUMERIC} AS  AHEAD_BOOK_TIME,
+        	#{item.categoryId,jdbcType=NUMERIC} AS CATEGORY_ID,
+        	#{item.gapPrice,jdbcType=NUMERIC} AS GAP_PRICE,
+        	#{item.gapSettlementPrice,jdbcType=NUMERIC}AS GAP_SETTLEMENT_PRICE,
+        	#{item.gapMarketPrice,jdbcType=NUMERIC} AS GAP_MARKET_PRICE 
+ 			FROM DUAL
+        </foreach>  
+        )
+    </insert>  
+    
+    <update id="batchUpdate"  parameterType="java.util.List">
+      
+       	BEGIN
+       <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+                UPDATE META_GOODS_TIME_PRICE 
+                <set>
+                  	SUPP_GOODS_ID = #{item.suppGoodsId,jdbcType=NUMERIC} ,
+			        SPEC_DATE = #{item.specDate,jdbcType=DATE} ,
+			        STOCK = #{item.stock,jdbcType=NUMERIC} ,
+			        TOTAL_STOCK = #{item.totalStock,jdbcType=NUMERIC} ,
+			        FST_SETTLEMENT_PRICE = #{item.fstSettlementPrice,jdbcType=NUMERIC} ,
+			        FST_PRICE = #{item.fstPrice,jdbcType=NUMERIC} ,
+			        SEC_SETTLEMENT_PRICE = #{item.secSettlementPrice,jdbcType=NUMERIC} ,
+			        SEC_PRICE = #{item.secPrice,jdbcType=NUMERIC} ,
+			        CHILD_SETTLEMENT_PRICE = #{item.childSettlementPrice,jdbcType=NUMERIC} ,
+			        CHILD_PRICE = #{item.childPrice,jdbcType=NUMERIC} ,
+			        FST_MARKET_PRICE = #{item.fstMarketPrice,jdbcType=NUMERIC} ,
+			        SEC_MARKET_PRICE = #{item.secMarketPrice,jdbcType=NUMERIC} ,
+			        CHILD_MARKET_PRICE = #{item.childMarketPrice,jdbcType=NUMERIC} ,
+			        RESTORE_FLAG = #{item.restoreFlag,jdbcType=VARCHAR} ,
+			        ONSALE_FLAG = #{item.onsaleFlag,jdbcType=VARCHAR} ,
+			        CANCEL_STRATEGY = #{item.cancelStrategy,jdbcType=VARCHAR} ,
+			        STOCK_TYPE = #{item.stockType,jdbcType=VARCHAR} ,
+			        BOOK_LIMIT_TYPE = #{item.bookLimitType,jdbcType=VARCHAR} ,
+			        AHEAD_BOOK_TIME = #{item.aheadBookTime,jdbcType=NUMERIC} ,
+			        CATEGORY_ID = #{item.categoryId,jdbcType=NUMERIC},
+			        GAP_PRICE = #{item.gapPrice,jdbcType=NUMERIC},
+		        	GAP_SETTLEMENT_PRICE = #{item.gapSettlementPrice,jdbcType=NUMERIC},
+		        	GAP_MARKET_PRICE = #{item.gapMarketPrice,jdbcType=NUMERIC}
+                </set>
+                WHERE META_GOODS_TIME_PRICE_ID = #{item.metaGoodsTimePriceId,jdbcType=NUMERIC} 
+       </foreach>
+          ;END;
+    </update>
+    
+    <update id="updates" parameterType="com.lvmama.tnt.prod.vo.MetaGoodsTimePrice">
+        UPDATE META_GOODS_TIME_PRICE SET
+	        SUPP_GOODS_ID = #{suppGoodsId,jdbcType=NUMERIC} ,
+	        STOCK = #{stock,jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{totalStock,jdbcType=NUMERIC} ,
+	        FST_SETTLEMENT_PRICE = #{fstSettlementPrice,jdbcType=NUMERIC} ,
+	        FST_PRICE = #{fstPrice,jdbcType=NUMERIC} ,
+	        SEC_SETTLEMENT_PRICE = #{secSettlementPrice,jdbcType=NUMERIC} ,
+	        SEC_PRICE = #{secPrice,jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice,jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{childPrice,jdbcType=NUMERIC} ,
+	        FST_MARKET_PRICE = #{fstMarketPrice,jdbcType=NUMERIC} ,
+	        SEC_MARKET_PRICE = #{secMarketPrice,jdbcType=NUMERIC} ,
+	        CHILD_MARKET_PRICE = #{childMarketPrice,jdbcType=NUMERIC} ,
+	        RESTORE_FLAG = #{restoreFlag,jdbcType=VARCHAR} ,
+	        ONSALE_FLAG = #{onsaleFlag,jdbcType=VARCHAR} ,
+	        CANCEL_STRATEGY = #{cancelStrategy,jdbcType=VARCHAR} ,
+	        STOCK_TYPE = #{stockType,jdbcType=VARCHAR} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType,jdbcType=VARCHAR} ,
+	        AHEAD_BOOK_TIME = #{aheadBookTime,jdbcType=NUMERIC} ,
+	        CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+	        GAP_PRICE = #{gapPrice,jdbcType=NUMERIC},
+        	GAP_SETTLEMENT_PRICE = #{gapSettlementPrice,jdbcType=NUMERIC},
+        	GAP_MARKET_PRICE = #{gapMarketPrice,jdbcType=NUMERIC}
+        WHERE 
+        	<if test="metaGoodsTimePriceIds !=null">
+        	META_GOODS_TIME_PRICE_ID IN 
+	        	<foreach item="metaGoodsTimePriceId" index="index" collection="metaGoodsTimePriceIds"
+				open="(" separator="," close=")">
+					#{metaGoodsTimePriceId}
+				</foreach>
+	        </if>
+	</update>
+	<!-- 根据打包套餐商品ID查询舱房出团日期 -->
+	 <select id="queryGroupDateByPackageGoodsId" resultType="Date" parameterType="Long">
+    	SELECT A.SPEC_DATE
+		  FROM META_GOODS_TIME_PRICE A,
+		       (SELECT sub_goods_id
+		          FROM TNT_CRUISE_PACKAGE_PRODUCT_REL
+		         WHERE GOODS_ID = #{PackageGoodsId}
+		           and sub_category_id = 2) B
+		 WHERE A.SUPP_GOODS_ID = B.SUB_GOODS_ID
+    </select>
+</mapper>
+

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.seconddistributor.mapper.TntOrderSubMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+        <result property="orderSubId" column="ORDER_SUB_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="settleAccountNum" column="SETTLE_ACCOUNT_NUM"/>
+        <result property="settleOrderStatus" column="SETTLE_ORDER_STATUS"/>
+        <result property="profit" column="PROFIT"/>
+	</resultMap>
+	
+	<resultMap id="pageResultMap"  type="com.lvmama.tnt.seconddistributor.vo.OrderFormVo" extends="baseResultMap">
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="contactName" column="CONTACT_NAME"/>
+        <result property="contactMoblie" column="CONTACT_MOBLIE"/>
+        <result property="visitTime" column="VISIT_TIME"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="orderStatus" column="ORDER_STATUS"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS"/>
+        
+        <result property="performStatus" column="PERFORM_STATUS"/>
+        <result property="refundStatus" column="REFUND_STATUS"/>
+        <result property="orderChannel" column="ORDER_CHANNEL"/>
+        
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="profit" column="PROFIT"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		<!-- a.PAYMENT_STATUS,a.ORDER_STATUS, -->
+	    <![CDATA[
+		a.ORDER_SUB_ID,a.ORDER_ID,a.USER_ID,a.PRODUCT_ID,a.PRODUCT_NAME,a.CATEGORY_ID,
+		a.CREATE_TIME,a.UPDATE_TIME,a.SETTLE_ACCOUNT_NUM,a.SETTLE_ORDER_STATUS,a.PROFIT
+	    ]]>
+	</sql>
+	
+	<sql id="pageColumns">
+	    <![CDATA[
+	    	a.ORDER_SUB_ID,o.ORDER_ID,o.PRODUCT_TYPE,o.PRODUCT_NAME,o.CONTACT_NAME,o.CONTACT_MOBLIE,o.CREATE_TIME,o.VISIT_TIME,o.ORDER_CHANNEL,
+	    	a.USER_ID,o.ORDER_STATUS,a.CATEGORY_ID,o.PAYMENT_STATUS,o.PERFORM_STATUS,o.REFUND_STATUS,a.SETTLE_ORDER_STATUS,
+	    	a.PROFIT,a.SETTLE_ACCOUNT_NUM,u.USER_NAME
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+		<selectKey resultType="java.lang.Long" keyProperty="orderSubId" order="BEFORE">
+			select  TNT_ORDER_SUB_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_ORDER_SUB 
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+        		ORDER_SUB_ID ,
+        	<if test="orderId != null and  orderId != '' ">
+        		ORDER_ID ,
+			</if>
+        	<if test="userId != null and  userId != '' ">
+        		USER_ID ,
+			</if>
+        	<if test="productId != null and  productId != '' ">
+        		PRODUCT_ID ,
+			</if>
+        	<if test="productName != null and  productName != '' ">
+        		PRODUCT_NAME ,
+			</if>
+        	<if test="categoryId != null and categoryId  != '' ">
+        		CATEGORY_ID ,
+			</if>
+        	<if test="createTime != null and  createTime != '' ">
+        		CREATE_TIME ,
+			</if>
+        	<if test="updateTime != null and  updateTime != '' ">
+        		UPDATE_TIME ,
+			</if>
+        	<if test="settleAccountNum != null and  settleAccountNum != '' ">
+        		SETTLE_ACCOUNT_NUM ,
+			</if>
+			<if test="settleOrderStatus != null and  settleOrderStatus != '' ">
+        		SETTLE_ORDER_STATUS ,
+			</if>
+        	<if test="profit != null and  profit != '' ">
+        		PROFIT 
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+        		#{orderSubId} ,
+        	<if test="orderId != null and  orderId != '' ">
+        		#{orderId} ,
+			</if>
+        	<if test="userId != null and  userId != '' ">
+        		#{userId} ,
+			</if>
+        	<if test="productId != null and  productId != '' ">
+        		#{productId} ,
+			</if>
+			<if test="productName != null and  productName != '' ">
+        		#{productName} ,
+			</if>
+        	<if test="categoryId != null and categoryId  != '' ">
+        		#{categoryId} ,
+			</if>
+        	<if test="createTime != null and  createTime != '' ">
+        		#{createTime} ,
+			</if>
+        	<if test="updateTime != null and  updateTime != '' ">
+        		#{updateTime} ,
+			</if>
+			<if test="settleAccountNum != null and  settleAccountNum != '' ">
+        		#{settleAccountNum} ,
+			</if>
+        	<!-- <if test="settleAccountStatus != null and  settleAccountStatus != '' ">
+        		#{settleAccountStatus} ,
+			</if> -->
+			<if test="settleOrderStatus != null and  settleOrderStatus != '' ">
+        		#{settleOrderStatus} ,
+			</if>
+        	<if test="profit != null and  profit != '' ">
+        		#{profit} 
+			</if>
+        </trim>
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+        UPDATE TNT_ORDER_SUB 
+        <set>
+        	<if test="orderId != null">
+				 ORDER_ID = #{orderId} ,
+			</if>
+        	<if test="userId != null">
+				 USER_ID = #{userId} ,
+			</if>
+        	<if test="productId != null">
+				 PRODUCT_ID = #{productId} ,
+			</if>
+        	<if test="productName != null">
+				PRODUCT_NAME = #{productName} ,
+			</if>
+        	<if test="categoryId != null">
+				CATEGORY_ID = #{categoryId} ,
+			</if>
+        	<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime} ,
+			</if>
+        	<if test="settleAccountNum != null">
+				SETTLE_ACCOUNT_NUM = #{settleAccountNum},
+			</if>
+        	<if test="settleOrderStatus != null">
+				SETTLE_ORDER_STATUS = #{settleOrderStatus} ,
+			</if>
+        	<if test="profit != null">
+				 PROFIT = #{profit}
+			</if>
+        </set>
+        <where>
+        	<if test="orderSubId != null">
+        		AND ORDER_SUB_ID = #{orderSubId}
+        	</if>
+        	<if test="orderId != null">
+        		AND ORDER_ID = #{orderId}
+        	</if>
+        	<if test="userId != null">
+        		AND USER_ID = #{userId}
+        	</if>
+        	<if test="productId != null">
+        		AND PRODUCT_ID = #{productId}
+        	</if>
+        	<if test="categoryId != null">
+        		AND CATEGORY_ID = #{categoryId}
+        	</if>        	
+        </where>
+	</update>
+	<!-- updateBySettleAccountNum -->
+	<update id="updateBySettleAccountNum" parameterType="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+        UPDATE TNT_ORDER_SUB 
+        <set>
+        	<if test="userId != null">
+				 USER_ID = #{userId} ,
+			</if>
+        	<if test="productId != null">
+				 PRODUCT_ID = #{productId} ,
+			</if>
+        	<if test="productName != null">
+				PRODUCT_NAME = #{productName} ,
+			</if>
+        	<if test="categoryId != null">
+				CATEGORY_ID = #{categoryId} ,
+			</if>
+        	<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime} ,
+			</if>
+        	<if test="settleOrderStatus != null">
+				SETTLE_ORDER_STATUS = #{settleOrderStatus} ,
+			</if>
+        	<if test="profit != null">
+				 PROFIT = #{profit}
+			</if>
+        </set>
+        WHERE SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+	</update>
+	
+	<update id="clearSettleAccountNumByOrderId" parameterType="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+		UPDATE TNT_ORDER_SUB 
+        <set>        	
+        	<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime} ,
+			</if>
+        	<if test="settleOrderStatus != null">
+				SETTLE_ORDER_STATUS = #{settleOrderStatus} ,
+			</if>
+			SETTLE_ACCOUNT_NUM = ''
+        </set>
+        WHERE ORDER_ID = #{orderId}
+	</update>
+	
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ORDER_SUB WHERE
+        ORDER_SUB_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ORDER_SUB 
+	        WHERE 
+		        ORDER_SUB_ID = #{id} 
+	</select>
+	
+	<select id="getByOrderId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_SUB a
+		WHERE
+		ORDER_ID = #{orderId}
+	</select>
+	
+	<sql id="where">
+		<where>
+			<if test="orderSubId != null and orderSubId !=''">
+				AND ORDER_SUB_ID = #{orderSubId}
+	       	</if> 
+			<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME = #{productName}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+			<if test="settleAccountNum != null and settleAccountNum !=''">
+				AND SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+	       	</if> 
+			<if test="settleOrderStatus != null and settleOrderStatus !=''">
+				AND SETTLE_ORDER_STATUS = #{settleOrderStatus}
+	       	</if> 
+			<if test="profit != null and profit !=''">
+				AND PROFIT = #{profit}
+	       	</if> 
+		</where>
+	</sql>
+	
+	<sql id="countWhere">
+			<if test="orderId != null and orderId !=''">
+				AND o.ORDER_ID = #{orderId}
+			</if>
+			<if test="productType != null and productType !=''">
+				AND o.PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="productName != null and productName !=''">
+				AND o.PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="contactName != null and contactName !=''">
+				AND o.CONTACT_NAME like 
+				CONCAT(CONCAT('%',#{contactName}),'%')
+			</if>
+			<if test="visitTimeBegin != null and visitTimeBegin !=null">
+			    <![CDATA[ AND #{visitTimeBegin} <=  o.VISIT_TIME  ]]>
+			</if>
+			<if test="visitTimeEnd != null and visitTimeEnd !=null">
+			     <![CDATA[ AND o.VISIT_TIME <= #{visitTimeEnd} ]]>
+			</if>
+			<if test="createTimeBegin != null and createTimeBegin !=null">
+			     <![CDATA[ AND #{createTimeBegin} <=  o.CREATE_TIME  ]]>
+			</if>
+			<if test="createTimeEnd != null and createTimeEnd !=null">
+				 <![CDATA[ AND o.CREATE_TIME <= #{createTimeEnd} ]]>
+			</if>
+			<if test="contactMoblie != null and contactMoblie !=''">
+				AND o.CONTACT_MOBLIE = #{contactMoblie}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND exists (select 1
+         				 from tnt_user u
+      					  where a.user_id = u.user_id
+          				        and u.parent_id = #{userId}) 
+			</if>
+			<if test="settleOrderStatus != null and settleOrderStatus !='' ">
+				AND a.SETTLE_ORDER_STATUS = #{settleOrderStatus}
+			</if>
+			<if test="settleAccountNum != null and settleAccountNum !='' ">
+				AND a.SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+			</if>
+			<if test="userName != null and userName!='' ">
+				AND o.CREATE_OPERATOR = #{userName}
+			</if>
+			<if test="paymentStatus != null and paymentStatus !='' ">
+				AND o.PAYMENT_STATUS = #{paymentStatus}
+			</if>
+			<if test="orderChannel != null and orderChannel !=''">
+				AND o.ORDER_CHANNEL = #{orderChannel}
+			</if>
+			AND	<![CDATA[ a.PROFIT >= 0 ]]>
+			AND (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+			AND <![CDATA[( o.visit_time <= add_months(sysdate,-1) OR o.PERFORM_STATUS = 'PERFORM' )]]> <!--  超过游玩时间30天的订单 -->
+	</sql>
+	<sql id="pageWhere">		
+			<if test="param.userId != null and param.userId !='' ">
+				exists (select 1
+         				 from tnt_user u
+      					  where a.user_id = u.user_id
+          				        and u.parent_id = #{param.userId}) 
+			</if>			
+			<if test="param.orderId != null and param.orderId !=''">
+				AND o.ORDER_ID = #{param.orderId}
+			</if>
+			<if test="param.productType != null and param.productType !=''">
+				AND o.PRODUCT_TYPE = #{param.productType}
+			</if>
+			<if test="param.productName != null and param.productName !=''">
+				AND o.PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{param.productName}),'%')
+			</if>
+			<if test="param.visitTimeBegin != null and param.visitTimeBegin !=null">
+			    <![CDATA[ AND #{param.visitTimeBegin} <=  o.VISIT_TIME  ]]>
+			</if>
+			<if test="param.visitTimeEnd != null and param.visitTimeEnd !=null">
+			     <![CDATA[ AND o.VISIT_TIME <= #{param.visitTimeEnd}   ]]>
+			</if>
+			<if test="param.createTimeBegin != null and param.createTimeBegin !=null">
+			     <![CDATA[ AND #{param.createTimeBegin} <=  o.CREATE_TIME  ]]>
+			</if>
+			<if test="param.createTimeEnd != null and param.createTimeEnd !=null">
+			     <![CDATA[ AND o.CREATE_TIME <= #{param.createTimeEnd}   ]]>
+			</if>
+			
+			<if test="param.contactName != null and param.contactName !=''">
+				AND o.CONTACT_NAME like 
+				CONCAT(CONCAT('%',#{param.contactName}),'%')
+			</if>
+			<if test="param.contactMoblie != null and param.contactMoblie !=''">
+				AND o.CONTACT_MOBLIE = #{param.contactMoblie}
+			</if>
+			<if test="param.settleOrderStatus != null and param.settleOrderStatus !='' ">
+				AND a.SETTLE_ORDER_STATUS = #{param.settleOrderStatus}
+			</if>
+			<if test="param.settleAccountNum != null and param.settleAccountNum !='' ">
+				AND a.SETTLE_ACCOUNT_NUM = #{param.settleAccountNum}
+			</if>
+			<if test="param.userName != null and param.userName!='' ">
+				AND o.CREATE_OPERATOR = #{param.userName}
+			</if>
+			<if test="param.paymentStatus != null and param.paymentStatus !=''">
+				AND o.payment_status = #{param.paymentStatus}
+			</if>
+			<if test="param.orderChannel != null and param.orderChannel != ''">
+				AND o.ORDER_CHANNEL = #{param.orderChannel}
+			</if>
+			AND	<![CDATA[ a.PROFIT >= 0 ]]>
+			AND (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+			AND <![CDATA[( o.visit_time <= add_months(sysdate,-1) OR o.PERFORM_STATUS = 'PERFORM' )]]> <!--  超过游玩时间30天的订单 -->
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.seconddistributor.po.TntOrderSub">
+        SELECT count(*) FROM TNT_ORDER_SUB 
+		<include refid="where"/>    
+    </select>
+    
+     <select id="countVo" resultType="Integer" parameterType="com.lvmama.tnt.seconddistributor.vo.OrderFormVo">
+        SELECT count(*) 
+        FROM 
+        	TNT_ORDER_SUB a 
+        INNER JOIN 
+			TNT_ORDER o 
+		on a.ORDER_ID = o.ORDER_ID
+		<where>
+			<include refid="countWhere" />
+		</where>    
+    </select>
+    
+    <select id="query" resultMap="pageResultMap" parameterType="com.lvmama.tnt.seconddistributor.vo.OrderFormVo">
+		SELECT
+			<include refid="pageColumns" />
+		FROM 
+			TNT_ORDER_SUB a
+		INNER JOIN 
+			TNT_ORDER o 
+		on a.ORDER_ID = o.ORDER_ID   
+		LEFT JOIN TNT_USER u
+			ON u.USER_ID =  a.USER_ID
+		<where>
+			<include refid="countWhere" />
+		</where>
+    </select>
+    
+    <select id="findPage" resultMap="pageResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+			<include refid="pageColumns" />
+		FROM 
+			TNT_ORDER_SUB a
+		INNER JOIN 
+			TNT_ORDER o 
+		on a.ORDER_ID = o.ORDER_ID
+		LEFT JOIN TNT_USER u
+			ON u.USER_ID =  a.USER_ID
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+    
+    <select id="findByParam" resultMap="pageResultMap" parameterType="java.util.Map">
+   		 SELECT
+			<include refid="pageColumns" />
+		FROM 
+			TNT_ORDER_SUB a
+		INNER JOIN 
+			TNT_ORDER o 
+		on a.ORDER_ID = o.ORDER_ID
+		LEFT JOIN TNT_USER u 
+		ON a.USER_ID = u.USER_ID 
+   	         <include refid="where"/>
+    </select>
+    <!-- 可申请结算数据查询 -->
+    <update id="batchUpdateBySubId" parameterType="map">
+    	UPDATE TNT_ORDER_SUB 
+    	<set>
+        	<if test="userId != null">
+				 USER_ID = #{userId} ,
+			</if>
+        	<if test="productId != null">
+				 PRODUCT_ID = #{productId} ,
+			</if>
+        	<if test="productName != null">
+				PRODUCT_NAME = #{productName} ,
+			</if>
+        	<if test="categoryId != null">
+				CATEGORY_ID = #{categoryId} ,
+			</if>
+        	<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime} ,
+			</if>
+        	<if test="settleOrderStatus != null">
+				SETTLE_ORDER_STATUS = #{settleOrderStatus} ,
+			</if>
+        	<if test="profit != null">
+				 PROFIT = #{profit},
+			</if>
+			<if test="settleAccountNum != null">
+				SETTLE_ACCOUNT_NUM = #{settleAccountNum}
+			</if>
+        </set>
+    	WHERE ORDER_SUB_ID IN
+		<foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+    </update>  
+    
+</mapper>
+

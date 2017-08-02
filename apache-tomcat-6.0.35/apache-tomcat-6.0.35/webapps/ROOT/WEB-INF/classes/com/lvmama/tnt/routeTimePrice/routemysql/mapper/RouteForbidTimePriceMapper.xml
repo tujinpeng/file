@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.routemysql.mapper.RouteForbidTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.routeTimePrice.vo.RouteForbidTimePrice">
+        <result property="id" column="ID"/>
+        <result property="unitId" column="UNIT_ID"/>
+        <result property="distId" column="DIST_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="adultForbid" column="ADULT_FORBID"/>
+        <result property="childForbid" column="CHILD_FORBID"/>
+        <result property="gapForbid" column="GAP_FORBID"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	 ID,UNIT_ID,DIST_ID,SPEC_DATE,ADULT_FORBID,CHILD_FORBID,GAP_FORBID,UPDATE_TIME
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.routeTimePrice.vo.RouteForbidTimePrice">
+        INSERT INTO ROUTE_FORBID_TIME_PRICE (
+        	ID ,
+        	UNIT_ID ,
+        	DIST_ID ,
+        	SPEC_DATE ,
+        	ADULT_FORBID ,
+        	CHILD_FORBID ,
+        	GAP_FORBID ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{id} ,
+        	#{unitId} ,
+        	#{distId} ,
+        	#{specDate} ,
+        	#{adultForbid} ,
+        	#{childForbid} ,
+        	#{gapForbid} ,
+        	#{updateTime} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.routeTimePrice.vo.RouteForbidTimePrice">
+        UPDATE ROUTE_FORBID_TIME_PRICE SET
+	        UNIT_ID = #{unitId} ,
+	        DIST_ID = #{distId} ,
+	        SPEC_DATE = #{specDate} ,
+	        ADULT_FORBID = #{adultForbid} ,
+	        CHILD_FORBID = #{childForbid} ,
+	        GAP_FORBID = #{gapForbid} ,
+	        UPDATE_TIME = #{updateTime} 
+        WHERE 
+        	<if test="id !=null">
+	        	ID = #{id} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM ROUTE_FORBID_TIME_PRICE WHERE
+        ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_FORBID_TIME_PRICE 
+	        WHERE 
+		        ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="id != null and id !=''">
+				AND ID = #{id}
+	       	</if> 
+			<if test="unitId != null and unitId !=''">
+				AND UNIT_ID = #{unitId}
+	       	</if> 
+			<if test="distId != null and distId !=''">
+				AND DIST_ID = #{distId}
+	       	</if>
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if>
+			<if test="adultForbid != null and adultForbid !=''">
+				AND ADULT_FORBID = #{adultForbid}
+	       	</if> 
+			<if test="childForbid != null and childForbid !=''">
+				AND CHILD_FORBID = #{childForbid}
+	       	</if> 
+			<if test="gapForbid != null and gapForbid !=''">
+				AND GAP_FORBID = #{gapForbid}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if>
+			<if test="dates != null and dates != ''">
+				AND SPEC_DATE IN
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.id != null and param.id !=''">
+				AND ID = #{param.id}
+	       	</if>
+			<if test="param.unitId != null and param.unitId !=''">
+				AND UNIT_ID = #{param.unitId}
+	       	</if>
+			<if test="param.distId != null and param.distId !=''">
+				AND DIST_ID = #{param.distId}
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = #{param.specDate}
+	       	</if>
+			<if test="param.adultForbid != null and param.adultForbid !=''">
+				AND ADULT_FORBID = #{param.adultForbid}
+	       	</if>
+			<if test="param.childForbid != null and param.childForbid !=''">
+				AND CHILD_FORBID = #{param.childForbid}
+	       	</if>
+			<if test="param.gapForbid != null and param.gapForbid !=''">
+				AND GAP_FORBID = #{param.gapForbid}
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if>
+	       	<if test="param.dates != null and param.dates != ''">
+				AND SPEC_DATE IN
+				<foreach collection="param.dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.routeTimePrice.vo.RouteForbidTimePrice">
+        SELECT COUNT(*) FROM ROUTE_FORBID_TIME_PRICE
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM ROUTE_FORBID_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<if test="startRowsForMySql!=null and pageSize!=null">
+			LIMIT #{startRowsForMySql}, #{pageSize}
+		</if>
+    </select>
+
+    <insert id="merge" parameterType="java.util.List">
+    	INSERT INTO ROUTE_FORBID_TIME_PRICE
+		(<include refid="columns"/>)
+    	VALUES
+    	<foreach collection="list" item="item" separator="," index="index">
+    		(#{item.id},#{item.unitId},#{item.distId},#{item.specDate},#{item.adultForbid},#{item.childForbid},#{item.gapForbid},#{item.updateTime})
+    	</foreach>
+    	ON DUPLICATE KEY
+    	UPDATE
+			ADULT_FORBID = VALUES(ADULT_FORBID),
+    		CHILD_FORBID = VALUES(CHILD_FORBID),
+    		GAP_FORBID = VALUES(GAP_FORBID),
+    		UPDATE_TIME = VALUES(UPDATE_TIME)
+    </insert>
+
+</mapper>
+

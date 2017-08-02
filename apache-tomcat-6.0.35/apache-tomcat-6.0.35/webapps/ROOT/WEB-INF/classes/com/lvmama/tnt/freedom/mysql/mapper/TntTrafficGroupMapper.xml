@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntTrafficGroupMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntTrafficGroup">
+        <result property="id" column="ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="groupName" column="GROUP_NAME"/>
+        <result property="toStartDays" column="TO_START_DAYS"/>
+        <result property="toStartPointId" column="TO_START_POINT_ID"/>
+        <result property="toStartPointName" column="TO_START_POINT_NAME"/>
+        <result property="toEndPointId" column="TO_END_POINT_ID"/>
+        <result property="toEndPointName" column="TO_END_POINT_NAME"/>
+        <result property="backStartDays" column="BACK_START_DAYS"/>
+        <result property="backStartPointId" column="BACK_START_POINT_ID"/>
+        <result property="backStartPointName" column="BACK_START_POINT_NAME"/>
+        <result property="backDestinationPointId" column="BACK_DESTINATION_POINT_ID"/>
+        <result property="backDestinationPointName" column="BACK_DESTINATION_POINT_NAME"/>
+        <result property="hasBranch" column="HAS_BRANCH"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+
+
+
+
+
+		ID,PRODUCT_ID,GROUP_ID,GROUP_NAME,TO_START_DAYS,TO_START_POINT_ID,TO_START_POINT_NAME,TO_END_POINT_ID,TO_END_POINT_NAME,BACK_START_DAYS,BACK_START_POINT_ID,BACK_START_POINT_NAME,BACK_DESTINATION_POINT_ID,BACK_DESTINATION_POINT_NAME,HAS_BRANCH
+
+
+
+
+
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficGroup">
+        INSERT INTO TNT_TRAFFIC_GROUP (
+        	PRODUCT_ID ,
+        	GROUP_ID ,
+        	GROUP_NAME ,
+        	TO_START_DAYS ,
+        	TO_START_POINT_ID ,
+        	TO_START_POINT_NAME ,
+        	TO_END_POINT_ID ,
+        	TO_END_POINT_NAME ,
+        	BACK_START_DAYS ,
+        	BACK_START_POINT_ID ,
+        	BACK_START_POINT_NAME ,
+        	BACK_DESTINATION_POINT_ID ,
+        	BACK_DESTINATION_POINT_NAME ,
+        	HAS_BRANCH
+        ) VALUES (
+        	#{productId} ,
+        	#{groupId} ,
+        	#{groupName} ,
+        	#{toStartDays} ,
+        	#{toStartPointId} ,
+        	#{toStartPointName} ,
+        	#{toEndPointId} ,
+        	#{toEndPointName} ,
+        	#{backStartDays} ,
+        	#{backStartPointId} ,
+        	#{backStartPointName} ,
+        	#{backDestinationPointId} ,
+        	#{backDestinationPointName} ,
+        	#{hasBranch}
+        )
+	</insert>
+
+    <insert id="insertForBatch" parameterType="java.util.List">
+        INSERT INTO TNT_TRAFFIC_GROUP (
+        PRODUCT_ID ,
+        GROUP_ID ,
+        GROUP_NAME ,
+        TO_START_DAYS ,
+        TO_START_POINT_ID ,
+        TO_START_POINT_NAME ,
+        TO_END_POINT_ID ,
+        TO_END_POINT_NAME ,
+        BACK_START_DAYS ,
+        BACK_START_POINT_ID ,
+        BACK_START_POINT_NAME ,
+        BACK_DESTINATION_POINT_ID ,
+        BACK_DESTINATION_POINT_NAME ,
+        HAS_BRANCH
+        ) VALUES
+        <foreach collection="list" separator="," index="index" item="tntTrafficGroup">
+            (
+            #{tntTrafficGroup.productId} ,
+            #{tntTrafficGroup.groupId} ,
+            #{tntTrafficGroup.groupName} ,
+            #{tntTrafficGroup.toStartDays} ,
+            #{tntTrafficGroup.toStartPointId} ,
+            #{tntTrafficGroup.toStartPointName} ,
+            #{tntTrafficGroup.toEndPointId} ,
+            #{tntTrafficGroup.toEndPointName} ,
+            #{tntTrafficGroup.backStartDays} ,
+            #{tntTrafficGroup.backStartPointId} ,
+            #{tntTrafficGroup.backStartPointName} ,
+            #{tntTrafficGroup.backDestinationPointId} ,
+            #{tntTrafficGroup.backDestinationPointName} ,
+            #{tntTrafficGroup.hasBranch}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficGroup">
+        UPDATE TNT_TRAFFIC_GROUP SET
+        PRODUCT_ID = #{productId} ,
+        GROUP_ID = #{groupId} ,
+        GROUP_NAME = #{groupName} ,
+        TO_START_DAYS = #{toStartDays} ,
+        TO_START_POINT_ID = #{toStartPointId} ,
+        TO_START_POINT_NAME = #{toStartPointName} ,
+        TO_END_POINT_ID = #{toEndPointId} ,
+        TO_END_POINT_NAME = #{toEndPointName} ,
+        BACK_START_DAYS = #{backStartDays} ,
+        BACK_START_POINT_ID = #{backStartPointId} ,
+        BACK_START_POINT_NAME = #{backStartPointName} ,
+        BACK_DESTINATION_POINT_ID = #{backDestinationPointId} ,
+        BACK_DESTINATION_POINT_NAME = #{backDestinationPointName} ,
+        HAS_BRANCH = #{hasBranch}
+        WHERE
+        <if test="id !=null">
+            ID = #{id}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_TRAFFIC_GROUP WHERE
+        ID = #{id} 
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="java.util.List">
+        DELETE FROM TNT_TRAFFIC_GROUP WHERE ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_GROUP
+        WHERE
+        ID = #{id}
+    </select>
+
+    <select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_GROUP
+        WHERE
+        PRODUCT_ID = #{productId}
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="id != null and id !=''">
+                AND ID = #{id}
+            </if>
+            <if test="productId != null and productId !=''">
+                AND PRODUCT_ID = #{productId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND GROUP_ID = #{groupId}
+            </if>
+            <if test="groupName != null and groupName !=''">
+                AND GROUP_NAME = #{groupName}
+            </if>
+            <if test="toStartDays != null and toStartDays !=''">
+                AND TO_START_DAYS = #{toStartDays}
+            </if>
+            <if test="toStartPointId != null and toStartPointId !=''">
+                AND TO_START_POINT_ID = #{toStartPointId}
+            </if>
+            <if test="toStartPointName != null and toStartPointName !=''">
+                AND TO_START_POINT_NAME = #{toStartPointName}
+            </if>
+            <if test="toEndPointId != null and toEndPointId !=''">
+                AND TO_END_POINT_ID = #{toEndPointId}
+            </if>
+            <if test="toEndPointName != null and toEndPointName !=''">
+                AND TO_END_POINT_NAME = #{toEndPointName}
+            </if>
+            <if test="backStartDays != null and backStartDays !=''">
+                AND BACK_START_DAYS = #{backStartDays}
+            </if>
+            <if test="backStartPointId != null and backStartPointId !=''">
+                AND BACK_START_POINT_ID = #{backStartPointId}
+            </if>
+            <if test="backStartPointName != null and backStartPointName !=''">
+                AND BACK_START_POINT_NAME = #{backStartPointName}
+            </if>
+            <if test="backDestinationPointId != null and backDestinationPointId !=''">
+                AND BACK_DESTINATION_POINT_ID = #{backDestinationPointId}
+            </if>
+            <if test="backDestinationPointName != null and backDestinationPointName !=''">
+                AND BACK_DESTINATION_POINT_NAME = #{backDestinationPointName}
+            </if>
+            <if test="hasBranch != null and hasBranch !=''">
+                AND HAS_BRANCH = #{hasBranch}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.id != null and param.id !=''">
+                AND ID = #{param.id}
+            </if>
+            <if test="param.productId != null and param.productId !=''">
+                AND PRODUCT_ID = #{param.productId}
+            </if>
+            <if test="param.groupId != null and param.groupId !=''">
+                AND GROUP_ID = #{param.groupId}
+            </if>
+            <if test="param.groupName != null and param.groupName !=''">
+                AND GROUP_NAME = #{param.groupName}
+            </if>
+            <if test="param.toStartDays != null and param.toStartDays !=''">
+                AND TO_START_DAYS = #{param.toStartDays}
+            </if>
+            <if test="param.toStartPointId != null and param.toStartPointId !=''">
+                AND TO_START_POINT_ID = #{param.toStartPointId}
+            </if>
+            <if test="param.toStartPointName != null and param.toStartPointName !=''">
+                AND TO_START_POINT_NAME = #{param.toStartPointName}
+            </if>
+            <if test="param.toEndPointId != null and param.toEndPointId !=''">
+                AND TO_END_POINT_ID = #{param.toEndPointId}
+            </if>
+            <if test="param.toEndPointName != null and param.toEndPointName !=''">
+                AND TO_END_POINT_NAME = #{param.toEndPointName}
+            </if>
+            <if test="param.backStartDays != null and param.backStartDays !=''">
+                AND BACK_START_DAYS = #{param.backStartDays}
+            </if>
+            <if test="param.backStartPointId != null and param.backStartPointId !=''">
+                AND BACK_START_POINT_ID = #{param.backStartPointId}
+            </if>
+            <if test="param.backStartPointName != null and param.backStartPointName !=''">
+                AND BACK_START_POINT_NAME = #{param.backStartPointName}
+            </if>
+            <if test="param.backDestinationPointId != null and param.backDestinationPointId !=''">
+                AND BACK_DESTINATION_POINT_ID = #{param.backDestinationPointId}
+            </if>
+            <if test="param.backDestinationPointName != null and param.backDestinationPointName !=''">
+                AND BACK_DESTINATION_POINT_NAME = #{param.backDestinationPointName}
+            </if>
+            <if test="param.hasBranch != null and param.hasBranch !=''">
+                AND HAS_BRANCH = #{param.hasBranch}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficGroup">
+        SELECT count(*) FROM TNT_TRAFFIC_GROUP
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_GROUP
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+
+</mapper>
+

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.api.ctrip.holiday.mysql.mapper.TntPartnerOrderSyncMapper" >
+   <resultMap id="BaseResultMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="SUPPLIER_ORDER_ID" property="supplierOrderId" jdbcType="VARCHAR" />
+    <result column="PARTNER_ORDER_ID" property="partnerOrderId" jdbcType="VARCHAR" />
+    <result column="SUPPLIER_PRODUCT_ID" property="supplierProductId" jdbcType="VARCHAR" />
+    <result column="SUPPLIER_PACKAGE_ID" property="supplierPackageId" jdbcType="VARCHAR" />
+    <result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="PARTNER_ACTION" property="partnerAction" jdbcType="VARCHAR" />
+    <result column="CREATE_MESSAGE_ID" property="createMessageId" jdbcType="VARCHAR" />
+    <result column="UPDATE_MESSAGE_ID" property="updateMessageId" jdbcType="VARCHAR" />
+    <result column="PAY_MESSAGE_ID" property="payMessageId" jdbcType="VARCHAR" />
+    <result column="CANCEL_MESSAGE_ID" property="cancelMessageId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CONFIRM_STATUS" property="confirmStatus" jdbcType="VARCHAR" />
+
+    <result column="ORDER_CANCEL_STATUS" property="orderCancelStatus" jdbcType="VARCHAR" />
+    <result column="REVIEW_STATUS" property="reviewStatus" jdbcType="VARCHAR" />
+    <result column="ADULT_COST_PRICE" property="adultCostPrice"/>
+    <result column="CHILD_COST_PRICE" property="childCostPrice"/>
+    <result column="GAP_COST_PRICE" property="gapCostPrice"/>
+    <result column="PARTNER_ORDER_TOTAL" property="partnerOrderTotal"/>
+
+   </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SUPPLIER_ORDER_ID, PARTNER_ORDER_ID, SUPPLIER_PRODUCT_ID, SUPPLIER_PACKAGE_ID, 
+    ORDER_STATUS, PARTNER_ACTION, CREATE_MESSAGE_ID, UPDATE_MESSAGE_ID, PAY_MESSAGE_ID, 
+    CANCEL_MESSAGE_ID, CREATE_TIME, UPDATE_TIME,CONFIRM_STATUS,ORDER_CANCEL_STATUS,REVIEW_STATUS,ADULT_COST_PRICE,CHILD_COST_PRICE,GAP_COST_PRICE,PARTNER_ORDER_TOTAL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from TNT_PARTNER_ORDER_SYNC
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from TNT_PARTNER_ORDER_SYNC
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync" >
+    insert into TNT_PARTNER_ORDER_SYNC (ID, SUPPLIER_ORDER_ID, PARTNER_ORDER_ID, 
+      SUPPLIER_PRODUCT_ID, SUPPLIER_PACKAGE_ID, ORDER_STATUS, 
+      PARTNER_ACTION, CREATE_MESSAGE_ID, UPDATE_MESSAGE_ID, 
+      PAY_MESSAGE_ID, CANCEL_MESSAGE_ID, CREATE_TIME, 
+      UPDATE_TIME,CONFIRM_STATUS, ORDER_CANCEL_STATUS, REVIEW_STATUS,ADULT_COST_PRICE,CHILD_COST_PRICE,GAP_COST_PRICE,PARTNER_ORDER_TOTAL)
+    values (#{id,jdbcType=INTEGER}, #{supplierOrderId,jdbcType=VARCHAR}, #{partnerOrderId,jdbcType=VARCHAR}, 
+      #{supplierProductId,jdbcType=VARCHAR}, #{supplierPackageId,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
+      #{partnerAction,jdbcType=VARCHAR}, #{createMessageId,jdbcType=VARCHAR}, #{updateMessageId,jdbcType=VARCHAR}, 
+      #{payMessageId,jdbcType=VARCHAR}, #{cancelMessageId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP},#{confirmStatus,jdbcType=VARCHAR},  #{orderCancelStatus,jdbcType=VARCHAR}, #{reviewStatus,jdbcType=VARCHAR},#{adultCostPrice},#{childCostPrice},#{gapCostPrice},#{partnerOrderTotal})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync" >
+    insert into TNT_PARTNER_ORDER_SYNC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="supplierOrderId != null" >
+        SUPPLIER_ORDER_ID,
+      </if>
+      <if test="partnerOrderId != null" >
+        PARTNER_ORDER_ID,
+      </if>
+      <if test="supplierProductId != null" >
+        SUPPLIER_PRODUCT_ID,
+      </if>
+      <if test="supplierPackageId != null" >
+        SUPPLIER_PACKAGE_ID,
+      </if>
+      <if test="orderStatus != null" >
+        ORDER_STATUS,
+      </if>
+      <if test="partnerAction != null" >
+        PARTNER_ACTION,
+      </if>
+      <if test="createMessageId != null" >
+        CREATE_MESSAGE_ID,
+      </if>
+      <if test="updateMessageId != null" >
+        UPDATE_MESSAGE_ID,
+      </if>
+      <if test="payMessageId != null" >
+        PAY_MESSAGE_ID,
+      </if>
+      <if test="cancelMessageId != null" >
+        CANCEL_MESSAGE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="confirmStatus != null" >
+        CONFIRM_STATUS,
+      </if>
+      <if test="reviewStatus != null" >
+        REVIEW_STATUS,
+      </if>
+      <if test="adultCostPrice != null" >
+        ADULT_COST_PRICE,
+      </if>
+      <if test="childCostPrice != null" >
+        CHILD_COST_PRICE,
+      </if>
+      <if test="gapCostPrice != null" >
+        GAP_COST_PRICE,
+      </if>
+      <if test="partnerOrderTotal != null" >
+        PARTNER_ORDER_TOTAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="supplierOrderId != null" >
+        #{supplierOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerOrderId != null" >
+        #{partnerOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierProductId != null" >
+        #{supplierProductId,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierPackageId != null" >
+        #{supplierPackageId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerAction != null" >
+        #{partnerAction,jdbcType=VARCHAR},
+      </if>
+      <if test="createMessageId != null" >
+        #{createMessageId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateMessageId != null" >
+        #{updateMessageId,jdbcType=VARCHAR},
+      </if>
+      <if test="payMessageId != null" >
+        #{payMessageId,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelMessageId != null" >
+        #{cancelMessageId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmStatus != null" >
+        #{confirmStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewStatus != null" >
+        #{reviewStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="adultCostPrice != null" >
+        #{adultCostPrice},
+      </if>
+      <if test="childCostPrice != null" >
+        #{childCostPrice},
+      </if>
+      <if test="gapCostPrice != null" >
+        #{gapCostPrice},
+      </if>
+      <if test="partnerOrderTotal != null" >
+        #{partnerOrderTotal},
+      </if>
+    </trim>
+  </insert>
+   
+  <select id="selectBySupplierOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	SELECT
+		<include refid="Base_Column_List"/>
+	FROM
+		TNT_PARTNER_ORDER_SYNC tpos
+	WHERE
+		tpos.SUPPLIER_ORDER_ID = #{supplierOrderId,jdbcType=VARCHAR};
+  </select>
+  
+  <select id="selectByPartnerOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	SELECT
+		<include refid="Base_Column_List"/>
+	FROM
+		TNT_PARTNER_ORDER_SYNC tpos
+	WHERE
+		tpos.PARTNER_ORDER_ID = #{partnerOrderId,jdbcType=VARCHAR};
+  </select>
+  
+  <update id="updatePayedOrderStatusBySuppOrderId" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync">
+  	UPDATE TNT_PARTNER_ORDER_SYNC 
+  	SET ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+	UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP} 
+  	WHERE SUPPLIER_ORDER_ID = #{supplierOrderId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateOrderStatusBySuppOrderId" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync">
+  	UPDATE TNT_PARTNER_ORDER_SYNC 
+  	SET ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+  	PAY_MESSAGE_ID = #{payMessageId,jdbcType=VARCHAR},
+	UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP} 
+  	WHERE SUPPLIER_ORDER_ID = #{supplierOrderId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateTntOrderSync" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync">
+         update TNT_PARTNER_ORDER_SYNC 
+           set 
+            PARTNER_ACTION = #{partnerAction,jdbcType=VARCHAR},
+            UPDATE_MESSAGE_ID = #{updateMessageId,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+           WHERE PARTNER_ORDER_ID =#{partnerOrderId,jdbcType=VARCHAR};
+  </update>
+  <update id="cancelTntOrderSync" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync">
+         update TNT_PARTNER_ORDER_SYNC 
+           set 
+            PARTNER_ACTION = #{partnerAction,jdbcType=VARCHAR},
+            CANCEL_MESSAGE_ID = #{cancelMessageId,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORDER_CANCEL_STATUS = #{orderCancelStatus}
+           WHERE PARTNER_ORDER_ID =#{partnerOrderId,jdbcType=VARCHAR}; 
+  </update>
+
+  <update id="updateReviewOrCancelStatus" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSync">
+
+      UPDATE
+          TNT_PARTNER_ORDER_SYNC
+      <set>
+        <if test="orderCancelStatus != null and orderCancelStatus != '' ">
+          ORDER_CANCEL_STATUS = #{orderCancelStatus},
+        </if>
+        <if test="reviewStatus != null and reviewStatus != '' ">
+          REVIEW_STATUS = #{reviewStatus}
+        </if>
+      </set>
+      WHERE
+          SUPPLIER_ORDER_ID = #{supplierOrderId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSyncVo">
+
+    SELECT
+        count(A.ID)
+    FROM
+        TNT_PARTNER_ORDER_SYNC A
+    <where>
+      <if test="startTime != null">
+        AND A.UPDATE_TIME <![CDATA[ > ]]> #{startTime}
+      </if>
+      <if test="endTime != null">
+        AND A.UPDATE_TIME  <![CDATA[ < ]]> #{endTime}
+      </if>
+      <if test="supplierOrderId != null and supplierOrderId != ''">
+        AND A.SUPPLIER_ORDER_ID = #{supplierOrderId}
+      </if>
+      <if test="partnerOrderId != null and partnerOrderId != ''">
+        AND A.PARTNER_ORDER_ID = #{partnerOrderId}
+      </if>
+      <if test="supplierProductId != null and supplierProductId != ''">
+        AND A.SUPPLIER_PRODUCT_ID = #{supplierProductId}
+      </if>
+      <if test="supplierPackageId != null and supplierPackageId != ''">
+        AND A.SUPPLIER_PACKAGE_ID = #{supplierPackageId}
+      </if>
+      <if test="orderStatus != null and orderStatus != ''">
+        AND A.ORDER_STATUS = #{orderStatus}
+      </if>
+      <if test="reviewStatus != null and reviewStatus != ''">
+        AND A.REVIEW_STATUS = #{reviewStatus}
+      </if>
+      <if test="orderCancelStatus != null and orderCancelStatus != ''">
+        AND A.ORDER_CANCEL_STATUS = #{orderCancelStatus}
+      </if>
+      <if test="partnerAction != null and partnerAction != ''">
+        AND A.PARTNER_ACTION = #{partnerAction}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="searchCancelOrderList" resultType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerOrderSyncVo" parameterType="page">
+
+    SELECT
+       A.ID ID, A.UPDATE_TIME updateTime,A.SUPPLIER_ORDER_ID supplierOrderId, A.PARTNER_ORDER_ID partnerOrderId,
+       A.ORDER_STATUS orderStatus, A.ORDER_CANCEL_STATUS orderCancelStatus,A.REVIEW_STATUS reviewStatus,
+       A.SUPPLIER_PRODUCT_ID supplierProductId,A.SUPPLIER_PACKAGE_ID supplierPackageId
+    FROM
+    TNT_PARTNER_ORDER_SYNC A
+    <where>
+      <if test="param.startTime != null">
+        AND A.UPDATE_TIME <![CDATA[ > ]]> #{param.startTime}
+      </if>
+      <if test="param.endTime != null">
+        AND A.UPDATE_TIME  <![CDATA[ < ]]> #{param.endTime}
+      </if>
+      <if test="param.supplierOrderId != null and param.supplierOrderId != ''">
+        AND A.SUPPLIER_ORDER_ID = #{param.supplierOrderId}
+      </if>
+      <if test="param.partnerOrderId != null and param.partnerOrderId != ''">
+        AND A.PARTNER_ORDER_ID = #{param.partnerOrderId}
+      </if>
+      <if test="param.supplierProductId != null and param.supplierProductId != ''">
+        AND A.SUPPLIER_PRODUCT_ID = #{param.supplierProductId}
+      </if>
+      <if test="param.supplierPackageId != null and param.supplierPackageId != ''">
+        AND A.SUPPLIER_PACKAGE_ID = #{param.supplierPackageId}
+      </if>
+      <if test="param.orderStatus != null and param.orderStatus != ''">
+        AND A.ORDER_STATUS = #{param.orderStatus}
+      </if>
+      <if test="param.reviewStatus != null and param.reviewStatus != ''">
+        AND A.REVIEW_STATUS = #{param.reviewStatus}
+      </if>
+      <if test="param.orderCancelStatus != null and param.orderCancelStatus != ''">
+        AND A.ORDER_CANCEL_STATUS = #{param.orderCancelStatus}
+      </if>
+      <if test="param.partnerAction != null and param.partnerAction != ''">
+        AND A.PARTNER_ACTION = #{param.partnerAction}
+      </if>
+    </where>
+    ORDER BY A.UPDATE_TIME DESC
+    limit #{startRowsForMySql}, #{pageSize}
+
+  </select>
+
+</mapper>

@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.ctrip.mysql.mapper.TntHotelPartnerOrderRelMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.api.po.ctrip.hotel.TntHotelPartnerOrderRel">
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="partnerOrderId" column="PARTNER_ORDER_ID"/>
+        <result property="partnerOrderSendId" column="PARTNER_ORDER_SEND_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="partnerProductId" column="PARTNER_PRODUCT_ID"/>
+        <result property="partnerProductName" column="PARTNER_PRODUCT_NAME"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="partnerGoodsId" column="PARTNER_GOODS_ID"/>
+        <result property="partnerGoodsName" column="PARTNER_GOODS_NAME"/>
+        <result property="arrival" column="ARRIVAL"/>
+        <result property="departure" column="DEPARTURE"/>
+        <result property="quantity" column="QUANTITY"/>
+        <result property="partnerOrderStatus" column="PARTNER_ORDER_STATUS"/>
+        <result property="supplierOrderId" column="SUPPLIER_ORDER_ID"/>
+        <result property="supplierOrderStatus" column="SUPPLIER_ORDER_STATUS"/>
+        <result property="supplierPayStatus" column="SUPPLIER_PAY_STATUS"/>
+        <result property="supplierApprorderStatus" column="SUPPLIER_APPRORDER_STATUS"/>
+        <result property="supplierOrderConfirm" column="SUPPLIER_ORDER_CONFIRM"/>
+        <result property="syncStatus" column="SYNC_STATUS"/>
+        <result property="tryNum" column="TRY_NUM"/>
+        <result property="cancelOrderStatus" column="CANCEL_ORDER_STATUS"/>
+        <result property="orderRequestTime" column="ORDER_REQUEST_TIME"/>
+        <result property="cancelRequestTime" column="CANCEL_REQUEST_TIME"/>
+        <result property="orderResponseTime" column="ORDER_RESPONSE_TIME"/>
+        <result property="cancelResponseTime" column="CANCEL_RESPONSE_TIME"/>
+        <result property="errorMsg" column="ERROR_MSG"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        <![CDATA[
+		ORDER_ID,PARTNER_ORDER_ID,PARTNER_ORDER_SEND_ID,PRODUCT_ID,PARTNER_PRODUCT_ID,PARTNER_PRODUCT_NAME,GOODS_ID,
+		PARTNER_GOODS_ID,PARTNER_GOODS_NAME,ARRIVAL,DEPARTURE,QUANTITY,PARTNER_ORDER_STATUS,SUPPLIER_ORDER_ID,SUPPLIER_ORDER_STATUS,SUPPLIER_PAY_STATUS,
+		SUPPLIER_APPRORDER_STATUS,SUPPLIER_ORDER_CONFIRM,SYNC_STATUS,TRY_NUM,CANCEL_ORDER_STATUS,ORDER_REQUEST_TIME,
+		CANCEL_REQUEST_TIME,ORDER_RESPONSE_TIME,CANCEL_RESPONSE_TIME,ERROR_MSG,CREATE_TIME,UPDATE_TIME
+	    ]]>
+    </sql>
+
+    <select id="getTntHotelPartnerOrderRelsBypartnerOrderIdAndPartnerOrderSendId" parameterType="list" resultMap="baseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        WHERE
+        1!=1
+        <foreach collection="list" index="index" item="obj">
+            OR (PARTNER_ORDER_ID = ${obj.partnerOrderId} and PARTNER_ORDER_SEND_ID = ${obj.partnerOrderSendId})
+        </foreach>
+        <!--
+        PARTNER_ORDER_ID IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        -->
+    </select>
+
+    <select id="getTntOrderBysoIdAndpos" parameterType="map" resultType="com.lvmama.tnt.api.po.ctrip.hotel.TntHotelPartnerOrderRel">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        WHERE SUPPLIER_ORDER_ID = #{superierOrderId}
+        AND PARTNER_ORDER_STATUS = #{partnerOrderStatus}
+    </select>
+
+    <select id="getListByParams" parameterType="map" resultMap="baseResultMap">
+        SELECT
+        <include refid="columns" />
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        <include refid="where"/>
+        <if test="size != null">
+            LIMIT #{size}
+        </if>
+    </select>
+
+    <select id="selectByPartnerOrderId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns" />
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        WHERE
+        PARTNER_ORDER_ID = #{partnerOrderId}
+    </select>
+
+	<select id="selectByPartnerOrderIdAndSendId" resultMap="baseResultMap" parameterType="Long">
+          SELECT
+          <include refid="columns"/>  
+          FROM TNT_HOTEL_PARTNER_ORDER_REL
+          WHERE
+          PARTNER_ORDER_ID = #{partnerOrderId}
+          AND
+          PARTNER_ORDER_SEND_ID = #{partnerOrderSendId}
+    </select>    
+           
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.api.po.ctrip.hotel.TntHotelPartnerOrderRel">
+        INSERT INTO TNT_HOTEL_PARTNER_ORDER_REL (
+        PARTNER_ORDER_ID ,
+        PARTNER_ORDER_SEND_ID ,
+        PRODUCT_ID ,
+        PARTNER_PRODUCT_ID ,
+        PARTNER_PRODUCT_NAME ,
+        GOODS_ID ,
+        PARTNER_GOODS_ID ,
+        PARTNER_GOODS_NAME ,
+        ARRIVAL,
+        DEPARTURE,
+        QUANTITY,
+        PARTNER_ORDER_STATUS ,
+        SUPPLIER_ORDER_ID ,
+        SUPPLIER_ORDER_STATUS,
+        SUPPLIER_PAY_STATUS ,
+        SUPPLIER_APPRORDER_STATUS ,
+        SUPPLIER_ORDER_CONFIRM ,
+        SYNC_STATUS ,
+        TRY_NUM ,
+        CANCEL_ORDER_STATUS,
+        ORDER_REQUEST_TIME,
+        CANCEL_REQUEST_TIME,
+        ORDER_RESPONSE_TIME,
+        CANCEL_RESPONSE_TIME,
+        ERROR_MSG,
+        CREATE_TIME ,
+        UPDATE_TIME
+        ) VALUES (
+        #{partnerOrderId} ,
+        #{partnerOrderSendId} ,
+        #{productId} ,
+        #{partnerProductId} ,
+        #{partnerProductName} ,
+        #{goodsId} ,
+        #{partnerGoodsId} ,
+        #{partnerGoodsName} ,
+        #{arrival},
+        #{departure},
+        #{quantity},
+        #{partnerOrderStatus} ,
+        #{supplierOrderId} ,
+        #{supplierOrderStatus},
+        #{supplierPayStatus} ,
+        #{supplierApprorderStatus} ,
+        #{supplierOrderConfirm} ,
+        #{syncStatus} ,
+        #{tryNum} ,
+        #{cancelOrderStatus} ,
+        #{orderRequestTime} ,
+        #{cancelRequestTime} ,
+        #{orderResponseTime} ,
+        #{cancelResponseTime} ,
+        #{errorMsg} ,
+        #{createTime} ,
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.api.po.ctrip.hotel.TntHotelPartnerOrderRel">
+        UPDATE TNT_HOTEL_PARTNER_ORDER_REL
+        <set>
+            <if test="partnerOrderId!=null">
+                PARTNER_ORDER_ID = #{partnerOrderId}
+            </if>
+            <if test="partnerOrderSendId!=null">
+                , PARTNER_ORDER_SEND_ID = #{partnerOrderSendId}
+            </if>
+            <if test="productId!=null">
+                , PRODUCT_ID = #{productId}
+            </if>
+            <if test="partnerProductId!=null">
+                , PARTNER_PRODUCT_ID = #{partnerProductId}
+            </if>
+            <if test="partnerProductName!=null">
+                , PARTNER_PRODUCT_NAME = #{partnerProductName}
+            </if>
+            <if test="goodsId!=null">
+                , GOODS_ID = #{goodsId}
+            </if>
+            <if test="partnerGoodsId!=null">
+                , PARTNER_GOODS_ID = #{partnerGoodsId}
+            </if>
+            <if test="partnerGoodsName!=null">
+                , PARTNER_GOODS_NAME = #{partnerGoodsName}
+            </if>
+            <if test="arrival!=null">
+            	,ARRIVAL = #{arrival}
+            </if>
+            <if test="departure!=null">
+            	,DEPARTURE = #{departure}
+            </if>
+            <if test="quantity!=null">
+            	,QUANTITY = #{quantity}
+            </if>
+            <if test="partnerOrderStatus!=null">
+                , PARTNER_ORDER_STATUS = #{partnerOrderStatus}
+            </if>
+            <if test="supplierOrderId!=null">
+                , SUPPLIER_ORDER_ID = #{supplierOrderId}
+            </if>
+            <if test="supplierOrderStatus!=null">
+                , SUPPLIER_ORDER_STATUS=#{supplierOrderStatus}
+            </if>
+            <if test="supplierPayStatus!=null">
+                , SUPPLIER_PAY_STATUS = #{supplierPayStatus}
+            </if>
+            <if test="supplierApprorderStatus!=null">
+                , SUPPLIER_APPRORDER_STATUS = #{supplierApprorderStatus}
+            </if>
+            <if test="supplierOrderConfirm!=null">
+                , SUPPLIER_ORDER_CONFIRM = #{supplierOrderConfirm}
+            </if>
+            <if test="syncStatus!=null">
+                , SYNC_STATUS = #{syncStatus}
+            </if>
+            <if test="tryNum!=null">
+                , TRY_NUM = #{tryNum}
+            </if>
+            <if test="cancelOrderStatus!=null and cancelOrderStatus!=''">
+                , CANCEL_ORDER_STATUS = #{cancelOrderStatus}
+            </if>
+            <if test="orderRequestTime!=null">
+                , ORDER_REQUEST_TIME = #{orderRequestTime}
+            </if>
+            <if test="cancelRequestTime!=null">
+                , CANCEL_REQUEST_TIME = #{cancelRequestTime}
+            </if>
+            <if test="orderResponseTime!=null">
+                , ORDER_RESPONSE_TIME = #{orderResponseTime}
+            </if>
+            <if test="cancelResponseTime!=null">
+                , CANCEL_RESPONSE_TIME = #{cancelResponseTime}
+            </if>
+            <if test="errorMsg!=null and errorMsg!='' ">
+                , ERROR_MSG = #{errorMsg}
+            </if>
+            <if test="createTime!=null">
+                , CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime!=null">
+                , UPDATE_TIME = #{updateTime}
+            </if>
+        </set>
+        WHERE  ORDER_ID = #{orderId}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_PARTNER_ORDER_REL WHERE
+        ORDER_ID = #{id}
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT <include refid="columns" />
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        WHERE
+        ORDER_ID = #{id}
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="orderId != null and orderId !=''">
+                AND ORDER_ID = #{orderId}
+            </if>
+            <if test="partnerOrderId != null and partnerOrderId !=''">
+                AND PARTNER_ORDER_ID = #{partnerOrderId}
+            </if>
+            <if test="partnerOrderSendId != null and partnerOrderSendId !=''">
+                AND PARTNER_ORDER_SEND_ID = #{partnerOrderSendId}
+            </if>
+            <if test="productId != null and productId !=''">
+                AND PRODUCT_ID = #{productId}
+            </if>
+            <if test="partnerProductId != null and partnerProductId !=''">
+                AND PARTNER_PRODUCT_ID = #{partnerProductId}
+            </if>
+            <if test="partnerProductName != null and partnerProductName !=''">
+                AND PARTNER_PRODUCT_NAME = #{partnerProductName}
+            </if>
+            <if test="goodsId != null and goodsId !=''">
+                AND GOODS_ID = #{goodsId}
+            </if>
+            <if test="partnerGoodsId != null and partnerGoodsId !=''">
+                AND PARTNER_GOODS_ID = #{partnerGoodsId}
+            </if>
+            <if test="partnerGoodsName != null and partnerGoodsName !=''">
+                AND PARTNER_GOODS_NAME = #{partnerGoodsName}
+            </if>
+            <if test="(partnerOrderStatus != null and partnerOrderStatus !='') or partnerOrderStatus == 0">
+                AND PARTNER_ORDER_STATUS = #{partnerOrderStatus}
+            </if>
+            <if test="supplierOrderId != null and supplierOrderId !=''">
+                AND SUPPLIER_ORDER_ID = #{supplierOrderId}
+            </if>
+            <if test="(supplierPayStatus != null and supplierPayStatus !='') or supplierPayStatus == 0">
+                AND SUPPLIER_PAY_STATUS = #{supplierPayStatus}
+            </if>
+            <if test="supplierApprorderStatus != null and supplierApprorderStatus !=''">
+                AND SUPPLIER_APPRORDER_STATUS = #{supplierApprorderStatus}
+            </if>
+            <if test="supplierOrderConfirm != null and supplierOrderConfirm !=''">
+                AND SUPPLIER_ORDER_CONFIRM = #{supplierOrderConfirm}
+            </if>
+            <if test="(syncStatus != null and syncStatus !='') or syncStatus == 0">
+                AND SYNC_STATUS = #{syncStatus}
+            </if>
+            <if test="tryNum != null and tryNum !=''">
+                AND TRY_NUM = #{tryNum}
+            </if>
+            <if test="cancelOrderStatus!=null and cancelOrderStatus!=''">
+                AND CANCEL_ORDER_STATUS = #{cancelOrderStatus}
+            </if>
+            <if test="orderRequestTime!=null">
+                AND ORDER_REQUEST_TIME = #{orderRequestTime}
+            </if>
+            <if test="cancelRequestTime!=null">
+                AND CANCEL_REQUEST_TIME = #{cancelRequestTime}
+            </if>
+            <if test="createTime != null and createTime !=''">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime !=''">
+                AND UPDATE_TIME = #{updateTime}
+            </if>
+            <if test="errorMsg != null and errorMsg !=''">
+                AND ERROR_MSG LIKE CONCAT(CONCAT('%',TRIM(#{errorMsg})),'%')
+            </if>
+            <if test="(supplierOrderStatus != null and supplierOrderStatus !='') or supplierOrderStatus == 0">
+                AND SUPPLIER_ORDER_STATUS = #{supplierOrderStatus}
+            </if>
+            <choose>
+                <when test="searchType=='ORDER'">
+                    <if test="createBegin != null and createBegin !='' ">
+                        AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{createBegin}
+                    </if>
+                    <if test="createEnd != null and createEnd !='' ">
+                        AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{createEnd},INTERVAL 1 DAY)
+                    </if>
+                </when>
+                <when test="searchType=='CANCEL'">
+                    <if test="createBegin != null and createBegin !='' ">
+                        AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{createBegin}
+                    </if>
+                    <if test="createEnd != null and createEnd != '' ">
+                        AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{createEnd},INTERVAL 1 DAY)
+                    </if>
+                    <if test="updateBegin != null and updateBegin != ''">
+                        AND CANCEL_REQUEST_TIME <![CDATA[>=]]> #{updateBegin}
+                    </if>
+                    <if test="updateEnd != null and updateEnd != '' ">
+                        AND CANCEL_REQUEST_TIME &lt; DATE_ADD(#{updateEnd},INTERVAL 1 DAY)
+                    </if>
+                </when>
+                <when test="searchType=='LVMAMA'">
+                    AND SUPPLIER_ORDER_ID IS NOT NULL           
+                    <if test="createBegin != null and createBegin !=''">
+                        AND (
+                        (PARTNER_ORDER_STATUS=0 AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{createBegin}) 
+                        OR 
+                        (PARTNER_ORDER_STATUS=1 AND CANCEL_REQUEST_TIME <![CDATA[>=]]> #{createBegin})
+                        )
+                    </if>
+                    <if test="createEnd != null and createEnd !='' ">
+                        AND 
+                        (
+                        (PARTNER_ORDER_STATUS=0 AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{createEnd},INTERVAL 1 DAY)) 
+                        OR 
+                        (PARTNER_ORDER_STATUS=1 AND CANCEL_REQUEST_TIME &lt; DATE_ADD(#{createEnd},INTERVAL 1 DAY))
+                        )
+                    </if>
+                    <if test="updateBegin != null and updateBegin !='' ">
+						AND (
+							(PARTNER_ORDER_STATUS=0 AND ORDER_RESPONSE_TIME IS NOT NULL AND ORDER_RESPONSE_TIME <![CDATA[>=]]> #{updateBegin})
+							OR
+							(PARTNER_ORDER_STATUS=1 AND CANCEL_RESPONSE_TIME IS NOT NULL AND CANCEL_RESPONSE_TIME <![CDATA[>=]]> #{updateBegin})
+							)
+					</if>
+					<if test="updateEnd != null and updateEnd !='' ">
+						AND (
+							(PARTNER_ORDER_STATUS=0 AND ORDER_RESPONSE_TIME IS NOT NULL AND ORDER_RESPONSE_TIME &lt;
+								DATE_ADD(#{updateEnd},INTERVAL 1 DAY))
+							OR
+							(PARTNER_ORDER_STATUS=1 AND CANCEL_RESPONSE_TIME IS NOT NULL AND CANCEL_RESPONSE_TIME &lt;
+							DATE_ADD(#{updateEnd},INTERVAL 1 DAY))
+							)
+					</if>
+                </when>
+            </choose>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.orderId != null and param.orderId !=''">
+                AND ORDER_ID = #{param.orderId}
+            </if>
+            <if test="param.partnerOrderId != null and param.partnerOrderId !=''">
+                AND PARTNER_ORDER_ID = #{param.partnerOrderId}
+            </if>
+            <if test="param.partnerOrderSendId != null and param.partnerOrderSendId !=''">
+                AND PARTNER_ORDER_SEND_ID = #{param.partnerOrderSendId}
+            </if>
+            <if test="param.productId != null and param.productId !=''">
+                AND PRODUCT_ID = #{param.productId}
+            </if>
+            <if test="param.partnerProductId != null and param.partnerProductId !=''">
+                AND PARTNER_PRODUCT_ID = #{param.partnerProductId}
+            </if>
+            <if test="param.partnerProductName != null and param.partnerProductName !=''">
+                AND PARTNER_PRODUCT_NAME = #{param.partnerProductName}
+            </if>
+            <if test="param.goodsId != null and param.goodsId !=''">
+                AND GOODS_ID = #{param.goodsId}
+            </if>
+            <if test="param.partnerGoodsId != null and param.partnerGoodsId !=''">
+                AND PARTNER_GOODS_ID = #{param.partnerGoodsId}
+            </if>
+            <if test="param.partnerGoodsName != null and param.partnerGoodsName !=''">
+                AND PARTNER_GOODS_NAME = #{param.partnerGoodsName}
+            </if>
+            <if test="(param.partnerOrderStatus != null and param.partnerOrderStatus !='') or param.partnerOrderStatus == 0 ">
+                AND PARTNER_ORDER_STATUS = #{param.partnerOrderStatus}
+            </if>
+            <if test="param.supplierOrderId != null and param.supplierOrderId !=''">
+                AND SUPPLIER_ORDER_ID = #{param.supplierOrderId}
+            </if>
+            <if test="(param.supplierPayStatus != null and param.supplierPayStatus !='') or param.supplierPayStatus == 0 ">
+                AND SUPPLIER_PAY_STATUS = #{param.supplierPayStatus}
+            </if>
+            <if test="param.supplierApprorderStatus != null and param.supplierApprorderStatus !=''">
+                AND SUPPLIER_APPRORDER_STATUS = #{param.supplierApprorderStatus}
+            </if>
+            <if test="param.supplierOrderConfirm != null and param.supplierOrderConfirm !=''">
+                AND SUPPLIER_ORDER_CONFIRM = #{param.supplierOrderConfirm}
+            </if>
+            <if test="(param.syncStatus != null and param.syncStatus !='') or param.syncStatus == 0 ">
+                AND SYNC_STATUS = #{param.syncStatus}
+            </if>
+            <if test="param.tryNum != null and param.tryNum !=''">
+                AND TRY_NUM = #{param.tryNum}
+            </if>
+            <if test="param.errorMsg != null and param.errorMsg !=''">
+                AND ERROR_MSG LIKE CONCAT(CONCAT('%',TRIM(#{param.errorMsg})),'%')
+            </if>
+            <if test="param.cancelOrderStatus!=null and param.cancelOrderStatus!=''">
+                AND CANCEL_ORDER_STATUS = #{param.cancelOrderStatus}
+            </if>
+            <if test="param.orderRequestTime!=null">
+                AND ORDER_REQUEST_TIME = #{param.orderRequestTime}
+            </if>
+            <if test="param.cancelRequestTime!=null">
+                AND CANCEL_REQUEST_TIME = #{param.cancelRequestTime}
+            </if>
+            <if test="param.createTime != null and param.createTime !=''">
+                AND CREATE_TIME = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null and param.updateTime !=''">
+                AND UPDATE_TIME = #{param.updateTime}
+            </if>
+            <if test="(param.supplierOrderStatus != null and param.supplierOrderStatus !='') or param.supplierOrderStatus == 0 ">
+                AND SUPPLIER_ORDER_STATUS = #{param.supplierOrderStatus}
+            </if>
+            <choose>
+                <when test="param.searchType=='ORDER'">
+                    <if test="param.createBegin != null and param.createBegin !='' ">
+                        AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{param.createBegin}
+                    </if>
+                    <if test="param.createEnd != null and param.createEnd !='' ">
+                        AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{param.createEnd},INTERVAL 1 DAY)
+                    </if>
+                </when>
+                <when test="param.searchType=='CANCEL'">
+                    <if test="param.createBegin != null and param.createBegin !='' ">
+                        AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{param.createBegin}
+                    </if>
+                    <if test="param.createEnd != null and param.createEnd !='' ">
+                        AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{param.createEnd},INTERVAL 1 DAY)
+                    </if>
+                    <if test="param.updateBegin != null and param.updateBegin !='' ">
+                        AND CANCEL_REQUEST_TIME <![CDATA[>=]]> #{param.updateBegin}
+                    </if>
+                    <if test="param.updateEnd != null and param.updateEnd !='' ">
+                        AND CANCEL_REQUEST_TIME &lt; DATE_ADD(#{param.updateEnd},INTERVAL 1 DAY)
+                    </if>
+                </when>
+                <when test="param.searchType=='LVMAMA'">
+                     AND SUPPLIER_ORDER_ID IS NOT NULL 
+                     <if test="param.createBegin != null and param.createBegin !=''">
+                      AND (
+                        (PARTNER_ORDER_STATUS=0 AND ORDER_REQUEST_TIME <![CDATA[>=]]> #{param.createBegin}) 
+                        OR 
+                        (PARTNER_ORDER_STATUS=1 AND CANCEL_REQUEST_TIME <![CDATA[>=]]> #{param.createBegin})
+                        )
+                     </if>
+                    <if test="param.createEnd != null and param.createEnd !='' ">
+                   	AND 
+                        (
+                        (PARTNER_ORDER_STATUS=0 AND ORDER_REQUEST_TIME &lt; DATE_ADD(#{param.createEnd},INTERVAL 1 DAY)) 
+                        OR 
+                        (PARTNER_ORDER_STATUS=1 AND CANCEL_REQUEST_TIME &lt; DATE_ADD(#{param.createEnd},INTERVAL 1 DAY))
+                        )
+                    </if>
+					<if test="param.updateBegin != null and param.updateBegin !='' ">
+						AND (
+							(PARTNER_ORDER_STATUS=0 AND ORDER_RESPONSE_TIME IS NOT NULL AND ORDER_RESPONSE_TIME <![CDATA[>=]]> #{param.updateBegin})
+							OR
+							(PARTNER_ORDER_STATUS=1 AND CANCEL_RESPONSE_TIME IS NOT NULL AND CANCEL_RESPONSE_TIME <![CDATA[>=]]> #{param.updateBegin})
+							)
+					</if>
+					<if test="param.updateEnd != null and param.updateEnd !='' ">
+						AND (
+							(PARTNER_ORDER_STATUS=0 AND ORDER_RESPONSE_TIME IS NOT NULL AND ORDER_RESPONSE_TIME &lt;
+								DATE_ADD(#{param.updateEnd},INTERVAL 1 DAY))
+							OR
+							(PARTNER_ORDER_STATUS=1 AND CANCEL_RESPONSE_TIME IS NOT NULL AND CANCEL_RESPONSE_TIME &lt;
+							DATE_ADD(#{param.updateEnd},INTERVAL 1 DAY))
+							)
+					</if>
+                </when>
+            </choose>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.api.po.ctrip.hotel.TntHotelPartnerOrderRel">
+        SELECT count(*) FROM TNT_HOTEL_PARTNER_ORDER_REL
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT <include refid="columns" />
+        FROM TNT_HOTEL_PARTNER_ORDER_REL
+        <include refid="pageWhere"/>
+        ORDER BY
+        <if test="param.searchType=='CANCEL'">
+            CANCEL_REQUEST_TIME DESC,
+        </if>
+        ORDER_ID DESC
+        LIMIT #{startRowsForMySql},#{pageSize}
+    </select>
+
+</mapper>

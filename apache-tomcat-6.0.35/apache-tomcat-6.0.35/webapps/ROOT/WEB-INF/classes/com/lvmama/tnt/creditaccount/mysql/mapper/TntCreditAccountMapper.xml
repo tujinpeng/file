@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.creditaccount.mysql.mapper.TntCreditAccountMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.creditaccount.po.TntCreditAccount">
+        <result property="creditId" column="CREDIT_ID"/>
+        <result property="creditPassword" column="CREDIT_PASSWORD"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="channelId" column="CHANNEL_ID"/>
+        <result property="creditMoney" column="CREDIT_MONEY"/>
+        <result property="useMoney" column="USE_MONEY"/>
+        <result property="remainMoney" column="REMAIN_MONEY"/>
+        <result property="freezeMoney" column="FREEZE_MONEY"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="status" column="STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="recordId" column="RECORD_ID"/>
+        <result property="refundMoney" column="REFUND_MONEY"/>
+	</resultMap>
+	
+	<resultMap id="baseResultMap1" type="com.lvmama.tnt.creditaccount.po.TntCreditAccountVo">
+        <result property="recordId" column="RECORD_ID"/>
+        <result property="creditId" column="CREDIT_ID"/>
+        <result property="remainMoney" column="REMAIN_MONEY"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CREDIT_ID,CREDIT_PASSWORD,USER_ID,CHANNEL_ID,CREDIT_MONEY,USE_MONEY,REMAIN_MONEY,FREEZE_MONEY,START_DATE,END_DATE,STATUS,CREATE_TIME,UPDATE_TIME,RECORD_ID,REFUND_MONEY
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="creditId" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditAccount">
+        INSERT INTO TNT_CREDIT_ACCOUNT 
+         <trim prefix="(" suffix=")" suffixOverrides="," >
+          <if test="creditId != null">
+        	CREDIT_ID ,
+          </if>
+          <if test="creditPassword != null">
+        	CREDIT_PASSWORD ,
+          </if>
+          <if test="userId != null">
+        	USER_ID ,
+          </if>
+          <if test="channelId != null">
+        	CHANNEL_ID ,
+          </if>
+          <if test="creditMoney != null">
+        	CREDIT_MONEY ,
+          </if>
+          <if test="useMoney != null">
+        	USE_MONEY ,
+        	</if>
+        	<if test="remainMoney != null">
+        	REMAIN_MONEY ,
+        	</if>
+        	<if test="freezeMoney != null">
+        	FREEZE_MONEY ,
+        	</if>
+        	<if test="startDate != null">
+        	START_DATE ,
+        	</if>
+        	<if test="endDate != null">
+        	END_DATE ,
+        	</if>
+        	<if test="status != null">
+        	STATUS ,
+        	</if>
+        	<if test="createTime != null">
+        	CREATE_TIME,
+        	</if>
+        	<if test="updateTime != null">
+        	UPDATE_TIME,
+        	</if>
+        	<if test="recordId != null">
+        		RECORD_ID,
+        	</if>
+        	REFUND_MONEY
+        	</trim>
+        	<trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+        	<if test="creditId != null">
+        	#{creditId} ,
+        	</if>
+        	<if test="creditPassword != null">
+        	#{creditPassword} ,
+        	</if>
+        	<if test="userId != null">
+        	#{userId} ,
+        	</if>
+        	<if test="channelId != null">
+        	#{channelId} ,
+        	</if>
+        	<if test="creditMoney != null">
+        	#{creditMoney} ,
+        	</if>
+        	<if test="useMoney != null">
+        	#{useMoney} ,
+        	</if>
+        	<if test="remainMoney != null">
+        	#{remainMoney} ,
+        	</if>
+        	<if test="freezeMoney != null">
+        	#{freezeMoney} ,
+        	</if>
+        	<if test="startDate != null">
+        	#{startDate} ,
+        	</if>
+        	<if test="endDate != null">
+        	#{endDate} ,
+        	</if>
+        	<if test="status != null">
+        	#{status} ,
+        	</if>
+        	<if test="createTime != null">
+        	#{createTime},
+        	</if>
+        	<if test="updateTime != null">
+        	#{updateTime},
+        	</if>        	
+        	<if test="recordId != null">
+        	#{recordId},
+        	</if>
+        	0
+        	</trim>
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditAccount">
+        UPDATE TNT_CREDIT_ACCOUNT 
+        <trim prefix="set" suffixOverrides=",">
+	       <if test="creditPassword != null"> CREDIT_PASSWORD = #{creditPassword} ,</if>
+	       <if test="userId != null"> USER_ID = #{userId} ,</if>
+	       <if test="channelId != null"> CHANNEL_ID = #{channelId} ,</if>
+	       <if test="creditMoney != null">CREDIT_MONEY = #{creditMoney} ,</if>
+	       <if test="useMoney != null">USE_MONEY = #{useMoney} ,</if>
+	       <if test="remainMoney != null"> REMAIN_MONEY = #{remainMoney} ,</if>
+	       <if test="freezeMoney != null">FREEZE_MONEY = #{freezeMoney} ,</if>
+	       <if test="startDate != null">START_DATE = #{startDate} ,</if>
+	       <if test="endDate != null">END_DATE = #{endDate} ,</if>
+	       <if test="status != null">STATUS = #{status} ,</if>
+	       <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+	       <if test="recordId != null">RECORD_Id = #{recordId},</if>
+	       <if test="refundMoney != null">REFUND_MONEY= #{refundMoney}</if>
+	     </trim>
+        WHERE 
+        	<if test="creditId !=null">
+	        	CREDIT_ID = #{creditId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CREDIT_ACCOUNT WHERE
+        CREDIT_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_ACCOUNT 
+	        WHERE 
+		        CREDIT_ID = #{id} 
+	</select>
+	
+	 <select id="getByUserId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_ACCOUNT 
+	        WHERE 
+		        USER_ID = #{userId} 
+		    ORDER BY UPDATE_TIME DESC
+	</select>
+	
+	
+	<sql id="where">
+		<where>	      				
+			<if test="creditId != null and creditId !=''">
+				AND CREDIT_ID = #{creditId}
+	       	</if> 
+			<if test="creditPassword != null and creditPassword !=''">
+				AND CREDIT_PASSWORD = #{creditPassword}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+	       	</if> 
+			<if test="creditMoney != null and creditMoney !=''">
+				AND CREDIT_MONEY = #{creditMoney}
+	       	</if> 
+			<if test="useMoney != null and useMoney !=''">
+				AND USE_MONEY = #{useMoney}
+	       	</if> 
+			<if test="remainMoney != null and remainMoney !=''">
+				AND REMAIN_MONEY = #{remainMoney}
+	       	</if> 
+			<if test="freezeMoney != null and freezeMoney !=''">
+				AND FREEZE_MONEY = #{freezeMoney}
+	       	</if> 
+			<if test="startDate != null and startDate !=''">
+				AND START_DATE = #{startDate}
+	       	</if> 
+			<if test="endDate != null and endDate !=''">
+				AND END_DATE = #{endDate}
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditAccount">
+        SELECT count(*) FROM TNT_CREDIT_ACCOUNT 
+		<include refid="where"/>    
+    </select>
+    
+      <select id="query" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_ACCOUNT  
+	        <include refid="where"/> 
+	       ORDER BY CREATE_TIME DESC
+	</select>
+
+	<!-- 用于和TntCreditAccount的分页关联查询 -->
+	<select id="fetchPageWithpageMap" resultMap="baseResultMap" parameterType="java.util.Map">
+		    SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_ACCOUNT 
+			<include refid="where"/> 
+			ORDER BY CREATE_TIME DESC
+			limit #{startRow},#{pageSize}
+	</select>
+	
+	<select id="queryByUserIdAndUpdateTime" resultMap="baseResultMap" parameterType="Long">
+	SELECT
+	<include refid="columns" />
+	FROM TNT_CREDIT_ACCOUNT
+	where USER_ID = #{userId} 
+	AND STATUS IN ('WAIT_FOR_CONFIRMATION','CREDIT_IN','CREDIT_FREEZE','CREDIT_MATURITY') 
+	ORDER BY UPDATE_TIME DESC LIMIT 1
+	</select>
+
+	<update id="modifyMoneyByUserIdAndUpdateTime" parameterType="java.util.Map">
+	UPDATE TNT_CREDIT_ACCOUNT
+	SET
+	USE_MONEY = #{useMoney} ,
+	REMAIN_MONEY = #{remainMoney} ,
+	UPDATE_TIME = #{updateDate}
+	WHERE
+	USER_ID = #{userId} AND 
+	UPDATE_TIME = #{updateTime} AND 
+	STATUS = 'CREDIT_IN'
+	</update>
+	
+	<select id="findCreditIdByEndDateExpired"  resultMap="baseResultMap1">
+		SELECT
+			t1.CREDIT_ID,t2.RECORD_ID,t1.REMAIN_MONEY
+    	FROM
+    		TNT_CREDIT_ACCOUNT t1,
+    		TNT_CREDIT_RECORD t2
+		WHERE
+    		t1.CREDIT_ID=t2.CREDIT_ID
+    	AND t1.RECORD_ID=t2.RECORD_ID  		
+		AND t1.STATUS='CREDIT_IN'
+		AND t2.STATUS='CREDIT_IN'
+		AND t2.OPERATION_STATUS='DISPOSED'
+		AND t1.END_DATE &lt; CURDATE()
+	</select>
+</mapper>
+

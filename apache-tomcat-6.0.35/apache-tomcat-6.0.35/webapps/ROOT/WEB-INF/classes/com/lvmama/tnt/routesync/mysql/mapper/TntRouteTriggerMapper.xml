@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routesync.mysql.mapper.TntRouteTriggerMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.routesync.po.TntRouteTrigger">
+        <result property="triId" column="TRI_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="tableName" column="TABLE_NAME"/>
+        <result property="pkValue" column="PK_VALUE"/>
+        <result property="status" column="STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="triggerType" column="TRIGGER_TYPE"/>
+        <result property="dataSourceId" column="DATA_SOURCE_ID"/>
+        <result property="fieldOne" column="FIELD_ONE"/>
+        <result property="fieldTwo" column="FIELD_TWO"/>
+        <result property="fieldThree" column="FIELD_THREE"/>
+        <result property="plevel" column="P_LEVEL"/>
+        <result property="processTime" column="PROCESS_TIME"/>
+        <result property="retriggerTimes" column="RETRIGGER_TIMES"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TRI_ID,USER_NAME,TABLE_NAME,PK_VALUE,STATUS,CREATE_TIME,TRIGGER_TYPE,DATA_SOURCE_ID,FIELD_ONE,FIELD_TWO,FIELD_THREE,PROCESS_TIME,P_LEVEL
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.routesync.po.TntRouteTrigger" keyProperty="triId">
+        INSERT INTO TNT_ROUTE_TRIGGER (
+        	TRI_ID ,
+        	USER_NAME ,
+        	TABLE_NAME ,
+        	PK_VALUE ,
+        	STATUS ,
+        	CREATE_TIME ,
+        	TRIGGER_TYPE ,
+        	DATA_SOURCE_ID ,
+        	FIELD_ONE ,
+        	FIELD_TWO ,
+        	FIELD_THREE ,
+        	PROCESS_TIME ,
+        	P_LEVEL 
+        ) VALUES (
+        	#{triId} ,
+        	#{userName} ,
+        	#{tableName} ,
+        	#{pkValue} ,
+        	#{status} ,
+        	#{createTime} ,
+        	#{triggerType} ,
+        	#{dataSourceId} ,
+        	#{fieldOne} ,
+        	#{fieldTwo} ,
+        	#{fieldThree} ,
+        	#{processTime} ,
+        	#{plevel} 
+        )
+	</insert>
+    
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ROUTE_TRIGGER WHERE
+        TRI_ID = #{id} 
+    </delete>
+    
+    <update id="update" parameterType="com.lvmama.tnt.routesync.po.TntRouteTrigger">
+        UPDATE TNT_ROUTE_TRIGGER SET
+	        USER_NAME = #{userName} ,
+	        TABLE_NAME = #{tableName} ,
+	        PK_VALUE = #{pkValue} ,
+	        STATUS = #{status} ,
+	        CREATE_TIME = #{createTime} ,
+	        TRIGGER_TYPE = #{triggerType} ,
+	        DATA_SOURCE_ID = #{dataSourceId} ,
+	        FIELD_ONE = #{fieldOne} ,
+	        FIELD_TWO = #{fieldTwo} ,
+	        FIELD_THREE = #{fieldThree} ,
+	        PROCESS_TIME = #{processTime} ,
+	        P_LEVEL = #{plevel} 
+        WHERE 
+        	<if test="triId !=null">
+	        	TRI_ID = #{triId} 
+	        </if>
+	</update>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_TRIGGER 
+	        WHERE 
+		        TRI_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="triId != null and triId !=''">
+				AND TRI_ID = #{triId}
+	       	</if> 
+			<if test="userName != null and userName !=''">
+				AND USER_NAME = #{userName}
+	       	</if> 
+			<if test="tableName != null and tableName !=''">
+				AND TABLE_NAME = #{tableName}
+	       	</if> 
+			<if test="pkValue != null and pkValue !=''">
+				AND PK_VALUE = #{pkValue}
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="triggerType != null and triggerType !=''">
+				AND TRIGGER_TYPE = #{triggerType}
+	       	</if> 
+			<if test="dataSourceId != null and dataSourceId !=''">
+				AND DATA_SOURCE_ID = #{dataSourceId}
+	       	</if> 
+			<if test="fieldOne != null and fieldOne !=''">
+				AND FIELD_ONE = #{fieldOne}
+	       	</if> 
+			<if test="fieldTwo != null and fieldTwo !=''">
+				AND FIELD_TWO = #{fieldTwo}
+	       	</if> 
+			<if test="fieldThree != null and fieldThree !=''">
+				AND FIELD_THREE = #{fieldThree}
+	       	</if> 
+			<if test="processTime != null and processTime !=''">
+				AND PROCESS_TIME = #{processTime}
+	       	</if> 
+			<if test="plevel != null and plevel !=''">
+				AND P_LEVEL = #{plevel}
+	       	</if> 
+		</where>
+	</sql>
+		
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.routesync.po.TntRouteTrigger">
+        SELECT count(*) FROM TNT_ROUTE_TRIGGER 
+		<include refid="where"/>    
+    </select>
+    
+    
+    <!-- 查询旧的trigger记录 -->
+    <select id="findOldTriggerCountByTrigger" resultType="Integer" parameterType="com.lvmama.tnt.routesync.po.TntRouteTrigger">
+	  	SELECT  COUNT(1) FROM TNT_ROUTE_TRIGGER 
+	  	 WHERE STATUS = 'INIT' 
+	  	   AND USER_NAME = #{userName} 
+	  	   AND TABLE_NAME = #{tableName} 
+	  	   AND DATA_SOURCE_ID = #{dataSourceId}
+	  	   AND TRIGGER_TYPE = #{triggerType}
+	  	   AND PK_VALUE = #{pkValue}
+		     <if test="fieldOne != null and fieldOne !=''">
+		     	AND FIELD_ONE = #{fieldOne}
+	       </if> 
+		     <if test="fieldTwo != null and fieldTwo !=''">
+		     	AND FIELD_TWO = #{fieldTwo}
+	       </if> 
+		    <if test="fieldThree != null and fieldThree !=''">
+		     	AND FIELD_THREE = #{fieldThree}
+	       </if> 
+		      AND (PROCESS_TIME IS NULL OR UNIX_TIMESTAMP(PROCESS_TIME) <![CDATA[ <=]]> UNIX_TIMESTAMP())
+    </select>   
+  
+  <sql id="checkUserOp">
+  	<if test=' "IN" == userOp '>
+  		IN
+  	</if>
+  	<if test=' "NOT IN" == userOp '>
+  		NOT IN
+  	</if>
+  </sql>
+  
+  <sql id="checkTableOp">
+  	<if test=' "IN" == tableOp '>
+  		IN
+  	</if>
+  	<if test=' "NOT IN" == tableOp '>
+  		NOT IN
+  	</if>
+  </sql>
+  
+  <sql id="iterateUserNames">
+  	<foreach collection="userNames" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    </foreach>
+  </sql>
+  
+  <sql id="iterateTableNames">
+  	<foreach collection="tableNames" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    </foreach>
+  </sql>
+  
+  <!-- 限制地查询状态为INIT的trigger消息，每次_endRow条 -->
+  <select id="findPageList" resultMap="baseResultMap" parameterType="java.util.Map">
+	SELECT A.*
+	FROM (
+	SELECT * FROM TNT_ROUTE_TRIGGER WHERE STATUS = 'INIT'
+	AND USER_NAME
+	<include refid="checkUserOp" />
+	<include refid="iterateUserNames" />
+	AND TABLE_NAME
+	<include refid="checkTableOp" />
+	<include refid="iterateTableNames" />
+	<if test=' "pkValue" == field '>
+  		<if test=" factor != null and factor != '' ">
+  			AND MOD(PK_VALUE, #{factor}) = #{compareValue}
+  		</if>
+  	</if>
+	<if test=' "fieldThree" == field '>
+  		<if test=" factor != null and factor != '' ">
+  			AND MOD(FIELD_THREE, #{factor}) = #{compareValue}
+  		</if>
+  	</if>
+	  ORDER BY P_LEVEL DESC,CREATE_TIME
+	) A 
+	limit 0, #{_endRow}
+  </select>
+  
+  <!-- 动态限制地查询状trigger消息，每次_endRow条 -->
+  <select id="findPageListByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+	SELECT A.*
+	FROM (
+	SELECT * FROM TNT_ROUTE_TRIGGER 
+	WHERE 
+		STATUS = #{status}
+	AND USER_NAME
+	<include refid="checkUserOp" />
+	<include refid="iterateUserNames" />
+	AND TABLE_NAME
+	<include refid="checkTableOp" />
+	<include refid="iterateTableNames" />
+	
+	<if test=' "pkValue" == field '>
+  		<if test=" factor != null and factor != '' ">
+  			AND MOD(PK_VALUE, #{factor}) = #{compareValue}
+  		</if>
+  	</if>
+	<if test=' "fieldThree" == field '>
+  		<if test=" factor != null and factor != '' ">
+  			AND MOD(FIELD_THREE, #{factor}) = #{compareValue}
+  		</if>
+  	</if>
+	  ORDER BY P_LEVEL DESC,CREATE_TIME
+	) A 
+	limit 0, #{_endRow}
+  </select>
+  
+  <!-- 批量更新trigger状态 -->
+  <update id="batchUpdateStatus" parameterType="java.util.Map">
+  	UPDATE TNT_ROUTE_TRIGGER SET STATUS = #{status}, PROCESS_TIME = #{processTime}
+  	WHERE TRI_ID IN 
+  	<foreach collection="ids" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    </foreach>
+  </update>
+   
+  <!-- 将数据迁移到历史表相关sql                                                   begin-->
+  
+  <!-- 查询当前时间以前，状态为失败或成功的最大triggerId-->
+  <select id="findMaxNotInitTriggerId" resultType="Long" >
+  	SELECT MAX(TRI_ID) FROM TNT_ROUTE_TRIGGER WHERE STATUS in ('FAIL','SUCCESS')
+  	 AND UNIX_TIMESTAMP(PROCESS_TIME) <![CDATA[<=]]> UNIX_TIMESTAMP(#{date})
+  </select>
+  
+  <!-- 限制地将状态为失败或成功,消息id小于当前最大tri_id 迁移到历史表-->
+  <insert id="moveListToHistoryByMaxTriggerId" parameterType="java.util.Map" >
+  	INSERT INTO TNT_ROUTE_TRIGGER_HIS (TRI_ID,USER_NAME,TABLE_NAME,PK_VALUE,STATUS,CREATE_TIME,TRIGGER_TYPE,DATA_SOURCE_ID,FIELD_ONE,FIELD_TWO,FIELD_THREE,PROCESS_TIME)
+	SELECT TRI_ID,USER_NAME,TABLE_NAME,PK_VALUE,STATUS,CREATE_TIME,TRIGGER_TYPE,DATA_SOURCE_ID,FIELD_ONE,FIELD_TWO,FIELD_THREE,PROCESS_TIME FROM TNT_ROUTE_TRIGGER t 
+	WHERE TRI_ID <![CDATA[<=]]> #{maxNotInitId} AND STATUS in ('FAIL','SUCCESS') 
+	and not EXISTS ( SELECT 1 FROM TNT_ROUTE_TRIGGER_HIS sh WHERE sh.TRI_ID = t.TRI_ID )
+	limit #{limit}
+  </insert>
+  
+  <!-- 限制地将状态为失败或成功,消息id小于当前最大tri_id 从trigger表删除-->
+  <delete id="deleteByMaxTriggerId" parameterType="java.util.Map">
+  	DELETE FROM TNT_ROUTE_TRIGGER WHERE TRI_ID <![CDATA[<=]]> #{maxNotInitId} 
+  	AND STATUS in ('FAIL','SUCCESS') limit #{limit}
+  </delete>
+  
+  <!-- 查询状态为FAIL或SUCCESS,TRI_ID<axTriggerId的数量-->
+  <select id="findTotalCountByMaxTriggerId" resultType="java.lang.Integer" >
+  	SELECT COUNT(1) FROM TNT_ROUTE_TRIGGER WHERE TRI_ID <![CDATA[<=]]> #{triId}  and STATUS in ('FAIL','SUCCESS') 
+  </select>
+  
+  <!-- 将数据迁移到历史表相关sql                                                     end-->
+  
+  
+  <!-- new线路查询trigger列表 -->
+  <select id="findRouteTriggerPageList" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT A.*
+		FROM (
+		SELECT * FROM
+		TNT_ROUTE_TRIGGER
+		WHERE
+		<if test="'IN' == statusOp">
+			<if test="status != null and status !=''">
+				STATUS IN
+				<foreach item="item" index="" collection="status" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="'EQ' == statusOp">
+			<if test="status != null and status !=''">
+				STATUS = #{status}
+			</if>
+		</if>
+		
+		<if test="'IN' == typeOp">
+			<if test="triggerType != null and triggerType !=''">
+				AND TRIGGER_TYPE IN
+				<foreach item="item" index="" collection="triggerType" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="'EQ' == typeOp">
+			<if test="triggerType != null and triggerType !=''">
+				AND TRIGGER_TYPE = #{triggerType}
+			</if>
+		</if>
+		
+		<if test="'LT' == reTriOp">
+			<if test="retriggerTimes != null and retriggerTimes !=''">
+				AND (RETRIGGER_TIMES IS NULL OR #{retriggerTimes} > RETRIGGER_TIMES)
+			</if>
+		</if>
+		
+		<if test="'GT' == reTriOp">
+			<if test="retriggerTimes != null and retriggerTimes !=''">
+				AND RETRIGGER_TIMES > #{retriggerTimes}
+			</if>
+		</if>
+		
+		<if test="userName != null and userName !=''">
+			AND USER_NAME = #{userName}
+		</if>
+		<if test="processTime != null and processTime != ''">
+		AND PROCESS_TIME IS NOT NULL 
+		AND UNIX_TIMESTAMP(PROCESS_TIME) <![CDATA[ < ]]> UNIX_TIMESTAMP(#{processTime})
+		</if>
+		<if test="tableName != null and tableName !=''">
+			AND TABLE_NAME = #{tableName}
+		</if>
+		AND MOD(TRI_ID, #{factor}) = #{compareValue}
+		) A
+		limit 0, #{_endRow}
+	</select>
+
+	<update id="updateExceptionTriggerStatus" parameterType="com.lvmama.tnt.routesync.po.TntRouteTrigger">
+		UPDATE TNT_ROUTE_TRIGGER SET STATUS = #{status}, PROCESS_TIME = #{processTime}, RETRIGGER_TIMES = #{retriggerTimes}
+		WHERE TRI_ID = #{triId}
+	</update>
+	
+</mapper>
+

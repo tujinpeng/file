@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCruiseCompRelationMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        <result property="tntCruiseCompRelationId" column="TNT_CRUISE_COMP_RELATION_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="subGoodsId" column="SUB_GOODS_ID"/>
+        <result property="combOptionType" column="COMB_OPTION_TYPE"/>
+	</resultMap>
+	
+	<resultMap id="relResultMap" type="com.lvmama.tnt.prod.compship.vo.TntCruiseCompRelationVo">
+        <result property="productId" column="PRODUCT_ID"/>
+        <collection property="subCategories" ofType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        	<result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+        	<result property="subGoodsId" column="SUB_GOODS_ID"/>
+        </collection>
+	</resultMap>
+	
+	<resultMap id="relResultMapForSub" type="com.lvmama.tnt.prod.compship.vo.TntCruiseCompRelationVo">
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+        <result property="combOptionType" column="COMB_OPTION_TYPE"/>
+        <collection property="subGoods" ofType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        	<result property="subGoodsId" column="SUB_GOODS_ID"/>
+        	<result property="subProductId" column="SUB_PRODUCT_ID"/>
+        	<result property="subBranchId" column="SUB_BRANCH_ID"/>
+        </collection>
+	</resultMap>
+	
+	<resultMap id="relResultMapForSub2" type="com.lvmama.tnt.prod.compship.vo.TntCruiseCompRelationVo">
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+        <result property="combOptionType" column="COMB_OPTION_TYPE"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <collection property="subGoods" ofType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        	<result property="subGoodsId" column="SUB_GOODS_ID"/>
+        </collection>
+	</resultMap>
+	
+	  <select id="findDistinctList" resultMap="relResultMapForSub2" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_COMP_RELATION 
+	        <include refid="where"/>
+	</select>
+	
+	
+	 <select id="getByProductId" resultMap="relResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_COMP_RELATION 
+	        WHERE 
+		        PRODUCT_ID = #{id} 
+	</select>
+	
+	 <select id="getSubGoodsByProductId" resultMap="relResultMapForSub" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_COMP_RELATION 
+	        WHERE 
+		        PRODUCT_ID = #{id} 
+	</select>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_CRUISE_COMP_RELATION_ID,PRODUCT_ID,SUB_PRODUCT_ID,SUB_CATEGORY_ID,SUB_BRANCH_ID,SUB_GOODS_ID,COMB_OPTION_TYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCruiseCompRelationId"
+			order="BEFORE">
+			select  TNT_CRUISE_COMP_RELATION_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CRUISE_COMP_RELATION (
+        	TNT_CRUISE_COMP_RELATION_ID ,
+        	PRODUCT_ID ,
+        	SUB_PRODUCT_ID ,
+        	SUB_CATEGORY_ID ,
+        	SUB_BRANCH_ID ,
+        	SUB_GOODS_ID ,
+        	COMB_OPTION_TYPE 
+        ) VALUES (
+        	#{tntCruiseCompRelationId,jdbcType=DECIMAL} ,
+        	#{productId,jdbcType=DECIMAL} ,
+        	#{subProductId,jdbcType=DECIMAL} ,
+        	#{subCategoryId,jdbcType=DECIMAL} ,
+        	#{subBranchId,jdbcType=DECIMAL} ,
+        	#{subGoodsId,jdbcType=DECIMAL} ,
+        	#{combOptionType,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        UPDATE TNT_CRUISE_COMP_RELATION SET
+	        PRODUCT_ID = #{productId} ,
+	        SUB_PRODUCT_ID = #{subProductId} ,
+	        SUB_CATEGORY_ID = #{subCategoryId} ,
+	        SUB_BRANCH_ID = #{subBranchId} ,
+	        SUB_GOODS_ID = #{subGoodsId} ,
+	        COMB_OPTION_TYPE = #{combOptionType} 
+        WHERE 
+        	<if test="tntCruiseCompRelationId !=null">
+	        	TNT_CRUISE_COMP_RELATION_ID = #{tntCruiseCompRelationId} 
+	        </if>
+	</update>
+	
+	<update id="updateGoods" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        UPDATE TNT_CRUISE_COMP_RELATION 
+	        <set>
+				<if test="combOptionType != null and combOptionType != ''">
+					COMB_OPTION_TYPE = #{combOptionType,jdbcType=VARCHAR},
+				</if>
+				<if test="subBranchId != null and subBranchId != ''">
+					SUB_BRANCH_ID = #{subBranchId,jdbcType=DECIMAL},
+				</if>
+			</set> 
+      	<where>
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+			</if>
+			<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId,jdbcType=DECIMAL}
+			</if>
+			<if test="subGoodsId != null and subGoodsId !=''">
+				AND SUB_GOODS_ID = #{subGoodsId,jdbcType=DECIMAL}
+			</if>
+			<if test="subCategoryId != null and subCategoryId !=''">
+				AND SUB_CATEGORY_ID = #{subCategoryId,jdbcType=DECIMAL}
+			</if>
+		</where>
+	</update>
+	
+	<update id="updateOptionType" parameterType="java.util.HashMap">
+        UPDATE TNT_CRUISE_COMP_RELATION SET
+	        COMB_OPTION_TYPE = #{combOptionType,jdbcType=VARCHAR} 
+        WHERE PRODUCT_ID = #{productId,jdbcType=DECIMAL} 
+          and SUB_CATEGORY_ID = #{subCategoryId,jdbcType=DECIMAL}
+	</update>
+
+    <delete id="delete" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        DELETE FROM TNT_CRUISE_COMP_RELATION 	
+        	<include refid="where"/>
+    </delete>
+    
+    <delete id="removeBySubGoodsIds" parameterType="java.util.List">
+        DELETE FROM TNT_CRUISE_COMP_RELATION 	
+        	where sub_goods_id in
+        	<foreach item="item" index="index" collection="list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_COMP_RELATION 
+	        WHERE 
+		        TNT_CRUISE_COMP_RELATION_ID = #{id} 
+	</select>
+	
+    <select id="findList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+		SELECT <include refid="columns" />
+		    FROM TNT_CRUISE_COMP_RELATION 
+	        <include refid="where"/>
+	</select>
+	
+    <select id="findSingleCruiseGoods" resultMap="baseResultMap" parameterType="Long">
+	    SELECT  <include refid="columns" /> FROM LVMAMA_PET.TNT_CRUISE_COMP_RELATION  TCCR2 WHERE TCCR2.TNT_CRUISE_COMP_RELATION_ID =(
+		SELECT MIN(TCCR.TNT_CRUISE_COMP_RELATION_ID) 
+		FROM LVMAMA_PET.TNT_CRUISE_COMP_RELATION TCCR 
+		WHERE 
+		TCCR.SUB_CATEGORY_ID=2 AND TCCR.SUB_GOODS_ID IS NOT NULL AND TCCR.PRODUCT_ID=#{productId})
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntCruiseCompRelationId != null and tntCruiseCompRelationId !=''">
+				AND TNT_CRUISE_COMP_RELATION_ID = #{tntCruiseCompRelationId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subCategoryId != null and subCategoryId !=''">
+				AND SUB_CATEGORY_ID = #{subCategoryId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				AND SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+			<if test="subGoodsId != null and subGoodsId !=''">
+				AND SUB_GOODS_ID = #{subGoodsId}
+	       	</if> 
+			<if test="combOptionType != null and combOptionType !=''">
+				AND COMB_OPTION_TYPE = #{combOptionType}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntCruiseCompRelationId != null and param.tntCruiseCompRelationId !=''">
+				AND TNT_CRUISE_COMP_RELATION_ID = param.tntCruiseCompRelationId
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.subProductId != null and param.subProductId !=''">
+				AND SUB_PRODUCT_ID = #{param.subProductId}
+	       	</if>
+			<if test="param.subCategoryId != null and param.subCategoryId !=''">
+				AND SUB_CATEGORY_ID = #{param.subCategoryId}
+	       	</if>
+			<if test="param.subBranchId != null and param.subBranchId !=''">
+				AND SUB_BRANCH_ID = #{param.subBranchId}
+	       	</if>
+			<if test="param.subGoodsId != null and param.subGoodsId !=''">
+				AND SUB_GOODS_ID = #{param.subGoodsId}
+	       	</if>
+			<if test="param.combOptionType != null and param.combOptionType !=''">
+				AND COMB_OPTION_TYPE = #{param.combOptionType}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCruiseCompRelation">
+        SELECT count(*) FROM TNT_CRUISE_COMP_RELATION 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_CRUISE_COMP_RELATION 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+      <select id="findAllProductIds"  resultType="long" >
+    	SELECT DISTINCT PRODUCT_ID
+	    FROM TNT_CRUISE_COMP_RELATION 
+     </select>
+
+</mapper>
+

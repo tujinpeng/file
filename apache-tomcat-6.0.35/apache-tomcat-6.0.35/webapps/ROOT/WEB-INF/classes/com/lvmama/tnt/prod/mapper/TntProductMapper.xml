@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntProductMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntProduct">
+		<result property="tntProductId" column="TNT_PRODUCT_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="valid" column="VALID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="isAperiodic" column="IS_APERIODIC" />
+		<result property="payToLvmama" column="PAY_TO_LVMAMA" />
+		<result property="goodsName" column="GOODS_NAME" />
+		<result property="whiteChannelId" column ="CHANNEL_IDS"/>
+    	<result property="blackChannelId" column="CHANNEL_BLACK_IDS"/>
+    	<result property="categoryId" column="CATEGORY_ID"/>
+    	<result property="packageType" column="PACKAGE_TYPE"/>
+	</resultMap>
+
+    <resultMap type="com.lvmama.tnt.prod.po.TntProduct" id="goodsTypeMap" extends="baseResultMap">
+        <result property="goodsType" column="GOODS_TYPE" />
+    </resultMap>
+    
+    <resultMap type="com.lvmama.tnt.prod.po.TntProduct" id="goodListTypeMap" >
+    	<result property="branchId" column="BRANCH_ID" />
+    	<result property="categoryId" column="CATEGORY_ID"/>
+    	<result property="whiteChannelId" column ="CHANNEL_IDS"/>
+    	<result property="blackChannelId" column="CHANNEL_BLACK_IDS"/>
+    </resultMap>
+    
+    <resultMap type="com.lvmama.tnt.prod.po.TntProduct" id="aperiodicResultMap">
+        <result property="productId" column="PRODUCT_ID" />
+		<result property="branchId" column="GOODS_ID" />
+    	<result property="canSaleStartTime" column="START_DATE"/>
+    	<result property="canSaleEndTime" column="END_DATE" />
+    </resultMap>
+    
+    <resultMap type="com.lvmama.tnt.prod.po.TntProduct" id="channelSearchMap" extends="baseResultMap">
+        <result property="canSaleFlag" column="CAN_SALE_FLAG" />
+        <result property="packageType" column="PACKAGE_TYPE" />
+    </resultMap>
+    
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_PRODUCT_ID,PRODUCT_ID,BRANCH_ID,CHANNEL_ID,VALID,PRODUCT_NAME,IS_APERIODIC,PAY_TO_LVMAMA,GOODS_NAME,CATEGORY_ID,PACKAGE_TYPE
+	    ]]>
+	</sql>
+	
+	<!-- 用于select查询goods对象的列 -->
+	<sql id="goodsColumns">
+	    <![CDATA[
+		TNT_PRODUCT_ID,PRODUCT_ID,BRANCH_ID,CHANNEL_ID,VALID,PRODUCT_NAME,IS_APERIODIC,PAY_TO_LVMAMA,GOODS_NAME,GOODS_TYPE
+	    ]]>
+	</sql>
+
+	<sql id="columnsExtends">
+	    <![CDATA[
+		distinct PRODUCT_ID,VALID,PRODUCT_NAME,CATEGORY_ID,CAN_SALE_FLAG,PACKAGE_TYPE
+	    ]]>
+	</sql>
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		<selectKey resultType="java.lang.Long" keyProperty="tntProductId" order="BEFORE">
+			select TNT_PRODUCT_ID_SEQ.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_PRODUCT (
+		TNT_PRODUCT_ID ,
+		PRODUCT_ID ,
+		BRANCH_ID ,
+		CHANNEL_ID ,
+		VALID ,
+		PRODUCT_NAME ,
+		IS_APERIODIC ,
+		PAY_TO_LVMAMA,
+		CATEGORY_ID,
+		CHANNEL_IDS,
+		SYS_FLAG,
+		GOODS_STATUS,
+		GOODS_NAME
+		) VALUES (
+		#{tntProductId,jdbcType=DECIMAL} ,
+		#{productId,jdbcType=DECIMAL} ,
+		#{branchId,jdbcType=DECIMAL} ,
+		#{channelId,jdbcType=DECIMAL},
+		#{valid,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR} ,
+		#{isAperiodic,jdbcType=VARCHAR} ,
+		#{payToLvmama,jdbcType=VARCHAR},
+		#{categoryId,jdbcType=DECIMAL} ,
+		#{whiteChannelId,jdbcType=VARCHAR},
+		#{sysFlag,jdbcType=VARCHAR},
+		#{goodsStatus,jdbcType=VARCHAR},
+		#{goodsName,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		UPDATE TNT_PRODUCT
+		SET BRANCH_ID = #{branchId,jdbcType=DECIMAL}
+		<if test="productId != null">
+			,PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="channelId != null">
+			,CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+		</if>
+		<if test="valid != null">
+			,VALID = #{valid,jdbcType=VARCHAR}
+		</if>
+		<if test="productName != null">
+			,PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+		</if>
+		<if test="isAperiodic != null">
+			,IS_APERIODIC = #{isAperiodic,jdbcType=VARCHAR}
+		</if>
+		<if test="payToLvmama != null">
+			,PAY_TO_LVMAMA = #{payToLvmama,jdbcType=VARCHAR}
+		</if>
+		<where>
+			<if test="tntProductId != null and tntProductId !=''">
+				TNT_PRODUCT_ID = #{tntProductId,jdbcType=DECIMAL}
+			</if>
+			<if test="tntProductId == null">
+			    <if test="branchId != null and branchId !=''">
+	                BRANCH_ID = #{branchId}
+	            </if>
+	             <if test="categoryId != null and categoryId !=''">
+                    AND CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+                </if>
+                  <if test="branchId == null">
+                    AND 1=2
+                </if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="Long">
+		DELETE FROM
+		TNT_PRODUCT
+		WHERE
+		TNT_PRODUCT_ID = #{id}
+	</delete>
+
+	<delete id="delete" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		DELETE FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{branchId,jdbcType=DECIMAL} AND
+		CHANNEL_ID =
+		#{channelId,jdbcType=DECIMAL}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		TNT_PRODUCT_ID = #{id}
+	</select>
+	<select id="getBytntProductId" resultMap="channelSearchMap" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columnsExtends" />
+		FROM TNT_PRODUCT 
+		<include refid="where" />
+	</select>
+
+	<select id="selectOne" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		<include refid="where" />
+	</select>
+
+	<select id="selectList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		<include refid="where" />
+	</select>
+	
+	<select id="selectListNearBy" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE  SYS_FLAG = 'VST' AND  VALID = 'Y' AND CATEGORY_ID =1  AND PRODUCT_ID =#{productId} AND CHANNEL_IDS LIKE '%102%' AND BRANCH_ID IN (
+			SELECT GOODS_ID FROM TNT_HOTEL_PRODUCT WHERE PRODUCT_ID =#{productId} AND  LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL 
+			AND SYS_FLAG = 'VST' AND  VALID = 'Y' AND  PAY_TO_LVMAMA = 'PREPAID' AND HOTEL_STATUS = 'Y' AND GOODS_STATUS = 'Y'  AND BRANCH_CANCLE_FLAG = 'Y'
+			AND PACKAGE_FLAG = 'N'
+		)
+	</select>
+	
+	<select id="selectListByBranchId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		 WHERE PRODUCT_ID = #{productId} AND  SYS_FLAG = 'VST' AND  VALID = 'Y' and  BRANCH_ID IN 
+    		 (SELECT GOODS_ID FROM TNT_HOTEL_PRODUCT WHERE PRODUCT_ID =#{productId} AND PRODUCT_BRANCH_ID=#{branchId} 
+    		 										    AND PAY_TO_LVMAMA = 'PREPAID'  AND BRANCH_CANCLE_FLAG = 'Y')
+	</select>
+	
+	<select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		PRODUCT_ID = #{id}
+	</select>
+	
+	<select id="getByCategoryId" resultMap="baseResultMap" parameterType="Map">
+		SELECT DISTINCT
+		PRODUCT_ID,CATEGORY_ID
+		FROM TNT_PRODUCT
+		WHERE
+		1=1
+		AND
+		CATEGORY_ID IN 
+		<foreach item="item" index="" collection="categoryList"
+                 open="(" separator="," close=")">
+                 #{item}
+        </foreach>
+	</select>
+
+	<select id="getByBranchId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{id}
+	</select>
+	
+	<select id="getGoodsTypeByBranchId" resultMap="goodsTypeMap" parameterType="Long">
+		SELECT
+		<include refid="goodsColumns" />
+		FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{id}
+	</select>
+	
+	<select id="getGoodsTypeByTicketBranchId" resultMap="goodsTypeMap" parameterType="Long">
+		SELECT
+		<include refid="goodsColumns" />
+		FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{id}
+		AND CATEGORY_ID in (11,12,13)
+	</select>
+
+	<sql id="where">
+		<where>
+			<if test="tntProductId != null and tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{tntProductId}
+			</if>
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+			</if>
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+			</if>
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+			</if>
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+			</if>
+			<if test="sysFlag != null and sysFlag !=''">
+				AND SYS_FLAG = #{sysFlag}
+			</if>
+			<if test="productName != null  and productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="isAperiodic != null and isAperiodic !=''">
+				AND IS_APERIODIC = #{isAperiodic,jdbcType=VARCHAR}
+			</if>
+			<if test="payToLvmama != null and payToLvmama !=''">
+				AND PAY_TO_LVMAMA = #{payToLvmama,jdbcType=VARCHAR}
+			</if>
+			<if test="whiteChannelId != null and whiteChannelId !=''">
+				AND CHANNEL_IDS like
+				CONCAT(CONCAT('%,',#{whiteChannelId}),',%')
+			</if>
+			<if test="blackChannelId != null and blackChannelId !=''">
+				AND CHANNEL_BLACK_IDS like
+				CONCAT(CONCAT('%,',#{blackChannelId}),',%')
+			</if>
+			<if test="branchType != null and branchType !=''">
+				AND BRANCH_TYPE = #{branchType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.tntProductId != null and param.tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{param.tntProductId}
+			</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = #{param.branchId}
+			</if>
+			<if test="param.channelId != null and param.channelId !=''">
+				AND CHANNEL_ID = #{param.channelId}
+			</if>
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+			</if>
+			<if test="param.sysFlag != null and param.sysFlag !=''">
+				AND SYS_FLAG = #{param.sysFlag}
+			</if>
+			<if test="param.productName != null  and param.productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{param.productName}),'%')
+			</if>
+			<if test="param.isAperiodic != null and param.isAperiodic !=''">
+				AND IS_APERIODIC = #{param.isAperiodic,jdbcType=VARCHAR}
+			</if>
+			<if test="param.payToLvmama != null and param.payToLvmama !=''">
+				AND PAY_TO_LVMAMA = #{param.payToLvmama,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT count(1) FROM TNT_PRODUCT
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="countExtend" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT count(1) FROM TNT_PRODUCT
+		<where>
+			<if test="productId != null and productId !=''">
+				PRODUCT_ID = #{productId}
+			</if>
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+			</if>
+			<if test="productType != null and productType !=''">
+				AND PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="branchType != null and branchType !=''">
+				AND BRANCH_TYPE = #{branchType}
+			</if>
+			<if test="sysFlag != null and sysFlag !=''">
+				AND SYS_FLAG = #{sysFlag}
+			</if>
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="canSaleFlag != null  and canSaleFlag !=''">
+				AND CAN_SALE_FLAG  = #{canSaleFlag}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="findPageExtends" resultMap="channelSearchMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columnsExtends" />
+		FROM TNT_PRODUCT
+		<where>
+			<if test="param.productId != null and param.productId !=''">
+				PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+			</if>
+			<if test="param.productType != null and param.productType !=''">
+				AND PRODUCT_TYPE = #{param.productType}
+			</if>
+			<if test=" param.branchType != null and  param.branchType !=''">
+				AND BRANCH_TYPE = #{param.branchType}
+			</if>
+			<if test="param.sysFlag != null and param.sysFlag !=''">
+				AND SYS_FLAG = #{param.sysFlag}
+			</if>
+			<if test="param.productName != null  and param.productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{param.productName}),'%')
+			</if>
+			<if test="param.canSaleFlag != null  and param.canSaleFlag !=''">
+				AND CAN_SALE_FLAG  = #{param.canSaleFlag}
+			</if>
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="findLvtuGoodsIdList" resultType="Long">
+		SELECT TP.BRANCH_ID
+		  FROM LVMAMA_PET.TNT_PRODUCT TP
+		 WHERE TP.SYS_FLAG = 'VST'
+		   AND TP.BRANCH_TYPE = 'GOODS'
+		   AND (TP.CHANNEL_IDS LIKE '%10000%' OR TP.CHANNEL_IDS LIKE '%10001%' OR TP.CHANNEL_IDS LIKE '%10002%')
+		   AND TP.BRANCH_ID IN 
+		<foreach collection="list" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+	</select>
+
+	<select id="findLvtuGoodsIdGroupBuyAndSecKillList" resultType="Long">
+		SELECT TP.BRANCH_ID
+		  FROM LVMAMA_PET.TNT_PRODUCT TP
+		 WHERE TP.SYS_FLAG = 'VST'
+		   AND TP.BRANCH_TYPE = 'GOODS'
+		   AND (TP.CHANNEL_IDS LIKE '%10001%' OR TP.CHANNEL_IDS LIKE '%10002%')
+		   AND TP.BRANCH_ID IN 
+		<foreach collection="list" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+	</select>
+	
+	<select id="findTntProductByParameter" resultMap="baseResultMap" parameterType="Map">
+	SELECT <include refid="columns" />
+	    FROM TNT_PRODUCT P
+	    WHERE P.BRANCH_ID = #{branchId}
+	    AND P.CATEGORY_ID = #{categoryId}
+	    AND P.branch_type = 'COMSHIP'
+	    AND P.PRODUCT_TYPE = 'COMBCRUISE'
+	    AND P.SYS_FLAG = 'VST'
+	</select>
+	
+	<select id="findTntHotelProductByParameter" resultMap="baseResultMap" parameterType="Map">
+	SELECT <include refid="columns" />
+	    FROM TNT_PRODUCT P
+	    WHERE P.BRANCH_ID = #{branchId}
+	    AND P.CATEGORY_ID = #{categoryId}
+	    AND P.branch_type = 'GOODS'
+	    AND P.PRODUCT_TYPE = 'HOTEL'
+	    AND P.SYS_FLAG = 'VST'
+	</select>
+	
+	<select id="queryTntProIdsPageForCps" resultType="Long" parameterType="Map">
+		SELECT * FROM ( 
+            SELECT A.*, ROWNUM RN 
+            FROM (
+                SELECT DISTINCT P.PRODUCT_ID 
+                FROM TNT_PRODUCT P
+                WHERE P.PRODUCT_TYPE=#{productType,jdbcType=VARCHAR}
+                AND P.VALID='Y'
+           ) A  
+    	<![CDATA[WHERE ROWNUM <=  #{page}*#{pageSize}]]>
+	    <![CDATA[) WHERE RN > (#{page}-1)*#{pageSize}]]>
+	</select>
+	
+	<select id="countForCps" resultType="Long" parameterType="Map">
+		SELECT COUNT(DISTINCT P.PRODUCT_ID)
+		FROM TNT_PRODUCT P
+		WHERE P.VALID='Y'
+		AND P.PRODUCT_TYPE=#{productType,jdbcType=VARCHAR}
+	</select>
+	
+ 	<select id="findSeckillAndGroupon" parameterType="Map" resultMap="goodListTypeMap">
+		select p.category_id,
+                        p.branch_id,
+                        p.channel_ids,
+                        p.channel_black_ids
+                   from lvmama_pet.tnt_product p
+                where p.category_id = #{categoryId} and p.branch_id in
+                  <foreach item="item" index="" collection="branchIds"
+                  	open="(" separator="," close=")">
+                  		#{item}
+                  	</foreach>
+	</select>
+	
+		  <!-- notice must contains  101 13,11 -->
+	<select id="findTntAperiodicProductList" resultMap="aperiodicResultMap" parameterType="Map">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN 
+               FROM (SELECT tnp.product_id, tnp.goods_id, tnp.start_date, tnp.end_date
+			  FROM TNT_GOODS_NOTIME_PRICE tnp, tnt_product tp
+			 where tnp.goods_id = tp.branch_id
+			   and tp.sys_flag = 'VST'
+			   and tp.can_sale_flag = 'Y'
+			   and tp.valid = 'Y'
+			   and tp.goods_status = 'Y'
+			   and tp.channel_ids like '%101%' and tp.category_id in (11,13)
+		   )A
+		   <![CDATA[WHERE ROWNUM <=  #{end}]]>
+	       <![CDATA[) WHERE RN >= #{start}]]>
+	</select>
+	
+	<select id="queryAperiodicProTotalCount" resultType="Integer" parameterType="Map">
+		SELECT count(*)
+			  FROM TNT_GOODS_NOTIME_PRICE tnp, tnt_product tp
+			 where tnp.goods_id = tp.branch_id
+			   and tp.sys_flag = 'VST'
+			   and tp.can_sale_flag = 'Y'
+			   and tp.valid = 'Y'
+			   and tp.goods_status = 'Y'
+	</select>
+	
+		<!-- 查询能被cps分销的商品 -->
+	<select id="countProductDistributeByCPsUnion" resultType="int">
+		select count(1) 
+		from tnt_product
+		where product_id=#{productId}
+		and branch_id= #{branchId}
+		and channel_ids like '%103%'
+		and (channel_black_ids is null or channel_black_ids not like '%103%')
+	</select>
+	
+	<select id="fuzzyQueryByProductName" parameterType="Map" resultMap="baseResultMap" useCache="false">
+		SELECT distinct
+			PRODUCT_ID, PRODUCT_NAME,PACKAGE_TYPE
+		FROM
+			TNT_PRODUCT product
+		WHERE
+			product.product_type = 'TICKET'
+		AND 
+			PRODUCT.CATEGORY_ID IN (11,12,13)
+		AND
+			product.CHANNEL_IDS like CONCAT(CONCAT('%,',102),',%')
+		AND
+			product.VALID='Y'
+		AND 
+			PRODUCT_NAME like
+			CONCAT(CONCAT('%',#{productName}),'%')
+		AND not exists
+			(
+			SELECT 1 FROM tnt_product_user puser
+			WHERE
+			product.BRANCH_ID = puser.GOODS_ID
+			AND puser.type = product.category_id
+			AND puser.VALID = 'false'
+			AND puser.USER_ID = #{userId}
+			)
+		ORDER BY
+			product.product_id
+	</select>
+
+	<select id="countForRouteLmmProducts" resultType="Long">
+		select count(1)
+		from tnt_product tp
+		where tp.product_type='ROUTE'
+		and tp.package_type='LVMAMA'
+		and tp.valid='Y'
+		and tp.can_sale_flag='Y'
+		and tp.sys_flag='VST'
+	</select>
+
+	<select id="findIdsByPageForRouteLmmProducts" resultType="Long" parameterType="Map">
+		select * from (
+		select A.*,rownum rnow from(
+			select tp.product_id
+			from tnt_product tp
+			where tp.product_type='ROUTE'
+			and tp.package_type='LVMAMA'
+			and tp.valid='Y'
+			and tp.can_sale_flag='Y'
+			and tp.sys_flag='VST'
+		) A
+		<![CDATA[where rownum <= #{page}*#{pageSize}]]>
+		<![CDATA[) B where rnow > (#{page}-1)*#{pageSize}]]>
+	</select>
+</mapper>
+

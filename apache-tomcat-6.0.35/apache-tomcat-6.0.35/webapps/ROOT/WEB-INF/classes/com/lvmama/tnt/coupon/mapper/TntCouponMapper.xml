@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.coupon.mapper.TntCouponMapper">
+
+	<resultMap id="tntCouponResult" type="com.lvmama.tnt.coupon.pojo.TntCoupon">
+		<result property="tntCouponId" column="TNT_COUPON_ID" />
+		<result property="couponName" column="COUPON_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="couponType" column="COUPON_TYPE" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="beginTime" column="BEGIN_TIME" />
+		<result property="endTime" column="END_TIME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="amountAssume" column="AMOUNT_ASSUME" />
+	</resultMap>
+
+	<sql id="columns">
+		coupon.*
+	</sql>
+
+	<sql id="where">
+		<if test="tntCouponId != null and tntCouponId !=''">
+			AND TNT_COUPON_ID = #{tntCouponId}
+		</if>
+		<if test="couponName != null  and couponName !=''">
+			AND COUPON_NAME like
+			CONCAT(CONCAT('%',trim(#{couponName})),'%')
+		</if>
+		<if test="status != null and status !=''">
+			AND STATUS = #{status}
+		</if>
+		<if test="couponType != null and couponType !=''">
+			AND COUPON_TYPE = #{couponType}
+		</if>
+		<if test="channelId != null and channelId !=''">
+			AND CHANNEL_ID = #{channelId}
+		</if>
+		<if test="beginTime != null and beginTime !=''">
+			AND BEGIN_TIME = #{beginTime}
+		</if>
+		<if test="endTime != null and endTime !=''">
+			AND END_TIME = #{endTime}
+		</if>
+		<if test="amountAssume != null and amountAssume !=''">
+			AND AMOUNT_ASSUME = #{amountAssume}
+		</if>
+		<if test="inChannelIds != null and inChannelIds !=''">
+			AND CHANNEL_ID in (${inChannelIds})
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.tntCouponId != null and param.tntCouponId !=''">
+			AND TNT_COUPON_ID = #{param.tntCouponId}
+		</if>
+		<if test="param.couponName != null  and param.couponName !=''">
+			AND COUPON_NAME like
+			CONCAT(CONCAT('%',trim(#{param.couponName})),'%')
+		</if>
+		<if test="param.status != null and param.status !=''">
+			AND STATUS = #{param.status}
+		</if>
+		<if test="param.couponType != null and param.couponType !=''">
+			AND COUPON_TYPE = #{param.couponType}
+		</if>
+		<if test="param.channelId != null and param.channelId !=''">
+			AND CHANNEL_ID = #{param.channelId}
+		</if>
+		<if test="param.beginTime != null and param.beginTime !=''">
+			 <![CDATA[
+                AND BEGIN_TIME >= #{param.beginTime}
+            ]]>
+		</if>
+		<if test="param.endTime != null and param.endTime !=''">
+            <![CDATA[
+                AND END_TIME <= #{param.endTime}
+            ]]>
+		</if>
+		<if test="param.nowTime != null and param.nowTime !=''">
+            <![CDATA[
+                AND BEGIN_TIME <= #{param.nowTime}  AND END_TIME >= #{param.nowTime} 
+            ]]>
+		</if>
+		<if test="param.amountAssume != null and param.amountAssume !=''">
+			AND AMOUNT_ASSUME = #{param.amountAssume}
+		</if>
+		<if test="param.inChannelIds != null and param.inChannelIds !=''">
+			AND CHANNEL_ID in (${param.inChannelIds})
+		</if>
+	</sql>
+
+	<select id="count" resultType="Long" parameterType="com.lvmama.tnt.coupon.pojo.TntCoupon">
+		SELECT count(1) FROM TNT_COUPON
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="getByCouponId" resultMap="tntCouponResult" parameterType="java.lang.Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COUPON coupon
+		where TNT_COUPON_ID = #{tntCouponId}
+	</select>
+
+	<select id="queryPage" resultMap="tntCouponResult" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COUPON coupon
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="selectList" resultMap="tntCouponResult" parameterType="com.lvmama.tnt.coupon.pojo.TntCoupon">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COUPON coupon
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.coupon.pojo.TntCoupon">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCouponId" order="BEFORE">
+			select TNT_COUPON_ID_SEQ.nextval
+			from
+			dual
+		</selectKey>
+		INSERT INTO TNT_COUPON (
+		TNT_COUPON_ID ,
+		COUPON_NAME ,
+		STATUS ,
+		COUPON_TYPE ,
+		CHANNEL_ID ,
+		BEGIN_TIME ,
+		END_TIME ,
+		CREATE_TIME,
+		AMOUNT_ASSUME
+		)
+		VALUES
+		(
+		#{tntCouponId,jdbcType=DECIMAL} ,
+		#{couponName,jdbcType=VARCHAR} ,
+		#{status,jdbcType=VARCHAR}
+		,
+		#{couponType,jdbcType=VARCHAR},
+		#{channelId,jdbcType=DECIMAL},
+		#{beginTime,jdbcType=TIMESTAMP} ,
+		#{endTime,jdbcType=TIMESTAMP} ,
+		sysdate,
+		#{amountAssume,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.coupon.pojo.TntCoupon">
+		UPDATE TNT_COUPON
+		<set>
+			<if test="couponName != null">
+				COUPON_NAME = #{couponName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="couponType != null">
+				COUPON_TYPE = #{couponType,jdbcType=VARCHAR},
+			</if>
+			<if test="channelId != null">
+				CHANNEL_ID = #{channelId,jdbcType=DECIMAL},
+			</if>
+			<if test="beginTime != null">
+				BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="amountAssume != null">
+				AMOUNT_ASSUME = #{amountAssume,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE TNT_COUPON_ID = #{tntCouponId,jdbcType=DECIMAL}
+	</update>
+
+</mapper>
+

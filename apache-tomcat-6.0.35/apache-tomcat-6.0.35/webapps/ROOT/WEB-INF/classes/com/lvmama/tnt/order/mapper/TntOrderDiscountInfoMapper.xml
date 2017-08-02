@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntOrderDiscountInfoMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntOrderDiscountInfo">
+		<result property="tntOrderDiscountInfoId" column="TNT_ORDER_DISCOUNT_INFO_ID" />
+		<result property="orderId" column="ORDER_ID" />
+		<result property="discountName" column="DISCOUNT_NAME" />
+		<result property="orderPrice" column="ORDER_PRICE" />
+		<result property="orderSettlementPrice" column="ORDER_SETTLEMENT_PRICE" />
+		<result property="discountRule" column="DISCOUNT_RULE" />
+		<result property="discountPrice" column="DISCOUNT_PRICE" />
+		<result property="discountType" column="DISCOUNT_TYPE" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	
+	
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_DISCOUNT_INFO_ID,ORDER_ID,DISCOUNT_NAME,ORDER_PRICE,ORDER_SETTLEMENT_PRICE,DISCOUNT_RULE,DISCOUNT_PRICE,DISCOUNT_TYPE,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.order.po.TntOrderDiscountInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="tntOrderDiscountInfoId"
+			order="BEFORE">
+			select TNT_ORDER_DISCOUNT_INFO_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_ORDER_DISCOUNT_INFO (
+		TNT_ORDER_DISCOUNT_INFO_ID ,
+		ORDER_ID ,
+		DISCOUNT_NAME,
+		ORDER_PRICE ,
+		ORDER_SETTLEMENT_PRICE ,
+		DISCOUNT_RULE ,
+		DISCOUNT_PRICE ,
+		DISCOUNT_TYPE ,
+		CREATE_TIME 
+		) VALUES (
+		#{tntOrderDiscountInfoId,jdbcType=DECIMAL} ,
+		#{orderId,jdbcType=DECIMAL} ,
+		#{discountName,jdbcType=VARCHAR} ,
+		#{orderPrice,jdbcType=DECIMAL} ,
+		#{orderSettlementPrice,jdbcType=DECIMAL} ,
+		#{discountRule,jdbcType=VARCHAR} ,
+		#{discountPrice,jdbcType=DECIMAL} ,
+		#{discountType,jdbcType=VARCHAR} ,
+		sysdate
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntOrderDiscountInfo">
+		UPDATE TNT_ORDER_DISCOUNT_INFO SET
+		ORDER_ID = #{orderId,jdbcType=DECIMAL} ,
+		DISCOUNT_NAME = #{partnerOrderId,jdbcType=VARCHAR} ,
+		DISCOUNT_RULE = #{discountRule,jdbcType=VARCHAR} ,
+		DISCOUNT_TYPE = #{discountType,jdbcType=VARCHAR} ,
+		ORDER_PRICE = #{orderPrice,jdbcType=DECIMAL} ,
+		ORDER_SETTLEMENT_PRICE = #{orderSettlementPrice,jdbcType=DECIMAL} ,
+		DISCOUNT_PRICE = #{discountPrice,jdbcType=DECIMAL} ,
+		WHERE TNT_ORDER_DISCOUNT_INFO_ID = #{tntOrderId}
+	</update>
+
+	
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_ORDER_DISCOUNT_INFO WHERE		TNT_ORDER_DISCOUNT_INFO_ID = #{id}
+	</delete>
+
+	<select id="query"  resultMap="baseResultMap" parameterType="com.lvmama.tnt.order.po.TntOrderDiscountInfo">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_DISCOUNT_INFO
+		<where>
+		<include refid="where" />
+		</where>
+	</select>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER_DISCOUNT_INFO
+		WHERE
+		TNT_ORDER_DISCOUNT_INFO_ID = #{id}
+	</select>
+
+
+	<sql id="where">
+			<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+			</if>
+			<if test="discountType != null and discountType !=''">
+				AND DISCOUNT_TYPE = #{discountType}
+			</if>
+			<if test="createTimeBegin != null and createTimeEnd !=null">
+				<![CDATA[ AND CREATE_TIME > #{createTimeBegin} and CREATE_TIME< #{createTimeEnd} ]]>
+			</if>
+	</sql>
+</mapper>
+

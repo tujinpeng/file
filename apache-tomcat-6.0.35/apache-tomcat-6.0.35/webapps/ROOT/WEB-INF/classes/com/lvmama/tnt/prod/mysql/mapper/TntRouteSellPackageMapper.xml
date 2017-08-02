@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mysql.mapper.TntRouteSellPackageMapper">
+	<resultMap id="baseResultMapRoute" type="com.lvmama.comm.tnt.vo.TntSellPackage">
+		<result property="routeSellPackageId" column="ROUTE_SELL_PACKAGE_ID"></result>
+		<result property="tntSellPackageId" column="TNT_SELL_PACKAGE_ID" />
+		<result property="packageName" column="PACKAGE_NAME" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="maxCnt" column="MAX_CNT" />
+		<result property="minCnt" column="MIN_CNT" />
+		<result property="valid" column="VALID" />
+		<result property="isCompleted" column="IS_COMPLETED" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="upgrateGoodsId" column="UPGRATE_GOODS_ID" />
+		<result property="goodsName" column="GOODS_NAME" />
+		<result property="upgrateGoodsName" column="UPGRATE_GOODS_NAME" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="branchName" column="BRANCH_NAME" />
+		<result property="payTarget" column="PAY_TARGET" />
+		<result property="faxFlag" column="FAX_FLAG" />
+		<result property="goodsType" column="GOODS_TYPE" />
+		<result property="adult" column="ADULT" />
+		<result property="child" column="CHILD" />
+		<result property="additionGoodsIds" column="ADDITION_GOODS_IDS" />
+		<result property="additionGoodsNames" column="ADDITION_GOODS_NAMES" />
+		<result property="relationGoodsIds" column="RELATION_GOODS_IDS" />
+		<result property="relationGoodsNames" column="RELATION_GOODS_NAMES" />
+		<result property="packageType" column="PACKAGE_TYPE" />
+		<result property="remark" column="REMARK" />
+		<result property="maxGuests" column="MAX_GUESTS" />
+		<result property="isHotelPackage" column="IS_HOTEL_PACKAGE" />
+		<result property="lvmamaPackageType" column="LVMAMA_PACKAGE_TYPE" />
+		<result property="packageFlag" column="PACKAGE_FLAG" />
+		<result property="lineRouteId" column="LINE_ROUTE_ID" />
+		<result property="routeNum" column="ROUTE_NUM" />
+		<result property="stayNum" column="STAY_NUM" />
+		<result property="routeName" column="ROUTE_NAME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="startPlace" column="START_DISTRICT_NAME" />
+		<result property="startDistrictId" column="START_DISTRICT_ID" />
+		<result property="categoryTag" column="CATEGORY_TAG" />
+	</resultMap>
+
+	<!-- 将缓存数据改为放入表中 -->
+	<insert id="insertTntRouteSellPackage" useGeneratedKeys="true" keyProperty="routeSellPackageId" parameterType="com.lvmama.comm.tnt.vo.TntSellPackage">
+	  INSERT INTO TNT_ROUTE_SELL_PACKAGE (
+		PRODUCT_ID,
+		PRODUCT_NAME,
+		PACKAGE_NAME,
+		PACKAGE_TYPE,
+		MAX_CNT,
+		MIN_CNT,
+		VALID,
+		IS_COMPLETED,
+		ADULT,
+		CHILD,
+		CATEGORY_TAG,
+		TNT_SELL_PACKAGE_ID,
+		GOODS_ID ,
+		UPGRATE_GOODS_ID,
+		GOODS_NAME,
+		UPGRATE_GOODS_NAME,
+		BRANCH_ID ,
+		BRANCH_NAME,
+		PAY_TARGET,
+		FAX_FLAG,
+		GOODS_TYPE,
+		ADDITION_GOODS_IDS,
+		ADDITION_GOODS_NAMES,
+		RELATION_GOODS_IDS,
+		RELATION_GOODS_NAMES,
+		REMARK,
+		IS_HOTEL_PACKAGE,
+		MAX_GUESTS,
+		LVMAMA_PACKAGE_TYPE,
+		PACKAGE_FLAG,
+		LINE_ROUTE_ID,
+		ROUTE_NUM,
+		STAY_NUM,
+		ROUTE_NAME,
+		CREATE_TIME,
+		UPDATE_TIME,
+        START_DISTRICT_ID,
+        START_DISTRICT_NAME
+		) VALUES (
+		#{productId,jdbcType=INTEGER},
+		#{productName,jdbcType=VARCHAR},
+		#{packageName,jdbcType=VARCHAR},
+		#{packageType,jdbcType=VARCHAR},
+		#{maxCnt,jdbcType=INTEGER},
+		#{minCnt,jdbcType=INTEGER},
+		#{valid,jdbcType=VARCHAR},
+		#{isCompleted,jdbcType=VARCHAR},
+		#{adult,jdbcType=INTEGER},
+		#{child,jdbcType=INTEGER},
+		#{categoryTag,jdbcType=VARCHAR},
+		#{tntSellPackageId,jdbcType=INTEGER},
+        #{goodsId,jdbcType=INTEGER},
+		#{upgrateGoodsId,jdbcType=VARCHAR},
+		#{goodsName,jdbcType=VARCHAR},
+		#{upgrateGoodsName,jdbcType=VARCHAR},
+		#{branchId,jdbcType=INTEGER},
+		#{branchName,jdbcType=VARCHAR},
+		#{payTarget,jdbcType=VARCHAR},
+		#{faxFlag,jdbcType=VARCHAR},
+		#{goodsType,jdbcType=VARCHAR},
+		#{additionGoodsIds,jdbcType=VARCHAR},
+		#{additionGoodsNames,jdbcType=VARCHAR},
+		#{relationGoodsIds,jdbcType=VARCHAR},
+		#{relationGoodsNames,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{isHotelPackage,jdbcType=VARCHAR},
+		#{maxGuests,jdbcType=INTEGER},
+        #{lvmamaPackageType,jdbcType=VARCHAR},
+		#{packageFlag,jdbcType=VARCHAR},
+		#{lineRouteId,jdbcType=INTEGER},
+		#{routeNum,jdbcType=INTEGER},
+		#{stayNum,jdbcType=INTEGER},
+		#{routeName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{startDistrictId,jdbcType=INTEGER},
+		#{startPlace,jdbcType=VARCHAR}
+		)
+	</insert>
+	<select id="selectSellPackage" resultMap="baseResultMapRoute">
+	   SELECT
+		   *
+	      FROM 
+	     TNT_ROUTE_SELL_PACKAGE LIMIT 0,600
+	</select>
+    <delete id="batchDelete" parameterType="java.util.List">
+		DELETE FROM TNT_ROUTE_SELL_PACKAGE WHERE ROUTE_SELL_PACKAGE_ID IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.routeSellPackageId}
+		</foreach>
+	</delete>
+</mapper>
+

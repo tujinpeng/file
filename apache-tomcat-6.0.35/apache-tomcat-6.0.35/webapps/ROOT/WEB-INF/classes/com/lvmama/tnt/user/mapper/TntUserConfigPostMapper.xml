@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserConfigPostMapper">
+
+  <resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntUserConfigPost" >
+    <result column="USER_CONFIG_POST_ID" property="userConfigPostId" />
+    <result column="USER_CONFIG_ID" property="userConfigId" />
+    <result column="PARAM_NAME" property="paramName" />
+    <result column="POST_TEMPLATE" property="postTemplate" />
+  </resultMap>
+   
+  <select id="getUserConfigPostById" resultMap="baseResultMap" parameterType="java.lang.Long">
+  		SELECT * FROM TNT_USER_CONFIG_POST TUCP WHERE TUCP.USER_CONFIG_POST_ID =#{userConfigPostId}
+  </select>
+  
+  <select id="getUserConfigPostByConfigId" resultMap="baseResultMap" parameterType="java.lang.Long">
+  		SELECT * FROM TNT_USER_CONFIG_POST TUCP WHERE TUCP.USER_CONFIG_ID =#{userConfigId}
+  </select>
+  
+  <insert id="insert" parameterType="com.lvmama.tnt.user.po.TntUserConfigPost">
+	  	<selectKey  keyProperty="userConfigPostId" resultType="java.lang.Long" order="BEFORE"> 
+	  	SELECT TNT_USER_CONFIG_POST_SEQ.NEXTVAL FROM DUAL
+	  	</selectKey>
+	  	
+		INSERT INTO TNT_USER_CONFIG_POST(USER_CONFIG_POST_ID,USER_CONFIG_ID,PARAM_NAME,POST_TEMPLATE)
+		VALUES (#{userConfigPostId},#{userConfigId,jdbcType=BIGINT},#{paramName,jdbcType=VARCHAR},#{postTemplate,jdbcType=CLOB})
+  </insert>
+  <update id="update" parameterType="com.lvmama.tnt.user.po.TntUserConfigPost" >
+  		UPDATE TNT_USER_CONFIG_POST TUCP 
+  		SET
+  		PARAM_NAME = #{paramName,jdbcType=VARCHAR},
+  		POST_TEMPLATE = #{postTemplate,jdbcType=CLOB}
+  		WHERE TUCP.USER_CONFIG_POST_ID =#{userConfigPostId}
+  </update>
+  <delete id="deleteUserConfigPostById" parameterType="java.lang.Long">
+  		DELETE FROM TNT_USER_CONFIG_POST TUCP WHERE TUCP.USER_CONFIG_POST_ID =#{userConfigPostId}
+  </delete> 
+  
+  <delete id="deleteUserConfigPostByUserConfigId" parameterType="java.lang.Long">
+  		DELETE FROM TNT_USER_CONFIG_POST TUCP WHERE TUCP.USER_CONFIG_ID =#{userConfigId}
+  </delete> 
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.routemysql.mapper.RouteDistTimePriceMapper">
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.routeTimePrice.vo.RouteDistTimePrice">
+		<result column="TIME_PRICE_ID" property="timePriceId" />
+		<result column="SPEC_DATE" property="specDate" />
+		<result column="UNIT_ID" property="unitId" />
+		<result column="USER_ID" property="userId" />
+		<result column="PRICE_TYPE" property="priceType" />
+		<result column="IS_SET_DAYRULE" property="isSetDayRule" />
+		<result column="PRICE" property="price"/>
+		<result column="CALCULATE_TYPE" property="calculateType" />
+		<result column="CALCULATE_MODE" property="calculateMode" />
+		<result column="VALUE" property="value" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="columns">
+		TIME_PRICE_ID,
+		SPEC_DATE,
+		UNIT_ID,
+		USER_ID,
+		PRICE_TYPE,
+		IS_SET_DAYRULE,
+		PRICE,
+		CALCULATE_TYPE,
+		CALCULATE_MODE,
+		VALUE,
+		UPDATE_TIME
+	</sql>
+	
+	<select id="queryTimePriceByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ROUTE_DIST_TIME_PRICE r 
+		<where> 
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and r.spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and r.spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and r.USER_ID = #{userId}
+			</if>
+			<if test="priceType!=null and priceType!=''">
+				and r.PRICE_TYPE = #{priceType}
+			</if>
+			<if test="isSetDayRule!=null and isSetDayRule!=''">
+				and r.IS_SET_DAYRULE = #{isSetDayRule}
+			</if>
+		</where> 
+	</select>
+	
+	<select id="queryHasDayRule" parameterType="java.util.Map" resultType="String">
+		select distinct r.USER_ID
+		from ROUTE_DIST_TIME_PRICE r 
+		<where> 
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryTimePriceWithHistory" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ROUTE_DIST_TIME_PRICE r 
+		<where> 
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and r.spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and r.spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and r.USER_ID = #{userId}
+			</if>
+			<if test="priceType!=null and priceType!=''">
+				and r.PRICE_TYPE = #{priceType}
+			</if>
+			<if test="isSetDayRule!=null and isSetDayRule!=''">
+				and r.IS_SET_DAYRULE = #{isSetDayRule}
+			</if>
+		</where> 
+		union 
+		select <include refid="columns"/>
+		from ROUTE_DIST_TIME_PRICE_HIS r 
+		<where> 
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and r.spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and r.spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and r.USER_ID = #{userId}
+			</if>
+			<if test="priceType!=null and priceType!=''">
+				and r.PRICE_TYPE = #{priceType}
+			</if>
+			<if test="isSetDayRule!=null and isSetDayRule!=''">
+				and r.IS_SET_DAYRULE = #{isSetDayRule}
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="merge" parameterType="java.util.List">
+		insert into ROUTE_DIST_TIME_PRICE
+		( <include refid="columns"/> )
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.timePriceId,jdbcType=DECIMAL},
+			#{item.specDate,jdbcType=DATE},
+			#{item.unitId,jdbcType=DECIMAL},
+			#{item.userId,jdbcType=VARCHAR},
+			#{item.priceType,jdbcType=VARCHAR},
+			#{item.isSetDayRule,jdbcType=VARCHAR},
+			#{item.price,jdbcType=DECIMAL},
+			#{item.calculateType,jdbcType=VARCHAR},
+			#{item.calculateMode,jdbcType=VARCHAR},
+			#{item.value,jdbcType=DECIMAL},
+			#{item.updateTime,jdbcType=TIMESTAMP})
+		</foreach>
+		ON DUPLICATE KEY
+		update
+			IS_SET_DAYRULE = values(IS_SET_DAYRULE),
+			PRICE = values(PRICE),
+			CALCULATE_TYPE = values(CALCULATE_TYPE),
+			CALCULATE_MODE = values(CALCULATE_MODE),
+			VALUE = values(VALUE),
+			UPDATE_TIME = values(UPDATE_TIME)
+	</insert>
+	
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from ROUTE_DIST_TIME_PRICE
+		<where> 
+			<if test="beginDate != null and beginDate != ''">
+				spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and USER_ID = #{userId}
+			</if>
+			<if test="priceType!=null and priceType!=''">
+				and PRICE_TYPE = #{priceType}
+			</if>
+			<if test="isSetDayRule!=null and isSetDayRule!=''">
+				and IS_SET_DAYRULE = #{isSetDayRule}
+			</if>
+		</where>
+		<if test="page!=null and page!=''">
+			limit #{page}
+		</if>
+	</delete>
+	
+	<insert id="move" parameterType="java.util.Map">
+		insert into ROUTE_DIST_TIME_PRICE_HIS
+		SELECT * FROM ROUTE_DIST_TIME_PRICE where spec_date <![CDATA[ <= ]]> #{endDate} LIMIT #{page}
+		ON DUPLICATE KEY
+		update
+			IS_SET_DAYRULE = values(IS_SET_DAYRULE),
+			PRICE = values(PRICE),
+			CALCULATE_TYPE = values(CALCULATE_TYPE),
+			CALCULATE_MODE = values(CALCULATE_MODE),
+			VALUE = values(VALUE),
+			UPDATE_TIME = values(UPDATE_TIME)
+	</insert>
+	
+</mapper>

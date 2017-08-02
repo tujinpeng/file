@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntHotelPackageBranchMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranch">
+        <result property="packageBranchId" column="PACKAGE_BRANCH_ID"/>
+        <result property="packageId" column="PACKAGE_ID"/>
+        <result property="freedomProductId" column="FREEDOM_PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subProductName" column="SUB_PRODUCT_NAME"/>
+        <result property="subProductStatus" column="SUB_PRODUCT_STATUS"/>
+        <result property="subProductSaleFlag" column="SUB_PRODUCT_SALE_FLAG"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="subBranchName" column="SUB_BRANCH_NAME"/>
+        <result property="subBranchStatus" column="SUB_BRANCH_STATUS"/>
+        <result property="subBranchSaleFlag" column="SUB_BRANCH_SALE_FLAG"/>
+        <result property="maxVisitor" column="MAX_VISITOR"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="price" column="PRICE"/>
+        <result property="stayDays" column="STAY_DAYS"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="audltNum" column="AUDLT_NUM"/>
+        <result property="childNum" column="CHILD_NUM"/>
+        <result property="packHotelCount" column="PACK_HOTEL_COUNT"/>
+        <result property="deletedFlag" column="DELETED_FLAG"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+
+
+
+
+
+
+
+
+
+		PACKAGE_BRANCH_ID,PACKAGE_ID,FREEDOM_PRODUCT_ID,GROUP_ID,DETAIL_ID,SUB_PRODUCT_ID,SUB_PRODUCT_NAME,SUB_PRODUCT_STATUS,SUB_PRODUCT_SALE_FLAG,SUB_BRANCH_ID,SUB_BRANCH_NAME,SUB_BRANCH_STATUS,SUB_BRANCH_SALE_FLAG,MAX_VISITOR,PRICE_TYPE,PRICE,STAY_DAYS,SALE_TYPE,AUDLT_NUM,CHILD_NUM,PACK_HOTEL_COUNT,DELETED_FLAG,CREATE_TIME,UPDATE_TIME
+
+
+
+
+
+
+
+
+
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranch">
+        INSERT INTO TNT_HOTEL_PACKAGE_BRANCH (
+        	PACKAGE_ID ,
+        	FREEDOM_PRODUCT_ID ,
+        	GROUP_ID ,
+        	DETAIL_ID ,
+        	SUB_PRODUCT_ID ,
+        	SUB_PRODUCT_NAME ,
+        	SUB_PRODUCT_STATUS ,
+        	SUB_PRODUCT_SALE_FLAG ,
+        	SUB_BRANCH_ID ,
+        	SUB_BRANCH_NAME ,
+        	SUB_BRANCH_STATUS ,
+        	SUB_BRANCH_SALE_FLAG ,
+        	MAX_VISITOR ,
+        	PRICE_TYPE ,
+        	PRICE ,
+        	STAY_DAYS ,
+        	DELETED_FLAG,
+        	CREATE_TIME ,
+        	UPDATE_TIME ,
+        	SALE_TYPE,
+        	AUDLT_NUM,
+        	CHILD_NUM,
+        	PACK_HOTEL_COUNT
+        ) VALUES (
+        	#{packageId} ,
+        	#{freedomProductId} ,
+        	#{groupId} ,
+        	#{detailId} ,
+        	#{subProductId} ,
+        	#{subProductName} ,
+        	#{subProductStatus} ,
+        	#{subProductSaleFlag} ,
+        	#{subBranchId} ,
+        	#{subBranchName} ,
+        	#{subBranchStatus} ,
+        	#{subBranchSaleFlag} ,
+        	#{maxVisitor} ,
+        	#{priceType} ,
+        	#{price} ,
+        	#{stayDays} ,
+        	#{deletedFlag} ,
+        	now() ,
+        	now(),
+        	#{saleType},
+        	#{audltNum},
+        	#{childNum},
+        	#{packHotelCount}
+        )
+	</insert>
+
+    <insert id="insertForBatch" parameterType="java.util.List">
+        INSERT INTO TNT_HOTEL_PACKAGE_BRANCH (
+        PACKAGE_ID ,
+        FREEDOM_PRODUCT_ID ,
+        GROUP_ID ,
+        DETAIL_ID ,
+        SUB_PRODUCT_ID ,
+        SUB_PRODUCT_NAME ,
+        SUB_PRODUCT_STATUS ,
+        SUB_PRODUCT_SALE_FLAG ,
+        SUB_BRANCH_ID ,
+        SUB_BRANCH_NAME ,
+        SUB_BRANCH_STATUS ,
+        SUB_BRANCH_SALE_FLAG ,
+        MAX_VISITOR ,
+        PRICE_TYPE ,
+        PRICE ,
+        STAY_DAYS ,
+        DELETED_FLAG,
+        CREATE_TIME ,
+        UPDATE_TIME,
+        SALE_TYPE,
+        AUDLT_NUM,
+        CHILD_NUM,
+        PACK_HOTEL_COUNT
+        ) VALUES
+        <foreach collection="list" separator="," item="tntHotelPackageBranch" index="index">
+            (
+            #{tntHotelPackageBranch.packageId} ,
+            #{tntHotelPackageBranch.freedomProductId} ,
+            #{tntHotelPackageBranch.groupId} ,
+            #{tntHotelPackageBranch.detailId} ,
+            #{tntHotelPackageBranch.subProductId} ,
+            #{tntHotelPackageBranch.subProductName} ,
+            #{tntHotelPackageBranch.subProductStatus} ,
+            #{tntHotelPackageBranch.subProductSaleFlag} ,
+            #{tntHotelPackageBranch.subBranchId} ,
+            #{tntHotelPackageBranch.subBranchName} ,
+            #{tntHotelPackageBranch.subBranchStatus} ,
+            #{tntHotelPackageBranch.subBranchSaleFlag} ,
+            #{tntHotelPackageBranch.maxVisitor} ,
+            #{tntHotelPackageBranch.priceType} ,
+            #{tntHotelPackageBranch.price} ,
+            #{tntHotelPackageBranch.stayDays} ,
+            #{tntHotelPackageBranch.deletedFlag} ,
+            now() ,
+            now(),
+            #{tntHotelPackageBranch.saleType},
+            #{tntHotelPackageBranch.audltNum},
+            #{tntHotelPackageBranch.childNum},
+            #{tntHotelPackageBranch.packHotelCount}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranch">
+        UPDATE TNT_HOTEL_PACKAGE_BRANCH SET
+        FREEDOM_PRODUCT_ID = #{freedomProductId} ,
+        GROUP_ID = #{groupId} ,
+	    DETAIL_ID = #{detailId} ,
+        SUB_PRODUCT_ID = #{subProductId} ,
+        SUB_PRODUCT_NAME = #{subProductName} ,
+        SUB_PRODUCT_STATUS = #{subProductStatus} ,
+        SUB_PRODUCT_SALE_FLAG = #{subProductSaleFlag} ,
+        SUB_BRANCH_ID = #{subBranchId} ,
+        SUB_BRANCH_NAME = #{subBranchName} ,
+        SUB_BRANCH_STATUS = #{subBranchStatus} ,
+        SUB_BRANCH_SALE_FLAG = #{subBranchSaleFlag} ,
+	    MAX_VISITOR = #{maxVisitor} ,
+        PRICE_TYPE = #{priceType} ,
+        PRICE = #{price} ,
+        STAY_DAYS = #{stayDays} ,
+        DELETED_FLAG = #{deletedFlag} ,
+        UPDATE_TIME = now(),
+        SALE_TYPE = #{saleType},
+        AUDLT_NUM = #{audltNum},
+        CHILD_NUM = #{childNum},
+        PACK_HOTEL_COUNT = #{packHotelCount}
+        WHERE
+        <if test="packageBranchId !=null">
+            PACKAGE_BRANCH_ID = #{packageBranchId}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE TNT_HOTEL_PACKAGE_BRANCH SET DELETED_FLAG = 'Y' WHERE
+        PACKAGE_BRANCH_ID = #{tntHotelPackageBranchId}
+    </delete>
+
+    <delete id="deleteByHotelPackageId" parameterType="Long">
+        UPDATE TNT_HOTEL_PACKAGE_BRANCH SET DELETED_FLAG = 'Y' WHERE
+        PACKAGE_ID = #{tntHotelPackageId}
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="java.util.List">
+        UPDATE TNT_HOTEL_PACKAGE_BRANCH SET DELETED_FLAG = 'Y' WHERE
+        PACKAGE_BRANCH_ID in
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        WHERE
+        PACKAGE_BRANCH_ID = #{id}
+    </select>
+
+    <select id="getListByFreedomProductId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        WHERE
+        FREEDOM_PRODUCT_ID = #{freedomProductId}
+    </select>
+
+    <select id="getListByPackageId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        WHERE
+        PACKAGE_ID = #{packageId}
+    </select>
+
+    <select id="getListByPackageIds" resultMap="baseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        WHERE
+        PACKAGE_ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getTntHotelPackageBranchList" resultMap="baseResultMap"
+            parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranch">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        <include refid="where"/>
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="packageBranchId != null and packageBranchId !=''">
+                AND PACKAGE_BRANCH_ID = #{packageBranchId}
+            </if>
+            <if test="packageId != null and packageId !=''">
+                AND PACKAGE_ID = #{packageId}
+            </if>
+            <if test="freedomProductId != null and freedomProductId !=''">
+                AND FREEDOM_PRODUCT_ID = #{freedomProductId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND GROUP_ID = #{groupId}
+            </if>
+			<if test="detailId != null and detailId !=''">
+				AND DETAIL_ID = #{detailId}
+	       	</if> 
+            <if test="subProductId != null and subProductId !=''">
+                AND SUB_PRODUCT_ID = #{subProductId}
+            </if>
+            <if test="subProductName != null and subProductName !=''">
+                AND SUB_PRODUCT_NAME = #{subProductName}
+            </if>
+            <if test="subProductStatus != null and subProductStatus !=''">
+                AND SUB_PRODUCT_STATUS = #{subProductStatus}
+            </if>
+            <if test="subProductSaleFlag != null and subProductSaleFlag !=''">
+                AND SUB_PRODUCT_SALE_FLAG = #{subProductSaleFlag}
+            </if>
+            <if test="subBranchId != null and subBranchId !=''">
+                AND SUB_BRANCH_ID = #{subBranchId}
+            </if>
+            <if test="subBranchName != null and subBranchName !=''">
+                AND SUB_BRANCH_NAME = #{subBranchName}
+            </if>
+            <if test="subBranchStatus != null and subBranchStatus !=''">
+                AND SUB_BRANCH_STATUS = #{subBranchStatus}
+            </if>
+            <if test="subBranchSaleFlag != null and subBranchSaleFlag !=''">
+                AND SUB_BRANCH_SALE_FLAG = #{subBranchSaleFlag}
+            </if>
+			<if test="maxVisitor != null and maxVisitor !=''">
+				AND MAX_VISITOR = #{maxVisitor}
+	       	</if> 
+            <if test="priceType != null and priceType !=''">
+                AND PRICE_TYPE = #{priceType}
+            </if>
+            <if test="price != null and price !=''">
+                AND PRICE = #{price}
+            </if>
+            <if test="stayDays != null and stayDays !=''">
+                AND STAY_DAYS = #{stayDays}
+            </if>
+            <if test="deletedFlag != null and deletedFlag !=''">
+                <if test='deletedFlag =="Y"'>
+                    AND DELETED_FLAG = #{deletedFlag}
+                </if>
+                <if test='deletedFlag =="N"'>
+                    AND ( DELETED_FLAG = #{deletedFlag} or DELETED_FLAG = '' or DELETED_FLAG is NULL)
+                </if>
+            </if>
+            <if test="createTime != null and createTime !=''">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime !=''">
+                AND UPDATE_TIME = #{updateTime}
+            </if>
+            <if test="saleType != null and saleType !=''">
+                AND SALE_TYPE = #{saleType}
+            </if>
+            <if test="audltNum != null and audltNum !=''">
+                AND AUDLT_NUM = #{audltNum}
+            </if>
+            <if test="childNum != null and childNum !=''">
+                AND CHILD_NUM = #{childNum}
+            </if>
+            <if test="packHotelCount != null and packHotelCount !=''">
+                AND PACK_HOTEL_COUNT = #{packHotelCount}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.packageBranchId != null and param.packageBranchId !=''">
+                AND PACKAGE_BRANCH_ID = #{param.packageBranchId}
+            </if>
+            <if test="param.packageId != null and param.packageId !=''">
+                AND PACKAGE_ID = #{param.packageId}
+            </if>
+            <if test="param.freedomProductId != null and param.freedomProductId !=''">
+                AND FREEDOM_PRODUCT_ID = #{param.freedomProductId}
+            </if>
+            <if test="param.groupId != null and param.groupId !=''">
+                AND GROUP_ID = #{param.groupId}
+            </if>
+			<if test="param.detailId != null and param.detailId !=''">
+				AND DETAIL_ID = param.detailId
+	       	</if>
+            <if test="param.subProductId != null and param.subProductId !=''">
+                AND SUB_PRODUCT_ID = #{param.subProductId}
+            </if>
+            <if test="param.subProductName != null and param.subProductName !=''">
+                AND SUB_PRODUCT_NAME = #{param.subProductName}
+            </if>
+            <if test="param.subProductStatus != null and param.subProductStatus !=''">
+                AND SUB_PRODUCT_STATUS = #{param.subProductStatus}
+            </if>
+            <if test="param.subProductSaleFlag != null and param.subProductSaleFlag !=''">
+                AND SUB_PRODUCT_SALE_FLAG = #{param.subProductSaleFlag}
+            </if>
+            <if test="param.subBranchId != null and param.subBranchId !=''">
+                AND SUB_BRANCH_ID = #{param.subBranchId}
+            </if>
+            <if test="param.subBranchName != null and param.subBranchName !=''">
+                AND SUB_BRANCH_NAME = #{param.subBranchName}
+            </if>
+            <if test="param.subBranchStatus != null and param.subBranchStatus !=''">
+                AND SUB_BRANCH_STATUS = #{param.subBranchStatus}
+            </if>
+            <if test="param.subBranchSaleFlag != null and param.subBranchSaleFlag !=''">
+                AND SUB_BRANCH_SALE_FLAG = #{param.subBranchSaleFlag}
+            </if>
+			<if test="param.maxVisitor != null and param.maxVisitor !=''">
+				AND MAX_VISITOR = param.maxVisitor
+	       	</if>
+            <if test="param.priceType != null and param.priceType !=''">
+                AND PRICE_TYPE = #{param.priceType}
+            </if>
+            <if test="param.price != null and param.price !=''">
+                AND PRICE = #{param.price}
+            </if>
+            <if test="param.stayDays != null and param.stayDays !=''">
+                AND STAY_DAYS = #{param.stayDays}
+            </if>
+            <if test="param.deletedFlag != null and param.deletedFlag !=''">
+                AND DELETED_FLAG = #{param.deletedFlag}
+            </if>
+            <if test="param.createTime != null and param.createTime !=''">
+                AND CREATE_TIME = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null and param.updateTime !=''">
+                AND UPDATE_TIME = #{param.updateTime}
+            </if>
+            <if test="param.saleType != null and param.saleType !=''">
+                AND SALE_TYPE = #{param.saleType}
+            </if>
+            <if test="param.audltNum != null and param.audltNum !=''">
+                AND AUDLT_NUM = #{param.audltNum}
+            </if>
+            <if test="param.childNum != null and param.childNum !=''">
+                AND CHILD_NUM = #{param.childNum}
+            </if>
+            <if test="param.packHotelCount != null and param.packHotelCount !=''">
+                AND PACK_HOTEL_COUNT = #{param.packHotelCount}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelPackageBranch">
+        SELECT count(*) FROM TNT_HOTEL_PACKAGE_BRANCH
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_PACKAGE_BRANCH
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+
+</mapper>
+

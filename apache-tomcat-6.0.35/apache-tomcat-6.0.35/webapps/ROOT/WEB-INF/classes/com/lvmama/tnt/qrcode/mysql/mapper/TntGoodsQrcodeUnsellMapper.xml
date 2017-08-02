@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.lvmama.tnt.qrcode.mysql.mapper.TntGoodsQrcodeUnsellMapper">
+
+	<resultMap id="resultMap" type="com.lvmama.tnt.qrcode.comm.vo.TntGoodsQrcodeUnsellVO">
+		<result property="id"			column="ID"/>
+		<result property="distUserId"	column="DIST_USER_ID"/>
+		<result property="goodsId"		column="GOODS_ID"/>
+		<result property="productId"	column="PRODUCT_ID"/>
+		<result property="categoryId"	column="CATEGORY_ID"/>
+		<result property="packageType"	column="PACKAGE_TYPE"/>
+		<result property="status"		column="STATUS"/>
+		<result property="createTime"	column="CREATE_TIME"/>
+		<result property="updateTime"	column="UPDATE_TIME"/>
+	</resultMap>
+	
+	<sql id="columns">
+    	tgqu.ID, tgqu.DIST_USER_ID, tgqu.GOODS_ID, tgqu.PRODUCT_ID, tgqu.CATEGORY_ID, tgqu.PACKAGE_TYPE, tgqu.STATUS, tgqu.CREATE_TIME, tgqu.UPDATE_TIME
+    </sql>
+    
+    <sql id="where">
+    	<where>
+    		<if test="id != null">AND tgqu.ID = #{id}</if>
+    		<if test="distUserId != null">AND tgqu.DIST_USER_ID = #{distUserId}</if>
+			<if test="goodsId != null">AND tgqu.GOODS_ID = #{goodsId}</if>
+    		<if test="productId != null">AND tgqu.PRODUCT_ID = #{productId}</if>
+    		<if test="categoryId != null">AND tgqu.CATEGORY_ID = #{categoryId}</if>
+    		<if test="packageType != null">AND tgqu.PACKAGE_TYPE = #{packageType}</if>
+    		<if test="status != null">AND tgqu.STATUS = #{status}</if>
+    	</where>
+    </sql>
+    
+    <sql id="page">
+    	<if test="start != null AND pageSize != null">LIMIT #{start}, #{pageSize}</if>
+    </sql>
+    
+    <sql id="set">
+   		<trim prefix="set" suffixOverrides=",">
+			<if test="distUserId != null">tgqu.DIST_USER_ID = #{distUserId},</if>
+			<if test="goodsId != null">tgqu.GOODS_ID = #{goodsId},</if>
+	   		<if test="productId != null">tgqu.PRODUCT_ID = #{productId},</if>
+	   		<if test="categoryId != null">tgqu.CATEGORY_ID = #{categoryId},</if>
+	   		<if test="packageType != null">tgqu.PACKAGE_TYPE = #{packageType},</if>
+	   		<if test="status != null">tgqu.STATUS = #{status},</if>
+		</trim>
+    </sql>
+    
+	<insert id="saveTntGoodsQrcodeUnsellVO" parameterType="com.lvmama.tnt.qrcode.comm.vo.TntGoodsQrcodeUnsellVO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TNT_GOODS_QRCODE_UNSELL 
+			(DIST_USER_ID, GOODS_ID, PRODUCT_ID, CATEGORY_ID, PACKAGE_TYPE, STATUS, CREATE_TIME, UPDATE_TIME) 
+		VALUES 
+			(#{distUserId}, #{goodsId}, #{productId}, #{categoryId}, #{packageType}, #{status}, #{createTime}, #{updateTime})
+	</insert>
+	
+	<delete id="deleteTntGoodsQrcodeUnsellVO" parameterType="java.lang.Long">
+		DELETE FROM TNT_GOODS_QRCODE_UNSELL tgqu WHERE tgqu.ID = #{id}
+	</delete>
+	
+	<update id="updateTntGoodsQrcodeUnsellVO" parameterType="com.lvmama.tnt.qrcode.comm.vo.TntGoodsQrcodeUnsellVO">
+		UPDATE TNT_GOODS_QRCODE_UNSELL tgqu <include refid="set"/> WHERE tgqu.ID = #{id}
+	</update>
+	
+	<select id="getTntGoodsQrcodeUnsellVOList" parameterType="java.util.HashMap" resultMap="resultMap">
+    	SELECT <include refid="columns"/> FROM TNT_GOODS_QRCODE_UNSELL tgqu <include refid="where"/>
+    </select>
+    
+    <select id="getTntGoodsQrcodeUnsellVOListByGoodsIds" parameterType="java.util.HashMap" resultMap="resultMap">
+    	SELECT 
+    		<include refid="columns"/> 
+    	FROM 
+    		TNT_GOODS_QRCODE_UNSELL tgqu 
+    	WHERE 
+    		tgqu.DIST_USER_ID = #{distUserId} AND 
+    		tgqu.STATUS = #{status} AND 
+    		tgqu.GOODS_ID IN <foreach collection="goodsIds" item="goodsId" index="index" open="(" close=")" separator=",">#{goodsId}</foreach>
+    </select>
+</mapper>

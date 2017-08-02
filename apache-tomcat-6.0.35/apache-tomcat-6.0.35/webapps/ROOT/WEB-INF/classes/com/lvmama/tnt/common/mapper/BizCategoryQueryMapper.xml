@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.comm.mapper.BizCategoryQueryMapper" >
+
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.common.po.BizCategory" >
+    <id column="CATEGORY_ID" property="categoryId"  />
+    <result column="PARENT_ID" property="parentId"  />
+    <result column="CATEGORY_CODE" property="categoryCode" />
+    <result column="CATEGORY_NAME" property="categoryName"  />
+    <result column="CATEGORY_DESC" property="categoryDesc" />
+    <result column="CANCEL_FLAG" property="cancelFlag" />
+    <result column="PROCESS_KEY" property="processKey" />
+    <result column="SEQ" property="seq" />
+    <result column="PROM_TARGET" property="promTarget" />
+  </resultMap>
+   
+  <sql id="Base_Query_Column_List" >
+	  <if test="parentId != null" >
+      		and  PARENT_ID = #{parentId}
+      </if>
+      <if test="categoryName != null" >
+       		and CATEGORY_NAME like '%'||#{categoryName}||'%'
+      </if>
+	  <if test="categoryNameEqual != null" >
+       		and CATEGORY_NAME = #{categoryNameEqual}
+      </if>
+	  <if test="categoryIdNotEqual != null" >
+       		and CATEGORY_ID != #{categoryIdNotEqual}
+      </if>
+      <if test="categoryDesc != null" >
+      		 and CATEGORY_DESC = #{categoryDesc}
+      </if>
+      <if test="cancelFlag != null" >
+        	and CANCEL_FLAG = #{cancelFlag}
+      </if>
+      <if test="seq != null" >
+       		 and SEQ = #{seq}
+      </if>
+      <if test="categoryCode != null" >
+       		 and CATEGORY_CODE = #{categoryCode}
+      </if>
+      
+  </sql>
+    
+  <sql id="select_by_param" >
+		select *
+		from lvmama_ver.BIZ_CATEGORY 
+		where 1=1
+		<include refid="Base_Query_Column_List" />
+  </sql>
+	  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	    select CATEGORY_ID,PARENT_ID,CATEGORY_CODE,CATEGORY_NAME,CATEGORY_DESC,CANCEL_FLAG,PROCESS_KEY,SEQ,PROM_TARGET
+	    from BIZ_CATEGORY
+	    where CATEGORY_ID = #{categoryId}
+  </select>
+	  
+  <select id="selectByCategoryCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select  *
+	    from BIZ_CATEGORY
+	    where CATEGORY_CODE = #{categoryCode} and CANCEL_FLAG='Y'
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+	    delete from BIZ_CATEGORY
+	    where CATEGORY_ID = #{categoryId}
+  </delete>
+  
+  <insert id="insert" parameterType="com.lvmama.tnt.common.po.BizCategory" >
+	    <selectKey resultType="java.lang.Long" keyProperty="categoryId" order="BEFORE" >
+	     	select SEQ_BIZ_CATEGORY_ID.nextval from dual
+	    </selectKey>
+	    insert into BIZ_CATEGORY (CATEGORY_ID, PARENT_ID, CATEGORY_NAME, 
+	      	 CATEGORY_DESC, CANCEL_FLAG, SEQ, CATEGORY_CODE )
+	    values (#{categoryId}, #{parentId}, #{categoryName}, 
+	     	 #{categoryDesc}, #{cancelFlag}, #{seq}, #{categoryCode})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.common.po.BizCategory" >
+    <selectKey resultType="java.lang.Long" keyProperty="categoryId" order="BEFORE" >
+      	select SEQ_BIZ_CATEGORY_ID.nextval from dual
+    </selectKey>
+    	insert into BIZ_CATEGORY
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      		CATEGORY_ID,
+	      <if test="parentId != null" >
+	        	PARENT_ID,
+	      </if>
+	      <if test="categoryName != null" >
+	        	CATEGORY_NAME,
+	      </if>
+	      <if test="categoryDesc != null" >
+	      		CATEGORY_DESC,
+	      </if>
+	      <if test="cancelFlag != null" >
+	        	CANCEL_FLAG,
+	      </if>
+	      <if test="seq != null" >
+	        	SEQ,
+	      </if>
+	      <if test="categoryCode != null" >
+	        	CATEGORY_CODE,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      		#{categoryId},
+	      <if test="parentId != null" >
+	        	#{parentId},
+	      </if>
+	      <if test="categoryName != null" >
+	        	#{categoryName},
+	      </if>
+	      <if test="categoryDesc != null" >
+	        	#{categoryDesc},
+	      </if>
+	      <if test="cancelFlag != null" >
+	        	#{cancelFlag},
+	      </if>
+	      <if test="seq != null" >
+	        	#{seq},
+	      </if>
+	      <if test="categoryCode != null" >
+	        	#{categoryCode},
+	      </if>
+	    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.common.po.BizCategory" >
+	    update BIZ_CATEGORY
+	    <set >
+	      <if test="parentId != null" >
+	        	PARENT_ID = #{parentId},
+	      </if>
+	      <if test="categoryName != null" >
+	        	CATEGORY_NAME = #{categoryName},
+	      </if>
+	      <if test="categoryDesc != null" >
+	        	CATEGORY_DESC = #{categoryDesc},
+	      </if>
+	      <if test="cancelFlag != null" >
+	        	CANCEL_FLAG = #{cancelFlag},
+	      </if>
+	      <if test="seq != null" >
+	        	SEQ = #{seq},
+	      </if>
+	      <if test="categoryCode != null" >
+	        	CATEGORY_CODE = #{categoryCode},
+	      </if>
+	    </set>
+	    where CATEGORY_ID = #{categoryId}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.common.po.BizCategory" >
+	    update BIZ_CATEGORY
+	    set PARENT_ID = #{parentId,jdbcType=NUMERIC},
+	      CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+	      CATEGORY_DESC = #{categoryDesc,jdbcType=VARCHAR},
+	      CANCEL_FLAG = #{cancelFlag,jdbcType=VARCHAR},
+	      SEQ = #{seq,jdbcType=NUMERIC},
+	      CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR}
+	    where CATEGORY_ID = #{categoryId}
+  </update>
+	
+	<select id="findListByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		<include refid="basic.pageSearchHead"/>
+		<include refid="select_by_param"/>
+		<include refid="basic.pageSearchFoot"/>  
+		asc
+	</select>
+	
+	 <select id="queryTotalCount" parameterType="java.util.Map" resultType="Integer">
+		select  count(1)
+		from BIZ_CATEGORY
+	     where 1=1
+		<include refid="Base_Query_Column_List" />
+	</select>
+	
+	<select id="findCategoryListByParentCategoryId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select BC.*
+		from BIZ_CATEGORY BC where BC.PARENT_ID = #{parentId} or bc.category_id = #{parentId}
+	</select>
+	<select id="findListByParamsBottomCategory" parameterType="java.util.Map" resultMap="BaseResultMap">
+		<include refid="basic.pageSearchHead"/>
+		
+		select BC.*
+		from BIZ_CATEGORY BC
+		<where>
+		  <if test="parentId != null" >
+	      		and  BC.PARENT_ID = #{parentId}
+	      </if>
+	      <if test="categoryName != null" >
+	       		and BC.CATEGORY_NAME like '%'||#{categoryName}||'%'
+	      </if>
+		  <if test="categoryNameEqual != null" >
+	       		and BC.CATEGORY_NAME = #{categoryNameEqual}
+	      </if>
+		  <if test="categoryIdNotEqual != null" >
+	       		and BC.CATEGORY_ID != #{categoryIdNotEqual}
+	      </if>
+	      <if test="categoryDesc != null" >
+	      		and BC.CATEGORY_DESC = #{categoryDesc}
+	      </if>
+	      <if test="cancelFlag != null" >
+	        	and BC.CANCEL_FLAG = #{cancelFlag}
+	      </if>
+	      <if test="seq != null" >
+	       		and BC.SEQ = #{seq}
+	      </if>
+	      <if test="categoryCode != null" >
+	       		and BC.CATEGORY_CODE = #{categoryCode}
+	      </if>
+		  and not exists (select 1 from BIZ_CATEGORY BC2 where BC2.parent_id = BC.category_id and BC2.CANCEL_FLAG='Y')
+		  and not exists (select 1 from BIZ_CATEGORY BC2 where bc.PARENT_ID=18) or bc.category_id = 18 
+		</where>
+      
+		<include refid="basic.pageSearchFoot"/>  
+	</select>
+</mapper>

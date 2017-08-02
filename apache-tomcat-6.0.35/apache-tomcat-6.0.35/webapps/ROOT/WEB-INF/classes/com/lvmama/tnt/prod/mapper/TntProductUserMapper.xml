@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntProductUserMapper">
+    <!-- <cache eviction="LRU" size="5000" type="org.apache.ibatis.caches.memcache.MemcachedCache"/> -->
+	<resultMap id="tntProductVoResult" type="com.lvmama.tnt.prod.po.TntProductUser">
+		<result property="tntProductUserId" column="TNT_PRODUCT_USER_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="valid" column="VALID" />
+		<result property="type" column="TYPE" />
+		<result property="isSpecial" column="IS_SPECIAL" />
+		<result property="smsChannel" column="SMS_CHANNEL"/>
+		<result property="commissionMode" column="COMMISSION_MODE" />
+		<result property="commissionRate" column="COMMISSIONRATE" />
+		<result property="commissionVolid" column="COMMISSIONVOLID" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="downpayment" column="DOWNPAYMENT" />
+		<association property="user" javaType="com.lvmama.tnt.user.vo.TntUserVo">
+			<id property="userId" column="USER_ID" />
+			<result property="companyName" column="COMPANY_NAME" />
+			<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+			<result property="companyTypeName" column="COMPANY_TYPE_NAME" />
+			<result property="channelId" column="CHANNEL_ID" />
+			<result property="channelName" column="CHANNEL_NAME" />
+			<result property="channelCode" column="CHANNEL_CODE" />
+			<result property="userName" column="USER_NAME" />
+		</association>
+	</resultMap>
+	
+	<resultMap id="tntProductVoResult1" type="com.lvmama.tnt.prod.po.TntProductUser">
+	   <result property="userId" column="USER_ID" />
+	   <result property="channelId" column="CHANNEL_ID" />
+	</resultMap>
+
+	<sql id="columns">
+		*
+	</sql>
+
+	<sql id="userWhere">
+		<if test="user!=null">
+			<if test="user.channelId != null and user.channelId !=''">
+				AND channel.CHANNEL_ID = #{user.channelId}
+			</if>
+			<if test="user.companyName != null and user.companyName !=''">
+				AND usr.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{user.companyName})),'%')
+			</if>
+			<if test="user.userName != null and user.userName !=''">
+				AND u.USER_NAME like
+				CONCAT(CONCAT('%',trim(#{user.userName})),'%')
+			</if>
+		</if>
+	</sql>
+
+	<sql id="where">
+		<if test="productId != null and productId !=''">
+			AND pu.PRODUCT_ID = #{productId}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND pu.GOODS_ID = #{goodsId}
+		</if>
+		<if test="userId != null and userId !=''">
+			AND pu.USER_ID = #{userId}
+		</if>
+		<if test="type != null and type !=''">
+			AND pu.TYPE = #{type}
+		</if>
+
+		<if test="commissionMode != null and commissionMode !=''">
+			AND pu.COMMISSION_MODE = #{commissionMode}
+
+		</if>
+		<if test="commissionRate != null">
+			AND pu.COMMISSIONRATE = #{commissionRate}
+		</if>
+		<if test="commissionVolid != null and commissionVolid !=''">
+			AND pu.COMMISSIONVOLID = #{commissionVolid}
+		</if>
+		<if test="valid != null and valid !=''">
+			AND pu.VALID = #{valid}
+		</if>
+		<if test="isSpecial != null and isSpecial !=''">
+			AND pu.IS_SPECIAL = #{isSpecial}
+		</if>
+	</sql>
+
+	<sql id="pageUserWhere">
+		<if test="param.user!=null">
+			<if test="param.user.channelId != null and param.user.channelId !=''">
+				AND channel.CHANNEL_ID = #{param.user.channelId}
+			</if>
+			<if test="param.user.companyName != null and param.user.companyName !=''">
+				AND usr.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{param.user.companyName})),'%')
+			</if>
+			<if test="param.user.userName != null and param.user.userName !=''">
+				AND u.USER_NAME like
+				CONCAT(CONCAT('%',trim(#{param.user.userName})),'%')
+			</if>
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.productId != null and param.productId !=''">
+			AND pu.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.goodsId != null and param.goodsId !=''">
+			AND pu.GOODS_ID = #{param.goodsId}
+		</if>
+		<if test="param.valid != null and param.valid !=''">
+			AND pu.VALID = #{param.valid}
+		</if>
+		<if test="param.type != null and param.type !=''">
+			AND pu.TYPE = #{param.type}
+		</if>
+		<if test="param.userId != null and param.userId !=''">
+			AND pu.USER_ID = #{param.userId}
+		</if>
+		
+		<if test="param.commissionMode != null and param.commissionMode !=''">
+			AND pu.COMMISSION_MODE = #{param.commissionMode}
+
+		</if>
+		<if test="param.commissionRate != null">
+			AND pu.COMMISSIONRATE = #{param.commissionRate}
+		</if>
+		<if test="param.commissionVolid != null and param.commissionVolid !=''">
+			AND pu.COMMISSIONVOLID = #{param.commissionVolid}
+		</if>
+	</sql>
+
+	<select id="count" resultType="Long" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		SELECT count(1)FROM TNT_PRODUCT_USER
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="countWithUser" resultType="Long" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		SELECT count(1) FROM
+		TNT_USER u,
+		TNT_USER_DETAIL usr,
+		TNT_COMPANY_TYPE tp,
+		TNT_CHANNEL channel
+		<where>
+			usr.USER_ID = u.USER_ID and
+			usr.COMPANY_TYPE_ID = tp.COMPANY_TYPE_ID and
+			tp.CHANNEL_ID = channel.CHANNEL_ID and
+			usr.FINAL_STATUS='DOING' and
+			not
+			exists
+			(select 1 from tnt_product_user pu
+			where u.user_id = pu.user_id and
+			pu.valid='false'
+			<include refid="where" />
+			)
+			<include refid="userWhere" />
+		</where>
+	</select>
+	
+	<select id="countWithDistributors" resultType="Long" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		SELECT count(1) FROM
+		TNT_USER u,
+		TNT_USER_DETAIL usr,
+		TNT_COMPANY_TYPE tp,
+		TNT_CHANNEL channel
+		<where>
+			usr.USER_ID = u.USER_ID and
+			usr.COMPANY_TYPE_ID = tp.COMPANY_TYPE_ID and
+			tp.CHANNEL_ID = channel.CHANNEL_ID and
+			usr.FINAL_STATUS='DOING' and
+			not
+			exists
+			(select 1 from tnt_product_user pu
+			where u.user_id = pu.user_id and
+			pu.valid='false'
+			<include refid="where" />
+			)
+			<include refid="userWhere" />
+			<if test="channelIds!=null and channelIds!=''">
+			AND TP.CHANNEL_ID IN (${channelIds})
+		</if>
+		</where>
+	</select>
+
+	<select id="queryPageWithUser" resultMap="tntProductVoResult" parameterType="page" useCache="false">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		u.USER_NAME,usr.COMPANY_NAME,tp.COMPANY_TYPE_ID,tp.COMPANY_TYPE_NAME,
+		channel.CHANNEL_ID,channel.CHANNEL_NAME,channel.CHANNEL_CODE
+		FROM
+		TNT_USER u,
+		TNT_USER_DETAIL usr,
+		TNT_COMPANY_TYPE tp,
+		TNT_CHANNEL channel
+		<where>
+			u.USER_ID = usr.USER_ID and
+			usr.COMPANY_TYPE_ID = tp.COMPANY_TYPE_ID and
+			tp.CHANNEL_ID =
+			channel.CHANNEL_ID and
+			usr.FINAL_STATUS='DOING' and
+			not
+			exists
+			(select 1 from tnt_product_user pu
+			where u.user_id =
+			pu.user_id and
+			pu.valid='false'
+			<include refid="pageWhere" />
+			)
+			<include refid="pageUserWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="queryPageWithDistributors" resultMap="tntProductVoResult" parameterType="page" useCache="false">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		u.USER_NAME,usr.COMPANY_NAME,tp.COMPANY_TYPE_ID,tp.COMPANY_TYPE_NAME,
+		channel.CHANNEL_ID,channel.CHANNEL_NAME,channel.CHANNEL_CODE
+		FROM
+		TNT_USER u,
+		TNT_USER_DETAIL usr,
+		TNT_COMPANY_TYPE tp,
+		TNT_CHANNEL channel
+		<where>
+			u.USER_ID = usr.USER_ID and
+			usr.COMPANY_TYPE_ID = tp.COMPANY_TYPE_ID and
+			tp.CHANNEL_ID =
+			channel.CHANNEL_ID and
+			usr.FINAL_STATUS='DOING' and
+			not
+			exists
+			(select 1 from tnt_product_user pu
+			where u.user_id =
+			pu.user_id and
+			pu.valid='false'
+			<include refid="pageWhere" />
+			)
+			<include refid="pageUserWhere" />
+			<if test="param.channelIds!=null and param.channelIds!=''">
+			AND TP.CHANNEL_ID IN (${param.channelIds})
+		</if>
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		UPDATE TNT_PRODUCT_USER
+		<set>
+			<if test="valid != null">
+				VALID = #{valid,jdbcType=VARCHAR},
+			</if>
+			<if test="commissionMode != null">
+				COMMISSION_MODE = #{commissionMode,jdbcType=VARCHAR},
+			</if>
+			<if test="commissionVolid != null">
+				COMMISSIONVOLID = #{commissionVolid,jdbcType=VARCHAR},
+			</if>
+			<if test="commissionRate != null">
+				COMMISSIONRATE = #{commissionRate,jdbcType=VARCHAR},
+			</if>
+			<if test="isSpecial != null">
+				IS_SPECIAL = #{isSpecial,jdbcType=VARCHAR},
+			</if>
+			<if test="smsChannel != null">
+				SMS_CHANNEL = #{smsChannel,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			USER_ID = #{userId,jdbcType=DECIMAL} and
+			GOODS_ID=#{goodsId,jdbcType=DECIMAL} and
+			TYPE=#{type,jdbcType=VARCHAR} 
+		</where>
+	</update>
+
+	<select id="selectOne" resultMap="tntProductVoResult" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		select
+		<include refid="columns" />
+		from TNT_PRODUCT_USER pu
+		<where>
+			<include refid="where" />
+			<if test="valid != null and valid !=''">
+				AND pu.VALID = #{valid}
+			</if>
+		</where>
+	</select>
+
+	<select id="getByGoodsId" resultMap="tntProductVoResult" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		SELECT
+		u.USER_ID
+		FROM TNT_USER u
+		WHERE
+		not
+		exists
+		(select 1 from tnt_product_user pu
+		where u.user_id =
+		pu.user_id and pu.valid='false'
+		and
+		pu.GOODS_ID = #{goodsId}
+		and
+		pu.type = #{type}
+		)
+	</select>
+
+	<select id="selectList" resultMap="tntProductVoResult1" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		<if test="valid != null and valid =='false'">
+			select
+			<include refid="columns" />
+			from TNT_PRODUCT_USER pu 
+			<where>
+				<include refid="where" />
+			</where>
+		</if>
+		<if test="valid ==null or valid =='true'">
+			select
+			u.user_id,c.channel_id
+			from TNT_USER u,TNT_USER_DETAIL d,TNT_CHANNEL c
+			where
+			u.USER_ID = d.USER_ID
+			and d.CHANNEL_CODE = c.CHANNEL_CODE
+			and d.FINAL_STATUS='DOING'
+			and
+			not
+			exists
+			(select 1 from tnt_product_user pu
+			where
+			u.user_id =
+			pu.user_id and
+			pu.valid='false'
+			<include refid="where" />
+			)
+		</if>
+	</select>
+	
+	<select id="getWhiteUserIds" resultType="java.lang.Long" parameterType="com.lvmama.tnt.prod.po.TntProductUser" useCache="false">
+		select USER_ID from TNT_PRODUCT_USER pu
+		<where>
+			<include refid="where"/>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		<selectKey resultType="java.lang.Long" keyProperty="tntProductUserId" order="BEFORE">
+			select
+			tnt_product_user_id_seq.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_PRODUCT_USER (
+		TNT_PRODUCT_USER_ID,
+		PRODUCT_ID ,
+		GOODS_ID ,
+		USER_ID ,
+		CREATE_TIME,
+		VALID,
+		TYPE,
+		COMMISSION_MODE,
+		COMMISSIONRATE,
+		COMMISSIONVOLID,
+		SMS_CHANNEL,
+		IS_SPECIAL
+		) VALUES
+		(#{tntProductUserId,jdbcType=DECIMAL}
+		,
+		#{productId,jdbcType=DECIMAL}
+		,
+		#{goodsId,jdbcType=DECIMAL} ,
+		#{userId,jdbcType=DECIMAL},
+		sysdate ,
+		#{valid,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},
+		#{commissionMode,jdbcType=VARCHAR},
+		#{commissionRate,jdbcType=DECIMAL},
+		#{commissionVolid,jdbcType=VARCHAR},
+		#{smsChannel,jdbcType=VARCHAR},
+		<if test="isSpecial != null and isSpecial !=''">
+		#{isSpecial,jdbcType=VARCHAR}
+		</if>
+		<if test="isSpecial == null or isSpecial ==''">
+		'N'
+		</if>
+		)
+	</insert>
+
+	<delete id="delete" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		delete from TNT_PRODUCT_USER where PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		and GOODS_ID =
+		#{goodsId,jdbcType=DECIMAL}
+		<if test="type != null and type !=''">
+			and TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="valid != null and valid !=''">
+            and VALID = #{valid,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null and userId !=''">
+            and USER_ID = #{userId,jdbcType=DECIMAL}
+        </if>
+	</delete>
+	
+	<delete id="batchDeleteWhenAdd" parameterType="map">
+	   delete from tnt_product_user u
+		 where goods_id = #{goodsId,jdbcType=DECIMAL}
+		   and product_id = #{productId,jdbcType=DECIMAL}
+		   and valid = 'false'
+		   and exists
+		 (select 1
+		          from tnt_user_detail d, tnt_channel c
+		         where d.channel_code = c.channel_code
+		           and c.show_flag = 'Y'
+		           and c.relate_flag = 'Y'
+		           and d.user_id = u.user_id)
+    </delete>
+
+	<!-- 未使用 -->
+	<select id="queryPage" resultMap="tntProductVoResult" parameterType="page" useCache="false">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT product
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<update id="toblackUserProd" parameterType="java.util.Map">
+		update tnt_Product_User set valid='false' where goods_id=#{goodsId}
+		and type=#{type} and user_id = #{userId}
+	</update>
+	<update id="delSingleCommission" parameterType="java.util.Map">
+		update tnt_Product_User set COMMISSION_MODE=null , COMMISSIONRATE=null where goods_id=#{goodsId}
+		and type=#{type} and user_id = #{userId}
+	</update>
+	
+	<select id="getById" resultMap="tntProductVoResult" parameterType="Long" useCache="false">
+		SELECT <include refid="columns" />
+		    FROM TNT_PRODUCT_USER 
+	        WHERE 
+		        TNT_PRODUCT_USER_ID = #{id} 
+	</select>
+	
+	<update id="updateUsersValid" parameterType="map">
+        update TNT_PRODUCT_USER tpu set tpu.VALID = #{valid,jdbcType=VARCHAR}  
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}  and TYPE = #{type,jdbcType=VARCHAR} 
+        and  exists (select 1 from tnt_user_detail tud,tnt_channel tc where tpu.user_id = tud.user_id
+        and tud.channel_code = tc.channel_code and tc.channel_id =#{channelId,jdbcType=DECIMAL}
+        )
+    </update>
+    
+    <insert id="insertUsersBlack" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+        insert into tnt_product_user
+          (tnt_product_user_id,
+           product_id,
+           goods_id,
+           user_id,
+           create_time,
+           valid,
+           type)
+          (select tnt_product_user_id_seq.nextval,
+                  ${productId},
+                  ${goodsId},
+                  tud.user_id,
+                  sysdate,
+                  'false',
+                  ${type}
+             from tnt_user_detail tud, tnt_channel tc
+            where tud.channel_code = tc.channel_code
+              and tc.channel_id = #{channelId,jdbcType=DECIMAL}
+              and not exists (select 1
+                     from tnt_product_user tpu
+                    where tpu.user_id = tud.user_id
+                      and tpu.goods_id = #{goodsId,jdbcType=DECIMAL}
+                      and tpu.type = #{type,jdbcType=VARCHAR}))
+    </insert>
+    
+    <select id="selectBlackUserConfig" resultType="com.lvmama.tnt.prod.service.distset.TntUserConfigVo" parameterType="Map" useCache="false">
+        SELECT a.user_id as userId,b.user_config_args as userConfigArgs from tnt_product_user a,tnt_user_detail b,tnt_channel c
+        WHERE a.user_id = b.user_id and b.channel_code = c.channel_code
+        and a.goods_id = #{goodsId}
+        and a.type=#{type}
+        and a.valid = 'false'
+        and c.channel_id = #{channelId}
+    </select>
+    
+   <select id="selectWhiteUserConfig" resultType="com.lvmama.tnt.prod.service.distset.TntUserConfigVo"
+		parameterType="Map" useCache="false">
+		select
+		a.user_id AS userId,
+		a.user_config_args AS userConfigArgs,
+		b.COMMISSIONVOLID AS
+		commissionVolid,
+		b.COMMISSION_MODE AS commissionMode,
+		b.COMMISSIONRATE
+		AS commissionRate
+		FROM
+		tnt_user_detail a
+		LEFT JOIN
+		(
+		SELECT
+		pu.USER_ID,
+		pu.COMMISSIONVOLID,
+		pu.COMMISSION_MODE,
+		pu.COMMISSIONRATE,
+		pu.VALID
+		FROM
+		TNT_PRODUCT_USER pu
+		WHERE
+		pu.goods_id =
+		#{goodsId}
+		AND pu.type = #{type}) b
+		ON
+		a.USER_ID = b.user_id,
+		tnt_channel c
+		WHERE
+		a.channel_code = c.channel_code
+		AND
+		c.channel_id = #{channelId}
+		AND (b.valid is null or b.valid = 'true')
+	</select>
+
+	<select id="loadWhiteUserConfig" resultType="com.lvmama.tnt.prod.service.distset.TntUserConfigVo"
+		parameterType="Map" useCache="false">
+		SELECT
+		a.user_id AS userId,
+		a.user_config_args AS userConfigArgs,
+		b.COMMISSIONVOLID AS
+		commissionVolid,
+		b.COMMISSION_MODE AS commissionMode,
+		b.COMMISSIONRATE
+		AS commissionRate
+		FROM
+		tnt_user_detail a
+		LEFT JOIN
+		(
+		SELECT
+		pu.USER_ID,
+		pu.COMMISSIONVOLID,
+		pu.COMMISSION_MODE,
+		pu.COMMISSIONRATE,
+		pu.VALID
+		FROM
+		TNT_PRODUCT_USER pu
+		WHERE
+		pu.goods_id = #{goodsId}
+		AND pu.type =
+		#{type})
+		b
+		ON
+		a.USER_ID = b.user_id
+		and b.valid=#{valid}
+		WHERE
+		a.user_id
+		=#{userId}
+	</select>
+	
+	<update id="updateDownPay" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		UPDATE TNT_PRODUCT_USER SET DOWNPAYMENT = #{downpayment,jdbcType=DECIMAL}
+		<where>
+			USER_ID = #{userId,jdbcType=DECIMAL} and
+			PRODUCT_ID = #{productId,jdbcType=DECIMAL} and
+			GOODS_ID=#{goodsId,jdbcType=DECIMAL} and
+			TYPE=#{type,jdbcType=VARCHAR} 
+		</where>
+	</update>
+	
+	<insert id="insertDownPay" parameterType="com.lvmama.tnt.prod.po.TntProductUser">
+		<selectKey resultType="java.lang.Long" keyProperty="tntProductUserId" order="BEFORE">
+			select
+			tnt_product_user_id_seq.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_PRODUCT_USER (
+		TNT_PRODUCT_USER_ID,
+		PRODUCT_ID ,
+		GOODS_ID ,
+		USER_ID ,
+		CREATE_TIME,
+		VALID,
+		TYPE,
+		IS_SPECIAL,
+		DOWNPAYMENT
+		) VALUES
+		(#{tntProductUserId,jdbcType=DECIMAL}
+		,
+		#{productId,jdbcType=DECIMAL}
+		,
+		#{goodsId,jdbcType=DECIMAL} ,
+		#{userId,jdbcType=DECIMAL},
+		sysdate ,
+		<if test="valid == null or valid ==''">
+		'true',
+		</if>
+		#{type,jdbcType=VARCHAR},
+		<if test="isSpecial != null and isSpecial !=''">
+		#{isSpecial,jdbcType=VARCHAR},
+		</if>
+		<if test="isSpecial == null or isSpecial ==''">
+		'N',
+		</if>
+		#{downpayment,jdbcType=DECIMAL}
+		)
+	</insert>
+	
+	<select id="selectHasCommission" resultType="com.lvmama.tnt.prod.service.distset.TntUserConfigVo" parameterType="Map" useCache="false">
+		select
+			a.user_id AS userId,
+			a.user_config_args AS userConfigArgs,
+			b.COMMISSIONVOLID AS commissionVolid,
+			b.COMMISSION_MODE AS commissionMode,
+			b.COMMISSIONRATE AS commissionRate
+		FROM tnt_user_detail a
+		join TNT_PRODUCT_USER b on a.USER_ID = b.user_id
+		join tnt_channel c on a.channel_code = c.channel_code
+		<where>
+			b.valid = 'true'
+			<if test="goodsId!=null and goodsId!=''">
+				AND b.goods_id = #{goodsId}
+			</if>
+			<if test="type!=null and type!=''">
+				AND b.type = #{type}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				AND c.channel_id = #{channelId}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findSetProdByProd" resultMap="tntProductVoResult" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT *
+		  FROM TNT_PRODUCT_USER PUSER
+		 WHERE PUSER.GOODS_ID = #{param.goodsId}
+		   AND PUSER.PRODUCT_ID = #{param.productId}
+		   AND PUSER.VALID = 'TRUE'
+		   AND PUSER.COMMISSION_MODE IS NOT NULL
+		 ORDER BY PUSER.USER_ID DESC
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	<select id="findB2BDistProdByGoodsId" parameterType="com.lvmama.tnt.prod.po.TntProductUser" resultMap="tntProductVoResult">
+		SELECT distinct p.PRODUCT_ID,p.BRANCH_ID,p.VALID  FROM TNT_PRODUCT p
+ 		WHERE p.BRANCH_ID=#{goodsId} AND p.CATEGORY_ID IN (11, 12, 13)
+	    AND p.CHANNEL_IDS like CONCAT(CONCAT('%,', 102), ',%')  AND p.VALID = 'Y' 
+	    AND not exists (SELECT 1 FROM tnt_product_user u  WHERE p.BRANCH_ID = u.GOODS_ID
+           AND u.type = p.category_id  AND u.VALID = 'false' AND u.USER_ID = #{userId} )
+	</select>
+</mapper>
+

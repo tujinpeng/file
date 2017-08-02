@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntFreedomGroupBranchPriceRuleMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntFreedomGroupBranchPriceRule">
+        <result property="priceId" column="PRICE_ID"/>
+        <result property="freedomProductId" column="FREEDOM_PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="subProductId" column="SUB_PRODUCT_ID"/>
+        <result property="subBranchId" column="SUB_BRANCH_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="price" column="PRICE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		PRICE_ID,FREEDOM_PRODUCT_ID,GROUP_ID,SUB_PRODUCT_ID,SUB_BRANCH_ID,CATEGORY_ID,PRICE_TYPE,PRICE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomGroupBranchPriceRule">
+        INSERT INTO TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE (
+        	PRICE_ID ,
+        	FREEDOM_PRODUCT_ID ,
+        	GROUP_ID ,
+        	SUB_PRODUCT_ID ,
+        	SUB_BRANCH_ID ,
+        	CATEGORY_ID ,
+        	PRICE_TYPE ,
+        	PRICE 
+        ) VALUES (
+        	#{priceId} ,
+        	#{freedomProductId} ,
+        	#{groupId} ,
+        	#{subProductId} ,
+        	#{subBranchId} ,
+        	#{categoryId} ,
+        	#{priceType} ,
+        	#{price} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomGroupBranchPriceRule">
+        UPDATE TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE SET
+	        FREEDOM_PRODUCT_ID = #{freedomProductId} ,
+	        GROUP_ID = #{groupId} ,
+	        SUB_PRODUCT_ID = #{subProductId} ,
+	        SUB_BRANCH_ID = #{subBranchId} ,
+	        CATEGORY_ID = #{categoryId} ,
+	        PRICE_TYPE = #{priceType} ,
+	        PRICE = #{price} 
+        WHERE 
+        	<if test="priceId !=null">
+	        	PRICE_ID = #{priceId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE WHERE
+        PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE 
+	        WHERE 
+		        PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="priceId != null and priceId !=''">
+				AND PRICE_ID = #{priceId}
+	       	</if> 
+			<if test="freedomProductId != null and freedomProductId !=''">
+				AND FREEDOM_PRODUCT_ID = #{freedomProductId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="subProductId != null and subProductId !=''">
+				AND SUB_PRODUCT_ID = #{subProductId}
+	       	</if> 
+			<if test="subBranchId != null and subBranchId !=''">
+				AND SUB_BRANCH_ID = #{subBranchId}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				AND PRICE_TYPE = #{priceType}
+	       	</if> 
+			<if test="price != null and price !=''">
+				AND PRICE = #{price}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.priceId != null and param.priceId !=''">
+				AND PRICE_ID = param.priceId
+	       	</if>
+			<if test="param.freedomProductId != null and param.freedomProductId !=''">
+				AND FREEDOM_PRODUCT_ID = param.freedomProductId
+	       	</if>
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = param.groupId
+	       	</if>
+			<if test="param.subProductId != null and param.subProductId !=''">
+				AND SUB_PRODUCT_ID = param.subProductId
+	       	</if>
+			<if test="param.subBranchId != null and param.subBranchId !=''">
+				AND SUB_BRANCH_ID = param.subBranchId
+	       	</if>
+			<if test="param.categoryId != null and param.categoryId !=''">
+				AND CATEGORY_ID = param.categoryId
+	       	</if>
+			<if test="param.priceType != null and param.priceType !=''">
+				AND PRICE_TYPE = param.priceType
+	       	</if>
+			<if test="param.price != null and param.price !=''">
+				AND PRICE = param.price
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntFreedomGroupBranchPriceRule">
+        SELECT count(*) FROM TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_FREEDOM_GROUP_BRANCH_PRICE_RULE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

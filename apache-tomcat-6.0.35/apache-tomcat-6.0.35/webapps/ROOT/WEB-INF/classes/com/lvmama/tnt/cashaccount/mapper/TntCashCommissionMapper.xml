@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashCommissionMapper">
+
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		<id column="COMMISSION_ID" property="commissionId" jdbcType="DECIMAL" />
+		<result column="SERIAL_NUMBER" property="serialNumber" jdbcType="VARCHAR" />
+		<result column="CASH_ACCOUNT_ID" property="cashAccountId" jdbcType="DECIMAL" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+		<result column="TRADE_FROM" property="tradeFrom" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List" >
+		t.COMMISSION_ID,t.SERIAL_NUMBER,t.CASH_ACCOUNT_ID,t.AMOUNT,t.TRADE_TYPE,t.TRADE_FROM,t.REMARK,t.CREATE_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CASH_COMMISSION
+		where COMMISSION_ID = #{commissionId,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+		delete from TNT_CASH_COMMISSION
+		where COMMISSION_ID = #{commissionId,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		<selectKey resultType="java.lang.Long" keyProperty="commissionId" order="BEFORE" >
+			SELECT TNT_CASH_COMMISSION_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into TNT_CASH_COMMISSION (COMMISSION_ID, SERIAL_NUMBER, CASH_ACCOUNT_ID,
+		AMOUNT, TRADE_TYPE, TRADE_FROM,
+		REMARK, CREATE_TIME)
+		values (#{commissionId,jdbcType=DECIMAL}, #{serialNumber,jdbcType=VARCHAR}, #{cashAccountId,jdbcType=DECIMAL},
+		#{amount,jdbcType=DECIMAL}, #{tradeType,jdbcType=VARCHAR}, #{tradeFrom,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		<selectKey resultType="java.lang.Long" keyProperty="commissionId" order="BEFORE" >
+			SELECT TNT_CASH_COMMISSION_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into TNT_CASH_COMMISSION
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			COMMISSION_ID,
+			<if test="serialNumber != null" >
+				SERIAL_NUMBER,
+			</if>
+			<if test="cashAccountId != null" >
+				CASH_ACCOUNT_ID,
+			</if>
+			<if test="amount != null" >
+				AMOUNT,
+			</if>
+			<if test="tradeType != null" >
+				TRADE_TYPE,
+			</if>
+			<if test="tradeFrom != null" >
+				TRADE_FROM,
+			</if>
+			<if test="remark != null" >
+				REMARK,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			#{commissionId,jdbcType=DECIMAL},
+			<if test="serialNumber != null" >
+				#{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="cashAccountId != null" >
+				#{cashAccountId,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null" >
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="tradeType != null" >
+				#{tradeType,jdbcType=VARCHAR},
+			</if>
+			<if test="tradeFrom != null" >
+				#{tradeFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		update TNT_CASH_COMMISSION
+		<set >
+			<if test="serialNumber != null" >
+				SERIAL_NUMBER = #{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="cashAccountId != null" >
+				CASH_ACCOUNT_ID = #{cashAccountId,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null" >
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="tradeType != null" >
+				TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+			</if>
+			<if test="tradeFrom != null" >
+				TRADE_FROM = #{tradeFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where COMMISSION_ID = #{commissionId,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		update TNT_CASH_COMMISSION
+		set SERIAL_NUMBER = #{serialNumber,jdbcType=VARCHAR},
+		CASH_ACCOUNT_ID = #{cashAccountId,jdbcType=DECIMAL},
+		AMOUNT = #{amount,jdbcType=DECIMAL},
+		TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+		TRADE_FROM = #{tradeFrom,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+		where COMMISSION_ID = #{commissionId,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="updateBySerialNumber" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" >
+		update TNT_CASH_COMMISSION
+		set
+		AMOUNT = #{amount,jdbcType=DECIMAL},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where SERIAL_NUMBER = #{serialNumber,jdbcType=VARCHAR} AND
+		TRADE_TYPE= #{tradeType,jdbcType=VARCHAR} AND
+		CASH_ACCOUNT_ID = #{cashAccountId,jdbcType=DECIMAL} AND
+		TRADE_FROM = #{tradeFrom,jdbcType=VARCHAR}
+	</update>
+	<!--  -->
+	<sql id="commWhere">
+		<if test="serialNumber != null and serialNumber !=''">
+			AND SERIAL_NUMBER = #{serialNumber}
+		</if>
+		<if test="cashAccountId != null and cashAccountId !=''">
+			AND CASH_ACCOUNT_ID = #{cashAccountId}
+		</if>
+		<if test="tradeType != null and tradeType !=''">
+			AND TRADE_TYPE = #{tradeType}
+		</if>
+		<if test="tradeFrom != null and tradeFrom !=''">
+			AND TRADE_FROM = #{tradeFrom}
+		</if>
+		<if test="beginTime != null and beginTime !='' and endTime!=null">
+				<![CDATA[
+					AND CREATE_TIME >= #{beginDateTime} and CREATE_TIME <= #{endDateTime}
+				]]>
+		</if>
+	</sql>
+	<!--  -->
+	<sql id="pageWhere">
+		<if test="param.serialNumber != null and param.serialNumber !=''">
+			AND t.SERIAL_NUMBER = #{param.serialNumber}
+		</if>
+		<if test="param.cashAccountId != null and param.cashAccountId !=''">
+			AND t.CASH_ACCOUNT_ID = #{param.cashAccountId}
+		</if>
+		<if test="param.tradeType != null and param.tradeType !=''">
+			AND t.TRADE_TYPE = #{param.tradeType}
+		</if>
+		<if test="param.tradeFrom != null and param.tradeFrom !=''">
+			AND t.TRADE_FROM = #{param.tradeFrom}
+		</if>
+		<if test="param.beginTime != null and param.beginTime !='' and param.endTime!=null">
+				<![CDATA[
+					AND t.CREATE_TIME >= #{param.beginDateTime} and t.CREATE_TIME <= #{param.endDateTime}
+				]]>
+		</if>
+	</sql>
+	<!--  -->
+	<select id="countCashCommission" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission" resultType="Integer">
+		SELECT COUNT(1) FROM TNT_CASH_COMMISSION 
+		<where>
+			<include refid="commWhere" />
+		</where>
+	</select>
+	<select id="pageQueryCashCommission" parameterType="page" resultMap="BaseResultMap">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="Base_Column_List" />
+		,u.USER_NAME
+		FROM TNT_CASH_COMMISSION t LEFT JOIN TNT_CASH_ACCOUNT c ON t.CASH_ACCOUNT_ID=c.CASH_ACCOUNT_ID LEFT JOIN TNT_USER u ON c.USER_ID=u.USER_ID 
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+</mapper>
+

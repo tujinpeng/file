@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntRouteGroupBranchMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        <result property="tntRouteGroupBranchId" column="TNT_ROUTE_GROUP_BRANCH_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="suppProductId" column="SUPP_PRODUCT_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="price" column="PRICE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	    TNT_ROUTE_GROUP_BRANCH_ID,
+	    DETAIL_ID,
+	    GROUP_ID,
+	    SUPP_PRODUCT_ID,
+	    BRANCH_ID,
+	    PRICE_TYPE,
+	    PRICE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        INSERT INTO TNT_ROUTE_GROUP_BRANCH (
+        	TNT_ROUTE_GROUP_BRANCH_ID,
+	    	DETAIL_ID,
+	    	GROUP_ID,
+	    	SUPP_PRODUCT_ID,
+	    	BRANCH_ID,
+	    	PRICE_TYPE,
+	    	PRICE 
+        ) VALUES (
+        	#{tntRouteGroupBranchId},
+        	#{detailId},
+        	#{groupId},
+        	#{suppProductId},
+        	#{branchId},
+        	#{priceType},
+        	#{price}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        UPDATE TNT_ROUTE_GROUP_BRANCH SET
+	        DETAIL_ID = #{detailId} ,
+	        GROUP_ID = #{groupId} ,
+	        SUPP_PRODUCT_ID = #{suppProductId} ,
+	        BRANCH_ID = #{branchId} ,
+	        PRICE_TYPE = #{priceType} ,
+	        PRICE = #{price} 
+        WHERE 
+        	<if test="tntRouteGroupBranchId !=null">
+	        	TNT_ROUTE_GROUP_BRANCH_ID = #{tntRouteGroupBranchId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ROUTE_GROUP_BRANCH WHERE
+        TNT_ROUTE_GROUP_BRANCH_ID = #{tntRouteGroupBranchId} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_GROUP_BRANCH 
+	        WHERE 
+		        TNT_ROUTE_GROUP_BRANCH_ID = #{tntRouteGroupBranchId} 
+	</select>
+	
+    <select id="getByGroupId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_GROUP_BRANCH 
+	        WHERE 
+		        GROUP_ID = #{groupId} 
+	</select>
+	
+	<sql id="where">
+		<where>	
+		    1=1   				
+			<if test="tntRouteGroupBranchId != null and tntRouteGroupBranchId !=''">
+				AND TNT_ROUTE_GROUP_BRANCH_ID = #{tntRouteGroupBranchId}
+	       	</if> 
+			<if test="detailId != null and detailId !=''">
+				AND DETAIL_ID = #{detailId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="suppProductId != null and suppProductId !=''">
+				AND SUPP_PRODUCT_ID = #{suppProductId}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				AND PRICE_TYPE = #{priceType}
+	       	</if> 
+			<if test="price != null and price !=''">
+				AND PRICE = #{price}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	  
+			1=1    				
+			<if test="param.tntRouteGroupBranchId != null and param.tntRouteGroupBranchId !=''">
+				AND TNT_ROUTE_GROUP_BRANCH_ID = #{param.tntRouteGroupBranchId}
+	       	</if> 
+			<if test="param.detailId != null and param.detailId !=''">
+				AND DETAIL_ID = #{param.detailId}
+	       	</if> 
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = #{param.groupId}
+	       	</if> 
+			<if test="param.suppProductId != null and param.suppProductId !=''">
+				AND SUPP_PRODUCT_ID = #{param.suppProductId}
+	       	</if> 
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = #{param.branchId}
+	       	</if> 
+			<if test="param.priceType != null and param.priceType !=''">
+				AND PRICE_TYPE = #{param.priceType}
+	       	</if> 
+			<if test="param.price != null and param.price !=''">
+				AND PRICE = #{param.price}
+	       	</if> 
+		</where>
+	</sql>
+	
+	 <delete id="deleteByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        DELETE FROM TNT_ROUTE_GROUP_BRANCH
+        <include refid="where"/>
+    </delete>
+    
+	 <delete id="deleteByMap" parameterType="java.util.Map">
+        DELETE FROM TNT_ROUTE_GROUP_BRANCH
+        <include refid="where"/>
+    </delete>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        SELECT count(*) FROM TNT_ROUTE_GROUP_BRANCH 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_GROUP_BRANCH
+	    <include refid="pageWhere"/> 
+	    <include refid="mysqlPageSearchFoot"/> 
+    </select>
+    
+    <sql id="mysqlPageSearchFoot">
+    	LIMIT #{startRowsForMySql},#{pageSize}
+    </sql>
+    
+    
+    <select id="findByMap" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_GROUP_BRANCH 
+	        <include refid="where"/> 
+	</select>
+
+</mapper>
+

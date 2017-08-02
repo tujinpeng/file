@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cps.mysql.mapper.TntCpsMediaMaterialMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cps.vo.TntCpsMediaMaterial">
+	   <result property="mediaMaterialId" column="MEDIA_MATERIAL_ID"/>
+	   <result property="userId" column="USER_ID"/>
+	   <result property="mediaId" column="MEDIA_ID"/>
+	   <result property="mediaName" column="MEDIA_NAME"/>
+	   <result property="advertiseName" column="ADVERTISE_NAME"/>
+	   <result property="advertiseId" column="ADVERTISE_ID"/>
+	   <result property="materialId" column="MATERIAL_ID"/>
+	   <result property="materialType" column="MATERIAL_TYPE"/>
+	   <result property="advertise" column="ADVERTISE"/>
+	   <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	<insert id="insert" parameterType="com.lvmama.tnt.cps.vo.TntCpsMediaMaterial">
+	      INSERT INTO TNT_CPS_MEDIA_MATERIAL (
+	        	USER_ID,
+	        	MEDIA_ID,
+	        	MEDIA_NAME,
+	        	ADVERTISE_NAME,
+	        	ADVERTISE_ID,
+	        	MATERIAL_ID,
+	        	MATERIAL_TYPE,
+	        	ADVERTISE,
+	        	CREATE_TIME
+	        ) VALUES (
+	        	#{userId,jdbcType=DECIMAL},
+	        	#{mediaId,jdbcType=DECIMAL},
+	        	#{mediaName,jdbcType=VARCHAR},
+	        	#{advertiseName,jdbcType=VARCHAR},
+	        	#{advertiseId,jdbcType=DECIMAL},
+	        	#{materialId,jdbcType=DECIMAL},
+	        	#{materialType,jdbcType=DECIMAL},
+	        	#{advertise,jdbcType=VARCHAR},
+		      	NOW()
+	        )
+	</insert>
+    <select id="queryByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.cps.vo.TntCpsMediaMaterial" >
+   	    SELECT * FROM TNT_CPS_MEDIA_MATERIAL A , TNT_CPS_MEDIA B
+   	    WHERE 1=1 AND A.MEDIA_ID = B.MEDIA_ID AND B.AUDIT_STATUS = 'PassAudit'
+		<include refid="where" />
+    </select>
+	<sql id="where">
+		<if test="mediaMaterialId != null and mediaMaterialId !='' ">
+			AND	A.MEDIA_MATERIAL_ID = #{mediaMaterialId}
+		</if>
+		<if test="userId != null and userId !='' ">
+			AND	A.USER_ID = #{userId}
+		</if>
+		<if test="mediaId != null and mediaId !='' ">
+			AND	A.MEDIA_ID = #{mediaId}
+		</if>
+		<if test="mediaName != null and mediaName !='' ">
+			AND	 A.MEDIA_NAME = #{mediaName}
+		</if>
+		<if test="advertiseName != null and advertiseName !='' ">
+			AND	 A.ADVERTISE_NAME = #{advertiseName}
+		</if>
+		<if test="advertiseId != null and advertiseId !='' ">
+			AND	 A.ADVERTISE_ID = #{advertiseId}
+		</if>
+		<if test="materialId != null and materialId !='' ">
+			AND	 A.MATERIAL_ID = #{materialId}
+		</if>
+		<if test="materialType != null and materialType !='' ">
+			AND	 A.MATERIAL_TYPE = #{materialType}
+		</if>
+		<if test="advertise != null and advertise !='' ">
+			AND	 A.ADVERTISE = #{advertise}
+		</if>
+	</sql>
+
+	
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.qrcode.mapper.TntOrderQrCodeSettleMapper" >
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    <id column="TNT_ORDER_QRCODE_SETTLE_ID" property="tntOrderQrcodeSettleId" jdbcType="DECIMAL" />
+    <result column="DISTRIBUTOR_ID" property="distributorId" jdbcType="DECIMAL" />
+    <result column="UNSETTLE_MONEY" property="unsettleMoney" jdbcType="DECIMAL" />
+    <result column="SETTLED_MONEY" property="settledMoney" jdbcType="DECIMAL" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="VER" property="ver" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TNT_ORDER_QRCODE_SETTLE_ID, DISTRIBUTOR_ID, UNSETTLE_MONEY, SETTLED_MONEY, UPDATE_TIME,
+    VER
+  </sql>
+
+  <sql id="queryWhere">
+    <if test="tntOrderQrcodeSettleId != null and tntOrderQrcodeSettleId != ''">
+      and TNT_ORDER_QRCODE_SETTLE_ID = #{tntOrderQrcodeSettleId}
+    </if>
+    <if test="distributorId != null and distributorId != ''">
+      and DISTRIBUTOR_ID = #{distributorId}
+    </if>
+    <if test="unsettleMoney != null and unsettleMoney != ''">
+      and UNSETTLE_MONEY = #{unsettleMoney}
+    </if>
+    <if test="settledMoney != null and settledMoney != ''">
+      and SETTLED_MONEY = #{settledMoney}
+    </if>
+    <if test="updateTime != null and updateTime != ''">
+      and UPDATE_TIME = #{updateTime}
+    </if>
+    <if test="ver != null and ver != ''">
+      and VER = #{ver}
+    </if>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TNT_ORDER_QRCODE_SETTLE
+    where TNT_ORDER_QRCODE_SETTLE_ID = #{tntOrderQrcodeSettleId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TNT_ORDER_QRCODE_SETTLE
+    where TNT_ORDER_QRCODE_SETTLE_ID = #{tntOrderQrcodeSettleId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    <selectKey resultType="java.lang.Long" keyProperty="tntOrderQrcodeSettleId" order="BEFORE" >
+      SELECT TNT_ORDER_QRCODE_SETTLE_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into TNT_ORDER_QRCODE_SETTLE (TNT_ORDER_QRCODE_SETTLE_ID, DISTRIBUTOR_ID,
+      UNSETTLE_MONEY, SETTLED_MONEY, UPDATE_TIME, 
+      VER)
+    values (#{tntOrderQrcodeSettleId,jdbcType=DECIMAL}, #{distributorId,jdbcType=DECIMAL},
+      #{unsettleMoney,jdbcType=DECIMAL}, #{settledMoney,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{ver,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    <selectKey resultType="java.lang.Long" keyProperty="tntOrderQrcodeSettleId" order="BEFORE" >
+      SELECT TNT_ORDER_QRCODE_SETTLE_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into TNT_ORDER_QRCODE_SETTLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      TNT_ORDER_QRCODE_SETTLE_ID,
+      <if test="distributorId != null" >
+        DISTRIBUTOR_ID,
+      </if>
+      <if test="unsettleMoney != null" >
+        UNSETTLE_MONEY,
+      </if>
+      <if test="settledMoney != null" >
+        SETTLED_MONEY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="ver != null" >
+        VER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{tntOrderQrcodeSettleId,jdbcType=DECIMAL},
+      <if test="distributorId != null" >
+        #{distributorId,jdbcType=DECIMAL},
+      </if>
+      <if test="unsettleMoney != null" >
+        #{unsettleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="settledMoney != null" >
+        #{settledMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ver != null" >
+        #{ver,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    update TNT_ORDER_QRCODE_SETTLE
+    <set >
+      <if test="distributorId != null" >
+        DISTRIBUTOR_ID = #{distributorId,jdbcType=DECIMAL},
+      </if>
+      <if test="unsettleMoney != null" >
+        UNSETTLE_MONEY = #{unsettleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="settledMoney != null" >
+        SETTLED_MONEY = #{settledMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ver != null" >
+        VER = #{ver,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TNT_ORDER_QRCODE_SETTLE_ID = #{tntOrderQrcodeSettleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    update TNT_ORDER_QRCODE_SETTLE
+    set DISTRIBUTOR_ID = #{distributorId,jdbcType=DECIMAL},
+      UNSETTLE_MONEY = #{unsettleMoney,jdbcType=DECIMAL},
+      SETTLED_MONEY = #{settledMoney,jdbcType=DECIMAL},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      VER = #{ver,jdbcType=VARCHAR}
+    where TNT_ORDER_QRCODE_SETTLE_ID = #{tntOrderQrcodeSettleId,jdbcType=DECIMAL}
+  </update>
+  <!--增加分销商待结算金额  -->
+  <update id="updateUnSettleByUserId" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    update TNT_ORDER_QRCODE_SETTLE
+    set 
+      UNSETTLE_MONEY = UNSETTLE_MONEY+#{unsettleMoney,jdbcType=DECIMAL},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where DISTRIBUTOR_ID = #{distributorId,jdbcType=DECIMAL}
+  </update>
+  <!--分销商已结算金额  -->
+  <update id="updateSettledByUserId" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    update TNT_ORDER_QRCODE_SETTLE
+    set 
+      UNSETTLE_MONEY = UNSETTLE_MONEY-#{unsettleMoney,jdbcType=DECIMAL},
+      SETTLED_MONEY = SETTLED_MONEY+#{settledMoney,jdbcType=DECIMAL},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where DISTRIBUTOR_ID = #{distributorId,jdbcType=DECIMAL}
+  </update>
+  <!--分销商退款金额  -->
+  <update id="updateBackSettledByUserId" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" >
+    update TNT_ORDER_QRCODE_SETTLE
+    set 
+    <if test="unsettleMoney != null" >
+        UNSETTLE_MONEY = UNSETTLE_MONEY-#{unsettleMoney,jdbcType=DECIMAL},
+    </if>
+    <if test="settledMoney != null" >
+        SETTLED_MONEY = SETTLED_MONEY-#{settledMoney,jdbcType=DECIMAL},
+    </if>
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where DISTRIBUTOR_ID = #{distributorId,jdbcType=DECIMAL}
+  </update>
+
+  <select id="queryListByCondition" parameterType="com.lvmama.tnt.qrcode.ticket.vo.TntOrderQrCodeSettle" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from TNT_ORDER_QRCODE_SETTLE
+    <where>
+      <include refid="queryWhere"/>
+    </where>
+
+  </select>
+
+  <select id="queryByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from TNT_ORDER_QRCODE_SETTLE
+    where DISTRIBUTOR_ID = #{userId}
+  </select>
+</mapper>

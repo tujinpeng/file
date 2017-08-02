@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntGoodsNotimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntGoodsNotimePrice">
+	    <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TIME_PRICE_ID,PRODUCT_ID,GOODS_ID,START_DATE,END_DATE
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntGoodsNotimePrice">
+		<selectKey resultType="java.lang.Long" keyProperty="timePriceId"
+			order="BEFORE">
+			select  TNT_GOODS_NOTIME_PRICE_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_GOODS_NOTIME_PRICE (
+         	TIME_PRICE_ID,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	START_DATE ,
+        	END_DATE 
+        ) VALUES (
+        	#{timePriceId,jdbcType=DECIMAL} ,
+        	#{productId} ,
+        	#{goodsId} ,
+        	#{startDate,jdbcType=DATE} ,
+        	#{endDate,jdbcType=DATE} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntGoodsNotimePrice">
+        UPDATE TNT_GOODS_NOTIME_PRICE SET
+	        START_DATE = #{startDate,jdbcType=DATE} ,
+	        END_DATE = #{endDate,jdbcType=DATE} 
+        WHERE 
+        	<if test="goodsId !=null">
+	        	GOODS_ID = #{goodsId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_GOODS_NOTIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_GOODS_NOTIME_PRICE 
+	        WHERE 
+		        TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<select id="getAperodicProductByBranchId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_GOODS_NOTIME_PRICE 
+	        WHERE 
+		        GOODS_ID = #{goodsId}
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="startDate != null and startDate !=''">
+				AND START_DATE = #{startDate}
+	       	</if> 
+			<if test="endDate != null and endDate !=''">
+				AND END_DATE = #{endDate}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID =  #{param.productId}
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID =  #{param.goodsId}
+	       	</if>
+			<if test="param.startDate != null and param.startDate !=''">
+				AND START_DATE =  #{param.startDate}
+	       	</if>
+			<if test="param.endDate != null and param.endDate !=''">
+				AND END_DATE =  #{param.endDate}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntGoodsNotimePrice">
+        SELECT count(*) FROM TNT_GOODS_NOTIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_GOODS_NOTIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

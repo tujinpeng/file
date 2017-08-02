@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.seconddistributor.mapper.TntMarkupRuleMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+        <result property="markupRuleId" column="MARKUP_RULE_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="markupRule" column="MARKUP_RULE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="ruleStatus" column="RULE_STATUS"/>
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="ruleCanal" column="RULE_CANAL"/>
+        
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		MARKUP_RULE_ID,PRODUCT_ID,GOODS_ID,USER_ID,MARKUP_RULE,CREATE_TIME,UPDATE_TIME,RULE_STATUS,RULE_CANAL,PRODUCT_TYPE
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+	<selectKey resultType="java.lang.Long" keyProperty="markupRuleId" order="BEFORE">
+			select  TNT_MARKUP_RULE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_MARKUP_RULE (
+        	MARKUP_RULE_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	USER_ID ,
+        	MARKUP_RULE ,
+        	CREATE_TIME ,
+        	UPDATE_TIME ,
+        	RULE_STATUS,
+        	PRODUCT_TYPE,
+        	RULE_CANAL
+        ) VALUES (
+        	#{markupRuleId} ,
+        	#{productId} ,
+        	#{goodsId} ,
+        	#{userId} ,
+        	#{markupRule} ,
+        	#{createTime} ,
+        	#{updateTime} ,
+        	#{ruleStatus},
+        	#{productType},
+        	#{ruleCanal}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+        UPDATE TNT_MARKUP_RULE  
+        <set>
+        <if test="productId !=null">
+	        PRODUCT_ID = #{productId} ,
+	     </if>
+        <if test="goodsId !=null">
+	        GOODS_ID = #{goodsId} ,
+	     </if>
+        <if test="userId !=null">
+	        USER_ID = #{userId} ,
+	     </if>
+        <if test="markupRule !=null">
+	        MARKUP_RULE = #{markupRule} ,
+	     </if>
+        <if test="updateTime !=null">
+	        UPDATE_TIME = #{updateTime} ,
+	     </if>
+        <if test="ruleStatus !=null">
+	        RULE_STATUS = #{ruleStatus}
+	     </if>
+	     </set>
+        <where> 
+        	<if test="markupRuleId !=null">
+	        	AND MARKUP_RULE_ID = #{markupRuleId} 
+	        </if>
+        	<if test="productId !=null">
+	        	AND PRODUCT_ID = #{productId} 
+	        </if>
+        	<if test="goodsId !=null">
+	        	AND GOODS_ID = #{goodsId} 
+	        </if>
+        	<if test="userId !=null">
+	        	AND USER_ID = #{userId} 
+	        </if>
+	        <if test="ruleStatus !=null">
+	        	AND RULE_STATUS = #{ruleStatus}
+	        </if>
+	        <if test="productType != null">
+	           AND PRODUCT_TYPE = #{productType}
+	        </if>
+	        <if test="ruleCanal != null">
+	           AND RULE_CANAL = #{ruleCanal}
+	        </if>
+	     </where>
+	</update>
+	<update id="changeRuleStatus" parameterType="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+        UPDATE TNT_MARKUP_RULE SET 
+        <if test="updateTime !=null">
+	        UPDATE_TIME = #{updateTime} ,
+	     </if>
+        <if test="ruleStatus !=null">
+	        RULE_STATUS = #{ruleStatus}
+	     </if>
+        <where> 
+        	<if test="productId !=null">
+	        	AND PRODUCT_ID = #{productId} 
+	        </if>
+        	<if test="goodsId !=null">
+	        	AND GOODS_ID = #{goodsId} 
+	        </if>
+        	<if test="userId !=null">
+	        	AND USER_ID = #{userId} 
+	        </if>
+	        <if test="productType != null">
+	           AND PRODUCT_TYPE = #{productType}
+	        </if>
+	        <if test="ruleCanal != null">
+	           AND RULE_CANAL = #{ruleCanal}
+	        </if>
+	     </where>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_MARKUP_RULE WHERE 
+        MARKUP_RULE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_MARKUP_RULE 
+	        WHERE 
+		        MARKUP_RULE_ID = #{id} 
+	</select>
+	
+	 <select id="getByProductId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+		SELECT <include refid="columns" />
+		    FROM TNT_MARKUP_RULE 
+	        <where>	   
+		        <if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+	       	<if test="ruleStatus != null and ruleStatus !=''">
+				AND RULE_STATUS = #{ruleStatus}
+	       	</if> 
+	       	<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if>
+			<if test="ruleCanal != null and ruleCanal !=''">
+				AND RULE_CANAL = #{ruleCanal}
+			</if>
+			<if test="productType != null">
+	           AND PRODUCT_TYPE = #{productType}
+	        </if>
+	        <if test="ruleCanal != null">
+	           AND RULE_CANAL = #{ruleCanal}
+	        </if>
+		    </where>
+		    ORDER BY CREATE_TIME
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="markupRuleId != null and markupRuleId !=''">
+				AND MARKUP_RULE_ID = #{markupRuleId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="markupRule != null and markupRule !=''">
+				AND MARKUP_RULE = #{markupRule}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+	       	<if test="productType != null and productType !=''">
+	           AND PRODUCT_TYPE = #{productType}
+	        </if>
+	        <if test="ruleCanal != null and ruleCanal !=''">
+	           AND RULE_CANAL = #{ruleCanal}
+	        </if>
+		</where>
+	</sql>
+		
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.seconddistributor.po.TntMarkupRule">
+        SELECT count(*) FROM TNT_MARKUP_RULE 
+		<include refid="where"/>    
+    </select>
+    
+
+</mapper>
+

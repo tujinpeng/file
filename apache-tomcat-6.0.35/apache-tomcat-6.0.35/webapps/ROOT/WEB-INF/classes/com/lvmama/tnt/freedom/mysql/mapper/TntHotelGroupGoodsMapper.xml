@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntHotelGroupGoodsMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupGoods">
+        <result property="id" column="ID"/>
+        <result property="freedomProductId" column="FREEDOM_PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="goodsStatus" column="GOODS_STATUS"/>
+        <result property="goodsSaleFlag" column="GOODS_SALE_FLAG"/>
+        <result property="goodsName" column="GOODS_NAME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,FREEDOM_PRODUCT_ID,GROUP_ID,BRANCH_ID,GOODS_ID,GOODS_STATUS,GOODS_SALE_FLAG,GOODS_NAME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupGoods">
+        INSERT INTO TNT_HOTEL_GROUP_GOODS (
+        	ID ,
+        	FREEDOM_PRODUCT_ID ,
+        	GROUP_ID ,
+        	BRANCH_ID ,
+        	GOODS_ID ,
+        	GOODS_STATUS ,
+        	GOODS_SALE_FLAG ,
+        	GOODS_NAME 
+        ) VALUES (
+        	#{id} ,
+        	#{freedomProductId} ,
+        	#{groupId} ,
+        	#{branchId} ,
+        	#{goodsId} ,
+        	#{goodsStatus} ,
+        	#{goodsSaleFlag} ,
+        	#{goodsName} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupGoods">
+        UPDATE TNT_HOTEL_GROUP_GOODS SET
+	        FREEDOM_PRODUCT_ID = #{freedomProductId} ,
+	        GROUP_ID = #{groupId} ,
+	        BRANCH_ID = #{branchId} ,
+	        GOODS_ID = #{goodsId} ,
+	        GOODS_STATUS = #{goodsStatus} ,
+	        GOODS_SALE_FLAG = #{goodsSaleFlag} ,
+	        GOODS_NAME = #{goodsName} 
+        WHERE 
+        	<if test="id !=null">
+	        	ID = #{id} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_GROUP_GOODS WHERE
+        ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_GROUP_GOODS 
+	        WHERE 
+		        ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="id != null and id !=''">
+				AND ID = #{id}
+	       	</if> 
+			<if test="freedomProductId != null and freedomProductId !=''">
+				AND FREEDOM_PRODUCT_ID = #{freedomProductId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="goodsStatus != null and goodsStatus !=''">
+				AND GOODS_STATUS = #{goodsStatus}
+	       	</if> 
+			<if test="goodsSaleFlag != null and goodsSaleFlag !=''">
+				AND GOODS_SALE_FLAG = #{goodsSaleFlag}
+	       	</if> 
+			<if test="goodsName != null and goodsName !=''">
+				AND GOODS_NAME = #{goodsName}
+	       	</if> 
+	       	<if test="goodsNameUnequal != null and goodsNameUnequal !=''">
+				AND GOODS_NAME <![CDATA[ <> ]]> #{goodsNameUnequal}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.id != null and param.id !=''">
+				AND ID = param.id
+	       	</if>
+			<if test="param.freedomProductId != null and param.freedomProductId !=''">
+				AND FREEDOM_PRODUCT_ID = param.freedomProductId
+	       	</if>
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = param.groupId
+	       	</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = param.branchId
+	       	</if>
+			<if test="param.goodsId != null and param.goodsId !=''">
+				AND GOODS_ID = param.goodsId
+	       	</if>
+			<if test="param.goodsStatus != null and param.goodsStatus !=''">
+				AND GOODS_STATUS = param.goodsStatus
+	       	</if>
+			<if test="param.goodsSaleFlag != null and param.goodsSaleFlag !=''">
+				AND GOODS_SALE_FLAG = param.goodsSaleFlag
+	       	</if>
+			<if test="param.goodsName != null and param.goodsName !=''">
+				AND GOODS_NAME = param.goodsName
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupGoods">
+        SELECT count(*) FROM TNT_HOTEL_GROUP_GOODS 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_GROUP_GOODS 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="getTntHotelGroupGoodsList" resultMap="baseResultMap" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupGoods">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_GROUP_GOODS 
+	       <include refid="where"/>
+	</select>
+	
+	<select id="getListByGoodsIds" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_HOTEL_GROUP_GOODS 
+		WHERE FREEDOM_PRODUCT_ID = #{freedomProductId}
+		AND GOODS_ID in 
+		<foreach collection="goodsIdList" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    	</foreach> 
+    	
+    </select>
+
+</mapper>
+

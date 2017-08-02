@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.channel.mysql.mapper.TntCommFillwhiteMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.channel.po.TntCommFillwhite">
+        <result property="id" column="ID"/>
+        <result property="categoryClassification" column="CATEGORY_CLASSIFICATION"/>
+        <result property="dataSource" column="DATA_SOURCE"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,CATEGORY_CLASSIFICATION,DATA_SOURCE,UPDATE_TIME 
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.channel.po.TntCommFillwhite">
+        INSERT INTO TNT_COM_FILLWHITE (
+        	CATEGORY_CLASSIFICATION ,
+        	DATA_SOURCE ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{categoryClassification} ,
+        	#{dataSource} ,
+        	#{updateTime} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.channel.po.TntCommFillwhite">
+        UPDATE TNT_COM_FILLWHITE SET
+	        CATEGORY_CLASSIFICATION = #{categoryClassification} ,
+	        DATA_SOURCE = #{dataSource} ,
+	        UPDATE_TIME = #{updateTime} 
+        WHERE 
+        	<if test="id !=null">
+	        	ID = #{id} 
+	        </if>
+	</update>
+	
+	
+	<update id="updateWriteWhite" parameterType="java.util.Map">
+		 update TNT_COM_FILLWHITE  set DATA_SOURCE=#{dataSource} , UPDATE_TIME=#{updateTime}  where  CATEGORY_CLASSIFICATION=#{categoryClassification}
+	</update>
+	
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_COM_FILLWHITE WHERE
+        ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COM_FILLWHITE 
+	        WHERE 
+		        ID = #{id} 
+	</select>
+	
+    <select id="getByParem" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_COM_FILLWHITE 
+	        WHERE 
+		        CATEGORY_CLASSIFICATION = #{categoryClassification} 
+	</select>
+	
+	
+	
+    <select id="selectDataSource" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT <include refid="columns" />
+			 FROM TNT_COM_FILLWHITE WHERE  CATEGORY_CLASSIFICATION=#{categoryClassification}
+	</select>
+	
+
+</mapper>
+

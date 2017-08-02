@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntAdPromMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntAdProm">
+        <result property="adPromNum" column="AD_PROM_NUM"/>
+        <result property="adPromProdId" column="AD_PROM_PROD_ID"/>
+        <result property="adPromSort" column="AD_PROM_SORT"/>
+        <result property="adPromKey" column="AD_PROM_KEY"/>
+        <result property="status" column="STATUS"/>
+        <result property="isSoldable" column="IS_SOLDABLE"/>
+        <result property="adPromDistributor" column="AD_PROM_DISTRIBUTOR"/>
+        <result property="destination" column="DESTINATION"/>
+        <result property="playWay" column="PLAY_WAY"/>
+        <result property="tripDay" column="TRIP_DAY"/>
+	</resultMap>
+	
+	<resultMap id="resultUserMap" type="com.lvmama.tnt.user.po.TntUser">
+       	<result property="userId" column="USER_ID" />
+       	<result property="realName" column="REAL_NAME" />
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		AD_PROM_NUM,AD_PROM_PROD_ID,AD_PROM_SORT,AD_PROM_KEY,STATUS,IS_SOLDABLE,AD_PROM_DISTRIBUTOR,DESTINATION,PLAY_WAY,TRIP_DAY
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntAdProm">
+		<selectKey resultType="java.lang.Long" keyProperty="adPromNum"
+			order="BEFORE">
+			select  AD_PROM_NUM_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_AD_PROM (
+        	AD_PROM_NUM ,
+        	AD_PROM_PROD_ID ,
+        	AD_PROM_SORT ,
+        	AD_PROM_KEY ,
+        	STATUS ,
+        	IS_SOLDABLE ,
+        	AD_PROM_DISTRIBUTOR ,
+        	DESTINATION ,
+        	PLAY_WAY ,
+        	TRIP_DAY 
+        ) VALUES (
+        	#{adPromNum} ,
+        	#{adPromProdId,jdbcType=VARCHAR} ,
+        	#{adPromSort,jdbcType=VARCHAR} ,
+        	#{adPromKey,jdbcType=VARCHAR} ,
+        	#{status,jdbcType=VARCHAR} ,
+        	#{isSoldable,jdbcType=VARCHAR} ,
+        	#{adPromDistributor,jdbcType=VARCHAR} ,
+        	#{destination,jdbcType=VARCHAR} ,
+        	#{playWay,jdbcType=VARCHAR} ,
+        	#{tripDay,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntAdProm">
+        UPDATE TNT_AD_PROM SET
+	         AD_PROM_PROD_ID = #{adPromProdId,jdbcType=VARCHAR} , 
+	        <!-- AD_PROM_SORT = #{adPromSort,jdbcType=VARCHAR} ,
+	        AD_PROM_KEY = #{adPromKey,jdbcType=VARCHAR} , -->
+	        STATUS = #{status,jdbcType=VARCHAR} ,
+	        IS_SOLDABLE = #{isSoldable,jdbcType=VARCHAR} ,
+	        AD_PROM_DISTRIBUTOR = #{adPromDistributor,jdbcType=VARCHAR} ,
+	        DESTINATION = #{destination,jdbcType=VARCHAR} ,
+	        PLAY_WAY = #{playWay,jdbcType=VARCHAR} ,
+	        TRIP_DAY = #{tripDay,jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="adPromNum !=null">
+	        	AD_PROM_NUM = #{adPromNum} 
+	        </if>
+	</update>
+	
+	<update id="updateStatus" parameterType="com.lvmama.tnt.prod.po.TntAdProm">
+		UPDATE TNT_AD_PROM SET
+			STATUS = #{status,jdbcType=VARCHAR} ,
+		    IS_SOLDABLE = #{isSoldable,jdbcType=VARCHAR} ,
+		    DESTINATION = #{destination,jdbcType=VARCHAR} ,
+	        PLAY_WAY = #{playWay,jdbcType=VARCHAR} ,
+	        TRIP_DAY = #{tripDay,jdbcType=VARCHAR} 
+	    WHERE
+	      AD_PROM_SORT = #{adPromSort} AND 
+	      AD_PROM_KEY = #{adPromKey}
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_AD_PROM WHERE
+        AD_PROM_NUM = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_AD_PROM 
+	        WHERE 
+		        AD_PROM_NUM = #{id} 
+	</select>
+	
+	<!-- <select id="productPromoteList" resultMap="baseResultMap" parameterType="java.lang.Long" useCache="false">
+	SELECT 
+	AD_PROM_NUM,AD_PROM_PROD_ID,AD_PROM_SORT,AD_PROM_KEY,STATUS,IS_SOLDABLE 
+	FROM TNT_AD_PROM 
+	</select> -->
+	
+	<sql id="where">
+		<where>	      				
+			<if test="adPromNum != null and adPromNum !=''">
+				AND AD_PROM_NUM = #{adPromNum}
+	       	</if> 
+			<if test="adPromProdId != null and adPromProdId !=''">
+				AND AD_PROM_PROD_ID = #{adPromProdId}
+	       	</if> 
+			<if test="adPromSort != null and adPromSort !=''">
+				AND AD_PROM_SORT = #{adPromSort}
+	       	</if> 
+			<if test="adPromKey != null and adPromKey !=''">
+				AND AD_PROM_KEY = #{adPromKey}
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+			<if test="isSoldable != null and isSoldable !=''">
+				AND IS_SOLDABLE = #{isSoldable}
+	       	</if> 
+			<if test="adPromDistributor != null and adPromDistributor !=''">
+				AND AD_PROM_DISTRIBUTOR like 
+				CONCAT(CONCAT('%',#{adPromDistributor}),'%')
+	       	</if> 
+			<if test="destination != null and destination !=''">
+				AND DESTINATION = #{destination}
+	       	</if> 
+			<if test="playWay != null and playWay !=''">
+				AND PLAY_WAY = #{playWay}
+	       	</if> 
+			<if test="tripDay != null and tripDay !=''">
+				AND TRIP_DAY = #{tripDay}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.adPromNum != null and param.adPromNum !=''">
+				AND AD_PROM_NUM = #{param.adPromNum}
+	       	</if>
+			<if test="param.adPromProdId != null and param.adPromProdId !=''">
+				AND AD_PROM_PROD_ID = #{param.adPromProdId}
+	       	</if>
+			<if test="param.adPromSort != null and param.adPromSort !=''">
+				AND AD_PROM_SORT = #{param.adPromSort}
+	       	</if>
+			<if test="param.adPromKey != null and param.adPromKey !=''">  
+				AND AD_PROM_KEY like 
+				CONCAT(CONCAT('%',#{param.adPromKey}),'%')
+	       	</if>
+			<if test="param.status != null and param.status !=''">
+				AND STATUS = #{param.status}
+	       	</if>
+			<if test="param.isSoldable != null and param.isSoldable !=''">
+				AND IS_SOLDABLE = #{param.isSoldable}
+	       	</if>
+			<if test="param.adPromDistributor != null and param.adPromDistributor !=''">
+				AND AD_PROM_DISTRIBUTOR like 
+				CONCAT(CONCAT('%',#{param.adPromDistributor}),'%')
+	       	</if>
+			<if test="param.destination != null and param.destination !=''">
+				AND DESTINATION = #{param.destination}
+	       	</if>
+			<if test="param.playWay != null and param.playWay !=''">
+				AND PLAY_WAY = #{param.playWay}
+	       	</if>
+			<if test="param.tripDay != null and param.tripDay !=''">
+				AND TRIP_DAY = #{param.tripDay}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count"  parameterType="com.lvmama.tnt.prod.po.TntAdProm" resultType="Integer">
+        SELECT count(*) FROM TNT_AD_PROM 
+        <!-- <include refid="where" /> -->
+    </select>
+    
+    <select id="findPage"  parameterType="page" resultMap="baseResultMap">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_AD_PROM 
+		<!-- <include refid="pageWhere"/> -->
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="countWithDetail" parameterType="com.lvmama.tnt.prod.po.TntAdProm" resultType="java.lang.Integer">
+		SELECT count(1) FROM TNT_AD_PROM 
+		<include refid="where" /> 
+	</select>
+	
+	<!-- 用于和detail的分页关联查询 -->
+	<select id="fetchPageWithDetail" parameterType="page" resultMap="baseResultMap">
+		<include refid="basic.pageSearchHead" />
+		SELECT 
+			<include refid="columns" />
+		FROM TNT_AD_PROM
+		<include refid="pageWhere" /> 
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+    <select id="listADPromoteByChannelCode" parameterType="java.lang.String" resultMap="resultUserMap" >
+         SELECT
+           TU.USER_ID,REAL_NAME
+          FROM TNT_USER TU,TNT_USER_DETAIL TUD WHERE TU.USER_ID = TUD.USER_ID AND TUD.CHANNEL_CODE = #{channel_code}
+    </select>
+
+	<select id="queryPromByKey"  parameterType="com.lvmama.tnt.prod.po.TntAdProm" resultMap="baseResultMap" >
+			SELECT
+			<include refid="columns" />
+			    FROM TNT_AD_PROM WHERE 
+			AD_PROM_SORT = #{adPromSort} AND AD_PROM_KEY = #{adPromKey}
+	</select>
+	
+	<select id="getAdPromByAdPromNum" parameterType="java.lang.Long" resultMap="baseResultMap" >
+		SELECT
+		<include refid="columns" />
+		FROM TNT_AD_PROM WHERE
+			AD_PROM_NUM = #{adPromNum}
+	</select>
+	
+	<select id="queryDistributorList" parameterType="com.lvmama.tnt.user.po.TntUser" resultMap="resultUserMap">
+		SELECT
+           TU.USER_ID,REAL_NAME
+          FROM TNT_USER TU,TNT_USER_DETAIL TUD WHERE TU.USER_ID = TUD.USER_ID AND TUD.CHANNEL_CODE = #{channelCode}
+           AND TU.USER_ID = #{userId}
+	</select>
+	
+	<!-- for baiduALaDing -->
+	<select id="queryAdPromListForBaiduAladdin" parameterType="java.util.Map" resultMap="baseResultMap">
+			SELECT * 
+            FROM (SELECT T.*, ROWNUM RN
+            FROM (
+			SELECT 
+			<include refid="columns" />
+			FROM TNT_AD_PROM  WHERE AD_PROM_SORT = #{adPromSort}
+		    AND AD_PROM_DISTRIBUTOR LIKE CONCAT(CONCAT('%',#{userId}),'%')
+			order by AD_PROM_NUM
+		     ) T ) TT
+            WHERE RN &lt;= #{endRow}
+            AND RN &gt;= #{startRow}
+	</select>
+	
+	<!-- for qiHu360 -->
+	<select id="queryAdPromListForQiHu360" parameterType="java.util.Map" resultMap="baseResultMap">
+			SELECT * 
+            FROM (SELECT T.*, ROWNUM RN
+            FROM (
+			SELECT 
+			<include refid="columns" />
+			FROM TNT_AD_PROM  WHERE AD_PROM_SORT = #{adPromSort}
+		    AND AD_PROM_DISTRIBUTOR LIKE CONCAT(CONCAT('%',#{userId}),'%')
+			order by AD_PROM_NUM
+		     ) T ) TT
+            WHERE RN &lt;= #{endRow}
+            AND RN &gt;= #{startRow}
+	</select>
+</mapper>
+

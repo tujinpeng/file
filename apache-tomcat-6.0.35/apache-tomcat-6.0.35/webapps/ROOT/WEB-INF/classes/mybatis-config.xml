@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<settings>
+		<!-- changes from the defaults -->
+		<setting name="lazyLoadingEnabled" value="false" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="tntUser" type="com.lvmama.tnt.user.po.TntUser" />
+		<typeAlias alias="tntUserDetail" type="com.lvmama.tnt.user.po.TntUserDetail" />
+		<typeAlias alias="page" type="com.lvmama.tnt.comm.vo.Page" />
+		<typeAlias alias="tntAnnouncement" type="com.lvmama.tnt.user.po.TntAnnouncement" />
+		<typeAlias alias="tntFAQ" type="com.lvmama.tnt.user.po.TntFAQ" />
+		<typeAlias alias="tntContract" type="com.lvmama.tnt.user.po.TntContract" />
+		<typeAlias alias="tntContractAttach" type="com.lvmama.tnt.user.po.TntContractAttach" />
+		<typeAlias alias="tntCommissionRule" type="com.lvmama.tnt.user.po.TntCommissionRule" />
+		<typeAlias alias="tntUserMaterial" type="com.lvmama.tnt.user.po.TntUserMaterial" />
+		<typeAlias alias="tntRecognizance"
+			type="com.lvmama.tnt.recognizance.po.TntRecognizance" />
+		<typeAlias alias="tntRecognizanceChange"
+			type="com.lvmama.tnt.recognizance.po.TntRecognizanceChange" />
+		<typeAlias alias="tntAccount" type="com.lvmama.tnt.recognizance.po.TntAccount" />
+		<typeAlias alias="tntChannel" type="com.lvmama.tnt.user.po.TntChannel" />
+		<typeAlias alias="tntAppCommissionBack" type="com.lvmama.tnt.user.po.TntAppCommissionBack" />
+		<typeAlias alias="tntStoreUser" type="com.lvmama.tnt.user.po.TntStoreUser" />
+	</typeAliases>
+    <plugins>
+        <plugin interceptor="com.lvmama.tnt.comm.mybatis.plugin.OffsetLimitInterceptor">
+            <property name="dialectClass" value="com.lvmama.tnt.comm.mybatis.dialect.OracleDialect" />
+        </plugin>
+        <plugin interceptor="com.lvmama.ibatis.plugin.UpdateInterceptor"></plugin>
+    </plugins>
+	<mappers>
+		<mapper resource="oraclePage_sql.xml" />
+		<mapper resource="mysqlPage_sql.xml" />
+	</mappers>
+</configuration>
+

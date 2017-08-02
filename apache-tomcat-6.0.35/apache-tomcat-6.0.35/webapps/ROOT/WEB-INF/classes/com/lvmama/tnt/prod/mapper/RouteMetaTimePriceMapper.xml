@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.RouteMetaTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.comm.tnt.vo.RouteMetaTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="suppGoodsId" column="SUPP_GOODS_ID"/>
+        <result property="supplierId" column="SUPPLIER_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="stockType" column="STOCK_TYPE"/>
+        <result property="stock" column="STOCK"/>
+        <result property="totalStock" column="TOTAL_STOCK"/>
+        <result property="oversellFlag" column="OVERSELL_FLAG"/>
+        <result property="onSaleFlag" column="ONSALE_FLAG"/> 
+        <result property="adultSettlementPrice" column="AUDIT_SETTLEMENT_PRICE"/>
+        <result property="adultPrice" column="AUDIT_PRICE"/>
+        <result property="childSettlementPrice" column="CHILD_SETTLEMENT_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="gapSettlementPrice" column="GRAP_SETTLEMENT_PRICE"/>
+        <result property="gapPrice" column="GAP_PRICE"/>
+        <result property="aheadBookTime" column="AHEAD_BOOK_TIME"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+		<result property="childOnSaleFlag" column="CHILD_ONSALE_FLAG"/>
+        <result property="gapOnSaleFlag" column="GAP_ONSALE_FLAG"/>
+        <result property="goodsStockFlag" column="GOODS_STOCK_FLAG"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TIME_PRICE_ID,SUPP_GOODS_ID,SUPPLIER_ID,SPEC_DATE,STOCK_TYPE,STOCK,TOTAL_STOCK,OVERSELL_FLAG,ONSALE_FLAG,AUDIT_SETTLEMENT_PRICE,AUDIT_PRICE,CHILD_SETTLEMENT_PRICE,CHILD_PRICE,GRAP_SETTLEMENT_PRICE,GAP_PRICE,AHEAD_BOOK_TIME,BOOK_LIMIT_TYPE,CHILD_ONSALE_FLAG,GAP_ONSALE_FLAG,GOODS_STOCK_FLAG
+	    ]]>
+	</sql>
+
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.comm.tnt.vo.RouteMetaTimePrice">
+
+		<selectKey resultType="java.lang.Long" keyProperty="timePriceId"
+			order="BEFORE">
+			select  ROUTE_META_TIME_PRICE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO ROUTE_META_TIME_PRICE (
+        	TIME_PRICE_ID ,
+        	SUPP_GOODS_ID ,
+        	SUPPLIER_ID ,
+        	SPEC_DATE ,
+        	STOCK_TYPE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	OVERSELL_FLAG ,
+        	ONSALE_FLAG ,
+        	AUDIT_SETTLEMENT_PRICE ,
+        	AUDIT_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	GRAP_SETTLEMENT_PRICE ,
+        	GAP_PRICE ,
+        	AHEAD_BOOK_TIME ,
+        	BOOK_LIMIT_TYPE ,
+        	CHILD_ONSALE_FLAG,
+        	GAP_ONSALE_FLAG,
+        	GOODS_STOCK_FLAG
+        ) VALUES (
+        	#{timePriceId jdbcType=NUMERIC} ,
+        	#{suppGoodsId jdbcType=NUMERIC},
+        	#{supplierId jdbcType=NUMERIC},
+        	#{specDate jdbcType=DATE} ,
+        	#{stockType jdbcType=VARCHAR} ,
+        	#{stock jdbcType=NUMERIC} ,
+        	#{totalStock jdbcType=NUMERIC} ,
+        	#{oversellFlag jdbcType=VARCHAR} ,
+        	#{onSaleFlag jdbcType=VARCHAR} ,
+        	#{adultSettlementPrice jdbcType=NUMERIC} ,
+        	#{adultPrice jdbcType=NUMERIC} ,
+        	#{childSettlementPrice jdbcType=NUMERIC} ,
+        	#{childPrice jdbcType=NUMERIC} ,
+        	#{gapSettlementPrice jdbcType=NUMERIC} ,
+        	#{gapPrice jdbcType=NUMERIC} ,
+        	#{aheadBookTime jdbcType=NUMERIC} ,
+        	#{bookLimitType jdbcType=VARCHAR},
+        	#{childOnSaleFlag jdbcType=VARCHAR},
+        	#{gapOnSaleFlag jdbcType=VARCHAR},
+        	#{goodsStockFlag jdbcType=NUMERIC}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.comm.tnt.vo.RouteMetaTimePrice">
+        UPDATE ROUTE_META_TIME_PRICE SET
+	        SUPP_GOODS_ID = #{suppGoodsId jdbcType=NUMERIC},
+	        SUPPLIER_ID = #{supplierId jdbcType=NUMERIC},
+	        SPEC_DATE = #{specDate jdbcType=DATE} ,
+	        STOCK_TYPE = #{stockType jdbcType=VARCHAR} ,
+	        STOCK = #{stock jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{totalStock jdbcType=NUMERIC} ,
+	        OVERSELL_FLAG = #{oversellFlag jdbcType=VARCHAR} ,
+	        ONSALE_FLAG = #{onSaleFlag jdbcType=VARCHAR} ,
+	        AUDIT_SETTLEMENT_PRICE = #{adultSettlementPrice jdbcType=NUMERIC} ,
+	        AUDIT_PRICE = #{adultPrice jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{childPrice jdbcType=NUMERIC} ,
+	        GRAP_SETTLEMENT_PRICE = #{gapSettlementPrice jdbcType=NUMERIC} ,
+	        GAP_PRICE =#{gapPrice jdbcType=NUMERIC} ,
+	        AHEAD_BOOK_TIME = #{aheadBookTime jdbcType=NUMERIC} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType jdbcType=VARCHAR} ,
+	        CHILD_ONSALE_FLAG = #{childOnSaleFlag jdbcType=VARCHAR} ,
+	        GAP_ONSALE_FLAG = #{gapOnSaleFlag jdbcType=VARCHAR} ,
+	        GOODS_STOCK_FLAG = #{goodsStockFlag jdbcType=NUMERIC}
+        WHERE 
+        	<if test="timePriceId !=null">
+	        	TIME_PRICE_ID = #{timePriceId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM ROUTE_META_TIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM ROUTE_META_TIME_PRICE 
+	        WHERE 
+		        TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="timePriceId != null and timePriceId !=''">
+				AND TIME_PRICE_ID = #{timePriceId}
+	       	</if> 
+			<if test="suppGoodsId != null and suppGoodsId !=''">
+				AND SUPP_GOODS_ID = #{suppGoodsId}
+	       	</if> 
+			<if test="supplierId != null and supplierId !=''">
+				AND SUPPLIER_ID = #{supplierId}
+	       	</if> 
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if> 
+			<if test="stockType != null and stockType !=''">
+				AND STOCK_TYPE = #{stockType}
+	       	</if> 
+			<if test="stock != null and stock !=''">
+				AND STOCK = #{stock}
+	       	</if> 
+			<if test="totalStock != null and totalStock !=''">
+				AND TOTAL_STOCK = #{totalStock}
+	       	</if> 
+			<if test="oversellFlag != null and oversellFlag !=''">
+				AND OVERSELL_FLAG = #{oversellFlag}
+	       	</if> 
+			<if test="onSaleFlag != null and onSaleFlag !=''">
+				AND ONSALE_FLAG = #{onSaleFlag}
+	       	</if> 
+			<if test="adultSettlementPrice != null and adultSettlementPrice !=''">
+				AND AUDIT_SETTLEMENT_PRICE = #{adultSettlementPrice}
+	       	</if> 
+			<if test="adultPrice != null and adultPrice !=''">
+				AND AUDIT_PRICE = #{adultPrice}
+	       	</if> 
+			<if test="childSettlementPrice != null and childSettlementPrice !=''">
+				AND CHILD_SETTLEMENT_PRICE = #{childSettlementPrice}
+	       	</if> 
+			<if test="childPrice != null and childPrice !=''">
+				AND CHILD_PRICE = #{childPrice}
+	       	</if> 
+			<if test="gapSettlementPrice != null and gapSettlementPrice !=''">
+				AND GRAP_SETTLEMENT_PRICE = #{gapSettlementPrice}
+	       	</if> 
+			<if test="gapPrice != null and gapPrice !=''">
+				AND GAP_PRICE = #{gapPrice}
+	       	</if> 
+			<if test="aheadBookTime != null and aheadBookTime !=''">
+				AND AHEAD_BOOK_TIME = #{aheadBookTime}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+	       	<if test="childOnSaleFlag != null and childOnSaleFlag !=''">
+				AND CHILD_ONSALE_FLAG = #{childOnSaleFlag}
+	       	</if> 
+	       	<if test="gapOnSaleFlag != null and gapOnSaleFlag !=''">
+				AND GAP_ONSALE_FLAG = #{gapOnSaleFlag}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.timePriceId != null and param.timePriceId !=''">
+				AND TIME_PRICE_ID = param.timePriceId
+	       	</if>
+			<if test="param.suppGoodsId != null and param.suppGoodsId !=''">
+				AND SUPP_GOODS_ID = param.suppGoodsId
+	       	</if>
+			<if test="param.supplierId != null and param.supplierId !=''">
+				AND SUPPLIER_ID = param.supplierId
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = param.specDate
+	       	</if>
+			<if test="param.stockType != null and param.stockType !=''">
+				AND STOCK_TYPE = param.stockType
+	       	</if>
+			<if test="param.stock != null and param.stock !=''">
+				AND STOCK = param.stock
+	       	</if>
+			<if test="param.totalStock != null and param.totalStock !=''">
+				AND TOTAL_STOCK = param.totalStock
+	       	</if>
+			<if test="param.oversellFlag != null and param.oversellFlag !=''">
+				AND OVERSELL_FLAG = param.oversellFlag
+	       	</if>
+			<if test="param.onSaleFlag != null and param.onSaleFlag !=''">
+				AND ONSALE_FLAG = param.onSaleFlag
+	       	</if>
+			<if test="param.adultSettlementPrice != null and param.adultSettlementPrice !=''">
+				AND AUDIT_SETTLEMENT_PRICE = param.adultSettlementPrice
+	       	</if>
+			<if test="param.adultPrice != null and param.adultPrice !=''">
+				AND AUDIT_PRICE = param.adultPrice
+	       	</if>
+			<if test="param.childSettlementPrice != null and param.childSettlementPrice !=''">
+				AND CHILD_SETTLEMENT_PRICE = param.childSettlementPrice
+	       	</if>
+			<if test="param.childPrice != null and param.childPrice !=''">
+				AND CHILD_PRICE = param.childPrice
+	       	</if>
+			<if test="param.gapSettlementPrice != null and param.gapSettlementPrice !=''">
+				AND GRAP_SETTLEMENT_PRICE = param.gapSettlementPrice
+	       	</if>
+			<if test="param.gapPrice != null and param.gapPrice !=''">
+				AND GAP_PRICE = param.gapPrice
+	       	</if>
+			<if test="param.aheadBookTime != null and param.aheadBookTime !=''">
+				AND AHEAD_BOOK_TIME = param.aheadBookTime
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = param.bookLimitType
+	       	</if>
+	       	<if test="param.childOnSaleFlag != null and param.childOnSaleFlag !=''">
+				AND CHILD_ONSALE_FLAG = param.childOnSaleFlag
+	       	</if>
+	       	<if test="param.gapOnSaleFlag != null and param.gapOnSaleFlag !=''">
+				AND GAP_ONSALE_FLAG = param.gapOnSaleFlag
+	       	</if>
+	       	<if test="param.goodsStockFlag != null and param.goodsStockFlag !=''">
+				AND GOODS_STOCK_FLAG = param.goodsStockFlag
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.comm.tnt.vo.RouteMetaTimePrice">
+        SELECT count(*) FROM ROUTE_META_TIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM ROUTE_META_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="selectMetaTimePriceByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM ROUTE_META_TIME_PRICE 
+	    WHERE SUPP_GOODS_ID = #{goodsId}
+	    AND SPEC_DATE<![CDATA[=]]>TO_DATE(#{date},'YYYY-MM-DD')
+    </select>
+    
+    <select id="selectMetaTimePriceByPeriod" resultMap="baseResultMap" parameterType="java.util.Map">	   
+	    SELECT <include refid="columns" />
+	    FROM ROUTE_META_TIME_PRICE
+	    WHERE SUPP_GOODS_ID = #{goodsId}
+	    	AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    	AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+	</select>
+	
+	<select id="selectMetaTimePriceByGoodsIdsandPeriod" resultMap="baseResultMap" parameterType="java.util.Map">	   
+	    SELECT <include refid="columns" />
+	    FROM ROUTE_META_TIME_PRICE
+	    WHERE SUPP_GOODS_ID in 
+	        <foreach item="item" index="index" collection="suppGoodsIdList" open="(" separator="," close=")">  
+		       #{item}  
+	        </foreach>  
+	    	AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    	AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+	</select>
+</mapper>
+

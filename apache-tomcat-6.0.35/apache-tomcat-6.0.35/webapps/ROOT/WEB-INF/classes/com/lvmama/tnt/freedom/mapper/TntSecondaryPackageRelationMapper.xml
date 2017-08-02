@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mapper.TntSecondaryPackageRelationMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntSecondaryPackageRelation">
+		<result property="packageRelationId" column="PACKAGE_RELATION_ID"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="firstPackageId" column="FIRST_PACKAGE_ID"/>
+		<result property="firstPackageName" column="FIRST_PACKAGE_NAME"/>
+		<result property="tntSecondaryPackageId" column="TNT_SECONDARY_PACKAGE_ID"/>
+		<result property="categoryType" column="CATEGORY_TYPE"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+
+	<sql id="columns">*</sql>
+	<sql id="tableName">TNT_SECONDARY_PACKAGE_RELATION</sql>
+	
+	<!-- 条件查询操作 -->
+	<select id = "queryByParams" parameterType="java.util.Map" resultMap ="baseResultMap">
+		SELECT <include refid="columns" />
+		FROM <include refid="tableName" /> tspr
+		where 1=1
+		<if test ="productId != null and productId != ''">
+			AND tspr.PRODUCT_ID = #{productId}
+		</if>
+		<if test ="firstPackageId != null and firstPackageId != ''">
+			AND tspr.FIRST_PACKAGE_ID = #{firstPackageId}
+		</if>
+		<if test ="firstPackageName != null and firstPackageName != ''">
+			AND tspr.FIRST_PACKAGE_NAME = #{firstPackageName}
+		</if>
+		<if test ="tntSecondaryPackageId != null and tntSecondaryPackageId != ''">
+			AND tspr.TNT_SECONDARY_PACKAGE_ID = #{tntSecondaryPackageId}
+		</if>
+		<if test="combineType != null and combineType != ''">
+			AND tspr.CATEGORY_TYPE = #{categoryType}
+		</if>
+		<if test ="createTime != null and createTime != ''">
+			AND tspr.CREATE_TIME = #{createTime}
+		</if>
+		<if test ="updateTime != null and updateTime != ''">
+			AND tspr.UPDATE_TIME = #{updateTime}
+		</if>
+	</select>
+	
+	<!-- 一次组合id查询relation -->
+	<select id="querySecondaryPackagesByFistCombineId" parameterType="java.lang.Long" resultMap="baseResultMap">
+		SELECT <include refid="columns"/>
+		FROM <include refid="tableName"/> tspr
+		WHERE tspr.FIRST_PACKAGE_ID =#{combineId} 
+	</select>
+
+	<!--二次组合id查询ralation-->
+	<select id="queryByTntSecondaryPackageId" parameterType="java.lang.Long" resultMap="baseResultMap">
+		SELECT <include refid="columns"/> FROM <include refid="tableName"/> tspr WHERE tspr.TNT_SECONDARY_PACKAGE_ID = #{secondaryPackageId}
+	</select>
+
+	<!-- 条件更新操作 -->
+	<update id="updateByParams" parameterType ="java.util.Map">
+		UPDATE <include refid="tableName" /> tspr
+		<set>
+			<if test ="firstPackageId != null and firstPackageId != ''">
+				FIRST_PACKAGE_ID = #{firstPackageId},
+			</if>
+			<if test ="firstPackageName != null and firstPackageName != ''">
+				FIRST_PACKAGE_NAME = #{firstPackageName},
+			</if>
+			<if test ="tntSecondaryPackageId != null and tntSecondaryPackageId != ''">
+				TNT_SECONDARY_PACKAGE_ID = #{tntSecondaryPackageId},
+			</if>
+			<if test ="createTime != null and createTime != ''">
+				CREATE_TIME = #{createTime},
+			</if>
+			<if test ="updateTime != null and updateTime != ''">
+				UPDATE_TIME = #{updateTime}
+			</if>
+			<if test="categoryType != null and categoryType != ''">
+					CATEGORY_TYPE = #{categoryType}
+			</if>
+		</set>
+		where 1=1
+		<if test="productId != null and productId !=''">
+			AND tspr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="firstPackageId != null and firstPackageId != ''">
+			AND tspr.FIRST_PACKAGE_ID = #{firstPackageid}
+		</if>
+		<if test="tntSecondaryId != nul adn firstPackageId != ''">
+			AND tspr.TNT_SECONDARY_ID = #{tntSecondaryId}
+		</if>
+	</update>
+	
+	<!--插入操作  -->
+	<insert id="insertSecondaryPackageRelation" parameterType="com.lvmama.tnt.freedom.mysql.po.TntSecondaryPackageRelation">
+		<selectKey resultType="java.lang.Long" keyProperty="packageRelationId" order="BEFORE">
+			SELECT FREEDOM_PACKAGE_RELATION_SEQ.nextval
+			FROM DUAL
+		</selectKey>
+		INSERT INTO <include refid="tableName" />
+		(
+		PACKAGE_RELATION_ID,
+		PRODUCT_ID,
+		FIRST_PACKAGE_ID,
+		FIRST_PACKAGE_NAME,
+		TNT_SECONDARY_PACKAGE_ID,
+		CATEGORY_TYPE,
+		CREATE_TIME,
+		UPDATE_TIME
+		) VALUES (
+		#{packageRelationId,jdbcType=DECIMAL},
+		#{productId,jdbcType=DECIMAL},
+		#{firstPackageId,jdbcType=DECIMAL},
+		#{firstPackageName,jdbcType=VARCHAR},
+		#{tntSecondaryPackageId,jdbcType=DECIMAL},
+		#{categoryType,jdbcType=VARCHAR},
+		sysdate,
+		sysdate
+		)
+	</insert>
+	
+	<!--批量插入操作  -->
+	<insert id="insertSecondaryPackageRelationByList" parameterType="java.util.List">
+	<selectKey keyProperty="packageRelationId" order="BEFORE" resultType="java.lang.Long">
+		SELECT FREEDOM_PACKAGE_RELATION_SEQ.nextval FROM DUAL
+	</selectKey>
+	INSERT INTO <include refid="tableName" />
+		(
+		PACKAGE_RELATION_ID,
+		PRODUCT_ID,
+		FIRST_PACKAGE_ID,
+		FIRST_PACKAGE_NAME,
+		TNT_SECONDARY_PACKAGE_ID,
+		CATEGORY_TYPE,
+		CREATE_TIME,
+		UPDATE_TIME
+		) SELECT FREEDOM_PACKAGE_RELATION_SEQ.NEXTVAL,PRODUCT_ID,FIRST_PACKAGE_ID,FIRST_PACKAGE_NAME,TNT_SECONDARY_PACKAGE_ID,CATEGORY_TYPE,CREATE_TIME,UPDATE_TIME
+		 FROM
+		<foreach collection="list" index="index" item="item" separator="UNION ALL" open="(" close=")">
+		SELECT
+			#{item.productId,jdbcType=DECIMAL} AS PRODUCT_ID,
+			#{item.firstPackageId,jdbcType=DECIMAL} AS FIRST_PACKAGE_ID,
+			#{item.firstPackageName,jdbcType=VARCHAR} AS FIRST_PACKAGE_NAME,
+			#{item.tntSecondaryPackageId,jdbcType=DECIMAL} AS TNT_SECONDARY_PACKAGE_ID,
+			#{item.categoryType,jdbcType=VARCHAR} AS CATEGORY_TYPE,
+			sysdate AS CREATE_TIME,
+			sysdate AS UPDATE_TIME
+		FROM DUAL
+		</foreach>
+	</insert>
+	
+</mapper>
+

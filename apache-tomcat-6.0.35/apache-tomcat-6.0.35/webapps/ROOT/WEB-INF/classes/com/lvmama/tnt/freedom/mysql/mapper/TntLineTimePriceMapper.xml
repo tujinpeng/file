@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntLineTimePriceMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntLineTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="stockType" column="STOCK_TYPE"/>
+        <result property="stock" column="STOCK"/>
+        <result property="oversellFlag" column="OVERSELL_FLAG"/>
+        <result property="auditPrice" column="AUDIT_PRICE"/>
+        <result property="auditSettlementPrice" column="AUDIT_SETTLEMENT_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="childSettlementPrice" column="CHILD_SETTLEMENT_PRICE"/>
+        <result property="aheadBookTime" column="AHEAD_BOOK_TIME"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+		TIME_PRICE_ID,GOODS_ID,SPEC_DATE,STOCK_TYPE,STOCK,OVERSELL_FLAG,AUDIT_PRICE,AUDIT_SETTLEMENT_PRICE,CHILD_PRICE,CHILD_SETTLEMENT_PRICE,AHEAD_BOOK_TIME,BOOK_LIMIT_TYPE,CREATE_TIME,UPDATE_TIME
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntLineTimePrice">
+        INSERT INTO TNT_LINE_TIME_PRICE (
+        	GOODS_ID ,
+        	SPEC_DATE ,
+        	STOCK_TYPE ,
+        	STOCK ,
+        	OVERSELL_FLAG ,
+        	AUDIT_PRICE ,
+        	AUDIT_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	AHEAD_BOOK_TIME ,
+        	BOOK_LIMIT_TYPE ,
+        	CREATE_TIME ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{goodsId} ,
+        	#{specDate} ,
+        	#{stockType} ,
+        	#{stock} ,
+        	#{oversellFlag} ,
+        	#{auditPrice} ,
+        	#{auditSettlementPrice} ,
+        	#{childPrice} ,
+        	#{childSettlementPrice} ,
+        	#{aheadBookTime} ,
+        	#{bookLimitType} ,
+        	now() ,
+        	now()
+        )
+	</insert>
+
+    <insert id="insertForBatch" parameterType="java.util.List">
+        INSERT INTO TNT_LINE_TIME_PRICE (
+        GOODS_ID ,
+        SPEC_DATE ,
+        STOCK_TYPE ,
+        STOCK ,
+        OVERSELL_FLAG ,
+        AUDIT_PRICE ,
+        AUDIT_SETTLEMENT_PRICE ,
+        CHILD_PRICE ,
+        CHILD_SETTLEMENT_PRICE ,
+        AHEAD_BOOK_TIME ,
+        BOOK_LIMIT_TYPE ,
+        CREATE_TIME ,
+        UPDATE_TIME
+        ) VALUES
+        <foreach collection="list" separator="," index="index" item="tntLineTimePrice">
+            (
+            #{tntLineTimePrice.goodsId} ,
+            #{tntLineTimePrice.specDate} ,
+            #{tntLineTimePrice.stockType} ,
+            #{tntLineTimePrice.stock} ,
+            #{tntLineTimePrice.oversellFlag} ,
+            #{tntLineTimePrice.auditPrice} ,
+            #{tntLineTimePrice.auditSettlementPrice} ,
+            #{tntLineTimePrice.childPrice} ,
+            #{tntLineTimePrice.childSettlementPrice} ,
+            #{tntLineTimePrice.aheadBookTime} ,
+            #{tntLineTimePrice.bookLimitType} ,
+            now() ,
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntLineTimePrice">
+        UPDATE TNT_LINE_TIME_PRICE SET
+        GOODS_ID = #{goodsId} ,
+        SPEC_DATE = #{specDate} ,
+        STOCK_TYPE = #{stockType} ,
+        STOCK = #{stock} ,
+        OVERSELL_FLAG = #{oversellFlag} ,
+        AUDIT_PRICE = #{auditPrice} ,
+        AUDIT_SETTLEMENT_PRICE = #{auditSettlementPrice} ,
+        CHILD_PRICE = #{childPrice} ,
+        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice} ,
+        AHEAD_BOOK_TIME = #{aheadBookTime} ,
+        BOOK_LIMIT_TYPE = #{bookLimitType} ,
+        UPDATE_TIME = now()
+        WHERE
+        <if test="timePriceId !=null">
+            TIME_PRICE_ID = #{timePriceId}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_LINE_TIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="Long">
+        DELETE FROM TNT_LINE_TIME_PRICE WHERE
+        TIME_PRICE_ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_LINE_TIME_PRICE
+        WHERE
+        TIME_PRICE_ID = #{id}
+    </select>
+
+    <select id="getByGoodIds" resultMap="baseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_LINE_TIME_PRICE
+        WHERE GOODS_ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="goodsId">
+            #{goodsId}
+        </foreach>
+        <if test="specDate != null and specDate !=''">
+            AND SPEC_DATE = #{specDate}
+        </if>
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="timePriceId != null and timePriceId !=''">
+                AND TIME_PRICE_ID = #{timePriceId}
+            </if>
+            <if test="goodsId != null and goodsId !=''">
+                AND GOODS_ID = #{goodsId}
+            </if>
+            <if test="specDate != null and specDate !=''">
+                AND SPEC_DATE = #{specDate}
+            </if>
+            <if test="stockType != null and stockType !=''">
+                AND STOCK_TYPE = #{stockType}
+            </if>
+            <if test="stock != null and stock !=''">
+                AND STOCK = #{stock}
+            </if>
+            <if test="oversellFlag != null and oversellFlag !=''">
+                AND OVERSELL_FLAG = #{oversellFlag}
+            </if>
+            <if test="auditPrice != null and auditPrice !=''">
+                AND AUDIT_PRICE = #{auditPrice}
+            </if>
+            <if test="auditSettlementPrice != null and auditSettlementPrice !=''">
+                AND AUDIT_SETTLEMENT_PRICE = #{auditSettlementPrice}
+            </if>
+            <if test="childPrice != null and childPrice !=''">
+                AND CHILD_PRICE = #{childPrice}
+            </if>
+            <if test="childSettlementPrice != null and childSettlementPrice !=''">
+                AND CHILD_SETTLEMENT_PRICE = #{childSettlementPrice}
+            </if>
+            <if test="aheadBookTime != null and aheadBookTime !=''">
+                AND AHEAD_BOOK_TIME = #{aheadBookTime}
+            </if>
+            <if test="bookLimitType != null and bookLimitType !=''">
+                AND BOOK_LIMIT_TYPE = #{bookLimitType}
+            </if>
+            <if test="createTime != null and createTime !=''">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime !=''">
+                AND UPDATE_TIME = #{updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.timePriceId != null and param.timePriceId !=''">
+                AND TIME_PRICE_ID = #{param.timePriceId}
+            </if>
+            <if test="param.goodsId != null and param.goodsId !=''">
+                AND GOODS_ID = #{param.goodsId}
+            </if>
+            <if test="param.specDate != null and param.specDate !=''">
+                AND SPEC_DATE = #{param.specDate}
+            </if>
+            <if test="param.stockType != null and param.stockType !=''">
+                AND STOCK_TYPE = #{param.stockType}
+            </if>
+            <if test="param.stock != null and param.stock !=''">
+                AND STOCK = #{param.stock}
+            </if>
+            <if test="param.oversellFlag != null and param.oversellFlag !=''">
+                AND OVERSELL_FLAG = #{param.oversellFlag}
+            </if>
+            <if test="param.auditPrice != null and param.auditPrice !=''">
+                AND AUDIT_PRICE = #{param.auditPrice}
+            </if>
+            <if test="param.auditSettlementPrice != null and param.auditSettlementPrice !=''">
+                AND AUDIT_SETTLEMENT_PRICE = #{param.auditSettlementPrice}
+            </if>
+            <if test="param.childPrice != null and param.childPrice !=''">
+                AND CHILD_PRICE = #{param.childPrice}
+            </if>
+            <if test="param.childSettlementPrice != null and param.childSettlementPrice !=''">
+                AND CHILD_SETTLEMENT_PRICE = #{param.childSettlementPrice}
+            </if>
+            <if test="param.aheadBookTime != null and param.aheadBookTime !=''">
+                AND AHEAD_BOOK_TIME = #{param.aheadBookTime}
+            </if>
+            <if test="param.bookLimitType != null and param.bookLimitType !=''">
+                AND BOOK_LIMIT_TYPE = #{param.bookLimitType}
+            </if>
+            <if test="param.createTime != null and param.createTime !=''">
+                AND CREATE_TIME = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null and param.updateTime !=''">
+                AND UPDATE_TIME = #{param.updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntLineTimePrice">
+        SELECT count(*) FROM TNT_LINE_TIME_PRICE
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_LINE_TIME_PRICE
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+
+    <select id="selectMetaTimePriceByGoodsIdsandPeriod" resultMap="baseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_LINE_TIME_PRICE
+        WHERE GOODS_ID in
+        <foreach item="item" index="index" collection="suppGoodsIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND SPEC_DATE<![CDATA[ >= ]]>#{beginDate}
+        AND SPEC_DATE<![CDATA[ <= ]]>#{endDate}
+    </select>
+
+</mapper>
+

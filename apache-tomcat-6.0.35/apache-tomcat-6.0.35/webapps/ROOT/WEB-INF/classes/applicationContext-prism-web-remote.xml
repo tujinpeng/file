@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://code.alibabatech.com/schema/dubbo
+						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	default-autowire="byName">
+
+	<dubbo:reference id="tntApierrorLogServiceInterface"
+		interface="com.lvmama.bigger.biz.service.TntApierrorLogServiceInterface" />
+	<dubbo:reference id="tntApiPushLogServiceInterface"
+		interface="com.lvmama.bigger.biz.service.TntApiPushLogServiceInterface" />
+	<dubbo:reference id="biggerTntProductMonitorLogService"
+		interface="com.lvmama.bigger.biz.service.TntProductMonitorServiceInterface" />
+	<dubbo:reference id="tntComlogServiceInterface"
+		interface="com.lvmama.bigger.biz.service.TntComlogServiceInterface" />
+	<dubbo:reference id="tntApierrorLogServiceES" 
+		interface=" com.lvmama.bigger.biz.service.TntApierrorLogServiceInterface" group="es" />
+		
+</beans>

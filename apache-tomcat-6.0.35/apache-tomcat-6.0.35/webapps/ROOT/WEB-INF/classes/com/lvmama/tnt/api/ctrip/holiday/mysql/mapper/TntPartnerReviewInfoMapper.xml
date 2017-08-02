@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.api.ctrip.holiday.mysql.mapper.TntPartnerReviewInfoMapper">
+	<resultMap id="tntPartnerReviewInfoMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewInfo">
+		<result property="id" column="ID" />
+		<result property="pushId" column="PUSH_ID" />
+		<result property="reviewStatus" column="REVIEW_STATUS" />
+		<result property="failReason" column="FAIL_REASON" />
+		<result property="updateTime" column="UPDATE_TIME" />
+	</resultMap>
+
+	<resultMap id="tntPartnerReviewVoMap" type="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewVo" extends="tntPartnerReviewInfoMap">
+        <result property="productId" column="PRODUCT_ID" />
+        <result property="tntPackageId" column="TNT_PACKAGE_ID" />
+        <result property="pushType" column="PUSH_TYPE" />
+		<result property="pushStatus" column="PUSH_STATUS" />
+		<result property="scheduleStatus" column="IS_CLOSE" />
+		<result property="managerName" column="MANAGER_NAME" />
+	</resultMap>
+
+	<sql id="where">
+		<where>
+			<if test="id != null">
+				ID = #{id}
+			</if>
+			<if test="pushId != null">
+				AND PUSH_ID = #{pushId}
+			</if>
+		</where>
+	</sql>
+
+	
+	<select id="queryTntPartnerReviewInfo" resultMap="tntPartnerReviewInfoMap" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewInfo">
+		SELECT * FROM TNT_PARTNER_REVIEW_INFO
+		<include refid="where"/>
+	</select>
+	
+	
+	<insert id="insertTntPartnerReviewInfo"  parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewInfo">
+		insert into  TNT_PARTNER_REVIEW_INFO ( PUSH_ID, REVIEW_STATUS, FAIL_REASON, UPDATE_TIME)
+		values( #{pushId}, #{reviewStatus}, #{failReason}, now())
+		   
+	</insert>
+	
+	<update id="updateTntPartnerReviewInfo" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewInfo" >
+		UPDATE  TNT_PARTNER_REVIEW_INFO  tprn
+		SET
+			tprn.REVIEW_STATUS = #{reviewStatus},
+			tprn.FAIL_REASON = #{failReason},
+			tprn.UPDATE_TIME=#{updateTime}
+		WHERE
+			tprn.ID = #{id}
+			AND tprn.PUSH_ID = #{pushId}
+	</update>
+
+	<select id="countByTime" resultType="Integer" parameterType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewVo">
+
+		SELECT
+		   count(A.ID)
+		FROM
+		TNT_PARTNER_REVIEW_INFO A
+		LEFT JOIN
+		TNT_PARTNER_PRODUCT_SYNC B
+		ON
+		A.PUSH_ID = B.ID
+		<where>
+			<if test="startTime != null">
+				AND A.UPDATE_TIME <![CDATA[ > ]]> #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND A.UPDATE_TIME  <![CDATA[ < ]]> #{endTime}
+			</if>
+			<if test="reviewStatus != null and reviewStatus != ''">
+				AND A.REVIEW_STATUS = #{reviewStatus}
+			</if>
+			<if test="productId != null">
+				AND B.PRODUCT_ID = #{productId}
+			</if>
+			<if test="tntPackageId != null">
+				AND B.TNT_PACKAGE_ID = #{tntPackageId}
+			</if>
+			<if test="pushType != null and pushType != ''">
+				AND B.PUSH_TYPE = #{pushType}
+			</if>
+			<if test="managerName != null and managerName != ''">
+				AND B.MANAGER_NAME = #{managerName}
+			</if>
+			<if test="pushStatus != null and pushStatus != ''">
+				AND B.PUSH_STATUS = #{pushStatus}
+			</if>
+			<if test="scheduleStatus != null and scheduleStatus != ''">
+				AND B.IS_CLOSE = #{scheduleStatus}
+			</if>
+		</where>
+	</select>
+
+	<select id="searchAuditResult" resultMap="tntPartnerReviewVoMap" parameterType="page">
+		SELECT
+		A.*, B.PUSH_STATUS, B.IS_CLOSE, B.PRODUCT_ID, B.TNT_PACKAGE_ID, B.PUSH_TYPE, B.MANAGER_NAME
+		FROM
+		TNT_PARTNER_REVIEW_INFO A
+		LEFT JOIN
+		TNT_PARTNER_PRODUCT_SYNC B
+		ON
+		A.PUSH_ID = B.ID
+		<where>
+			<if test="param.startTime != null">
+				AND A.UPDATE_TIME <![CDATA[ > ]]> #{param.startTime}
+			</if>
+			<if test="param.endTime != null">
+				AND A.UPDATE_TIME  <![CDATA[ < ]]> #{param.endTime}
+			</if>
+			<if test="param.reviewStatus != null and param.reviewStatus != ''">
+				AND A.REVIEW_STATUS = #{param.reviewStatus}
+			</if>
+			<if test="param.productId != null">
+				AND B.PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.tntPackageId != null">
+				AND B.TNT_PACKAGE_ID = #{param.tntPackageId}
+			</if>
+			<if test="param.pushType != null and param.pushType != ''">
+				AND B.PUSH_TYPE = #{param.pushType}
+			</if>
+			<if test="param.managerName != null and param.managerName != ''">
+				AND B.MANAGER_NAME = #{param.managerName}
+			</if>
+			<if test="param.pushStatus != null and param.pushStatus != ''">
+				AND B.PUSH_STATUS = #{param.pushStatus}
+			</if>
+			<if test="param.scheduleStatus != null and param.scheduleStatus != ''">
+				AND B.IS_CLOSE = #{param.scheduleStatus}
+			</if>
+		</where>
+		ORDER BY A.UPDATE_TIME DESC
+		limit #{startRowsForMySql}, #{pageSize}
+	</select>
+
+	<select id="searchAuditResultByPackageId" resultType="com.lvmama.tnt.api.vo.ctrip.holiday.TntPartnerReviewInfo">
+		SELECT
+		    A.*
+		FROM
+		    TNT_PARTNER_REVIEW_INFO A
+		LEFT JOIN
+		    TNT_PARTNER_PRODUCT_SYNC B
+		ON
+		    A.PUSH_ID = B.ID
+		WHERE
+		    B.PARTNER_ID = #{0}
+		AND
+		    B.TNT_PACKAGE_ID = #{1}
+	</select>
+
+	<select id="queryReviewInfoByPushId" resultMap="tntPartnerReviewInfoMap" parameterType="Long">
+
+        SELECT *
+        FROM TNT_PARTNER_REVIEW_INFO
+        WHERE
+           PUSH_ID = #{pushId}
+
+	</select>
+
+</mapper>
+

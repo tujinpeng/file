@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.pay.mysql.mapper.ControlMessageMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.pay.vo.ControlMessage">
+        <result property="controlId" column="CONTROL_ID"/>
+        <result property="controlType" column="CONTROL_TYPE"/>
+        <result property="contrlCount" column="CONTROL_COUNT"/>
+        <result property="contrlStatus" column="CONTROL_STATUS"/>
+        <result property="lastSendTime" column="LAST_SEND_TIME"/>
+        <result property="monitoredId" column="MONITORED_ID"/>
+        <result property="categoryType" column="CATEGORY_TYPE"/>
+        <result property="appKey" column="APP_KAY"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CONTROL_ID,CONTROL_TYPE,CONTROL_COUNT,CONTROL_STATUS,LAST_SEND_TIME,MONITORED_ID,CATEGORY_TYPE,APP_KAY
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.pay.vo.ControlMessage" keyProperty="id">
+        INSERT INTO CONTROL_MESSAGE 
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="controlId != null">
+                CONTROL_ID,
+            </if>
+            <if test="controlType != null">
+                CONTROL_TYPE,
+            </if>
+            <if test="contrlCount != null">
+                CONTROL_COUNT,
+            </if>
+            <if test="contrlStatus != null">
+                CONTROL_STATUS,
+            </if>
+            <if test="lastSendTime != null">
+                LAST_SEND_TIME,
+            </if>
+            <if test="monitoredId != null">
+                MONITORED_ID,
+            </if>
+            <if test="categoryType != null">
+                CATEGORY_TYPE,
+            </if>
+            <if test="appKey != null">
+            	APP_KAY,
+            </if>
+        
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+        	<if test="controlId != null">
+               #{controlId} ,
+            </if>
+            <if test="controlType != null">
+                #{controlType} ,
+            </if>
+            <if test="contrlCount != null">
+                #{contrlCount} ,
+            </if>
+            <if test="contrlStatus != null">
+                #{contrlStatus} ,
+            </if>
+            <if test="lastSendTime != null">
+                #{lastSendTime} ,
+            </if>
+            <if test="monitoredId != null">
+               #{monitoredId} ,
+            </if>
+            <if test="categoryType != null">
+                #{categoryType} ,
+            </if>
+             <if test="appKey != null">
+            	#{appKey} ,
+            </if>
+        </trim>
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.pay.vo.ControlMessage">
+        UPDATE CONTROL_MESSAGE 
+ 			<trim prefix="set" suffixOverrides=",">
+	          <if test="contrlStatus != null">CONTROL_STATUS = #{contrlStatus} ,</if>
+	          <if test="lastSendTime != null">LAST_SEND_TIME = #{lastSendTime},</if>
+	          <if test="contrlCount != null">CONTROL_COUNT = #{contrlCount},</if>
+	          <if test="appKey != null">APP_KAY = #{appKey},</if>
+	         </trim>
+        WHERE 
+            CONTROL_ID = #{controlId}
+	</update>
+	
+	<update id="batchUpdate" parameterType="java.util.Map">
+        UPDATE CONTROL_MESSAGE 
+ 			<trim prefix="set" suffixOverrides=",">
+	          <if test="contrlStatus != null">CONTROL_STATUS = #{contrlStatus} ,</if>
+	          <if test="lastSendTime != null">LAST_SEND_TIME = #{lastSendTime},</if>
+	         </trim>
+        WHERE 
+            CONTROL_ID IN
+            <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getListControlMessage" resultMap="baseResultMap" parameterType="java.util.Map">
+	 SELECT A.*
+	 FROM (
+    	SELECT <include refid="columns" />
+		FROM CONTROL_MESSAGE  
+	    <include refid="where"/> 
+		ORDER BY CONTROL_ID
+		) A
+	limit #{startRow},#{pageSize}
+	</select>
+	
+	
+	<select id="getControlMessageCount" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.pay.vo.ControlMessage">
+		SELECT COUNT(1) FROM CONTROL_MESSAGE  
+	        <include refid="where"/> 
+	</select>
+	
+	<sql id="where">
+		<where>
+			<if test="controlId != null and controlId !=''">
+		    	AND CONTROL_ID = #{controlId}      
+	       	</if> 
+			<if test="controlType != null and controlType !=''">
+				AND CONTROL_TYPE = #{controlType} 
+	       	</if> 
+			<if test="monitoredId != null and monitoredId !=''">
+				AND MONITORED_ID = #{monitoredId} 
+	       	</if> 
+			<if test="categoryType != null and categoryType !=''">
+				AND CATEGORY_TYPE = #{categoryType} 
+	       	</if> 
+	       	AND CONTROL_STATUS = 'FAIL'  
+	       	AND 5 > CONTROL_COUNT
+		</where>
+	</sql>
+</mapper>
+

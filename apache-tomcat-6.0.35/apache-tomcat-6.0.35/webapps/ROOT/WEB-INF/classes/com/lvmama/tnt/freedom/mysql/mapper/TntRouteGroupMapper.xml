@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntRouteGroupMapper">
+	
+	<!-- 基础map -->
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        <result property="tntRouteGroupId" column="TNT_ROUTE_GROUP_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="groupName" column="GROUP_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="startDay" column="START_DAY"/>
+        <result property="travelDays" column="TRAVEL_DAYS"/>
+        <result property="stayDays" column="STAY_DAYS"/>
+        <result property="adult" column="ADULT"/>
+        <result property="child" column="CHILD"/>
+        <result property="hasBranch" column="HAS_BRANCH"/>
+	</resultMap>
+	
+	<!-- 需要关联branch list的map -->
+	<resultMap id="extResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        <result property="tntRouteGroupId" column="TNT_ROUTE_GROUP_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="groupName" column="GROUP_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="startDay" column="START_DAY"/>
+        <result property="travelDays" column="TRAVEL_DAYS"/>
+        <result property="stayDays" column="STAY_DAYS"/>
+        <result property="adult" column="ADULT"/>
+        <result property="child" column="CHILD"/>
+        <result property="hasBranch" column="HAS_BRANCH"/>
+        <collection property="tntRouteGroupBranchList" select="findsBranchsByGroupId" column="{groupId=GROUP_ID}" javaType="ArrayList" >
+        </collection>
+	</resultMap>
+	
+	<resultMap id="branchMap" type="com.lvmama.tnt.freedom.mysql.po.TntRouteGroupBranch">
+        <result property="tntRouteGroupBranchId" column="TNT_ROUTE_GROUP_BRANCH_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="suppProductId" column="SUPP_PRODUCT_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="price" column="PRICE"/>
+	</resultMap>
+	
+	 <select id="findsBranchsByGroupId" resultMap="branchMap" parameterType="java.util.Map">
+			SELECT *
+		    FROM TNT_ROUTE_GROUP_BRANCH 
+	        WHERE 
+		        GROUP_ID = #{groupId} 
+	</select>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ROUTE_GROUP_ID,GROUP_ID,GROUP_NAME,PRODUCT_ID,CATEGORY_ID,START_DAY,TRAVEL_DAYS,STAY_DAYS,ADULT,CHILD,HAS_BRANCH
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        INSERT INTO TNT_ROUTE_GROUP (
+        	TNT_ROUTE_GROUP_ID,
+        	GROUP_ID,
+        	GROUP_NAME,
+        	PRODUCT_ID,
+        	CATEGORY_ID,
+        	START_DAY,
+        	TRAVEL_DAYS,
+        	STAY_DAYS,
+        	ADULT,
+        	CHILD,
+        	HAS_BRANCH 
+        ) VALUES (
+        	#{tntRouteGroupId} ,
+        	#{groupId} ,
+        	#{groupName} ,
+        	#{productId} ,
+        	#{categoryId} ,
+        	#{startDay},
+        	#{travelDays},
+        	#{stayDays},
+        	#{adult},
+        	#{child},
+        	#{hasBranch}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        UPDATE TNT_ROUTE_GROUP SET
+	        GROUP_ID = #{groupId} ,
+	        GROUP_NAME = #{groupName} ,
+	        PRODUCT_ID = #{productId} ,
+	        CATEGORY_ID = #{categoryId} ,
+	        START_DAY = #{startDay} ,
+	        TRAVEL_DAYS = #{travelDays} ,
+	        STAY_DAYS = #{stayDays} ,
+	        ADULT = #{adult} ,
+	        CHILD = #{child} ,
+	        HAS_BRANCH = #{hasBranch} 
+        WHERE 
+        	<if test="tntRouteGroupId !=null">
+	        	TNT_ROUTE_GROUP_ID = #{tntRouteGroupId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_ROUTE_GROUP WHERE
+        TNT_ROUTE_GROUP_ID = #{tntRouteGroupId} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_GROUP 
+	        WHERE 
+		        TNT_ROUTE_GROUP_ID = #{tntRouteGroupId} 
+	</select>
+	
+    <select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_ROUTE_GROUP 
+	        WHERE 
+		        PRODUCT_ID = #{productId} 
+	</select>
+	
+	<sql id="where">
+		<where>	 
+			1=1     				
+			<if test="tntRouteGroupId != null and tntRouteGroupId !=''">
+				AND TNT_ROUTE_GROUP_ID = #{tntRouteGroupId}
+	       	</if> 
+			<if test="groupId != null and groupId !=''">
+				AND GROUP_ID = #{groupId}
+	       	</if> 
+			<if test="groupName != null and groupName !=''">
+				AND GROUP_NAME = #{groupName}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+			<if test="startDay != null and startDay !=''">
+				AND START_DAY = #{startDay}
+	       	</if> 
+			<if test="travelDays != null and travelDays !=''">
+				AND TRAVEL_DAYS = #{travelDays}
+	       	</if> 
+			<if test="stayDays != null and stayDays !=''">
+				AND STAY_DAYS = #{stayDays}
+	       	</if> 
+			<if test="adult != null and adult !=''">
+				AND ADULT = #{adult}
+	       	</if> 
+			<if test="child != null and child !=''">
+				AND CHILD = #{child}
+	       	</if> 
+			<if test="hasBranch != null and hasBranch !=''">
+				AND HAS_BRANCH = #{hasBranch}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>
+			1=1	      				
+	        <if test="param.tntRouteGroupId != null and param.tntRouteGroupId !=''">
+				AND TNT_ROUTE_GROUP_ID = #{param.tntRouteGroupId}
+	       	</if> 
+			<if test="param.groupId != null and param.groupId !=''">
+				AND GROUP_ID = #{param.groupId}
+	       	</if> 
+			<if test="param.groupName != null and param.groupName !=''">
+				AND GROUP_NAME = #{param.groupName}
+	       	</if> 
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if> 
+			<if test="param.categoryId != null and param.categoryId !=''">
+				AND CATEGORY_ID = #{param.categoryId}
+	       	</if> 
+			<if test="param.startDay != null and param.startDay !=''">
+				AND START_DAY = #{param.startDay}
+	       	</if> 
+			<if test="param.travelDays != null and param.travelDays !=''">
+				AND TRAVEL_DAYS = #{param.travelDays}
+	       	</if> 
+			<if test="param.stayDays != null and param.stayDays !=''">
+				AND STAY_DAYS = #{param.stayDays}
+	       	</if> 
+			<if test="param.adult != null and param.adult !=''">
+				AND ADULT = #{param.adult}
+	       	</if> 
+			<if test="param.child != null and param.child !=''">
+				AND CHILD = #{param.child}
+	       	</if> 
+			<if test="param.hasBranch != null and param.hasBranch !=''">
+				AND HAS_BRANCH = #{param.hasBranch}
+	       	</if> 
+		</where>
+	</sql>
+	
+	<select id="findByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup" resultMap="baseResultMap">
+	 	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_GROUP
+	    <include refid="where"/> 
+    </select>
+    
+	 <delete id="deleteByParams" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        DELETE FROM TNT_ROUTE_GROUP
+        <include refid="where"/>
+    </delete>
+    
+	 <delete id="deleteByMap" parameterType="java.util.Map">
+        DELETE FROM TNT_ROUTE_GROUP
+        <include refid="where"/>
+    </delete>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntRouteGroup">
+        SELECT count(*) FROM TNT_ROUTE_GROUP 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_GROUP
+	    <include refid="pageWhere"/> 
+	    <include refid="mysqlPageSearchFoot"/> 
+    </select>
+    
+    <sql id="mysqlPageSearchFoot">
+    	LIMIT #{startRowsForMySql},#{pageSize}
+    </sql>
+    
+    <select id="findGroupsAndBranchsByProductId" parameterType="Long" resultMap="extResultMap">
+	 	SELECT <include refid="columns" />
+	    FROM TNT_ROUTE_GROUP
+	    WHERE PRODUCT_ID=#{productId}
+    </select>
+    
+     <update id="updateHasBranchByProdAndGroupId" parameterType="java.util.Map">
+		  UPDATE TNT_ROUTE_GROUP
+		  SET
+			HAS_BRANCH=#{hasBranch}
+		  WHERE PRODUCT_ID=#{productId}
+			AND GROUP_ID=#{groupId}
+	</update>
+
+</mapper>
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://code.alibabatech.com/schema/dubbo
+http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <dubbo:reference id="vstProductService" interface="com.lvmama.vst.api.hotel.prod.service.VstProductService"/>
+    <dubbo:reference id="vstProductCommServiceRemote" interface="com.lvmama.vst.api.prod.service.VstProductService"/>
+    <dubbo:reference id="vstOrderQueryService" interface="com.lvmama.vst.api.hotel.order.service.VstOrderQueryService"/>
+    <dubbo:reference id="vstCreditCardService" interface="com.lvmama.vst.api.biz.service.VstCreditCardService"/>
+    <dubbo:reference id="vstDistrictService" interface="com.lvmama.vst.api.biz.service.VstDistrictService"/>
+    <dubbo:reference id="vstDistrictSignService" interface="com.lvmama.vst.api.biz.service.VstDistrictSignService"/>
+    <dubbo:reference id="vstGoodsCheckService" interface="com.lvmama.vst.api.hotel.prod.service.VstGoodsCheckService"/>
+    <dubbo:reference id="vstGoodsService" interface="com.lvmama.vst.api.hotel.prod.service.VstGoodsService" group="goods"/>
+    <dubbo:reference id="VstSubjectService" interface="com.lvmama.vst.api.biz.service.VstSubjectService"/>
+    <dubbo:reference id="vstOrderManageService" interface="com.lvmama.vst.api.hotel.order.service.VstOrderManageService"/>
+    <dubbo:reference id="vstSearchService" interface="com.lvmama.vst.api.search.service.VstSearchService"/>
+    <dubbo:reference id="lvmamaB2BServiceRemote" interface="com.lvmama.vst.newsearch.service.LvmamaB2BService"/>
+    <dubbo:reference id="clientOrderPushService" interface="com.lvmama.tnt.partner.hotel.service.OrderPushService"/>
+    <dubbo:reference id="vstCompshipOrderManageService" interface="com.lvmama.vst.api.compship.order.service.VstCompshipOrderManageService"/>
+    <dubbo:reference id="vstCompshipOrderQueryService" interface="com.lvmama.vst.api.compship.order.service.VstCompshipOrderQueryService"/>
+    <dubbo:reference id="vstCompShipService" interface="com.lvmama.vst.api.compship.prod.service.VstCompShipService"/>
+    <dubbo:reference id="vstComShipGoodsCheckService" interface="com.lvmama.vst.api.compship.prod.service.VstComShipGoodsCheckService"/>
+    <dubbo:reference id="vstCommOrderManageService" interface="com.lvmama.vst.api.order.service.VstCommOrderManageService"/>
+    <dubbo:reference id="vstCommOrderQueryService" interface="com.lvmama.vst.api.order.service.VstCommOrderQueryService"/>
+    <dubbo:reference id="vstOrderPerformService" interface="com.lvmama.vst.api.order.service.OrderPerformService"/>
+    <dubbo:reference id="vstOrderRequiredService" interface="com.lvmama.vst.api.order.service.VstOrderRequiredService"/>
+    <dubbo:reference id="vstOrderSmsSendService" interface="com.lvmama.vst.api.order.service.VstOrderSmsSendService"/>
+    <dubbo:reference id="vstTicketGoodsCheckService" interface="com.lvmama.vst.api.ticket.prod.service.VstTicketGoodsCheckService"/>
+    <dubbo:reference id="vstTicketProductService" interface="com.lvmama.vst.api.ticket.prod.service.VstTicketProductService"/>
+    <dubbo:reference id="vstTicketGoodsService" interface="com.lvmama.vst.api.ticket.prod.service.VstTicketGoodsService"/>
+    <dubbo:reference id="insuranceService" interface="com.lvmama.vst.api.insurance.prod.service.InsuranceService"/>
+    <dubbo:reference id="insuranceGoodsService" interface="com.lvmama.vst.api.insurance.prod.service.InsuranceGoodsService"/>
+    <dubbo:reference id="vstDestService" interface="com.lvmama.vst.api.biz.service.VstDestService"/>
+    <dubbo:reference id="vstCategoryService" interface="com.lvmama.vst.api.biz.service.VstCategoryService"/>
+    <dubbo:reference id="vstFlightService" interface="com.lvmama.vst.api.biz.service.VstFlightService"/>
+    <dubbo:reference id="vstTrainService" interface="com.lvmama.vst.api.biz.service.VstTrainService"/>
+    <dubbo:reference id="vstVisaDocService" interface="com.lvmama.vst.api.biz.service.VstVisaDocService"/>
+    <dubbo:reference id="vstDictInfoService" interface="com.lvmama.vst.api.biz.service.VstDictInfoService"/>
+    <dubbo:reference id="vstSuppSupplierService" interface="com.lvmama.comm.vst.service.VstSuppSupplierService"/>
+    <dubbo:reference id="vstShipGoodsService" interface="com.lvmama.vst.api.ship.prod.service.VstShipGoodsService"/>
+    <dubbo:reference id="vstShipService" interface="com.lvmama.vst.api.ship.prod.service.VstShipService"/>
+    <dubbo:reference id="vstPromotionService" interface="com.lvmama.vst.api.prom.service.VstPromotionService"/>
+    <dubbo:reference id="vstCommentService" interface="com.lvmama.vst.api.comm.comment.VstCommentService"/>
+    <dubbo:reference id="vstShipAdditionGoodsService" interface="com.lvmama.vst.api.shipAddition.prod.service.VstShipAdditionGoodsService"/>
+    <dubbo:reference id="vstShipAdditionService" interface="com.lvmama.vst.api.shipAddition.prod.service.VstShipAdditionService"/>
+    <dubbo:reference id="vstShoreExcursionsGoodsService" interface="com.lvmama.vst.api.shoreExcursions.prod.service.VstShoreExcursionsGoodsService"/>
+    <dubbo:reference id="vstShoreExcursionsService" interface="com.lvmama.vst.api.shoreExcursions.prod.service.VstShoreExcursionsService"/>
+    <dubbo:reference id="vstVisaGoodsService" interface="com.lvmama.vst.api.visa.prod.service.VstVisaGoodsService"/>
+    <dubbo:reference id="vstVisaService" interface="com.lvmama.vst.api.visa.prod.service.VstVisaService"/>
+    <dubbo:reference id="vstRouteGoodsCheckService" interface="com.lvmama.vst.api.route.prod.service.VstRouteGoodsCheckService"/>
+    <dubbo:reference id="vstRouteGoodsService" interface="com.lvmama.vst.api.route.prod.service.VstRouteGoodsService" group="goods"/>
+    <dubbo:reference id="vstRouteGoodsGroupService" interface="com.lvmama.vst.api.route.prod.service.VstRouteGoodsService" group="goodsGroup"/>
+    <dubbo:reference id="vstRouteService" interface="com.lvmama.vst.api.route.prod.service.VstRouteService"/>
+    <dubbo:reference id="vstSuppGoodsService" interface="com.lvmama.vst.api.prod.service.VstSuppGoodsService"/>
+    <dubbo:reference id="vstTicketOrderService" interface="com.lvmama.vst.api.ticket.order.service.TicketOrderService"/>
+    <dubbo:reference id="vstSubjectService" interface="com.lvmama.vst.api.biz.service.VstSubjectService"/>
+    <dubbo:reference id="vstOrderRefundmentService" interface="com.lvmama.comm.vst.service.VstOrderRefundmentService"/>
+    <dubbo:reference id="lvmamaB2BHotelService" interface="com.lvmama.vst.newsearch.service.LvmamaB2BHotelService"/>
+    <dubbo:reference id="vstOrderService" interface="com.lvmama.comm.vst.service.VstOrdOrderService"/>
+    <dubbo:reference id="vstBuyPresentService" interface="com.lvmama.vst.api.prom.service.VstBuyPresentService"/>
+    <dubbo:reference id="vstIntentionOrderService" interface="com.lvmama.vst.api.biz.service.VstIntentionOrderService"/>
+    <dubbo:reference id="vstOrdOrderService" interface="com.lvmama.comm.vst.service.VstOrdOrderService"/>
+    <dubbo:reference id="intentionOrderServiceRemote" interface="com.lvmama.vst.api.intentionOrder.service.IntentionOrderService"/>
+    <dubbo:reference id="prodPackageHotelCombDistributionService" interface="com.lvmama.vst.api.route.prod.service.ProdPackageHotelCombDistributionService"/>
+    <dubbo:reference id="vstVisaApprovalStatusService" interface="com.lvmama.vst.api.visa.prod.service.VstVisaApprovalStatusService"/>
+    <dubbo:reference id="vstGoodsGroupServiceRemote" interface="com.lvmama.vst.api.hotel.prod.service.VstGoodsService" group="goodsGroup"/>
+    <!--马戏票商品 -->
+    <dubbo:reference id="vstTicketCircusGoodsServiceRemote" interface="com.lvmama.vst.api.ticket.prod.service.VstTicketCircusGoodsService" />
+     <!--wifi下单必填项接口 -->
+    <dubbo:reference id="wifiOrderRequiredService" interface="com.lvmama.vst.api.wifi.order.WifiOrderRequiredService" />
+    <!--wifi商品信息接口 -->
+    <dubbo:reference id="vstWifiGoodsService" interface="com.lvmama.vst.api.wifi.prod.VstWifiGoodsService" />
+    <!--wifi库存校验接口 -->
+    <dubbo:reference id="vstWifiGoodsCheckService" interface="com.lvmama.vst.api.wifi.prod.VstWifiGoodsCheckService" /> 
+    <!--wifi订单查询接口 -->
+    <dubbo:reference id="vstWifiOrderQueryService" interface="com.lvmama.vst.api.wifi.order.VstWifiOrderQueryService" />
+    <!-- 线路产品交通查询接口 -->
+    <dubbo:reference id="vstProdTrafficServiceRemote" interface="com.lvmama.vst.api.route.prod.service.VstProdTrafficService" />
+    <!-- 期票判断 -->
+    <dubbo:reference id="prodPackageGroupService" interface="com.lvmama.vst.api.route.prod.service.ProdPackageGroupService" />
+    <!-- 根据订单ID查询订单申码状态接口 -->
+    <dubbo:reference id="vstPassportService" interface="com.lvmama.vst.api.passport.service.VstPassportService" />
+</beans>

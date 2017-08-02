@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntApierrorLogMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.comm.tnt.vo.TntApierrorLog">
+        <result property="logId" column="LOG_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodId" column="GOOD_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="partnerOrderId" column="PARTNER_ORDER_ID"/>
+        <result property="errorType" column="ERROR_TYPE"/>
+        <result property="methodName" column="METHOD_NAME"/>
+        <result property="partnerRequestIp" column="PARTNER_REQUEST_IP"/>
+        <result property="partnerName" column="REAL_NAME"/>
+        <result property="requestTime" column="REQUEST_TIME"/>
+	</resultMap>
+	
+	<resultMap id="requestInfoResult"  type="com.lvmama.comm.tnt.vo.TntApierrorLog">
+        <result property="requestTime" column="REQUEST_TIME"/>
+        <result property="methodName" column="METHOD_NAME"/>
+        <result property="requestContent" column="REQUEST_CONTENT"/>
+        <result property="errorExp" column="ERROR_EXP"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TPL.LOG_ID,TPL.PRODUCT_ID,TPL.GOOD_ID,TPL.ORDER_ID,TPL.PARTNER_ORDER_ID,TPL.ERROR_TYPE,TPL.METHOD_NAME,TPL.PARTNER_REQUEST_IP,TU.REAL_NAME,TPL.REQUEST_TIME
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.comm.tnt.vo.TntApierrorLog">
+		<selectKey resultType="java.lang.Long" keyProperty="logId"
+			order="BEFORE">
+			select  TNT_APIERROR_LOG_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_APIERROR_LOG (
+        	LOG_ID ,
+        	PRODUCT_ID ,
+        	GOOD_ID ,
+        	ORDER_ID ,
+        	PARTNER_ORDER_ID ,
+        	ERROR_TYPE ,
+        	METHOD_NAME ,
+        	PARTNER_REQUEST_IP ,
+        	PARTNER_NAME ,
+        	REQUEST_TIME ,
+        	REQUEST_CONTENT ,
+        	ERROR_EXP 
+        ) VALUES (
+        	#{logId,jdbcType=DECIMAL} ,
+        	#{productId,jdbcType=VARCHAR} ,
+        	#{goodId,jdbcType=VARCHAR} ,
+        	#{orderId,jdbcType=VARCHAR} ,
+        	#{partnerOrderId,jdbcType=VARCHAR} ,
+        	#{errorType,jdbcType=VARCHAR} ,
+        	#{methodName,jdbcType=VARCHAR} ,
+        	#{partnerRequestIp,jdbcType=VARCHAR} ,
+        	#{partnerName,jdbcType=VARCHAR} ,
+        	sysdate,
+        	#{requestContent,jdbcType=VARCHAR} ,
+        	#{errorExp,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+    <select id="getById" resultMap="requestInfoResult" parameterType="Long">
+		SELECT REQUEST_TIME,METHOD_NAME,REQUEST_CONTENT,ERROR_EXP
+		    FROM TNT_APIERROR_LOG 
+	        WHERE 
+		        LOG_ID = #{id}
+	</select>
+	
+	<sql id="where">
+			<if test="logId != null and logId !=''">
+				AND LOG_ID = #{logId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodId != null and goodId !=''">
+				AND GOOD_ID = #{goodId}
+	       	</if> 
+			<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+	       	</if> 
+			<if test="partnerOrderId != null and partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = #{partnerOrderId}
+	       	</if>  
+			<if test="partnerName != null and partnerName !=''">
+				AND REAL_NAME like
+				CONCAT(CONCAT('%',#{partnerName}),'%')
+	       	</if> 
+			<if test="createTimeBegin != null and createTimeEnd !=''">
+				<![CDATA[ AND REQUEST_TIME >= to_date(#{createTimeBegin}, 'yyyy-mm-dd') and REQUEST_TIME< to_date(#{createTimeEnd}, 'yyyy-mm-dd') ]]>
+			</if>
+	</sql>
+		
+	<sql id="pageWhere">
+			<if test="param.logId != null and param.logId !=''">
+				AND LOG_ID = #{param.logId}
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.goodId != null and param.goodId !=''">
+				AND GOOD_ID = #{param.goodId}
+	       	</if>
+			<if test="param.orderId != null and param.orderId !=''">
+				AND ORDER_ID = #{param.orderId}
+	       	</if>
+			<if test="param.partnerOrderId != null and param.partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = #{param.partnerOrderId}
+	       	</if>
+			<if test="param.partnerName != null and param.partnerName !=''">
+				AND REAL_NAME like CONCAT(CONCAT('%',#{param.partnerName}),'%')
+	       	</if>
+	       <if test="param.createTimeBegin != null and param.createTimeEnd !=''">
+				<![CDATA[ AND REQUEST_TIME >= to_date(#{param.createTimeBegin}, 'yyyy-mm-dd') and REQUEST_TIME< to_date(#{param.createTimeEnd}, 'yyyy-mm-dd') ]]>
+			</if>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.comm.tnt.vo.TntApierrorLog">
+        SELECT count(*) FROM TNT_APIERROR_LOG TPL ,TNT_USER TU,TNT_USER_DETAIL TUD
+			WHERE TPL.PARTNER_NAME=TUD.DISTRIBUTOR_CODE(+)
+			AND TU.USER_ID=TUD.USER_ID
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+			FROM TNT_APIERROR_LOG TPL ,TNT_USER TU,TNT_USER_DETAIL TUD
+			WHERE TPL.PARTNER_NAME=TUD.DISTRIBUTOR_CODE(+)
+			AND TU.USER_ID=TUD.USER_ID
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntSellBranchMapper">
+	
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntSellBranch">
+		<result property="tntSellBranchId" column="TNT_SELL_BRANCH_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="maxCnt" column="MAX_CNT" />
+		<result property="minCnt" column="MIN_CNT" />
+		<result property="valid" column="VALID" />
+		<result property="maxGuests" column="MAX_GUESTS" />
+		<result property="lvmamaPackageType" column="LVMAMA_PACKAGE_TYPE" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="categoryTag" column="CATEGORY_TAG" />
+		<collection property="relationList" select="selectRelationBySellBranchId" column="{tntSellBranchId=TNT_SELL_BRANCH_ID}" javaType="ArrayList" >
+        </collection>
+	</resultMap>
+	
+	<resultMap id="relationMap" type="com.lvmama.tnt.prod.po.TntSellBranchRelation">
+		<result property="tntSellBranchRelationId" column="TNT_SELL_BRANCH_RELATION_ID" />
+		<result property="tntSellBrancheId" column="TNT_SELL_BRANCH_ID" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productId" column="SUB_PRODUCT_ID" />
+		<result property="subProductType" column="SUB_PRODUCT_TYPE" />
+		<result property="cnt" column="CNT" />
+		<result property="valid" column="VALID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="startDays" column="START_DAYS" />
+		<result property="endDays" column="END_DAYS" />
+		<result property="priceType" column="PRICE_TYPE" />
+		<result property="price" column="PRICE" />
+		<result property="groupId" column="GROUP_ID" />
+		<result property="ticketType" column="TICKET_TYPE" />
+	</resultMap>
+	
+	<resultMap id="tntProductVoResult" type="com.lvmama.tnt.prod.vo.TntProductVo">
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="status" column="VALID" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="branchType" column="BRANCH_TYPE" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="payTarget" column="PAY_TO_LVMAMA" />
+	</resultMap>
+	
+	
+	<select id="selectRelationBySellBranchId" resultMap="relationMap" parameterType="HashMap">
+		select * from TNT_SELL_BRANCH_RELATION where tnt_sell_branch_id=#{tntSellBranchId}
+	</select>
+	
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntSellBranch" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="tntSellBranchId" order="BEFORE">
+			select
+			TNT_SELL_BRANCH_SEQ.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_SELL_BRANCH (
+			TNT_SELL_BRANCH_ID,
+			PRODUCT_ID ,
+			PRODUCT_NAME ,
+			MAX_CNT,
+			MIN_CNT,
+			VALID,
+			MAX_GUESTS,
+			LVMAMA_PACKAGE_TYPE,
+			CATEGORY_TAG,
+			CREATE_TIME,
+			UPDATE_TIME
+		) VALUES
+		(
+			#{tntSellBranchId,jdbcType=DECIMAL},
+			#{productId,jdbcType=DECIMAL},
+			#{productName,jdbcType=VARCHAR},
+			#{maxCnt,jdbcType=DECIMAL},
+			#{minCnt,jdbcType=DECIMAL},
+			#{valid,jdbcType=VARCHAR},
+			#{maxGuests,jdbcType=DECIMAL},
+			#{lvmamaPackageType,jdbcType=VARCHAR},
+			#{categoryTag,jdbcType=VARCHAR},
+			sysdate,
+			#{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntSellBranch">
+		UPDATE TNT_SELL_BRANCH 
+		  <trim prefix="set" prefixOverrides=",">
+			<if test="productId != null and productId !=''">
+				PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+			</if>
+			<if test="minCnt != null">
+				 ,MIN_CNT = #{minCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="maxCnt != null">
+				, MAX_CNT = #{maxCnt,jdbcType=DECIMAL}
+			</if>
+			<if test="valid != null and valid !=''">
+				 ,VALID = #{valid,jdbcType=VARCHAR}
+			</if>
+			<if test="productName != null and productName !=''">
+				, PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+			</if>
+			<if test="maxGuests != null and maxGuests  !=''">
+				 ,MAX_GUESTS = #{maxGuests,jdbcType=DECIMAL}
+			</if>	
+			<if test="lvmamaPackageType != null and lvmamaPackageType  !=''">
+				 ,LVMAMA_PACKAGE_TYPE = #{lvmamaPackageType,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime != null and updateTime  !=''">
+				 ,UPDATE_TIME = sysdate
+			</if>
+			<if test="categoryTag != null and categoryTag  !=''">
+				 ,CATEGORY_TAG = #{categoryTag,jdbcType=VARCHAR}
+			</if>
+		</trim>
+		WHERE
+		TNT_SELL_BRANCH_ID = #{tntSellBranchId}
+	</update>
+	
+	<sql id="columns">
+		*
+	</sql>
+	
+	<sql id="where">
+		<if test="tntSellBranchId != null and tntSellBranchId !=''">
+			AND sb.TNT_SELL_BRANCH_ID = #{tntSellBranchId}
+		</if>
+		<if test="productName != null and productName !=''">
+			AND sb.BRANCH_NAME = #{productName}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND sb.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productName != null and productName !=''">
+			AND sb.PRODUCT_NAME = #{productName}
+		</if>
+	</sql>
+	
+	<sql id="pageWhere">
+		<if test="param.tntSellBranchId != null  and param.tntSellBranchId !=''">
+			AND sb.TNT_SELL_BRANCH_ID = #{param.tntSellBranchId}
+		</if>
+		<if test="param.branchName != null and param.branchName !=''">
+			AND sb.BRANCH_NAME = #{param.branchName}
+		</if>
+		<if test="param.productId != null and param.productId !=''">
+			AND sb.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.productName!= null and param.productName !=''">
+			AND sb.PRODUCT_NAME = #{param.productName}
+		</if>
+	</sql>
+
+	<select id="queryByParams" resultMap="baseResultMap" parameterType="java.util.Map">
+		select 
+		<include refid="columns" /> 
+		from TNT_SELL_BRANCH sb
+		<where>
+			<include refid="where" />
+		</where>
+		order by TNT_SELL_BRANCH_ID desc
+	</select>
+
+	<select id="countPageByParams" resultType="java.lang.Long" parameterType="com.lvmama.tnt.prod.po.TntSellBranch">
+		select count(*)
+		from TNT_SELL_BRANCH sb
+		<where>
+		<include refid="where" />
+		</where>
+	</select>
+
+	<select id="queryPageByParams" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		select 
+		<include refid="columns" /> 
+		from TNT_SELL_BRANCH sb
+		<where>
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+		</where>
+	</select>
+	
+	 <delete id="delete" parameterType="Long">
+		DELETE FROM TNT_SELL_BRANCH
+		WHERE TNT_SELL_BRANCH_ID = #{tntSellBranchId,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="queryExistSellBranchByBranchIdAndOhters" resultType="java.lang.Long" parameterType="java.util.Map">
+		 SELECT HOTELBRANCH.TNT_SELL_BRANCH_ID
+		 FROM LVMAMA_PET.TNT_SELL_BRANCH_RELATION HOTELBRANCH,
+		       LVMAMA_PET.TNT_SELL_BRANCH_RELATION TICKETBRANCH
+		 WHERE HOTELBRANCH.BRANCH_ID = #{hotelBranchId,jdbcType=DECIMAL}
+		   AND TICKETBRANCH.BRANCH_ID =#{ticketBranchId,jdbcType=DECIMAL}
+		   AND TICKETBRANCH.START_DAYS =#{startDay,jdbcType=VARCHAR}
+		   AND TICKETBRANCH.TICKET_TYPE =#{ticketType,jdbcType=VARCHAR}
+		   AND TICKETBRANCH.TNT_SELL_BRANCH_ID = HOTELBRANCH.TNT_SELL_BRANCH_ID
+	</select>
+</mapper>
+

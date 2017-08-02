@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.HotelDistTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.HotelDistTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="prodBranchId" column="PROD_BRANCH_ID"/>
+        <result property="cancelHour" column="CANCEL_HOUR"/>
+        <result property="aheadHour" column="AHEAD_HOUR"/>
+        <result property="priceType" column="PRICE_TYPE"/>
+        <result property="ratePrice" column="RATE_PRICE"/>
+        <result property="fixedAddPrice" column="FIXED_ADD_PRICE"/>
+        <result property="cancelStrategy" column="CANCEL_STRATEGY"/>
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="auditPrice" column="AUDIT_PRICE"/>
+        <result property="auditSettlementPrice" column="AUDIT_SETTLEMENT_PRICE"/>
+        <result property="auditVstSettPrice" column="AUDIT_VST_SETT_PRICE"/>
+        <result property="calculateType" column="CALCULATE_TYPE"/>
+        <result property="ruleId" column="RULE_ID"/>
+        <result property="latestHoldTime" column="LATEST_HOLD_TIME"/>
+        <result property="deductType" column="DEDUCT_TYPE"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="guarType" column="GUAR_TYPE"/>
+        <result property="retentionTime" column="RETENTION_TIME"/>
+        <result property="guarQuantity" column="GUAR_QUANTITY"/>
+        <result property="restoreFlag" column="RESTORE_FLAG"/>
+        <result property="hasNotReservedRoom" column="HAS_NOT_RESERVED_ROOM"/>
+        <result property="retentionHouse" column="RETENTION_HOUSE"/>
+        <result property="totalHouse" column="TOTAL_HOUSE"/>
+        <result property="auditCommissionPrice" column="AUDIT_COMMISSION_PRICE"/>
+        <result property="stockStatus" column="STOCK_STATUS"/>
+        <result property="goodsStockFlag" column="GOODS_STOCK_FLAG"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="markUserTime" column="MARK_USER_TIME"/>
+        <result property="breakfastCount" column="BREAKFAST_COUNT"/>
+        <result property="overSale" column="OVER_SALE"/>
+        <result property="onsaleFlag" column="ON_SALE_FLAG"/>
+        <result property="lastUpdateTime" column="LAST_UPDATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TIME_PRICE_ID,MARK_USER_TIME,SPEC_DATE,PRODUCT_ID,PROD_BRANCH_ID,CANCEL_HOUR,AHEAD_HOUR,PRICE_TYPE,RATE_PRICE,FIXED_ADD_PRICE,CANCEL_STRATEGY,PRODUCT_TYPE,AUDIT_PRICE,AUDIT_SETTLEMENT_PRICE,AUDIT_VST_SETT_PRICE,CALCULATE_TYPE,RULE_ID,LATEST_HOLD_TIME,DEDUCT_TYPE,BOOK_LIMIT_TYPE,GUAR_TYPE,RETENTION_TIME,GUAR_QUANTITY,RESTORE_FLAG,HAS_NOT_RESERVED_ROOM,RETENTION_HOUSE,TOTAL_HOUSE,AUDIT_COMMISSION_PRICE,STOCK_STATUS,GOODS_STOCK_FLAG,UPDATE_TIME,BREAKFAST_COUNT,OVER_SALE,ON_SALE_FLAG,LAST_UPDATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.HotelDistTimePrice">
+		<selectKey resultType="java.lang.Long" keyProperty="timePriceId"
+			order="BEFORE">
+			select  HOTEL_DIST_TIME_PRICE_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO HOTEL_DIST_TIME_PRICE (
+        	TIME_PRICE_ID ,
+        	SPEC_DATE ,
+        	PRODUCT_ID ,
+        	PROD_BRANCH_ID ,
+        	CANCEL_HOUR ,
+        	AHEAD_HOUR ,
+        	PRICE_TYPE ,
+        	RATE_PRICE ,
+        	FIXED_ADD_PRICE ,
+        	CANCEL_STRATEGY ,
+        	PRODUCT_TYPE ,
+        	AUDIT_PRICE ,
+        	AUDIT_SETTLEMENT_PRICE ,
+        	AUDIT_VST_SETT_PRICE ,
+        	CALCULATE_TYPE ,
+        	RULE_ID ,
+        	LATEST_HOLD_TIME ,
+        	DEDUCT_TYPE ,
+        	BOOK_LIMIT_TYPE ,
+        	GUAR_TYPE ,
+        	RETENTION_TIME ,
+        	GUAR_QUANTITY ,
+        	RESTORE_FLAG ,
+        	HAS_NOT_RESERVED_ROOM ,
+        	RETENTION_HOUSE ,
+        	TOTAL_HOUSE ,
+        	AUDIT_COMMISSION_PRICE ,
+        	STOCK_STATUS ,
+        	GOODS_STOCK_FLAG ,
+        	UPDATE_TIME,
+        	MARK_USER_TIME,
+        	BREAKFAST_COUNT ,
+        	OVER_SALE,
+        	ON_SALE_FLAG,
+        	LAST_UPDATE_TIME
+        ) VALUES (
+        	#{timePriceId jdbcType=NUMERIC} ,
+        	#{specDate jdbcType=DATE} ,
+        	#{productId jdbcType=NUMERIC} ,
+        	#{prodBranchId jdbcType=NUMERIC} ,
+        	#{cancelHour jdbcType=NUMERIC} ,
+        	#{aheadHour jdbcType=NUMERIC} ,
+        	#{priceType jdbcType=VARCHAR} ,
+        	#{ratePrice jdbcType=NUMERIC} ,
+        	#{fixedAddPrice jdbcType=NUMERIC} ,
+        	#{cancelStrategy jdbcType=VARCHAR} ,
+        	#{productType jdbcType=VARCHAR} ,
+        	#{auditPrice jdbcType=NUMERIC} ,
+        	#{auditSettlementPrice jdbcType=NUMERIC} ,
+        	#{auditVstSettPrice jdbcType=NUMERIC} ,
+        	#{calculateType jdbcType=VARCHAR} ,
+        	#{ruleId jdbcType=NUMERIC} ,
+        	#{latestHoldTime jdbcType=NUMERIC} ,
+        	#{deductType jdbcType=VARCHAR} ,
+        	#{bookLimitType jdbcType=VARCHAR} ,
+        	#{guarType jdbcType=VARCHAR} ,
+        	#{retentionTime jdbcType=NUMERIC} ,
+        	#{guarQuantity jdbcType=NUMERIC} ,
+        	#{restoreFlag jdbcType=VARCHAR} ,
+        	#{hasNotReservedRoom jdbcType=VARCHAR} ,
+        	#{retentionHouse jdbcType=NUMERIC} ,
+        	#{totalHouse jdbcType=NUMERIC} ,
+        	#{auditCommissionPrice jdbcType=NUMERIC} ,
+        	#{stockStatus jdbcType=VARCHAR} ,
+        	#{goodsStockFlag jdbcType=NUMERIC} ,
+        	#{updateTime jdbcType=TIMESTAMP},
+        	#{markUserTime jdbcType=VARCHAR} ,
+        	#{breakfastCount jdbcType=NUMERIC} ,
+        	#{overSale jdbcType=VARCHAR} ,
+        	#{onsaleFlag jdbcType=VARCHAR} ,
+        	#{lastUpdateTime jdbcType=TIMESTAMP} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.HotelDistTimePrice">
+        UPDATE HOTEL_DIST_TIME_PRICE SET
+	        SPEC_DATE = #{specDate jdbcType=DATE} ,
+	        PRODUCT_ID = #{productId jdbcType=NUMERIC} ,
+	        PROD_BRANCH_ID = #{prodBranchId jdbcType=NUMERIC} ,
+	        CANCEL_HOUR = #{cancelHour jdbcType=NUMERIC} ,
+	        AHEAD_HOUR = #{aheadHour jdbcType=NUMERIC} ,
+	        PRICE_TYPE = #{priceType jdbcType=VARCHAR} ,
+	        RATE_PRICE = #{ratePrice jdbcType=NUMERIC} ,
+	        FIXED_ADD_PRICE = #{fixedAddPrice jdbcType=NUMERIC} ,
+	        CANCEL_STRATEGY = #{cancelStrategy jdbcType=VARCHAR} ,
+	        PRODUCT_TYPE = #{productType jdbcType=VARCHAR} ,
+	        AUDIT_PRICE = #{auditPrice jdbcType=NUMERIC} ,
+	        AUDIT_SETTLEMENT_PRICE = #{auditSettlementPrice jdbcType=NUMERIC} ,
+	        AUDIT_VST_SETT_PRICE = #{auditVstSettPrice jdbcType=NUMERIC} ,
+	        CALCULATE_TYPE = #{calculateType jdbcType=VARCHAR} ,
+	        RULE_ID = #{ruleId jdbcType=NUMERIC} ,
+	        LATEST_HOLD_TIME = #{latestHoldTime jdbcType=NUMERIC} ,
+	        DEDUCT_TYPE = #{deductType jdbcType=VARCHAR} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType jdbcType=VARCHAR} ,
+	        GUAR_TYPE = #{guarType jdbcType=VARCHAR} ,
+	        RETENTION_TIME = #{retentionTime jdbcType=NUMERIC} ,
+	        GUAR_QUANTITY = #{guarQuantity jdbcType=NUMERIC} ,
+	        RESTORE_FLAG = #{restoreFlag jdbcType=VARCHAR}  ,
+	        HAS_NOT_RESERVED_ROOM = #{hasNotReservedRoom jdbcType=VARCHAR} ,
+	        RETENTION_HOUSE = #{retentionHouse jdbcType=NUMERIC} ,
+	        TOTAL_HOUSE = #{totalHouse jdbcType=NUMERIC} ,
+	        AUDIT_COMMISSION_PRICE = #{auditCommissionPrice jdbcType=NUMERIC} ,
+	        STOCK_STATUS = #{stockStatus jdbcType=VARCHAR} ,
+	        GOODS_STOCK_FLAG = #{goodsStockFlag jdbcType=NUMERIC} ,
+	        UPDATE_TIME = #{updateTime jdbcType=TIMESTAMP},
+	        MARK_USER_TIME = #{markUserTime jdbcType=VARCHAR} ,
+	        BREAKFAST_COUNT = #{breakfastCount jdbcType=NUMERIC} ,
+	        OVER_SALE = #{overSale jdbcType=VARCHAR} ,
+	        ON_SALE_FLAG = #{onsaleFlag jdbcType=VARCHAR} ,
+	        LAST_UPDATE_TIME = #{lastUpdateTime jdbcType=TIMESTAMP}
+        WHERE 
+	        TIME_PRICE_ID = #{timePriceId jdbcType=NUMERIC} 
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM HOTEL_DIST_TIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM HOTEL_DIST_TIME_PRICE 
+	        WHERE 
+		        TIME_PRICE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="timePriceId != null and timePriceId !=''">
+				AND TIME_PRICE_ID = #{timePriceId}
+	       	</if> 
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="prodBranchId != null and prodBranchId !=''">
+				AND PROD_BRANCH_ID = #{prodBranchId}
+	       	</if> 
+			<if test="cancelHour != null and cancelHour !=''">
+				AND CANCEL_HOUR = #{cancelHour}
+	       	</if> 
+			<if test="aheadHour != null and aheadHour !=''">
+				AND AHEAD_HOUR = #{aheadHour}
+	       	</if> 
+			<if test="priceType != null and priceType !=''">
+				AND PRICE_TYPE = #{priceType}
+	       	</if> 
+			<if test="ratePrice != null and ratePrice !=''">
+				AND RATE_PRICE = #{ratePrice}
+	       	</if> 
+			<if test="fixedAddPrice != null and fixedAddPrice !=''">
+				AND FIXED_ADD_PRICE = #{fixedAddPrice}
+	       	</if> 
+			<if test="cancelStrategy != null and cancelStrategy !=''">
+				AND CANCEL_STRATEGY = #{cancelStrategy}
+	       	</if> 
+			<if test="productType != null and productType !=''">
+				AND PRODUCT_TYPE = #{productType}
+	       	</if> 
+			<if test="auditPrice != null and auditPrice !=''">
+				AND AUDIT_PRICE = #{auditPrice}
+	       	</if> 
+			<if test="auditSettlementPrice != null and auditSettlementPrice !=''">
+				AND AUDIT_SETTLEMENT_PRICE = #{auditSettlementPrice}
+	       	</if> 
+			<if test="auditVstSettPrice != null and auditVstSettPrice !=''">
+				AND AUDIT_VST_SETT_PRICE = #{auditVstSettPrice}
+	       	</if> 
+			<if test="calculateType != null and calculateType !=''">
+				AND CALCULATE_TYPE = #{calculateType}
+	       	</if> 
+			<if test="ruleId != null and ruleId !=''">
+				AND RULE_ID = #{ruleId}
+	       	</if> 
+			<if test="latestHoldTime != null and latestHoldTime !=''">
+				AND LATEST_HOLD_TIME = #{latestHoldTime}
+	       	</if> 
+			<if test="deductType != null and deductType !=''">
+				AND DEDUCT_TYPE = #{deductType}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+			<if test="guarType != null and guarType !=''">
+				AND GUAR_TYPE = #{guarType}
+	       	</if> 
+			<if test="retentionTime != null and retentionTime !=''">
+				AND RETENTION_TIME = #{retentionTime}
+	       	</if> 
+			<if test="guarQuantity != null and guarQuantity !=''">
+				AND GUAR_QUANTITY = #{guarQuantity}
+	       	</if> 
+			<if test="restoreFlag != null and restoreFlag !=''">
+				AND RESTORE_FLAG = #{restoreFlag}
+	       	</if> 
+			<if test="hasNotReservedRoom != null and hasNotReservedRoom !=''">
+				AND HAS_NOT_RESERVED_ROOM = #{hasNotReservedRoom}
+	       	</if> 
+			<if test="retentionHouse != null and retentionHouse !=''">
+				AND RETENTION_HOUSE = #{retentionHouse}
+	       	</if> 
+			<if test="totalHouse != null and totalHouse !=''">
+				AND TOTAL_HOUSE = #{totalHouse}
+	       	</if> 
+			<if test="auditCommissionPrice != null and auditCommissionPrice !=''">
+				AND AUDIT_COMMISSION_PRICE = #{auditCommissionPrice}
+	       	</if> 
+			<if test="stockStatus != null and stockStatus !=''">
+				AND STOCK_STATUS = #{stockStatus}
+	       	</if> 
+			<if test="goodsStockFlag != null and goodsStockFlag !=''">
+				AND GOODS_STOCK_FLAG = #{goodsStockFlag}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.timePriceId != null and param.timePriceId !=''">
+				AND TIME_PRICE_ID = param.timePriceId
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = param.specDate
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = param.productId
+	       	</if>
+			<if test="param.prodBranchId != null and param.prodBranchId !=''">
+				AND PROD_BRANCH_ID = param.prodBranchId
+	       	</if>
+			<if test="param.cancelHour != null and param.cancelHour !=''">
+				AND CANCEL_HOUR = param.cancelHour
+	       	</if>
+			<if test="param.aheadHour != null and param.aheadHour !=''">
+				AND AHEAD_HOUR = param.aheadHour
+	       	</if>
+			<if test="param.priceType != null and param.priceType !=''">
+				AND PRICE_TYPE = param.priceType
+	       	</if>
+			<if test="param.ratePrice != null and param.ratePrice !=''">
+				AND RATE_PRICE = param.ratePrice
+	       	</if>
+			<if test="param.fixedAddPrice != null and param.fixedAddPrice !=''">
+				AND FIXED_ADD_PRICE = param.fixedAddPrice
+	       	</if>
+			<if test="param.cancelStrategy != null and param.cancelStrategy !=''">
+				AND CANCEL_STRATEGY = param.cancelStrategy
+	       	</if>
+			<if test="param.productType != null and param.productType !=''">
+				AND PRODUCT_TYPE = param.productType
+	       	</if>
+			<if test="param.auditPrice != null and param.auditPrice !=''">
+				AND AUDIT_PRICE = param.auditPrice
+	       	</if>
+			<if test="param.auditSettlementPrice != null and param.auditSettlementPrice !=''">
+				AND AUDIT_SETTLEMENT_PRICE = param.auditSettlementPrice
+	       	</if>
+			<if test="param.auditVstSettPrice != null and param.auditVstSettPrice !=''">
+				AND AUDIT_VST_SETT_PRICE = param.auditVstSettPrice
+	       	</if>
+			<if test="param.calculateType != null and param.calculateType !=''">
+				AND CALCULATE_TYPE = param.calculateType
+	       	</if>
+			<if test="param.ruleId != null and param.ruleId !=''">
+				AND RULE_ID = param.ruleId
+	       	</if>
+			<if test="param.latestHoldTime != null and param.latestHoldTime !=''">
+				AND LATEST_HOLD_TIME = param.latestHoldTime
+	       	</if>
+			<if test="param.deductType != null and param.deductType !=''">
+				AND DEDUCT_TYPE = param.deductType
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = param.bookLimitType
+	       	</if>
+			<if test="param.guarType != null and param.guarType !=''">
+				AND GUAR_TYPE = param.guarType
+	       	</if>
+			<if test="param.retentionTime != null and param.retentionTime !=''">
+				AND RETENTION_TIME = param.retentionTime
+	       	</if>
+			<if test="param.guarQuantity != null and param.guarQuantity !=''">
+				AND GUAR_QUANTITY = param.guarQuantity
+	       	</if>
+			<if test="param.restoreFlag != null and param.restoreFlag !=''">
+				AND RESTORE_FLAG = param.restoreFlag
+	       	</if>
+			<if test="param.hasNotReservedRoom != null and param.hasNotReservedRoom !=''">
+				AND HAS_NOT_RESERVED_ROOM = param.hasNotReservedRoom
+	       	</if>
+			<if test="param.retentionHouse != null and param.retentionHouse !=''">
+				AND RETENTION_HOUSE = param.retentionHouse
+	       	</if>
+			<if test="param.totalHouse != null and param.totalHouse !=''">
+				AND TOTAL_HOUSE = param.totalHouse
+	       	</if>
+			<if test="param.auditCommissionPrice != null and param.auditCommissionPrice !=''">
+				AND AUDIT_COMMISSION_PRICE = param.auditCommissionPrice
+	       	</if>
+			<if test="param.stockStatus != null and param.stockStatus !=''">
+				AND STOCK_STATUS = param.stockStatus
+	       	</if>
+			<if test="param.goodsStockFlag != null and param.goodsStockFlag !=''">
+				AND GOODS_STOCK_FLAG = param.goodsStockFlag
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = param.updateTime
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.HotelDistTimePrice">
+        SELECT count(*) FROM HOTEL_DIST_TIME_PRICE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM HOTEL_DIST_TIME_PRICE 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+	<select id="selectTimePriceByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+	    FROM HOTEL_DIST_TIME_PRICE 
+	   	WHERE  PROD_BRANCH_ID = #{prodBranchId} 
+	   		AND SPEC_DATE<![CDATA[=]]>TO_DATE(#{specDate},'YYYY-MM-DD')
+	</select>
+	
+	<select id="selectTimePriceByPeriod" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+	    FROM HOTEL_DIST_TIME_PRICE
+	    WHERE  
+	        PROD_BRANCH_ID = #{prodBranchId}
+	    	AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    	AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+	</select>
+	
+	<select id="selectTimePriceByDatePeriod" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+	    FROM HOTEL_DIST_TIME_PRICE
+	    WHERE  
+	        PROD_BRANCH_ID = #{prodBranchId}
+	    	AND SPEC_DATE <![CDATA[>=]]> #{beginDate}
+	    	AND SPEC_DATE <![CDATA[<=]]> #{endDate}
+	</select>
+	
+	<!-- 查询已经设置过返佣值的时间价格表信息 -->
+	<select id="selectTimePriceWithCommissionByPeriod" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+	    FROM HOTEL_DIST_TIME_PRICE
+	    WHERE  
+	    	AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYY-MM-DD')
+	    	AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYY-MM-DD')
+	        AND PROD_BRANCH_ID = #{prodBranchId}
+	        AND AUDIT_COMMISSION_PRICE IS NULL
+	</select>
+	
+	<!-- 查询最新变价的酒店产品ID -->
+	<select id="queryForNewPrice" resultMap="baseResultMap" parameterType="java.util.Map">
+	   SELECT * 
+	   FROM(
+	   		SELECT HOTEL_DIST_TIME_PRICE.PRODUCT_ID,MAX(HOTEL_DIST_TIME_PRICE.LAST_UPDATE_TIME) AS lastUpdateTime
+	   		FROM HOTEL_DIST_TIME_PRICE,TNT_HOTEL_PRODUCT thp
+	   		WHERE HOTEL_DIST_TIME_PRICE.AUDIT_PRICE<![CDATA[!=]]>HOTEL_DIST_TIME_PRICE.AUDIT_SETTLEMENT_PRICE
+	   		AND HOTEL_DIST_TIME_PRICE.PRODUCT_ID IS NOT NULL
+	   		AND HOTEL_DIST_TIME_PRICE.PRODUCT_ID = thp.PRODUCT_ID AND thp.SYS_FLAG = 'VST' AND  thp.VALID = 'Y' AND thp.HOTEL_STATUS = 'Y' AND thp.PAY_TO_LVMAMA = 'PREPAID'
+	   		AND thp.CATEGORY_ID = 1 AND thp.PACKAGE_FLAG = 'N' AND thp.GOODS_STATUS = 'Y'
+	   		AND EXISTS(SELECT 1 FROM HOTEL_META_TIME_PRICE hmta, TNT_PRODUCT product
+	   			WHERE hmta.META_GOODS_ID = thp.GOODS_ID AND product.PRODUCT_ID = thp.PRODUCT_ID
+	   				AND product.BRANCH_ID = thp.GOODS_ID 
+	   				AND product.CHANNEL_IDS IS NOT NULL AND product.CHANNEL_IDS LIKE '%102%'
+					AND hmta.SPEC_DATE = TO_DATE(#{queryDay},'YYYY-MM-DD') and hmta.ONSALE_FLAG = 'Y')
+	   		GROUP BY HOTEL_DIST_TIME_PRICE.PRODUCT_ID
+	   		ORDER BY lastUpdateTime DESC
+	   )
+	   WHERE ROWNUM <![CDATA[<=]]> #{maxNum}
+	</select>
+	
+	<select id="queryForMoveData" resultMap="baseResultMap" parameterType="java.util.Map">
+	    SELECT * FROM(
+	    		SELECT <include refid="columns" />
+	    		FROM HOTEL_DIST_TIME_PRICE
+	    		WHERE SPEC_DATE  <![CDATA[<]]> TO_DATE(#{moveDate}, 'YYYY-MM-DD')
+	    		ORDER BY TIME_PRICE_ID
+	    )
+	    WHERE ROWNUM <![CDATA[<=]]> #{maxNum}
+	</select>
+	
+	<delete id="deleteForMoveData" parameterType="java.util.Map">
+	    <![CDATA[
+	   	DELETE
+	    FROM HOTEL_DIST_TIME_PRICE
+	    WHERE TIME_PRICE_ID >= #{minIndex}
+	    	AND TIME_PRICE_ID <= #{maxIndex}
+	    	AND SPEC_DATE < TO_DATE(#{moveDate}, 'YYYY-MM-DD')
+	    ]]>
+	</delete>
+</mapper>
+

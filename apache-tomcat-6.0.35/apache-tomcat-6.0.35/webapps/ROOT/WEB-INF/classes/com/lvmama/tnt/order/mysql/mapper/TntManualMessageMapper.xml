@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mysql.mapper.TntManualMessageMapper">
+	
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.order.po.TntManualMessage">
+		<result property="manualMessageId" column="MANUAL_MESSAGE_ID" />
+		<result property="objectIds" column="OBJECT_IDS" />
+		<result property="objectType" column="OBJECT_TYPE" />
+		<result property="status" column="STATUS" />
+		<result property="logDetails" column="LOG_DETAILS" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="operatorName" column="OPERATOR_NAME" />
+	</resultMap>
+	 
+	<sql id="columns">
+	    <![CDATA[
+		MANUAL_MESSAGE_ID,OBJECT_IDS,OBJECT_TYPE,CREATETIME,OPERATOR_NAME,STATUS,LOG_DETAILS
+	    ]]>
+	</sql>
+ 	<sql id="whereDetails">
+ 		<where>
+			<if test="objectType!=null and objectType!=''">
+				AND OBJECT_TYPE = #{objectType}
+			</if>
+			<if test="objectIds!=null and objectIds!=''">
+				AND OBJECT_IDS like CONCAT(CONCAT('%',trim(#{objectIds})),'%')
+			</if>
+				
+			<if test="queryStartTime!=null and queryStartTime!=''">
+				<![CDATA[
+					and DATE_FORMAT(CREATETIME, '%Y-%m-%d') >=  DATE_FORMAT(#{queryStartTime}, '%Y-%m-%d')
+				]]>				
+			</if>
+			<if test="queryEndTime!=null and queryEndTime!=''">
+				<![CDATA[
+					and DATE_FORMAT(CREATETIME, '%Y-%m-%d') <=  DATE_FORMAT(#{queryEndTime}, '%Y-%m-%d')
+				]]>				
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS = #{status}
+			</if>
+		</where>  
+	</sql>
+	<sql id="pageWhere">
+    <where>
+      <if test="param.objectType != null and param.objectType != ''">
+        AND OBJECT_TYPE = #{param.objectType}
+      </if>
+      <if test="param.objectIds != null and param.objectIds != ''">
+        AND OBJECT_IDS like CONCAT(CONCAT('%',trim(#{param.objectIds})),'%')
+      </if>
+      <if test="param.queryStartTime != null and param.queryStartTime  != ''">
+        <![CDATA[
+			and DATE_FORMAT(CREATETIME, '%Y-%m-%d') >=  DATE_FORMAT(#{param.queryStartTime}, '%Y-%m-%d')
+		]]>
+      </if>
+      <if test="param.queryEndTime != null and param.queryEndTime != ''">
+        <![CDATA[
+			and DATE_FORMAT(CREATETIME, '%Y-%m-%d') <=  DATE_FORMAT(#{param.queryEndTime}, '%Y-%m-%d')
+		]]>
+      </if>
+      <if test="param.status != null and param.status != ''">
+        AND STATUS = #{param.status}
+      </if>
+    </where>
+  </sql>
+	<select id="countWithDetail" parameterType="com.lvmama.tnt.order.po.TntManualMessage" resultType="java.lang.Integer">
+		select
+		count(1)
+		from TNT_MANUAL_ALTER_MESSAGE
+		<include refid="whereDetails" />
+	</select>
+	<insert id="insert" useGeneratedKeys="true" parameterType="com.lvmama.tnt.order.po.TntManualMessage">
+		INSERT INTO TNT_MANUAL_ALTER_MESSAGE (
+		MANUAL_MESSAGE_ID,
+		OBJECT_IDS,
+		OBJECT_TYPE,
+		CREATETIME,
+		OPERATOR_NAME,
+		STATUS,
+		LOG_DETAILS
+		) VALUES
+		(
+		#{manualMessageId,jdbcType=DECIMAL},
+		#{objectIds,jdbcType=VARCHAR},
+		#{objectType,jdbcType=VARCHAR},
+		now(),
+		#{operatorName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{logDetails,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateMessage" parameterType="com.lvmama.tnt.order.po.TntManualMessage">
+		UPDATE DISTRIBUTION_MESSAGE
+		<set>
+			<if test="messageStatus != null">
+				STATUS = #{messageStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="reapplyTime != null">
+				REAPPLYTIME = #{reapplyTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="objectType != null">
+				OBJECT_TYPE = #{objectType,jdbcType=VARCHAR}
+			</if>
+			<if test="objectIdList != null">
+				AND OBJECT_ID IN 
+				<foreach collection="objectIdList" item="objectId" open="(" close=")" separator=","  >  
+                #{objectId}  
+   			 	</foreach>
+			</if>
+		</where>
+	</update>
+	<select id="fetchPageWithDetail" resultMap="BaseResultMap" parameterType="page">
+		select
+		<include refid="columns" />
+		from TNT_MANUAL_ALTER_MESSAGE
+		<include refid="pageWhere"/>
+		ORDER BY CREATETIME DESC
+		<if test="startRowsForMySql!=null and pageSize!=null">
+      		LIMIT #{startRowsForMySql}, #{pageSize}
+    	</if>
+	</select>
+	<select id="getDetailsById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select * from TNT_MANUAL_ALTER_MESSAGE where MANUAL_MESSAGE_ID = #{manualMessageId,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

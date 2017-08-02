@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.eagleeye.mapper.ProductMonitorJobMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+        <result property="productMonitorJobId" column="TNT_PRODUCT_MONITOR_JOB_ID"/>
+        <result property="channelId" column="CHANNEL_ID"/>
+        <result property="tntUserId" column="TNT_USER_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="monitorUrl" column="MONITOR_URL"/>
+        <result property="tntUserProductId" column="TNT_USER_PRODUCT_ID"/>
+        <result property="noticeType" column="NOTICE_TYPE"/>
+        <result property="noticeEmails" column="NOTICE_EMAILS"/>
+        <result property="noticeMobiles" column="NOTICE_MOBILES"/>
+        <result property="keyword" column="KEYWORD"/>
+        <result property="failKeyword" column="FAIL_KEYWORD"/>
+        <result property="remark" column="REMARK"/>
+        <result property="faultDuration" column="FAULT_DURATION"/>
+        <result property="monitorStatus" column="MONITOR_STATUS"/>
+        <result property="lastMonitorTime" column="LAST_MONITOR_TIME"/>
+        <result property="jobStatus" column="JOB_STATUS"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="channelName" column="CHANNEL_NAME"/>
+        <result property="distributorName" column="REAL_NAME"/>
+        <result property="channelCode" column="CHANNEL_CODE"/> 
+        <result property="sendEmailTime" column="SEND_EMAIL_TIME"/>
+		<!-- modify by ACL @2016/8/31，修改内容：新增访问URL，VisitUrl -->
+		<result property="visitUrl" column="VISIT_URL"/>
+    </resultMap> 
+	
+	<resultMap id="resultUserMap" type="com.lvmama.tnt.user.po.TntUser">
+       	<result property="userId" column="USER_ID" />
+       	<result property="realName" column="REAL_NAME" />
+	</resultMap> 
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_PRODUCT_MONITOR_JOB_ID,CHANNEL_ID,TNT_USER_ID,PRODUCT_ID,GOODS_ID,MONITOR_URL,TNT_USER_PRODUCT_ID,NOTICE_TYPE,NOTICE_EMAILS,NOTICE_MOBILES,KEYWORD,FAIL_KEYWORD,REMARK,FAULT_DURATION,MONITOR_STATUS,LAST_MONITOR_TIME,JOB_STATUS,UPDATE_TIME,CREATE_TIME,SEND_EMAIL_TIME,VISIT_URL
+	    ]]>
+	</sql>
+	
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+		<selectKey resultType="java.lang.Long" keyProperty="productMonitorJobId"
+			order="BEFORE">
+			select  TNT_PRODUCT_MONITOR_JOB_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_PRODUCT_MONITOR_JOB (
+        	TNT_PRODUCT_MONITOR_JOB_ID ,
+        	CHANNEL_ID ,
+        	TNT_USER_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	MONITOR_URL ,
+        	TNT_USER_PRODUCT_ID ,
+        	NOTICE_TYPE ,
+        	NOTICE_EMAILS ,
+        	NOTICE_MOBILES ,
+        	KEYWORD ,
+        	FAIL_KEYWORD ,
+        	REMARK ,
+        	FAULT_DURATION ,
+        	MONITOR_STATUS ,
+        	LAST_MONITOR_TIME ,
+        	JOB_STATUS ,
+        	UPDATE_TIME ,
+        	CREATE_TIME ,
+        	SEND_EMAIL_TIME,
+			VISIT_URL
+        ) VALUES (
+        	#{productMonitorJobId} ,
+        	#{channelId,jdbcType=DECIMAL} ,
+        	#{tntUserId,jdbcType=DECIMAL} ,
+        	#{productId,jdbcType=DECIMAL} ,
+        	#{goodsId,jdbcType=DECIMAL} ,
+        	#{monitorUrl,jdbcType=VARCHAR} ,
+        	#{tntUserProductId,jdbcType=VARCHAR} ,
+        	#{noticeType,jdbcType=VARCHAR} ,
+        	#{noticeEmails,jdbcType=VARCHAR} ,
+        	#{noticeMobiles,jdbcType=VARCHAR} ,
+        	#{keyword,jdbcType=VARCHAR} ,
+        	#{failKeyword,jdbcType=VARCHAR} ,
+        	#{remark,jdbcType=VARCHAR} ,
+        	#{faultDuration,jdbcType=VARCHAR} ,
+        	#{monitorStatus,jdbcType=VARCHAR} ,
+        	#{lastMonitorTime,jdbcType=DATE} ,
+        	#{jobStatus,jdbcType=VARCHAR} ,
+        	#{updateTime,jdbcType=DATE} ,
+        	#{createTime,jdbcType=DATE} ,
+        	#{sendEmailTime,jdbcType=DATE} ,
+			#{visitUrl,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+        UPDATE TNT_PRODUCT_MONITOR_JOB SET
+        	<if test="channelId != null and channelId !=''">
+	        	CHANNEL_ID = #{channelId,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="tntUserId != null and tntUserId !=''">
+	        	TNT_USER_ID = #{tntUserId,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="productId != null and productId !=''">
+	        	PRODUCT_ID = #{productId,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="goodsId != null and goodsId !=''">
+	        	GOODS_ID = #{goodsId,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="monitorUrl != null and monitorUrl !=''">
+	        	MONITOR_URL = #{monitorUrl,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="tntUserProductId != null and tntUserProductId !=''">
+	        	TNT_USER_PRODUCT_ID = #{tntUserProductId,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="noticeType != null and noticeType !=''">
+	       		NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="noticeEmails != null and noticeEmails !=''">
+	        	NOTICE_EMAILS = #{noticeEmails,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="noticeMobiles != null and noticeMobiles !=''">
+	        	NOTICE_MOBILES = #{noticeMobiles,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="keyword != null and keyword !=''">
+	       		KEYWORD = #{keyword,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="failKeyword != null and failKeyword !=''">
+	       		FAIL_KEYWORD = #{failKeyword,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="remark != null and remark !=''">
+	        	REMARK = #{remark,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="faultDuration != null">
+	        	FAULT_DURATION = #{faultDuration,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="monitorStatus != null and monitorStatus !=''">
+	        	MONITOR_STATUS = #{monitorStatus,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="lastMonitorTime != null">
+	        	LAST_MONITOR_TIME = #{lastMonitorTime,jdbcType=TIMESTAMP} ,
+	       	</if>
+	       	<if test="jobStatus != null and jobStatus !=''">
+	        	JOB_STATUS = #{jobStatus,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="sendEmailTime != null">
+	        	SEND_EMAIL_TIME = #{sendEmailTime,jdbcType=TIMESTAMP} ,
+	       	</if>
+			<if test="visitUrl != null">
+				VISIT_URL = #{visitUrl,jdbcType=VARCHAR} ,
+			</if>
+	       	UPDATE_TIME = sysdate
+        WHERE 
+        	<if test="productMonitorJobId !=null">
+	        	TNT_PRODUCT_MONITOR_JOB_ID = #{productMonitorJobId} 
+	        </if>
+	</update>
+	
+	<update id="updateStatus" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+		  UPDATE TNT_PRODUCT_MONITOR_JOB SET
+	        JOB_STATUS = #{jobStatus,jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="productMonitorJobId !=null">
+	        	TNT_PRODUCT_MONITOR_JOB_ID = #{productMonitorJobId} 
+	        </if>
+	</update>
+
+	<update id="updateInfo" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+        UPDATE TNT_PRODUCT_MONITOR_JOB SET
+	        CHANNEL_ID = #{channelId,jdbcType=DECIMAL} ,
+	        TNT_USER_ID = #{tntUserId,jdbcType=DECIMAL} ,
+	        PRODUCT_ID = #{productId,jdbcType=DECIMAL} ,
+	        GOODS_ID = #{goodsId,jdbcType=DECIMAL} ,
+	        MONITOR_URL = #{monitorUrl,jdbcType=VARCHAR} ,
+	        TNT_USER_PRODUCT_ID = #{tntUserProductId,jdbcType=VARCHAR} ,
+	        NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR} ,
+	        NOTICE_EMAILS = #{noticeEmails,jdbcType=VARCHAR} ,
+	        NOTICE_MOBILES = #{noticeMobiles,jdbcType=VARCHAR} ,
+	        KEYWORD = #{keyword,jdbcType=VARCHAR} ,
+	        FAIL_KEYWORD = #{failKeyword,jdbcType=VARCHAR} ,
+	        REMARK = #{remark,jdbcType=VARCHAR} ,
+	        UPDATE_TIME = #{updateTime,jdbcType=DATE} ,
+			VISIT_URL = #{visitUrl,jdbcType=VARCHAR}
+        WHERE 
+        	<if test="productMonitorJobId !=null">
+	        	TNT_PRODUCT_MONITOR_JOB_ID = #{productMonitorJobId} 
+	        </if>
+	</update>
+	
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_PRODUCT_MONITOR_JOB WHERE
+        TNT_PRODUCT_MONITOR_JOB_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_PRODUCT_MONITOR_JOB 
+	        WHERE 
+		        TNT_PRODUCT_MONITOR_JOB_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="productMonitorJobId != null and productMonitorJobId !=''">
+				AND TNT_PRODUCT_MONITOR_JOB_ID = #{productMonitorJobId}
+	       	</if> 
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+	       	</if> 
+			<if test="tntUserId != null and tntUserId !=''">
+				AND TNT_USER_ID = #{tntUserId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="goodsId != null and goodsId !=''">
+				AND GOODS_ID = #{goodsId}
+	       	</if> 
+			<if test="monitorUrl != null and monitorUrl !=''">
+				AND MONITOR_URL = #{monitorUrl}
+	       	</if> 
+			<if test="tntUserProductId != null and tntUserProductId !=''">
+				AND TNT_USER_PRODUCT_ID = #{tntUserProductId}
+	       	</if> 
+			<if test="noticeType != null and noticeType !=''">
+				AND NOTICE_TYPE = #{noticeType}
+	       	</if> 
+			<if test="noticeEmails != null and noticeEmails !=''">
+				AND NOTICE_EMAILS = #{noticeEmails}
+	       	</if> 
+			<if test="noticeMobiles != null and noticeMobiles !=''">
+				AND NOTICE_MOBILES = #{noticeMobiles}
+	       	</if> 
+			<if test="keyword != null and keyword !=''">
+				AND KEYWORD = #{keyword}
+	       	</if> 
+	       	<if test="failKeyword != null and failKeyword !=''">
+				AND FAIL_KEYWORD = #{failKeyword}
+	       	</if> 
+			<if test="remark != null and remark !=''">
+				AND REMARK = #{remark}
+	       	</if> 
+			<if test="faultDuration != null and faultDuration !=''">
+				AND FAULT_DURATION = #{faultDuration}
+	       	</if> 
+			<if test="monitorStatus != null and monitorStatus !=''">
+				AND MONITOR_STATUS = #{monitorStatus}
+	       	</if> 
+			<if test="lastMonitorTime != null and lastMonitorTime !=''">
+				AND LAST_MONITOR_TIME = #{lastMonitorTime}
+	       	</if> 
+			<if test="jobStatus != null and jobStatus !=''">
+				AND JOB_STATUS = #{jobStatus}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if>
+			<if test="visitUrl != null and visitUrl !=''">
+				AND VISIT_URL = #{visitUrl}
+			</if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<if test="param.productMonitorJobId != null and param.productMonitorJobId !=''">
+			AND TNT_PRODUCT_MONITOR_JOB_ID = #{param.productMonitorJobId}
+	      	</if>
+		<if test="param.channelId != null and param.channelId !=''">
+			AND CHANNEL_ID = #{param.channelId}
+	      	</if>
+		<if test="param.tntUserId != null and param.tntUserId !=''">
+			AND TNT_USER_ID = #{param.tntUserId}
+	      	</if>
+		<if test="param.productId != null and param.productId !=''">
+			AND PRODUCT_ID = #{param.productId}
+	      	</if>
+		<if test="param.goodsId != null and param.goodsId !=''">
+			AND GOODS_ID = #{param.goodsId}
+	      	</if>
+		<if test="param.monitorUrl != null and param.monitorUrl !=''">
+			AND MONITOR_URL = #{param.monitorUrl}
+	      	</if>
+		<if test="param.tntUserProductId != null and param.tntUserProductId !=''">
+			AND TNT_USER_PRODUCT_ID = #{param.tntUserProductId}
+	      	</if>
+		<if test="param.noticeType != null and param.noticeType !=''">
+			AND NOTICE_TYPE = #{param.noticeType}
+	      	</if>
+		<if test="param.noticeEmails != null and param.noticeEmails !=''">
+			AND NOTICE_EMAILS = #{param.noticeEmails}
+	      	</if>
+		<if test="param.noticeMobiles != null and param.noticeMobiles !=''">
+			AND NOTICE_MOBILES = #{param.noticeMobiles}
+	      	</if>
+		<if test="param.keyword != null and param.keyword !=''">
+			AND KEYWORD = #{param.keyword}
+	      	</if>
+	    <if test="param.failKeyword != null and param.failKeyword !=''">
+			AND FAIL_KEYWORD = #{param.failKeyword}
+	      	</if>
+		<if test="param.remark != null and param.remark !=''">
+			AND REMARK = #{param.remark}
+	      	</if>
+		<if test="param.faultDuration != null and param.faultDuration !=''">
+			AND FAULT_DURATION = #{param.faultDuration}
+	      	</if>
+		<if test="param.monitorStatus != null and param.monitorStatus !=''">
+			AND MONITOR_STATUS = #{param.monitorStatus}
+	      	</if>
+		<if test="param.lastMonitorTime != null and param.lastMonitorTime !=''">
+			AND LAST_MONITOR_TIME = #{param.lastMonitorTime}
+	      	</if>
+		<if test="param.jobStatus != null and param.jobStatus !=''">
+			AND JOB_STATUS = #{param.jobStatus}
+	      	</if>
+		<if test="param.visitUrl != null and param.visitUrl !=''">
+			AND VISIT_URL = #{param.visitUrl}
+		</if>
+	</sql>
+	
+    <select id="count" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+        SELECT count(*) FROM TNT_PRODUCT_MONITOR_JOB 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_PRODUCT_MONITOR_JOB 
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="getDistributorListByCode" parameterType="java.lang.String"  resultMap="resultUserMap">
+    	 select u.user_id, u.real_name from tnt_user_detail d , tnt_user u 
+         where d.user_id = u.user_id 
+         and d.channel_code = #{channelCode}
+    </select>
+    
+    <select id="getProductLogList" parameterType="page" resultMap="baseResultMap">
+   		 <include refid="basic.pageSearchHead" />
+    	    select j.TNT_PRODUCT_MONITOR_JOB_ID,
+    	    		   j.monitor_url,
+                       c.channel_name,
+                       c.channel_id,
+                       j.tnt_user_id,
+                       u.user_id,
+                       u.real_name,
+                       j.fault_duration,
+                       j.monitor_status,
+                       j.last_monitor_time,
+                       j.job_status,
+                       j.keyword,
+                       j.FAIL_KEYWORD
+                  from 
+                  tnt_product_monitor_job j left
+                  join tnt_channel   c on j.channel_id = c.channel_id left join  tnt_user u on j.tnt_user_id = u.user_id 
+                  left join tnt_product  p on j.goods_id = p.branch_id  and j.product_id = p.product_id
+        <include refid="pageJoinDetailWhereSQL" /> 
+         order by j.TNT_PRODUCT_MONITOR_JOB_ID
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+     <select id="countWithDetail" resultType="java.lang.Long" parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+             select count(1)
+                  from 
+                  tnt_product_monitor_job j left
+                  join tnt_channel   c on j.channel_id = c.channel_id left join  tnt_user u on j.tnt_user_id = u.user_id 
+                  left join tnt_product  p on j.goods_id = p.branch_id  and j.product_id = p.product_id
+		<include refid="joinDetailWhereSQL"/>    
+    </select>
+    
+     <sql id="pageJoinDetailWhereSQL">
+		<where>
+			<if test="param.jobStatus!=null and param.jobStatus!=''">
+				AND j.JOB_STATUS = #{param.jobStatus}
+			</if>
+			<if test="param.channelId!=null and param.channelId!=''">
+				AND j.CHANNEL_ID = #{param.channelId}
+			</if>
+			<if test="param.tntUserId!=null and param.tntUserId!=''">
+				AND j.TNT_USER_ID = #{param.tntUserId}
+			</if>
+			<!-- <if test="param.lastMonitorTime!=null and param.lastMonitorTime!=''">
+				<![CDATA[
+					AND j.LAST_MONITOR_TIME = #{param.lastMonitorTime}
+				]]>
+			</if> -->
+		    <if test="param.channelCode!=null and param.channelCode!=''">
+				AND c.CHANNEL_CODE = #{param.channelCode}
+			</if> 
+			<if test="param.productId!=null and param.productId!=''">
+				AND j.PRODUCT_ID = #{param.productId}
+			</if> 
+			<if test="param.goodsId!=null and param.goodsId!=''">
+				AND j.GOODS_ID = #{param.goodsId}
+			</if>
+			<if test="param.tntUserProductId!=null and param.tntUserProductId!=''">
+				AND j.TNT_USER_PRODUCT_ID = #{param.tntUserProductId}
+			</if>
+			<!-- <if test="param.dateLastMonitorTimeBegin!=null and param.dateLastMonitorTimeEnd!=null">
+				<![CDATA[ AND j.LAST_MONITOR_TIME >= #{param.dateLastMonitorTimeBegin} and j.LAST_MONITOR_TIME <= #{param.dateLastMonitorTimeEnd} ]]>
+			</if> -->
+			<if test="param.dateLastMonitorTimeBegin!=null">
+				<![CDATA[ AND j.LAST_MONITOR_TIME >= #{param.dateLastMonitorTimeBegin} ]]>
+			</if>
+			<if test="param.dateLastMonitorTimeEnd!=null">
+				<![CDATA[ and j.LAST_MONITOR_TIME <= #{param.dateLastMonitorTimeEnd} ]]>
+			</if>
+			
+		</where>
+	</sql>
+	
+	<sql id="joinDetailWhereSQL">
+		<where>
+			<if test="jobStatus!=null and jobStatus!=''">
+				AND j.JOB_STATUS = #{jobStatus}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				AND j.CHANNEL_ID = #{channelId}
+			</if>
+			<if test="tntUserId!=null and tntUserId!=''">
+				AND j.TNT_USER_ID = #{tntUserId}
+			</if>
+			<!-- <if test="lastMonitorTime!=null and lastMonitorTime!=''">
+				AND j.LAST_MONITOR_TIME = #{lastMonitorTime}
+			</if> -->
+		    <if test="channelCode!=null and channelCode!=''">
+				AND c.CHANNEL_CODE = #{channelCode}
+			</if> 
+			<if test="productId!=null and productId!=''">
+				AND j.PRODUCT_ID = #{productId}
+			</if> 
+			<if test="goodsId!=null and goodsId!=''">
+				AND j.GOODS_ID = #{goodsId}
+			</if>
+			<if test="tntUserProductId!=null and tntUserProductId!=''">
+				AND j.TNT_USER_PRODUCT_ID = #{tntUserProductId}
+			</if>
+			<if test="dateLastMonitorTimeBegin!=null">
+				<![CDATA[ AND j.LAST_MONITOR_TIME >= #{dateLastMonitorTimeBegin} ]]>
+			</if>
+			<if test="dateLastMonitorTimeEnd!=null">
+				<![CDATA[ and j.LAST_MONITOR_TIME <= #{dateLastMonitorTimeEnd} ]]>
+			</if>
+		</where>
+	</sql>
+	 
+	<select id="getChannelIdByCode" parameterType="java.lang.String" resultType="java.lang.Long">
+		select channel_id from tnt_channel where channel_code = #{channelCode}
+	</select> 
+	
+<!-- wuzhajie start for Email-->
+
+	<select id="countByParam" resultType="java.lang.Long"
+		parameterType="java.util.Map">
+		SELECT count(*) FROM TNT_PRODUCT_MONITOR_JOB
+		<include refid="whereByParam" />
+	</select>
+
+	<sql id="whereByParam">
+		<where>
+			<if test="monitorStatus != null and monitorStatus !=''">
+				AND MONITOR_STATUS in
+				<foreach item="item" index="" collection="monitorStatus"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="jobStatus != null and jobStatus !=''">
+				AND JOB_STATUS = #{jobStatus}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findPageByParam" resultMap="baseResultMap"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT_MONITOR_JOB
+		<where>
+			<include refid="pageWhereByParam" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<sql id="pageWhereByParam">
+		<if test="param.monitorStatus != null and param.monitorStatus !=''">
+			AND MONITOR_STATUS in
+			<foreach item="item" index="" collection="param.monitorStatus"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="param.jobStatus != null and param.jobStatus !=''">
+			AND JOB_STATUS = #{param.jobStatus}
+		</if>
+	</sql>
+	
+	<!-- wuzhanjie end -->
+
+	<delete id="deleteInfoById"  parameterType="com.lvmama.tnt.eagleeye.vo.ProductMonitorJob">
+		delete from TNT_PRODUCT_MONITOR_JOB t
+		 where t.TNT_PRODUCT_MONITOR_JOB_ID =#{productMonitorJobId}
+ 	</delete>
+</mapper>

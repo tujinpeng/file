@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--<bean id="jobClient" class="com.github.ltsopensource.spring.JobClientFactoryBean" init-method="start">-->
+        <!--<property name="locations" value="jobClient.properties"/>-->
+        <!--<property name="jobCompletedHandler">-->
+            <!--<bean class="com.lvmama.tnt.message.util.lts.JobCompletedHandlerImpl"/>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="jobClient" class="com.github.ltsopensource.spring.JobClientFactoryBean" init-method="start">
+        <property name="clusterName" value="${lts.cluster.name}"/>
+        <property name="registryAddress" value="${lts.registry.address}"/>
+        <property name="nodeGroup" value="${lts.jobclient.node-group}"/>
+        <property name="jobCompletedHandler">
+            <bean class="com.lvmama.tnt.comm.lts.JobCompletedHandlerImpl"/>
+        </property>
+        <property name="configs">
+            <props>
+                <prop key="job.fail.store">mapdb</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="com.lvmama.tnt.comm.lts.LtsJobClient">
+        <property name="jobClient" ref="jobClient"/>
+    </bean>
+
+</beans>

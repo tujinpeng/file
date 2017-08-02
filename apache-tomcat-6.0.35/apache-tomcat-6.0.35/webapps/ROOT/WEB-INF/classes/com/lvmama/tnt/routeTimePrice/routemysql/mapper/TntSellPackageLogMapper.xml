@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.routemysql.mapper.TntSellPackageLogMapper">
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.routeTimePrice.vo.TntSellPackageLog">
+		<result column="TNT_SELL_PACKAGE_ID" property="tntSellPackageId" />
+		<result column="IS_UPDATE" property="isUpdate" />
+		<result column="IS_MOVE" property="isMove" />
+	</resultMap>
+	
+	<sql id="columns">
+		TNT_SELL_PACKAGE_ID,
+		IS_UPDATE,
+		IS_MOVE
+	</sql>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from TNT_SELL_PACKAGE_LOG 
+		<where> 
+			<if test="tntSellPackageId != null and tntSellPackageId != ''">
+				TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="merge" parameterType="com.lvmama.tnt.routeTimePrice.vo.TntSellPackageLog">
+		insert into TNT_SELL_PACKAGE_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			TNT_SELL_PACKAGE_ID,
+			IS_UPDATE,
+			IS_MOVE
+		</trim>
+		select 
+			#{tntSellPackageId,jdbcType=DECIMAL},
+			#{isUpdate,jdbcType=VARCHAR},
+			#{isMove,jdbcType=VARCHAR}
+		ON DUPLICATE KEY
+		update
+			IS_UPDATE = values(IS_UPDATE),
+			IS_MOVE = values(IS_MOVE)
+	</insert>
+	
+</mapper>

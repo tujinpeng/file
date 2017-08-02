@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntLineSellPackageMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntLineSellPackage">
+        <result property="tntSellPackageId" column="TNT_SELL_PACKAGE_ID"/>
+        <result property="packageName" column="PACKAGE_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="valid" column="VALID"/>
+        <result property="isCompleted" column="IS_COMPLETED"/>
+        <result property="payTarget" column="PAY_TARGET"/>
+        <result property="adult" column="ADULT"/>
+        <result property="child" column="CHILD"/>
+        <result property="packageType" column="PACKAGE_TYPE"/>
+        <result property="lineRouteId" column="LINE_ROUTE_ID"/>
+        <result property="routeNum" column="ROUTE_NUM"/>
+        <result property="stayNum" column="STAY_NUM"/>
+        <result property="routeName" column="ROUTE_NAME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="categoryTag" column="CATEGORY_TAG"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_SELL_PACKAGE_ID,PACKAGE_NAME,PRODUCT_ID,PRODUCT_NAME,VALID,IS_COMPLETED,PAY_TARGET,ADULT,CHILD,PACKAGE_TYPE,LINE_ROUTE_ID,ROUTE_NUM,STAY_NUM,ROUTE_NAME,CREATE_TIME,UPDATE_TIME,CATEGORY_TAG,CATEGORY_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntLineSellPackage" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="tntSellPackageId"
+			order="BEFORE">
+			select  TNT_LINE_SELL_PACKAGE_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_LINE_SELL_PACKAGE (
+        	TNT_SELL_PACKAGE_ID ,
+        	PACKAGE_NAME ,
+        	PRODUCT_ID ,
+        	PRODUCT_NAME ,
+        	VALID ,
+        	IS_COMPLETED ,
+        	PAY_TARGET ,
+        	ADULT ,
+        	CHILD ,
+        	PACKAGE_TYPE ,
+        	LINE_ROUTE_ID ,
+        	ROUTE_NUM ,
+        	STAY_NUM ,
+        	ROUTE_NAME ,
+        	CREATE_TIME ,
+        	UPDATE_TIME ,
+        	CATEGORY_TAG ,
+        	CATEGORY_ID 
+        ) VALUES (
+        	#{tntSellPackageId,jdbcType=DECIMAL},
+        	#{packageName,jdbcType=VARCHAR},
+        	#{productId,jdbcType=DECIMAL},
+        	#{productName,jdbcType=VARCHAR},
+        	#{valid,jdbcType=VARCHAR},
+        	#{isCompleted,jdbcType=VARCHAR},
+        	#{payTarget,jdbcType=VARCHAR},
+        	#{adult,jdbcType=DECIMAL},
+        	#{child,jdbcType=DECIMAL},
+        	#{packageType,jdbcType=VARCHAR},
+        	#{lineRouteId,jdbcType=DECIMAL},
+        	#{routeNum,jdbcType=DECIMAL},
+        	#{stayNum,jdbcType=DECIMAL},
+        	#{routeName,jdbcType=VARCHAR},
+        	SYSDATE ,
+        	#{updateTime,jdbcType=TIMESTAMP},
+        	#{categoryTag,jdbcType=VARCHAR},
+        	#{categoryId,jdbcType=DECIMAL}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntLineSellPackage">
+        UPDATE TNT_LINE_SELL_PACKAGE SET
+	        PACKAGE_NAME = #{packageName} ,
+	        PRODUCT_ID = #{productId} ,
+	        PRODUCT_NAME = #{productName} ,
+	        VALID = #{valid} ,
+	        IS_COMPLETED = #{isCompleted} ,
+	        PAY_TARGET = #{payTarget} ,
+	        ADULT = #{adult} ,
+	        CHILD = #{child} ,
+	        PACKAGE_TYPE = #{packageType} ,
+	        LINE_ROUTE_ID = #{lineRouteId} ,
+	        ROUTE_NUM = #{routeNum} ,
+	        STAY_NUM = #{stayNum} ,
+	        ROUTE_NAME = #{routeName} ,
+	        CREATE_TIME = #{createTime} ,
+	        UPDATE_TIME = #{updateTime} ,
+	        CATEGORY_TAG = #{categoryTag} ,
+	        CATEGORY_ID = #{categoryId} 
+        WHERE 
+        	<if test="tntSellPackageId !=null">
+	        	TNT_SELL_PACKAGE_ID = #{tntSellPackageId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_LINE_SELL_PACKAGE WHERE
+        TNT_SELL_PACKAGE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_LINE_SELL_PACKAGE 
+	        WHERE 
+		        TNT_SELL_PACKAGE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntSellPackageId != null and tntSellPackageId !=''">
+				AND TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+	       	</if> 
+			<if test="packageName != null and packageName !=''">
+				AND PACKAGE_NAME = #{packageName}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME = #{productName}
+	       	</if> 
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+	       	</if> 
+			<if test="isCompleted != null and isCompleted !=''">
+				AND IS_COMPLETED = #{isCompleted}
+	       	</if> 
+			<if test="payTarget != null and payTarget !=''">
+				AND PAY_TARGET = #{payTarget}
+	       	</if> 
+			<if test="adult != null and adult !=''">
+				AND ADULT = #{adult}
+	       	</if> 
+			<if test="child != null and child !=''">
+				AND CHILD = #{child}
+	       	</if> 
+			<if test="packageType != null and packageType !=''">
+				AND PACKAGE_TYPE = #{packageType}
+	       	</if> 
+			<if test="lineRouteId != null and lineRouteId !=''">
+				AND LINE_ROUTE_ID = #{lineRouteId}
+	       	</if> 
+			<if test="routeNum != null and routeNum !=''">
+				AND ROUTE_NUM = #{routeNum}
+	       	</if> 
+			<if test="stayNum != null and stayNum !=''">
+				AND STAY_NUM = #{stayNum}
+	       	</if> 
+			<if test="routeName != null and routeName !=''">
+				AND ROUTE_NAME = #{routeName}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+			<if test="categoryTag != null and categoryTag !=''">
+				AND CATEGORY_TAG = #{categoryTag}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntSellPackageId != null and param.tntSellPackageId !=''">
+				AND TNT_SELL_PACKAGE_ID = #{param.tntSellPackageId}
+	       	</if>
+			<if test="param.packageName != null and param.packageName !=''">
+				AND PACKAGE_NAME = #{param.packageName}
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.productName != null and param.productName !=''">
+				AND PRODUCT_NAME = #{param.productName}
+	       	</if>
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+	       	</if>
+			<if test="param.isCompleted != null and param.isCompleted !=''">
+				AND IS_COMPLETED = #{param.isCompleted}
+	       	</if>
+			<if test="param.payTarget != null and param.payTarget !=''">
+				AND PAY_TARGET = #{param.payTarget}
+	       	</if>
+			<if test="param.adult != null and param.adult !=''">
+				AND ADULT = #{param.adult}
+	       	</if>
+			<if test="param.child != null and param.child !=''">
+				AND CHILD = #{param.child}
+	       	</if>
+			<if test="param.packageType != null and param.packageType !=''">
+				AND PACKAGE_TYPE = #{param.packageType}
+	       	</if>
+			<if test="param.lineRouteId != null and param.lineRouteId !=''">
+				AND LINE_ROUTE_ID = #{param.lineRouteId}
+	       	</if>
+			<if test="param.routeNum != null and param.routeNum !=''">
+				AND ROUTE_NUM = #{param.routeNum}
+	       	</if>
+			<if test="param.stayNum != null and param.stayNum !=''">
+				AND STAY_NUM = #{param.stayNum}
+	       	</if>
+			<if test="param.routeName != null and param.routeName !=''">
+				AND ROUTE_NAME = #{param.routeName}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = #{param.updateTime}
+	       	</if>
+			<if test="param.categoryTag != null and param.categoryTag !=''">
+				AND CATEGORY_TAG = #{param.categoryTag}
+	       	</if>
+			<if test="param.categoryId != null and param.categoryId !=''">
+				AND CATEGORY_ID = #{param.categoryId}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntLineSellPackage">
+        SELECT count(*) FROM TNT_LINE_SELL_PACKAGE 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_LINE_SELL_PACKAGE 
+		<include refid="pageWhere"/>
+		order by TNT_SELL_PACKAGE_ID desc,IS_COMPLETED desc,VALID
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="queryByParams" resultMap="baseResultMap" parameterType="java.util.Map">
+		select  
+		<include refid="columns" /> 
+		from TNT_LINE_SELL_PACKAGE 
+		<include refid="where" />
+		order by TNT_SELL_PACKAGE_ID desc
+	</select>
+
+	<update id="updateBatch" parameterType="java.util.Map">
+	 	update lvmama_pet.TNT_LINE_SELL_PACKAGE tsp
+		 <trim prefix="set" prefixOverrides=",">
+		 	
+			<if test="valid != null and valid  !=''">
+				tsp.valid=#{valid},
+			</if>
+			<if test="isCompleted != null and isCompleted  !=''">
+				tsp.is_completed=#{isCompleted},
+			</if>
+			<if test="packagType != null and packagType  !=''">
+				tsp.PACKAGE_TYPE =#{packagType},
+			</if>
+			tsp.UPDATE_TIME = sysdate
+		</trim>	
+		where 1=1
+		     and tsp.category_tag= #{categoryTag}
+		     <if test="productId != null and productId  !=''">
+		     	 and tsp.product_id= #{productId}
+		     </if>
+		    
+		     <if test="list != null and list  !=''">
+			     and tsp.tnt_sell_package_id IN
+	        	<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+	           			 #{item.tntSellPackageId}
+	            </foreach>
+            </if>
+	</update>
+</mapper>
+

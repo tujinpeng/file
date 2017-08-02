@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.order.mysql.mapper.TntOrderRemarkMapper" >
+  <resultMap id="BaseResultMap" type="com.lvmama.tnt.order.po.TntOrderRemark" >
+    <id column="TNT_ORDER_REMARK_ID" property="tntOrderRemarkId" jdbcType="BIGINT" />
+    <result column="ORDER_ID" property="orderId" jdbcType="BIGINT" />
+    <result column="ORDER_REMARK" property="orderRemark" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TNT_ORDER_REMARK_ID, ORDER_ID, ORDER_REMARK, OPERATOR, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TNT_ORDER_REMARK
+    where TNT_ORDER_REMARK_ID = #{tntOrderRemarkId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TNT_ORDER_REMARK
+    where TNT_ORDER_REMARK_ID = #{tntOrderRemarkId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.lvmama.tnt.order.po.TntOrderRemark" >
+    <selectKey resultType="java.lang.Long" keyProperty="tntOrderRemarkId" order="BEFORE" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TNT_ORDER_REMARK (TNT_ORDER_REMARK_ID, ORDER_ID, ORDER_REMARK,
+      OPERATOR, CREATE_TIME, UPDATE_TIME
+      )
+    values (#{tntOrderRemarkId,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{orderRemark,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertRemark" parameterType="com.lvmama.tnt.order.po.TntOrderRemark">
+      INSERT INTO TNT_ORDER_REMARK(ORDER_ID,ORDER_REMARK,OPERATOR,CREATE_TIME) VALUES (#{orderId},#{orderRemark},#{operator},#{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lvmama.tnt.order.po.TntOrderRemark" >
+    <selectKey resultType="java.lang.Long" keyProperty="tntOrderRemarkId" order="BEFORE" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TNT_ORDER_REMARK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      TNT_ORDER_REMARK_ID,
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="orderRemark != null" >
+        ORDER_REMARK,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{tntOrderRemarkId,jdbcType=BIGINT},
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderRemark != null" >
+        #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lvmama.tnt.order.po.TntOrderRemark" >
+    update TNT_ORDER_REMARK
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderRemark != null" >
+        ORDER_REMARK = #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TNT_ORDER_REMARK_ID = #{tntOrderRemarkId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lvmama.tnt.order.po.TntOrderRemark" >
+    update TNT_ORDER_REMARK
+    set ORDER_ID = #{orderId,jdbcType=BIGINT},
+      ORDER_REMARK = #{orderRemark,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where TNT_ORDER_REMARK_ID = #{tntOrderRemarkId,jdbcType=BIGINT}
+  </update>
+
+  <sql id="where">
+    <where>
+      <if test="orderId != null and orderId != ''">
+        AND ORDER_ID = #{orderId}
+      </if>
+      <if test="orderRemark != null and orderRemark != ''">
+        AND ORDER_REMARK = #{orderRemark}
+      </if>
+      <if test="operator != null and operator != ''">
+        AND OPERATOR = #{operator}
+      </if>
+      <if test="createTime != null and createTime != ''">
+        AND CREATE_TIME = #{createTime}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        AND UPDATE_TIME = #{updateTime}
+      </if>
+    </where>
+  </sql>
+
+  <sql id="pageWhere">
+    <where>
+      <if test="param.orderId != null and param.orderId != ''">
+        AND ORDER_ID = #{param.orderId}
+      </if>
+      <if test="param.orderRemark != null and param.orderRemark != ''">
+        AND ORDER_REMARK = #{param.orderRemark}
+      </if>
+      <if test="param.operator != null and param.operator != ''">
+        AND OPERATOR = #{param.operator}
+      </if>
+      <if test="param.createTime != null and param.createTime != ''">
+        AND CREATE_TIME = #{param.createTime}
+      </if>
+      <if test="param.updateTime != null and param.updateTime != ''">
+        AND UPDATE_TIME = #{param.updateTime}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectTotalCount" parameterType="com.lvmama.tnt.order.po.TntOrderRemark" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM TNT_ORDER_REMARK <include refid="where"/>
+  </select>
+
+  <select id="selectPage" parameterType="page" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM TNT_ORDER_REMARK
+    <include refid="pageWhere"/>
+    ORDER BY CREATE_TIME DESC
+    <if test="startRowsForMySql!=null and pageSize!=null">
+      LIMIT #{startRowsForMySql}, #{pageSize}
+    </if>
+  </select>
+  <select id="selectByOrderId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM TNT_ORDER_REMARK WHERE ORDER_ID = #{orderId} ORDER BY CREATE_TIME DESC
+  </select>
+</mapper>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserDistributorRateMapper">
+    
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntUserDistributorRate">
+		<result property="userDistributorRateId" column="USER_DISTRIBUTOR_RATE_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="payOnline" column="PAY_ONLINE" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="subProductType" column="SUB_PRODUCT_TYPE" />
+		<result property="productTypeId" column="PRODUCT_TYPE_ID" />
+		<result property="subProductTypeId" column="SUB_PRODUCT_TYPE_ID" />
+		<result property="discountRate" column="DISCOUNT_RATE" />
+		<result property="productClassCode" column="PRODUCT_CLASS_CODE" />
+		<result property="productClassId" column="PRODUCT_CLASS_ID" />
+		<result property="commissionMode" column="COMMISSION_MODE" />
+		<result property="packageType" column="PACKAGE_TYPE" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		USER_DISTRIBUTOR_RATE_ID,USER_ID,PAY_ONLINE,PRODUCT_TYPE,SUB_PRODUCT_TYPE,DISCOUNT_RATE,PRODUCT_TYPE_ID,SUB_PRODUCT_TYPE_ID,PRODUCT_CLASS_CODE,PRODUCT_CLASS_ID,COMMISSION_MODE,PACKAGE_TYPE,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="userDistributorRateId"
+			order="BEFORE">
+			select USER_DISTRIBUTOR_RATE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO USER_DISTRIBUTOR_RATE (
+		USER_DISTRIBUTOR_RATE_ID ,
+		PAY_ONLINE,
+		PRODUCT_TYPE,
+		SUB_PRODUCT_TYPE ,
+		USER_ID,
+		PRODUCT_TYPE_ID,
+		SUB_PRODUCT_TYPE_ID,
+		DISCOUNT_RATE,
+		PRODUCT_CLASS_CODE,
+		PRODUCT_CLASS_ID,
+		COMMISSION_MODE,
+		PACKAGE_TYPE,
+		CREATE_TIME
+		) VALUES (
+		#{userDistributorRateId} ,
+		#{payOnline,jdbcType=VARCHAR} ,
+		#{productType,jdbcType=VARCHAR},
+		#{subProductType,jdbcType=VARCHAR},
+		#{userId,jdbcType=DECIMAL},
+		#{productTypeId,jdbcType=DECIMAL},
+		#{subProductTypeId,jdbcType=DECIMAL},
+		#{discountRate,jdbcType=DECIMAL},
+		#{productClassCode,jdbcType=VARCHAR},
+		#{productClassId,jdbcType=DECIMAL},
+		#{commissionMode,jdbcType=VARCHAR},
+		#{packageType,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE USER_DISTRIBUTOR_RATE
+		<set>
+			<if test="productType != null">
+				PRODUCT_TYPE = #{productType} ,
+			</if>
+			<if test="userId != null">
+				USER_ID = #{userId}
+			</if>
+			<if test="productTypeId != null">
+				PRODUCT_TYPE_ID = #{productTypeId}
+			</if>
+			<if test="subProductTypeId != null">
+				SUB_PRODUCT_TYPE_ID = #{subProductTypeId}
+			</if>
+			<if test="subProductType != null">
+				SUB_PRODUCT_TYPE = #{subProductType}
+			</if>
+			<if test="payOnline != null">
+				PAY_ONLINE = #{payOnline}
+			</if>
+			<if test="productClassCode != null">
+				PRODUCT_CLASS_CODE = #{productClassCode}
+			</if>
+			<if test="productClassId != null">
+				PRODUCT_CLASS_ID = #{productClassId}
+			</if>
+			<if test="discountRate != null">
+				DISCOUNT_RATE = #{discountRate}
+			</if>
+			<if test="commissionMode != null">
+				COMMISSION_MODE = #{commissionMode}
+			</if>
+			<if test="packageType != null">
+				PACKAGE_TYPE = #{packageType}
+			</if>
+		</set>
+		WHERE USER_DISTRIBUTOR_RATE_ID = #{userDistributorRateId}
+	</update>
+
+	<delete id="del" parameterType="Long">
+		DELETE FROM USER_DISTRIBUTOR_RATE WHERE	USER_DISTRIBUTOR_RATE_ID =	#{id}
+	</delete>
+
+	<select id="findById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM USER_DISTRIBUTOR_RATE WHERE	USER_DISTRIBUTOR_RATE_ID = #{id}
+	</select>
+
+
+	<select id="selectOne" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntUserDistributorRate">
+		select
+		<include refid="columns" />
+		from USER_DISTRIBUTOR_RATE 
+		<include refid="whereSQL" />
+	</select>
+	
+	<!-- 查询套餐下B2B渠道的有返佣规则的分销商 -->
+	<select id="queryByB2bChannel" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntUserDistributorRate">
+		select
+			u.USER_DISTRIBUTOR_RATE_ID,u.USER_ID,u.PAY_ONLINE,u.PRODUCT_TYPE,u.SUB_PRODUCT_TYPE,
+			u.DISCOUNT_RATE,u.PRODUCT_TYPE_ID,u.SUB_PRODUCT_TYPE_ID,u.PRODUCT_CLASS_CODE,u.PRODUCT_CLASS_ID,
+			u.COMMISSION_MODE,u.PACKAGE_TYPE
+		from USER_DISTRIBUTOR_RATE u
+		join TNT_USER_DETAIL t on u.user_id = t.user_id
+		<where>
+			t.CHANNEL_CODE = 'DISTRIBUTOR_B2B'
+			<if test="userId!=null and userId!=''">
+				AND u.USER_ID = #{userId}
+			</if>
+			<if test="productType!=null and productType!=''">
+				AND u.PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="productTypeId!=null">
+				AND u.PRODUCT_TYPE_ID = #{productTypeId}
+			</if>
+			<if test="subProductTypeId != null">
+				AND u.SUB_PRODUCT_TYPE_ID = #{subProductTypeId}
+			</if>
+			<if test="packageType != null and packageType != ''">
+				AND u.PACKAGE_TYPE = #{packageType}
+			</if>
+			<if test="payOnline!=null and payOnline!=''">
+				AND u.PAY_ONLINE = #{payOnline}
+			</if>
+			<if test="productClassCode!=null and productClassCode!=''">
+				AND (u.PRODUCT_CLASS_CODE = #{productClassCode} OR u.PRODUCT_CLASS_CODE = '' )
+			</if>
+		</where> 
+	</select>
+	
+	<select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.user.po.TntUserDistributorRate">
+		SELECT
+		<include refid="columns" />
+		FROM USER_DISTRIBUTOR_RATE
+		<include refid="whereSQL" />
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="userDistributorRateId!=null and userDistributorRateId!=''">
+				AND USER_DISTRIBUTOR_RATE_ID = #{userDistributorRateId}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="productType!=null and productType!=''">
+				AND PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="productTypeId!=null">
+				AND PRODUCT_TYPE_ID = #{productTypeId}
+			</if>
+			<if test="subProductTypeId != null">
+				AND SUB_PRODUCT_TYPE_ID = #{subProductTypeId}
+			</if>
+			<if test="payOnline!=null and payOnline!=''">
+				AND PAY_ONLINE = #{payOnline}
+			</if>
+			<if test="subProductType!=null and subProductType!=''">
+				AND SUB_PRODUCT_TYPE = #{subProductType}
+			</if>
+			<if test="productClassId!=null and productClassId!=''">
+				AND PRODUCT_CLASS_ID = #{subProductType}
+			</if>
+			<if test="productClassCode!=null and productClassCode!=''">
+				AND PRODUCT_CLASS_CODE = #{productClassCode}
+			</if>
+			<if test="commissionMode != null and commissionMode != ''">
+				AND COMMISSION_MODE = #{commissionMode}
+			</if>
+			<if test="packageType != null and packageType != ''">
+				AND PACKAGE_TYPE = #{packageType}
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+	<select id="queryUserUnSetByProd" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT DISTINCT R.USER_ID
+		  FROM USER_DISTRIBUTOR_RATE R
+		 WHERE R.SUB_PRODUCT_TYPE_ID = #{param.categoryId}
+		   AND R.COMMISSION_MODE IS NOT NULL
+		   AND R.PAY_ONLINE = #{param.payType}
+		   AND NOT EXISTS (SELECT 1
+		          FROM TNT_PRODUCT_USER PUSER
+		         WHERE R.USER_ID = PUSER.USER_ID
+		           AND PUSER.TYPE = R.SUB_PRODUCT_TYPE_ID
+		           AND PUSER.GOODS_ID = #{param.goodsId}
+		           AND PUSER.COMMISSION_MODE IS NOT NULL)
+		 ORDER BY R.USER_ID DESC
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<!-- CPS用户返佣返佣设置管理查询 -->
+	<select id="queryCPSRateByCondition" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT 
+		A.USER_DISTRIBUTOR_RATE_ID,A.USER_ID,A.PAY_ONLINE,A.DISCOUNT_RATE,A.PRODUCT_TYPE_ID,A.SUB_PRODUCT_TYPE_ID,A.PRODUCT_CLASS_CODE,A.COMMISSION_MODE,A.CREATE_TIME
+		FROM USER_DISTRIBUTOR_RATE A 
+		LEFT JOIN TNT_USER_DETAIL B 
+		ON A.USER_ID = B.USER_ID  
+		<where>
+		 B.CHANNEL_CODE='DISTRIBUTOR_CPS'
+		 AND B.DISTRIBUTOR_CODE LIKE 'cps%'
+		<if test="param.userId!=null and param.userId!=''">
+			AND A.USER_ID = #{param.userId}
+		</if>
+		<if test="param.productTypeId!=null">
+			AND A.PRODUCT_TYPE_ID = #{param.productTypeId}
+		</if>
+		<if test="param.subProductTypeId != null">
+			AND A.SUB_PRODUCT_TYPE_ID = #{param.subProductTypeId}
+		</if>
+		<if test="param.productClassCode!=null and param.productClassCode!=''">
+			AND A.PRODUCT_CLASS_CODE = #{param.productClassCode}
+		</if>
+		</where>
+		<choose>
+			<when test="param.orderBy!=null and param.orderBy!='' and param.orderBy==1">
+				ORDER BY A.DISCOUNT_RATE DESC
+			</when>
+			<otherwise>
+				ORDER BY A.CREATE_TIME DESC
+  			</otherwise>
+		</choose>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<!-- CPS用户返佣返佣设置管理查询,用于分页 -->
+	<select id="countCPSRateByCondition" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntUserDistributorRate">
+		SELECT count(1) 
+		FROM USER_DISTRIBUTOR_RATE A 
+		LEFT JOIN TNT_USER_DETAIL B 
+		ON A.USER_ID = B.USER_ID  
+		<where>
+		 B.CHANNEL_CODE='DISTRIBUTOR_CPS'
+		 AND B.DISTRIBUTOR_CODE LIKE 'cps%'
+		<if test="userId!=null and userId!=''">
+			AND A.USER_ID = #{userId}
+		</if>
+		<if test="productTypeId!=null">
+			AND A.PRODUCT_TYPE_ID = #{productTypeId}
+		</if>
+		<if test="subProductTypeId != null">
+			AND A.SUB_PRODUCT_TYPE_ID = #{subProductTypeId}
+		</if>
+		<if test="productClassCode!=null and productClassCode!=''">
+			AND A.PRODUCT_CLASS_CODE = #{productClassCode}
+		</if>
+		</where>
+	</select>
+</mapper>

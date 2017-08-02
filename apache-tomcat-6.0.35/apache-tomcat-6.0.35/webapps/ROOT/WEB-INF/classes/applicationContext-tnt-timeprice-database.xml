@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 线路时间价格库 Mysql数据源配置-->
+	<bean id="route_mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${route_mysql_jdbc.driverClassName}</value></property>
+		<property name="url"><value>${route_mysql_jdbc.url}</value></property>
+		<property name="username"><value>${route_mysql_jdbc.username}</value></property>
+		<property name="password"><value>${route_mysql_jdbc.password}</value></property>
+		<property name="maxActive"><value>${route_mysql_jdbc.maxActive}</value></property>
+		<property name="maxWait"><value>${route_mysql_jdbc.maxWait}</value></property>
+		<property name="maxIdle"><value>${route_mysql_jdbc.maxIdle}</value></property> 
+		<property name="initialSize"><value>${route_mysql_jdbc.initSize}</value></property>
+		<property name="removeAbandoned"><value>true</value></property>
+		<property name="testWhileIdle"><value>true</value></property>
+		<property name="testOnBorrow"><value>false</value></property>
+		<property name="validationQuery"><value>SELECT 1</value></property> 
+	</bean>
+	
+
+    <!-- mysql数据源的sqlSessionFactory配置 -->
+    <bean id="route_sqlSessionFactory_mysql" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="route_mysqlDataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <property name="mapperLocations" value="classpath:com/lvmama/tnt/routeTimePrice/routemysql/mapper/*.xml"/>
+	</bean> 
+	
+	
+	<!-- mysql数据源的sqlSessionTemplate配置 -->
+    <bean id="sqlSessionTemplateMysql"  class="org.mybatis.spring.SqlSessionTemplate">  
+          <constructor-arg index="0" ref="route_sqlSessionFactory_mysql" />  
+    </bean> 
+     
+	
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lvmama.tnt.routeTimePrice.routemysql.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="route_sqlSessionFactory_mysql" />
+    </bean>
+    
+	
+	<!-- Transaction manager for a single mysql数据源 DataSource -->
+	 <bean id="route_txManagerMysql" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="route_mysqlDataSource" />
+	</bean> 
+	
+    
+    <!-- 连接事务的注解配置 -->
+	<tx:annotation-driven transaction-manager="route_txManagerMysql" /> 
+
+	<bean id="route_txInterceptorMysql" class="com.lvmama.hold.LvmamaSoaTransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="route_txManagerMysql"/>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+     
+</beans>

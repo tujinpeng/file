@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.common.mysql.mapper.TntComLogMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.common.po.TntComLog">
+        <result property="logId" column="LOG_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="content" column="CONTENT"/>
+        <result property="memo" column="MEMO"/>
+        <result property="userid" column="USERID"/>
+        <result property="objectId" column="OBJECT_ID"/>
+        <result property="objectType" column="OBJECT_TYPE"/>
+        <result property="logType" column="LOG_TYPE"/>
+        <result property="logName" column="LOG_NAME"/>
+        <result property="operatorName" column="OPERATOR_NAME"/>
+        <result property="parentId" column="PARENT_ID"/>
+        <result property="parentType" column="PARENT_TYPE"/>
+        <result property="contentType" column="CONTENT_TYPE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		LOG_ID,CREATE_TIME,CONTENT,MEMO,USERID,OBJECT_ID,OBJECT_TYPE,LOG_TYPE,LOG_NAME,OPERATOR_NAME,PARENT_ID,PARENT_TYPE,CONTENT_TYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.common.po.TntComLog" keyProperty="logId" useGeneratedKeys="true">
+        INSERT INTO TNT_COM_LOG (
+        	LOG_ID ,
+        	CREATE_TIME ,
+        	CONTENT ,
+        	MEMO ,
+        	USERID ,
+        	OBJECT_ID ,
+        	OBJECT_TYPE ,
+        	LOG_TYPE ,
+        	LOG_NAME ,
+        	OPERATOR_NAME ,
+        	PARENT_ID ,
+        	PARENT_TYPE ,
+        	CONTENT_TYPE 
+        ) VALUES (
+        	#{logId} ,
+        	NOW() ,
+        	#{content} ,
+        	#{memo} ,
+        	#{userid} ,
+        	#{objectId} ,
+        	#{objectType} ,
+        	#{logType} ,
+        	#{logName} ,
+        	#{operatorName} ,
+        	#{parentId} ,
+        	#{parentType} ,
+        	#{contentType} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.common.po.TntComLog">
+        UPDATE TNT_COM_LOG SET
+	        CREATE_TIME = #{createTime} ,
+	        CONTENT = #{content} ,
+	        MEMO = #{memo} ,
+	        USERID = #{userid} ,
+	        OBJECT_ID = #{objectId} ,
+	        OBJECT_TYPE = #{objectType} ,
+	        LOG_TYPE = #{logType} ,
+	        LOG_NAME = #{logName} ,
+	        OPERATOR_NAME = #{operatorName} ,
+	        PARENT_ID = #{parentId} ,
+	        PARENT_TYPE = #{parentType} ,
+	        CONTENT_TYPE = #{contentType} 
+        WHERE 
+        	<if test="logId !=null">
+	        	LOG_ID = #{logId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_COM_LOG WHERE
+        LOG_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COM_LOG 
+	        WHERE 
+		        LOG_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="logId != null and logId !=''">
+				AND LOG_ID = #{logId}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+	       	<if test="beginTime != null and beginTime !=''">
+				AND CREATE_TIME &gt;= #{beginTime}
+	       	</if> 
+	       	<if test="endTime != null and endTime !=''">
+				AND CREATE_TIME  &lt;= #{endTime}
+	       	</if> 
+       		<if test="beginIndexTime != null and beginIndexTime !=''">
+				AND CREATE_TIME  &gt;= #{beginIndexTime}
+	       	</if> 
+			<if test="content != null and content !=''">
+				AND CONTENT = #{content}
+	       	</if> 
+			<if test="memo != null and memo !=''">
+				AND MEMO = #{memo}
+	       	</if> 
+			<if test="userid != null and userid !=''">
+				AND USERID = #{userid}
+	       	</if> 
+			<if test="objectId != null and objectId !=''">
+				AND OBJECT_ID = #{objectId}
+	       	</if> 
+			<if test="objectType != null and objectType !=''">
+				AND OBJECT_TYPE = #{objectType}
+	       	</if> 
+			<if test="logType != null and logType !=''">
+				AND LOG_TYPE = #{logType}
+	       	</if> 
+			<if test="logName != null and logName !=''">
+				AND LOG_NAME = #{logName}
+	       	</if> 
+			<if test="operatorName != null and operatorName !=''">
+				AND OPERATOR_NAME = #{operatorName}
+	       	</if> 
+			<if test="parentId != null and parentId !=''">
+				AND PARENT_ID = #{parentId}
+	       	</if> 
+			<if test="parentType != null and parentType !=''">
+				AND PARENT_TYPE = #{parentType}
+	       	</if> 
+			<if test="contentType != null and contentType !=''">
+				AND CONTENT_TYPE = #{contentType}
+	       	</if> 
+		</where>
+	</sql>
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.common.po.TntComLog">
+        SELECT count(*) FROM TNT_COM_LOG 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	SELECT <include refid="columns" />
+	    FROM TNT_COM_LOG 
+		<!-- LIMIT #{startRows},#{pageSize} -->
+    </select>
+    
+     <!-- 通过指定参数查询,不分页 -->
+   <select id="selectByProIdOrParentId" resultMap="baseResultMap" parameterType="map">
+	  SELECT * FROM (
+		  SELECT CL.*
+			  FROM TNT_COM_LOG CL
+			  WHERE 1=1
+			 <include refid="where"/>    
+		  UNION ALL
+		  SELECT CL.*
+			  FROM TNT_COM_LOG_HIS CL
+			  WHERE 1=1
+			  <include refid="where"/>    
+	  ) T
+	  ORDER BY T.LOG_ID DESC
+  </select>
+  
+<!--  mysql分页  beginNum，pageSize 比如5，10 查询的6到15的数据-->
+ <select id="selectByParentIdAndObjectTypeMap" resultMap="baseResultMap" parameterType="map" >
+	  SELECT A.* FROM (
+	  		 SELECT * FROM (
+				  SELECT CL.*
+					  FROM TNT_COM_LOG CL
+					  WHERE 1=1
+					 <include refid="where"/>    
+				  UNION ALL
+				  SELECT CL.*
+					  FROM TNT_COM_LOG_HIS CL
+					  WHERE 1=1
+					  <include refid="where"/>    
+			  ) T
+			  ORDER BY T.LOG_ID DESC
+     ) A LIMIT #{beginNum},#{pageSize}
+  </select>
+  
+  <!--通过指定参数查询结果集，并进行分页 -->
+  <select id="queryByMap" resultMap="baseResultMap" parameterType="map">
+	 	SELECT A.* FROM (
+	  		 SELECT * FROM (
+				  SELECT CL.*
+					  FROM TNT_COM_LOG CL
+					  WHERE 1=1
+					 <include refid="where"/>    
+				  UNION ALL
+				  SELECT CL.*
+					  FROM TNT_COM_LOG_HIS CL
+					  WHERE 1=1
+					  <include refid="where"/>    
+			  ) T
+			  ORDER BY T.LOG_ID DESC
+       ) A LIMIT #{beginNum},#{pageSize}
+	</select> 
+	
+	
+	<!-- 指定参数查询分页,同上,计数COUNT(*) -->
+  <select id="queryByObjectIdMapCount" resultType="Long" parameterType="map" >
+	  select count(*) FROM (
+		  SELECT LOG_ID
+		  FROM TNT_COM_LOG CL
+		  WHERE
+		    <include refid="where"/>  
+		  UNION ALL
+		  SELECT LOG_ID
+		  FROM TNT_COM_LOG_HIS CL
+		  WHERE
+		  	<include refid="where"/>  
+	  ) t
+  </select>
+  
+    <select id="selectTntComLogByParam" resultMap="baseResultMap" parameterType="map">
+	  SELECT * FROM (
+		  SELECT CL.*
+			  FROM TNT_COM_LOG CL
+			  WHERE 1=1 and OBJECT_ID in 
+			 <foreach collection="ids" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+   			 </foreach>  
+	  ) T
+	  ORDER BY T.LOG_ID DESC
+  </select>
+
+</mapper>
+

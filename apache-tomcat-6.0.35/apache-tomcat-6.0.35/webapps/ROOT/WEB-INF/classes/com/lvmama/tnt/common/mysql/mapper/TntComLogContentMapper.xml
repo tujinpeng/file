@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.common.mysql.mapper.TntComLogContentMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.sync.frame.po.TntComLogContent">
+        <result property="logId" column="LOG_ID"/>
+        <result property="content" column="CONTENT"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		LOG_ID,CONTENT
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.sync.frame.po.TntComLogContent">
+        INSERT INTO TNT_COM_LOG_CONTENT (
+        	LOG_ID ,
+        	CONTENT 
+        ) VALUES (
+        	#{logId} ,
+        	#{content} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.sync.frame.po.TntComLogContent">
+        UPDATE TNT_COM_LOG_CONTENT SET
+	        CONTENT = #{content} 
+        WHERE 
+        	<if test="logId !=null">
+	        	LOG_ID = #{logId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_COM_LOG_CONTENT WHERE
+        LOG_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COM_LOG_CONTENT 
+	        WHERE 
+		        LOG_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="logId != null and logId !=''">
+				AND LOG_ID = #{logId}
+	       	</if> 
+			<if test="content != null and content !=''">
+				AND CONTENT = #{content}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.logId != null and param.logId !=''">
+				AND LOG_ID = param.logId
+	       	</if>
+			<if test="param.content != null and param.content !=''">
+				AND CONTENT = param.content
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.sync.frame.po.TntComLogContent">
+        SELECT count(*) FROM TNT_COM_LOG_CONTENT 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_COM_LOG_CONTENT 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="selectTntComLogContentByParam" resultMap="baseResultMap" parameterType="map">
+	  SELECT * FROM (
+		  SELECT CL.*
+			  FROM TNT_COM_LOG_CONTENT CL
+			  WHERE 1=1 and LOG_ID in 
+			 <foreach collection="ids" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+   			 </foreach>  
+	  ) T
+	  ORDER BY T.LOG_ID DESC
+  </select>
+
+</mapper>
+

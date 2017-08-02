@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntStoreUserOrderMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntStoreUserOrder">
+        <result property="tntStoreUserOrderId" column="TNT_STORE_USER_ORDER_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="visitDate" column="VISIT_DATE"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="commissionAmount" column="COMMISSION_AMOUNT"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="orderStatus" column="ORDER_STATUS"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS"/>
+        <result property="performStatus" column="PERFORM_STATUS"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<resultMap type="com.lvmama.tnt.user.po.TntStoreUserOrder" id="reportResutlMap">
+		 <result property="orderNum" column="ORDERNUM"/>
+        <result property="visitDate" column="VISIT_DATE"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="commissionAmount" column="COMMISSION_AMOUNT"/>
+		<result property="registerYear" column="REGISTER_YEAR"/>
+		<result property="proportion" column="PROPORTION"/>
+	</resultMap>
+	
+	<resultMap type="com.lvmama.tnt.user.po.TntStoreUserOrder" id="subReportResutlMap">
+        <result property="visitDate" column="VISIT_DATE"/>
+        <result property="orderNum" column="ORDERNUM"/>
+        <result property="subName" column="SUB_NAME"/>
+        <result property="contractName" column="CONTACT_NAME"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="commissionAmount" column="COMMISSION_AMOUNT"/>
+		<result property="registerYear" column="REGISTER_YEAR"/>
+		<result property="proportion" column="PROPORTION"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_STORE_USER_ORDER_ID,ORDER_ID,VISIT_DATE,AMOUNT,COMMISSION_AMOUNT,USER_NO,ORDER_STATUS,PAYMENT_STATUS,PERFORM_STATUS,UPDATE_TIME,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntStoreUserOrder">
+		<selectKey resultType="java.lang.Long" keyProperty="tntStoreUserOrderId"
+			order="BEFORE">
+			select  TNT_STORE_USER_ORDER_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_STORE_USER_ORDER (
+        	TNT_STORE_USER_ORDER_ID ,
+        	ORDER_ID ,
+        	VISIT_DATE ,
+        	AMOUNT ,
+        	COMMISSION_AMOUNT ,
+        	USER_NO ,
+        	ORDER_STATUS ,
+        	PAYMENT_STATUS ,
+        	PERFORM_STATUS ,
+        	UPDATE_TIME ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{tntStoreUserOrderId} ,
+        	#{orderId} ,
+        	#{visitDate} ,
+        	#{amount} ,
+        	#{commissionAmount} ,
+        	#{userNo} ,
+        	#{orderStatus} ,
+        	#{paymentStatus} ,
+        	#{performStatus} ,
+        	#{updateTime} ,
+        	#{createTime} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntStoreUserOrder">
+        UPDATE TNT_STORE_USER_ORDER SET
+	        ORDER_ID = #{orderId} ,
+	        VISIT_DATE = #{visitDate} ,
+	        AMOUNT = #{amount} ,
+	        COMMISSION_AMOUNT = #{commissionAmount} ,
+	        USER_NO = #{userNo} ,
+	        ORDER_STATUS = #{orderStatus} ,
+	        PAYMENT_STATUS = #{paymentStatus} ,
+	        PERFORM_STATUS = #{performStatus} ,
+	        UPDATE_TIME = #{updateTime} ,
+	        CREATE_TIME = #{createTime} 
+        WHERE 
+        	<if test="tntStoreUserOrderId !=null">
+	        	TNT_STORE_USER_ORDER_ID = #{tntStoreUserOrderId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_STORE_USER_ORDER WHERE
+        TNT_STORE_USER_ORDER_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_STORE_USER_ORDER 
+	        WHERE 
+		        TNT_STORE_USER_ORDER_ID = #{id} 
+	</select>
+	
+	<sql id="queryReportResut">
+		  select t.visit_date,
+			       count(t.order_id) as orderNum,
+			       sum(t.amount) as amount,
+			       sum(t.amount * (commisson_back.proportion / 100)) as COMMISSION_AMOUNT,
+			       t.register_year,
+			       commisson_back.proportion
+			  from (select tso.order_id,
+			               tso.visit_date,
+			               tso.amount,
+			               tso.commission_amount,
+			               (case when ceil((sysdate - tsu.register_date) / 365)>10 then 11 else  ceil((sysdate - tsu.register_date) / 365) end)as register_year,
+			               tsu.tnt_sub_user_id
+			          from tnt_store_user_order tso, tnt_store_user tsu
+			         where tso.user_no = tsu.user_no
+			          <![CDATA[ and tso.visit_date < sysdate]]>
+			           and tso.order_status = 'NORMAL'
+			           and tso.payment_status = 'PAYED'
+			           and tso.perform_status not like '%UN%'
+			            <![CDATA[and tso.amount > 0]]>) t,
+			       tnt_app_commission_back commisson_back,
+			       tnt_sub_user sub_user
+			 where t.tnt_sub_user_id = sub_user.tnt_sub_user_id
+			   and sub_user.tnt_user_id = commisson_back.user_id
+			   and t.register_year = commisson_back.year
+			   <if test="tntUserId != null">
+					and sub_user.tnt_user_id  = #{tntUserId}
+				</if>
+				<if test="beginTime != null and endTime !=null">
+				<![CDATA[ AND t.visit_date >= #{beginTime} AND t.visit_date <= #{endTime} ]]>
+				</if>
+			 group by t.visit_date, t.register_year, commisson_back.proportion
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntStoreUserOrder">
+    	select count(*) from (<include refid="queryReportResut"/>)
+    </select>
+    
+    <select id="findPage" resultMap="reportResutlMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+			   select t.visit_date,
+		       count(t.order_id) as orderNum,
+		       sum(t.amount)/100 as amount,
+		       sum(t.amount * (commisson_back.proportion / 100))/100 as COMMISSION_AMOUNT,
+		       t.register_year,
+		       commisson_back.proportion
+		  from (select tso.order_id,
+		               tso.visit_date,
+		               tso.amount,
+		               tso.commission_amount,
+		               (case when ceil((sysdate - tsu.register_date) / 365)>10 then 11 else  ceil((sysdate - tsu.register_date) / 365) end)as register_year,
+		               tsu.tnt_sub_user_id
+		          from tnt_store_user_order tso, tnt_store_user tsu
+		         where tso.user_no = tsu.user_no
+		          <![CDATA[ and tso.visit_date < sysdate]]>
+		           and tso.order_status = 'NORMAL'
+		           and tso.payment_status = 'PAYED'
+		           and tso.perform_status not like '%UN%'
+		          <![CDATA[ and tso.amount > 0]]>) t,
+		       tnt_app_commission_back commisson_back,
+		       tnt_sub_user sub_user
+		 where t.tnt_sub_user_id = sub_user.tnt_sub_user_id
+		   and sub_user.tnt_user_id = commisson_back.user_id
+		   and t.register_year = commisson_back.year
+		   <if test="param.tntUserId != null">
+				and sub_user.tnt_user_id  = #{param.tntUserId}
+			</if>
+			<if test="param.beginTime != null and param.endTime !=null">
+			<![CDATA[ AND t.visit_date >= #{param.beginTime} AND t.visit_date <= #{param.endTime} ]]>
+			</if>
+		 group by t.visit_date, t.register_year, commisson_back.proportion
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    
+    <sql id="querySubReportResult">
+	     select t.visit_date,
+			       count(t.order_id) as orderNum,
+			       sub_user.sub_name,
+	               sub_user.contact_name,
+			       sum(t.amount) as amount,
+			       sum(t.amount * (commisson_back.proportion / 100)) as COMMISSION_AMOUNT,
+			       t.register_year,
+			       commisson_back.proportion
+			  from (select tso.order_id,
+			               tso.visit_date,
+			               tso.amount,
+			               tso.commission_amount,
+			               (case when ceil((sysdate - tsu.register_date) / 365)>10 then 11 else  ceil((sysdate - tsu.register_date) / 365) end)as register_year,
+			               tsu.tnt_sub_user_id
+			          from tnt_store_user_order tso, tnt_store_user tsu
+			         where tso.user_no = tsu.user_no
+			          <![CDATA[  and tso.visit_date < sysdate ]]>
+			           and tso.order_status = 'NORMAL'
+			           and tso.payment_status = 'PAYED'
+			           and tso.perform_status not like '%UN%'
+			          <![CDATA[  and tso.amount > 0 ]]>) t,
+			       tnt_app_commission_back commisson_back,
+			       tnt_sub_user sub_user
+			 where t.tnt_sub_user_id = sub_user.tnt_sub_user_id
+			   and sub_user.tnt_user_id = commisson_back.user_id
+			   and t.register_year = commisson_back.year
+			   <if test="tntUserId != null">
+					and sub_user.tnt_user_id  = #{tntUserId}
+				</if>
+				<if test="subName != null">
+				and sub_user.sub_name  = #{subName}
+			    </if>
+			   <if test="beginTime != null and endTime !=null">
+				<![CDATA[ AND t.visit_date >= #{beginTime} AND t.visit_date <= #{endTime} ]]>
+			  </if>
+			 group by t.visit_date, t.register_year, commisson_back.proportion,sub_user.sub_name,sub_user.contact_name
+    </sql>
+    
+    
+    <select id="subUserOrderList" resultMap="subReportResutlMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+		     select t.visit_date,
+			       count(t.order_id) as orderNum,
+			       sub_user.sub_name,
+	               sub_user.contact_name,
+			       sum(t.amount)/100 as amount,
+			       sum(t.amount * (commisson_back.proportion / 100))/100 as COMMISSION_AMOUNT,
+			       t.register_year,
+			       commisson_back.proportion
+			  from (select tso.order_id,
+			               tso.visit_date,
+			               tso.amount,
+			               tso.commission_amount,
+			               (case when ceil((sysdate - tsu.register_date) / 365)>10 then 11 else  ceil((sysdate - tsu.register_date) / 365) end)as register_year,
+			               tsu.tnt_sub_user_id
+			          from tnt_store_user_order tso, tnt_store_user tsu
+			         where tso.user_no = tsu.user_no
+			          <![CDATA[ and tso.visit_date < sysdate]]>
+			           and tso.order_status = 'NORMAL'
+			           and tso.payment_status = 'PAYED'
+			           and tso.perform_status not like '%UN%'
+			          <![CDATA[ and tso.amount > 0 ]]>) t,
+			       tnt_app_commission_back commisson_back,
+			       tnt_sub_user sub_user
+			 where t.tnt_sub_user_id = sub_user.tnt_sub_user_id
+			   and sub_user.tnt_user_id = commisson_back.user_id
+			   and t.register_year = commisson_back.year
+			  <if test="param.tntUserId != null">
+				and sub_user.tnt_user_id  = #{param.tntUserId}
+			  </if>
+			   <if test="param.subName != null">
+				and sub_user.sub_name  = #{param.subName}
+			  </if>
+			   <if test="param.beginTime != null and param.endTime !=null">
+				<![CDATA[ AND t.visit_date >= #{param.beginTime} AND t.visit_date <= #{param.endTime} ]]>
+			   </if>
+			 group by t.visit_date, t.register_year, commisson_back.proportion,sub_user.sub_name,sub_user.contact_name
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    
+     <select id="subOrderCount" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntStoreUserOrder">
+	    select count(*) from (<include refid="querySubReportResult" />)
+	    
+    </select>
+
+</mapper>
+

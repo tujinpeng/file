@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.DistMetaGoodsTimePriceRelMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.DistMetaGoodsTimePriceRel">
+        <result property="distMetaGoodsTimePriceRel" column="DIST_META_GOODS_TIME_PRICE_REL"/>
+        <result property="metaGoodsTimePriceId" column="META_GOODS_TIME_PRICE_ID"/>
+        <result property="distGoodsTimePriceId" column="DIST_GOODS_TIME_PRICE_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		DIST_META_GOODS_TIME_PRICE_REL,META_GOODS_TIME_PRICE_ID,DIST_GOODS_TIME_PRICE_ID,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.DistMetaGoodsTimePriceRel">
+		<selectKey resultType="java.lang.Long" keyProperty="distMetaGoodsTimePriceRel"
+			order="BEFORE">
+			select  DIST_META_TIME_PRICE_REL_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO DIST_META_GOODS_TIME_PRICE_REL (
+        	DIST_META_GOODS_TIME_PRICE_REL ,
+        	META_GOODS_TIME_PRICE_ID ,
+        	DIST_GOODS_TIME_PRICE_ID ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{distMetaGoodsTimePriceRel,jdbcType=NUMERIC} ,
+        	#{metaGoodsTimePriceId,jdbcType=NUMERIC} ,
+        	#{distGoodsTimePriceId,jdbcType=NUMERIC} ,
+        	#{createTime,jdbcType=DATE} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.DistMetaGoodsTimePriceRel">
+        UPDATE DIST_META_GOODS_TIME_PRICE_REL SET
+	        META_GOODS_TIME_PRICE_ID = #{metaGoodsTimePriceId,jdbcType=NUMERIC} ,
+	        DIST_GOODS_TIME_PRICE_ID = #{distGoodsTimePriceId,jdbcType=NUMERIC} ,
+	        CREATE_TIME = #{createTime,jdbcType=DATE} 
+        WHERE 
+        	<if test="distMetaGoodsTimePriceRel !=null">
+	        	DIST_META_GOODS_TIME_PRICE_REL = #{distMetaGoodsTimePriceRel,jdbcType=NUMERIC} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM DIST_META_GOODS_TIME_PRICE_REL WHERE
+        DIST_META_GOODS_TIME_PRICE_REL = #{id} 
+    </delete>
+    
+    <delete id="deleteAll" >
+        DELETE FROM DIST_META_GOODS_TIME_PRICE_REL 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM DIST_META_GOODS_TIME_PRICE_REL 
+	        WHERE 
+		        DIST_META_GOODS_TIME_PRICE_REL = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="distMetaGoodsTimePriceRel != null and distMetaGoodsTimePriceRel !=''">
+				AND DIST_META_GOODS_TIME_PRICE_REL = #{distMetaGoodsTimePriceRel}
+	       	</if> 
+			<if test="metaGoodsTimePriceId != null and metaGoodsTimePriceId !=''">
+				AND META_GOODS_TIME_PRICE_ID = #{metaGoodsTimePriceId}
+	       	</if> 
+			<if test="distGoodsTimePriceId != null and distGoodsTimePriceId !=''">
+				AND DIST_GOODS_TIME_PRICE_ID = #{distGoodsTimePriceId}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.distMetaGoodsTimePriceRel != null and param.distMetaGoodsTimePriceRel !=''">
+				AND DIST_META_GOODS_TIME_PRICE_REL = #{param.distMetaGoodsTimePriceRel}
+	       	</if>
+			<if test="param.metaGoodsTimePriceId != null and param.metaGoodsTimePriceId !=''">
+				AND META_GOODS_TIME_PRICE_ID = #{param.metaGoodsTimePriceId}
+	       	</if>
+			<if test="param.distGoodsTimePriceId != null and param.distGoodsTimePriceId !=''">
+				AND DIST_GOODS_TIME_PRICE_ID = #{param.distGoodsTimePriceId}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.DistMetaGoodsTimePriceRel">
+        SELECT count(*) FROM DIST_META_GOODS_TIME_PRICE_REL 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM DIST_META_GOODS_TIME_PRICE_REL 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="findByMetaGoodsId" parameterType="Map" resultMap="baseResultMap">
+    	SELECT <include refid="columns" />
+	    FROM DIST_META_GOODS_TIME_PRICE_REL 
+	    <where>
+	    	<if test="metaId != null and metaId != '' ">
+	    	  AND META_GOODS_TIME_PRICE_ID = #{metaId}
+	    	</if>
+	    	<if test="distId != null and distId != '' ">
+	    	 AND DIST_GOODS_TIME_PRICE_ID = #{distId}
+	    	</if>
+	    </where>
+    </select>
+
+</mapper>
+

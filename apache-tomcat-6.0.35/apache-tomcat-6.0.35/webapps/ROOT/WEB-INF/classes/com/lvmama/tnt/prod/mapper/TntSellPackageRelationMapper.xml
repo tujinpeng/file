@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntSellPackageRelationMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.comm.tnt.vo.TntSellPackageRelation">
+		<result property="tntSellPackageRelationId" column="TNT_SELL_PACKAGE_RELATION_ID" />
+		<result property="tntSellPackageId" column="TNT_SELL_PACKAGE_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="subProductId" column="SUB_PRODUCT_ID" />
+		<result property="subProductName" column="SUB_PRODUCT_NAME" />
+		<result property="subProductType" column="SUB_PRODUCT_TYPE" />
+		<result property="subProductValid" column="SUB_PRODUCT_VALID" />
+		<result property="subBranchId" column="SUB_BRANCH_ID" />
+		<result property="subBranchName" column="SUB_BRANCH_NAME" />
+		<result property="subBranchValid" column="SUB_BRANCH_VALID" />
+		<result property="sellProductId" column="SELL_PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="goodsName" column="GOODS_NAME" />
+		<result property="cnt" column="CNT" />
+		<result property="detailId" column="DETAIL_ID" />
+		<result property="startDays" column="START_DAYS" />
+		<result property="backDays" column="BACK_DAYS" />
+		<result property="priceType" column="PRICE_TYPE" />
+		<result property="price" column="PRICE" />
+		<result property="supGoodsType" column="SUP_GOODS_TYPE" />
+		<result property="groupId" column="GROUP_ID" />
+		<result property="ticketType" column="TICKET_TYPE" />
+<!-- 		<result property="productNum" column="PRODUCT_NUM" /> -->
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.lvmama.comm.tnt.vo.TntSellPackageRelation">
+		<selectKey resultType="java.lang.Long" keyProperty="tntSellPackageRelationId" order="BEFORE">
+			select
+			TNT_SELL_PACKAGE_RELATION_SEQ.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_SELL_PACKAGE_RELATION (
+		TNT_SELL_PACKAGE_RELATION_ID,
+		PRODUCT_ID,
+		PRODUCT_TYPE,
+		SUB_PRODUCT_ID,
+		SUB_PRODUCT_NAME,
+		SUB_PRODUCT_TYPE,
+		SUB_PRODUCT_VALID,
+		SUB_BRANCH_ID,
+		SUB_BRANCH_NAME,
+		SUB_BRANCH_VALID,
+		SELL_PRODUCT_ID,
+		GOODS_ID,
+		GOODS_NAME,
+		CNT,
+		DETAIL_ID,
+		START_DAYS,
+		BACK_DAYS,
+		PRICE_TYPE,
+		PRICE,
+		TNT_SELL_PACKAGE_ID,
+		SUP_GOODS_TYPE,
+		GROUP_ID,
+		TICKET_TYPE
+		) VALUES
+		(#{tntSellPackageRelationId,jdbcType=DECIMAL},
+		#{productId,jdbcType=DECIMAL},
+		#{productType,jdbcType=VARCHAR},
+		#{subProductId,jdbcType=DECIMAL},
+		#{subProductName,jdbcType=VARCHAR},
+		#{subProductType,jdbcType=VARCHAR},
+		#{subProductValid,jdbcType=VARCHAR},
+		#{subBranchId,jdbcType=DECIMAL},
+		#{subBranchName,jdbcType=VARCHAR},
+		#{subBranchValid,jdbcType=VARCHAR},
+		#{sellProductId,jdbcType=DECIMAL},
+		#{goodsId,jdbcType=DECIMAL},
+		#{goodsName,jdbcType=VARCHAR},
+		#{cnt,jdbcType=DECIMAL},
+		#{detailId,jdbcType=DECIMAL},
+		#{startDays,jdbcType=VARCHAR},
+		#{backDays,jdbcType=VARCHAR},
+		#{priceType,jdbcType=DECIMAL},
+		#{price,jdbcType=VARCHAR},
+		#{tntSellPackageId,jdbcType=DECIMAL},
+		#{supGoodsType,jdbcType=VARCHAR},
+		#{groupId,jdbcType=DECIMAL},
+		#{ticketType,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<sql id="columns">
+		*
+	</sql>
+
+	<select id="queryByParams" resultMap="baseResultMap" parameterType="java.util.Map">
+		select 
+		<include refid="columns" />
+		from TNT_SELL_PACKAGE_RELATION spr
+		where 1=1 
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND spr.TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId}
+		</if>
+		<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND spr.TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND spr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productType != null and productType !=''">
+			AND spr.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="sellProductId != null and sellProductId !=''">
+			AND	spr.SELL_PRODUCT_ID = #{sellProductId,jdbcType=DECIMAL}
+		</if>
+		<if test="subBranchId !=null and subBranchId !=''">
+		   AND spr.SUB_BRANCH_ID=#{subBranchId,jdbcType=DECIMAL}
+		</if>
+		<if test="subProductId !=null and subProductId !=''">
+		   AND spr.SUB_PRODUCT_ID=#{subProductId,jdbcType=DECIMAL}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND	spr.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="supGoodsType != null and supGoodsType !=''">
+			AND	spr.SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR}
+		</if>
+		<if test="groupId != null and groupId !=''">
+			AND	spr.GROUP_ID = #{groupId,jdbcType=DECIMAL}
+		</if>
+		<if test="valid != null and valid !=''">
+			AND	spr.SUB_PRODUCT_VALID = #{valid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDays != null and startDays !=''">
+			AND	spr.START_DAYS = #{startDays,jdbcType=VARCHAR}
+		</if>
+		<if test="ticketType != null and ticketType !=''">
+			AND	spr.TICKET_TYPE = #{ticketType,jdbcType=VARCHAR}
+		</if>
+		order by spr.START_DAYS
+	</select>
+
+	<delete id="delete" parameterType="java.util.Map">
+		delete from TNT_SELL_PACKAGE_RELATION where 1=1
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId,jdbcType=DECIMAL}
+		</if>
+		<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND TNT_SELL_PACKAGE_ID = #{tntSellPackageId,jdbcType=DECIMAL}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="sellProductId != null and sellProductId !=''">
+			AND SELL_PRODUCT_ID = #{sellProductId,jdbcType=DECIMAL}
+		</if>
+		<if test="groupId != null and groupId != ''">
+			AND GROUP_ID = #{groupId,jdbcType=DECIMAL}
+		</if>
+		<if test="subBranchId != null and subBranchId != ''">
+			AND SUB_BRANCH_ID = #{subBranchId,jdbcType=DECIMAL}
+		</if>
+	</delete>
+	
+	<update id="update" parameterType="com.lvmama.comm.tnt.vo.TntSellPackageRelation">
+		UPDATE TNT_SELL_PACKAGE_RELATION spr
+		<set>		
+			<if test="subProductId != null and subProductId !=''">
+				SUB_PRODUCT_ID = #{subProductId,jdbcType=DECIMAL},
+			</if>
+			<if test="subProductName != null and subProductName !=''">
+				SUB_PRODUCT_NAME =#{subProductName,jdbcType=VARCHAR},
+			</if>
+			<if test="subProductType != null and subProductType !=''">
+				SUB_PRODUCT_TYPE = #{subProductType,jdbcType=VARCHAR},
+			</if>
+			<if test="subProductValid != null and subProductValid !=''">
+				SUB_PRODUCT_VALID = #{subProductValid,jdbcType=VARCHAR},
+			</if>
+			<if test="subBranchId != null and subBranchId !=''">
+				SUB_BRANCH_ID = #{subBranchId,jdbcType=DECIMAL},
+			</if>
+			<if test="subBranchName != null and subBranchName !=''">
+				SUB_BRANCH_NAME = #{subBranchName,jdbcType=VARCHAR},
+			</if>
+			<if test="subBranchValid != null and subBranchValid !=''">
+				SUB_BRANCH_VALID = #{subBranchValid,jdbcType=VARCHAR},
+			</if>
+			<if test="sellProductId != null and sellProductId !=''">
+				SELL_PRODUCT_ID = #{sellProductId,jdbcType=DECIMAL},
+			</if>
+			<if test="goodsName != null and goodsName !=''">
+				GOODS_NAME = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="cnt != null and cnt !=''">
+				CNT = #{cnt,jdbcType=DECIMAL},
+			</if>
+			<if test="detailId != null and detailId !=''">
+				DETAIL_ID = #{detailId,jdbcType=DECIMAL},
+			</if>
+			<if test="startDays != null and startDays !=''">
+				START_DAYS = #{startDays,jdbcType=VARCHAR},
+			</if>
+			<if test="backDays != null and backDays !=''">
+				BACK_DAYS = #{backDays,jdbcType=VARCHAR},
+			</if>
+			<if test="priceType != null and priceType !=''">
+				PRICE_TYPE = #{priceType,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null and price !=''">
+				PRICE = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="supGoodsType != null and supGoodsType !=''">
+				SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsId != null and goodsId !=''">
+				GOODS_ID = #{goodsId,jdbcType=DECIMAL},
+			</if>
+			<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			 	TNT_SELL_PACKAGE_ID = #{tntSellPackageId,jdbcType=DECIMAL}
+			</if>
+		</set>
+		where 1=1 
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND spr.TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId}
+		</if>
+		<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND spr.TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND spr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productType != null and productType !=''">
+			AND spr.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND	spr.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="supGoodsType != null and supGoodsType !=''">
+			AND	spr.SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR}
+		</if>
+	</update>
+	
+	<update id="updateRelation" parameterType="com.lvmama.comm.tnt.vo.TntSellPackageRelation">
+		UPDATE TNT_SELL_PACKAGE_RELATION spr set 
+			spr.SELL_PRODUCT_ID = null					 
+		where 1=1 
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND spr.TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId}
+		</if>
+		<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND spr.TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND spr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND	spr.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="supGoodsType != null and supGoodsType !=''">
+			AND	spr.SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR}
+		</if>
+	</update>
+	
+	
+	<update id="updateRelationSupPakckage" parameterType="com.lvmama.comm.tnt.vo.TntSellPackageRelation">
+		UPDATE TNT_SELL_PACKAGE_RELATION spr
+		<set>		
+			<if test="subProductId != null and subProductId !=''">
+				SUB_PRODUCT_ID = #{subProductId,jdbcType=DECIMAL},
+			</if>
+			<if test="subProductName != null and subProductName !=''">
+				SUB_PRODUCT_NAME =#{subProductName,jdbcType=VARCHAR},
+			</if>
+			<if test="subProductType != null and subProductType !=''">
+				SUB_PRODUCT_TYPE = #{subProductType,jdbcType=VARCHAR},
+			</if>
+			<if test="subProductValid != null and subProductValid !=''">
+				SUB_PRODUCT_VALID = #{subProductValid,jdbcType=VARCHAR},
+			</if>
+			<if test="subBranchId != null and subBranchId !=''">
+				SUB_BRANCH_ID = #{subBranchId,jdbcType=DECIMAL},
+			</if>
+			<if test="subBranchName != null and subBranchName !=''">
+				SUB_BRANCH_NAME = #{subBranchName,jdbcType=VARCHAR},
+			</if>
+			<if test="subBranchValid != null and subBranchValid !=''">
+				SUB_BRANCH_VALID = #{subBranchValid,jdbcType=VARCHAR},
+			</if>
+			<if test="sellProductId != null and sellProductId !=''">
+				SELL_PRODUCT_ID = #{sellProductId,jdbcType=DECIMAL},
+			</if>
+			<if test="goodsName != null and goodsName !=''">
+				GOODS_NAME = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="cnt != null and cnt !=''">
+				CNT = #{cnt,jdbcType=DECIMAL},
+			</if>
+			<if test="detailId != null and detailId !=''">
+				DETAIL_ID = #{detailId,jdbcType=DECIMAL},
+			</if>
+			<if test="startDays != null and startDays !=''">
+				START_DAYS = #{startDays,jdbcType=VARCHAR},
+			</if>
+			<if test="backDays != null and backDays !=''">
+				BACK_DAYS = #{backDays,jdbcType=VARCHAR},
+			</if>
+			<if test="priceType != null and priceType !=''">
+				PRICE_TYPE = #{priceType,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null and price !=''">
+				PRICE = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="supGoodsType != null and supGoodsType !=''">
+				SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsId != null and goodsId !=''">
+				GOODS_ID = #{goodsId,jdbcType=DECIMAL},
+			</if>
+			<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			 	TNT_SELL_PACKAGE_ID = #{tntSellPackageId,jdbcType=DECIMAL}
+			</if>
+		</set>
+		where 1=1 
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND spr.TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND spr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productType != null and productType !=''">
+			AND spr.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND	spr.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		</if>
+		<if test="supGoodsType != null and supGoodsType !=''">
+			AND	spr.SUP_GOODS_TYPE = #{supGoodsType,jdbcType=VARCHAR}
+		</if>
+		
+	</update>
+	
+	<select id="queryRelationByPackageIdForDelete" resultMap="baseResultMap" parameterType="java.util.Map">
+	
+		SELECT * FROM lvmama_pet.tnt_sell_package_relation tspr WHERE
+			tspr.sell_product_id IS NULL 
+		 <if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND	tspr.tnt_sell_package_id = #{tntSellPackageId,jdbcType=DECIMAL}
+		 </if>
+		 <if test="productId != null and productId !=''">
+			AND	tspr.product_id = #{productId,jdbcType=DECIMAL}
+		 </if>
+	</select>
+	
+	<select id="querySellPackageByGoodsId" resultMap="baseResultMap" parameterType="java.util.Map">
+		select distinct t.tnt_sell_package_id as TNT_SELL_PACKAGE_ID
+		  from tnt_sell_package_relation t
+		 where 1=1
+		 <if test="goodsId != null and goodsId !=''">
+			AND	t.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+		 </if>
+	</select>
+	<select id="querySupplyPackageIdByProductId" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select distinct t.tnt_sell_package_id as TNT_SELL_PACKAGE_ID
+		  from tnt_sell_package_relation t
+		 where t.tnt_sell_package_id= t.sell_product_id
+		 and t.SUB_PRODUCT_ID=#{productId}
+	</select>
+	<select id="queryLvPackageIdByProductId" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select distinct t.tnt_sell_package_id as TNT_SELL_PACKAGE_ID
+		  from tnt_sell_package_relation t
+		 where t.tnt_sell_package_id != t.sell_product_id
+		 and t.SUB_PRODUCT_ID=#{productId}
+	</select>
+	
+	<select id="queryExistTntSellPackageIdByTicketAndHotelGoodId" resultType="java.lang.Long" parameterType="java.util.Map">
+		SELECT ticketRelation.Tnt_Sell_Package_Id 
+		from lvmama_pet.tnt_sell_package_relation hotelRelation,
+			 lvmama_pet.tnt_sell_package_relation ticketRelation,
+			 lvmama_pet.tnt_sell_package tsp
+		WHERE hotelRelation.goods_id = #{hotelGoodId,jdbcType=DECIMAL}
+			AND ticketRelation.goods_id =  #{ticketGoodId,jdbcType=DECIMAL}
+			AND ticketRelation.Start_Days= #{startDay,jdbcType=VARCHAR}
+			AND hotelRelation.tnt_sell_package_id = ticketRelation.tnt_sell_package_id
+			AND TSP.TNT_SELL_PACKAGE_ID = hotelRelation.tnt_sell_package_id
+			and tsp.LVMAMA_PACKAGE_TYPE = #{lvmamaPackageType,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryExistTntSellPackageIdByAducltAndChildTicketAndHotelGoodId" resultType="java.lang.Long" parameterType="java.util.Map">
+		SELECT hotelRelation.Tnt_Sell_Package_Id 
+		from lvmama_pet.tnt_sell_package_relation hotelRelation,
+		 	 lvmama_pet.tnt_sell_package_relation adultTicketRelation,
+		 	 lvmama_pet.tnt_sell_package_relation childTicketRelation,
+			 lvmama_pet.tnt_sell_package tsp
+		WHERE hotelRelation.goods_id = #{hotelGoodId,jdbcType=DECIMAL}
+			  AND adultTicketRelation.goods_id =  #{adultGoodId,jdbcType=DECIMAL}
+			  AND childTicketRelation.goods_id =  #{childGoodId,jdbcType=DECIMAL}
+			  AND adultTicketRelation.Start_Days = #{startDay,jdbcType=VARCHAR}
+			  AND adultTicketRelation.Start_Days = childTicketRelation.start_days
+			  AND hotelRelation.tnt_sell_package_id = adultTicketRelation.tnt_sell_package_id
+			  AND adultTicketRelation.tnt_sell_package_id = childTicketRelation.tnt_sell_package_id		
+			  AND TSP.TNT_SELL_PACKAGE_ID = adultTicketRelation.tnt_sell_package_id
+			  and tsp.LVMAMA_PACKAGE_TYPE = #{lvmamaPackageType,jdbcType=VARCHAR}			
+	</select>
+	
+	<select id="queryBySubProductId" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT DISTINCT spr.PRODUCT_ID
+		FROM TNT_SELL_PACKAGE_RELATION spr, TNT_SELL_PACKAGE tsp
+		WHERE 1=1 
+		<if test="subProductId !=null and subProductId !=''">
+		   AND spr.SUB_PRODUCT_ID=#{subProductId,jdbcType=DECIMAL}
+		</if>
+		   AND spr.SUB_PRODUCT_VALID = 'Y' AND spr.SUB_BRANCH_VALID = 'Y' 
+		   AND spr.PRODUCT_ID = tsp.PRODUCT_ID AND spr.TNT_SELL_PACKAGE_ID = tsp.TNT_SELL_PACKAGE_ID
+		   AND tsp.VALID = 'Y' AND tsp.IS_COMPLETED = 'Y'
+	</select>
+	
+	<select id="queryStartDate" parameterType="java.util.Map" resultType="java.lang.String">
+
+		SELECT
+		   DISTINCT spr.START_DAYS
+		FROM
+		   lvmama_pet.tnt_sell_package_relation spr
+		where 1=1
+		<if test="tntSellPackageRelationId != null and tntSellPackageRelationId !=''">
+			AND spr.TNT_SELL_PACKAGE_RELATION_ID = #{tntSellPackageRelationId}
+		</if>
+		<if test="tntSellPackageId != null and tntSellPackageId !=''">
+			AND spr.TNT_SELL_PACKAGE_ID = #{tntSellPackageId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND spr.PRODUCT_ID = #{productId}
+		</if>
+		<if test="sellPackageIdList != null and sellPackageIdList !=''">
+			AND spr.TNT_SELL_PACKAGE_ID IN
+			<foreach item="sellPackageId" index="index" collection="sellPackageIdList"
+					open="(" separator="," close=")">
+					#{sellPackageId}
+			</foreach>
+		</if>
+		<if test="productType != null and productType !=''">
+			AND spr.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="subProductType != null and subProductType !=''">
+			AND spr.SUB_PRODUCT_TYPE = #{subProductType}
+		</if>
+	</select>
+</mapper>

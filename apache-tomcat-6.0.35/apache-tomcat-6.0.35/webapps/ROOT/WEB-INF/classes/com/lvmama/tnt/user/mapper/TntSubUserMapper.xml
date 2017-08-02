@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntSubUserMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntSubUser">
+        <result property="tntSubUserId" column="TNT_SUB_USER_ID"/>
+        <result property="subName" column="SUB_NAME"/>
+        <result property="subPassword" column="SUB_PASSWORD"/>
+        <result property="contactName" column="CONTACT_NAME"/>
+        <result property="contactMobile" column="CONTACT_MOBILE"/>
+        <result property="tntUserId" column="TNT_USER_ID"/>
+        <result property="status" column="STATUS"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="accountType" column="ACCOUNT_TYPE"/>
+        <result property="city" column="CITY"/>
+        <result property="parentCashType" column="PARENT_CASH_TYPE"/>
+        <result property="channelCode" column="CHANNEL_CODE"/>
+        <result property="userConfigArgs" column="USER_CONFIG_ARGS"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_SUB_USER_ID,SUB_NAME,SUB_PASSWORD,CONTACT_NAME,CONTACT_MOBILE,TNT_USER_ID,STATUS,CREATE_DATE,ACCOUNT_TYPE,CITY,PARENT_CASH_TYPE,CHANNEL_CODE,USER_CONFIG_ARGS
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntSubUser">
+		<selectKey resultType="java.lang.Long" keyProperty="tntSubUserId"
+			order="BEFORE">
+			select  TNT_SUB_USER_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_SUB_USER (
+        	TNT_SUB_USER_ID ,
+        	SUB_NAME ,
+        	SUB_PASSWORD ,
+        	CONTACT_NAME ,
+        	CONTACT_MOBILE ,
+        	TNT_USER_ID ,
+        	STATUS ,
+        	ACCOUNT_TYPE ,
+        	CITY ,
+        	PARENT_CASH_TYPE ,
+        	CREATE_DATE,
+        	USER_CONFIG_ARGS
+        ) VALUES (
+        	#{tntSubUserId} ,
+        	#{subName} ,
+        	#{subPassword} ,
+        	#{contactName} ,
+        	#{contactMobile} ,
+        	#{tntUserId} ,
+        	#{status,jdbcType=VARCHAR} ,
+        	#{accountType,jdbcType=VARCHAR} ,
+        	#{city,jdbcType=VARCHAR} ,
+        	#{parentCashType,jdbcType=VARCHAR} ,
+        	SYSDATE,
+        	#{userConfigArgs,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntSubUser">
+        UPDATE TNT_SUB_USER SET
+        	<if test="subName != null and subName !=''">
+		        SUB_NAME = #{subName,jdbcType=VARCHAR},
+        	</if>
+        	<if test="subPassword != null and subPassword !=''">
+		        SUB_PASSWORD = #{subPassword,jdbcType=VARCHAR},
+        	</if>
+        	<if test="contactName != null and contactName !=''">
+		        CONTACT_NAME = #{contactName,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="contactMobile != null and contactMobile !=''">
+		        CONTACT_MOBILE = #{contactMobile,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="tntUserId != null and tntUserId !=''">
+		        TNT_USER_ID = #{tntUserId,jdbcType=INTEGER} ,
+        	</if>
+        	<if test="parentCashType != null and parentCashType !=''">
+		        PARENT_CASH_TYPE = #{parentCashType,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="status != null and status !=''">
+		        STATUS = #{status,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="userConfigArgs != null and userConfigArgs !=''">
+		        USER_CONFIG_ARGS = #{userConfigArgs,jdbcType=VARCHAR},
+        	</if>
+        	<if test="channelCode != null and channelCode !=''">
+		        CHANNEL_CODE=#{channelCode,jdbcType=VARCHAR},
+        	</if>
+        	TNT_SUB_USER_ID = #{tntSubUserId,jdbcType=INTEGER}
+        WHERE 
+        	<if test="tntSubUserId !=null">
+	        	TNT_SUB_USER_ID = #{tntSubUserId,jdbcType=INTEGER}
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_SUB_USER WHERE
+        TNT_SUB_USER_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_SUB_USER 
+	        WHERE 
+		        TNT_SUB_USER_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="tntSubUserId != null and tntSubUserId !=''">
+				AND TNT_SUB_USER_ID = #{tntSubUserId}
+	       	</if> 
+			<if test="subName != null and subName !=''">
+				AND SUB_NAME like CONCAT('%',CONCAT(#{subName},'%'))
+	       	</if> 
+			<if test="subPassword != null and subPassword !=''">
+				AND SUB_PASSWORD = #{subPassword}
+	       	</if> 
+			<if test="contactName != null and contactName !=''">
+				AND CONTACT_NAME = #{contactName}
+	       	</if> 
+			<if test="contactMobile != null and contactMobile !=''">
+				AND CONTACT_MOBILE = #{contactMobile}
+	       	</if> 
+			<if test="tntUserId != null and tntUserId !=''">
+				AND TNT_USER_ID = #{tntUserId}
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.tntSubUserId != null and param.tntSubUserId !=''">
+				AND TNT_SUB_USER_ID = #{param.tntSubUserId}
+	       	</if>
+			<if test="param.subName != null and param.subName !=''">
+				AND SUB_NAME like CONCAT('%',CONCAT(#{param.subName},'%'))
+	       	</if>
+			<if test="param.subPassword != null and param.subPassword !=''">
+				AND SUB_PASSWORD = #{param.subPassword}
+	       	</if>
+			<if test="param.contactName != null and param.contactName !=''">
+				AND CONTACT_NAME = #{param.contactName}
+	       	</if>
+			<if test="param.contactMobile != null and param.contactMobile !=''">
+				AND CONTACT_MOBILE = #{param.contactMobile}
+	       	</if>
+			<if test="param.tntUserId != null and param.tntUserId !=''">
+				AND TNT_USER_ID = #{param.tntUserId}
+	       	</if>
+			<if test="param.status != null and param.status !=''">
+				AND STATUS = #{param.status}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntSubUser">
+        SELECT count(*) FROM TNT_SUB_USER 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_SUB_USER 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+	<select id="queryBySubName" resultMap="baseResultMap" parameterType="java.lang.String">
+		SELECT <include refid="columns" />
+		
+	    FROM TNT_SUB_USER t where t.sub_name=#{userName}
+	</select>
+	
+	<select id="selectByUserId" resultMap="baseResultMap" parameterType="java.lang.Long">
+        SELECT <include refid="columns" />
+        FROM TNT_SUB_USER t where t.TNT_USER_ID = #{userId}
+    </select>
+    
+    <select id="queryByAccountUserId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_SUB_USER u,TNT_ACCOUNT_USER_RELATE R
+	        WHERE U.TNT_SUB_USER_ID=R.USER_ID AND
+		        R.ACCOUNT_USER_ID = #{id} 
+	</select>
+	
+	<select id="queryList" resultMap="baseResultMap" parameterType="Map">
+        SELECT <include refid="columns" />
+        FROM TNT_SUB_USER t where t.CHANNEL_CODE = #{channelCode}
+    </select>
+    
+    <select id="getUserIdBySubName" resultMap="baseResultMap" parameterType="Map">
+        SELECT <include refid="columns" />
+        FROM TNT_SUB_USER t where t.SUB_NAME like  CONCAT(CONCAT('%',#{subName}),'%') 
+    </select>
+</mapper>
+

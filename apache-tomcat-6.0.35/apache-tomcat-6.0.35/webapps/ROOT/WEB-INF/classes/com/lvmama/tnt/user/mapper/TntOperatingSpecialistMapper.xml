@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntOperatingSpecialistMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntOperatingSpecialist">
+        <result property="operatingSpecialistId" column="OPERATING_SPECIALIST_ID"/>
+        <result property="name" column="NAME"/>
+        <result property="status" column="STATUS"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		OPERATING_SPECIALIST_ID,NAME,STATUS
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntOperatingSpecialist">
+		<selectKey resultType="java.lang.Long" keyProperty="operatingSpecialistId"
+			order="BEFORE">
+			select  TNT_OSP_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_OPERATING_SPECIALIST (
+        	OPERATING_SPECIALIST_ID ,
+        	NAME ,
+        	STATUS 
+        ) VALUES (
+        	#{operatingSpecialistId,jdbcType=DECIMAL},
+        	#{name,jdbcType=VARCHAR} ,
+        	#{status,jdbcType=VARCHAR} 
+        )
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntOperatingSpecialist">
+        UPDATE TNT_OPERATING_SPECIALIST SET
+	        NAME = #{name} ,
+	        STATUS = #{status} 
+        WHERE 
+        	<if test="operatingSpecialistId !=null">
+	        	OPERATING_SPECIALIST_ID = #{operatingSpecialistId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_OPERATING_SPECIALIST WHERE
+        OPERATING_SPECIALIST_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_OPERATING_SPECIALIST 
+	        WHERE 
+		        OPERATING_SPECIALIST_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="operatingSpecialistId != null and operatingSpecialistId !=''">
+				AND OPERATING_SPECIALIST_ID = #{operatingSpecialistId}
+	       	</if> 
+			<if test="name != null and name !=''">
+				AND NAME like
+				CONCAT(CONCAT('%',#{name}),'%')
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.operatingSpecialistId != null and param.operatingSpecialistId !=''">
+				AND OPERATING_SPECIALIST_ID = #{param.operatingSpecialistId}
+	       	</if>
+			<if test="param.name != null and param.name !=''">
+				AND NAME like
+				CONCAT(CONCAT('%',#{param.name}),'%')
+	       	</if>
+			<if test="param.status != null and param.status !=''">
+				AND STATUS = #{param.status}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntOperatingSpecialist">
+        SELECT count(*) FROM TNT_OPERATING_SPECIALIST 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_OPERATING_SPECIALIST 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <sql id="select">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_OPERATING_SPECIALIST
+		<include refid="where" />
+	</sql>
+	
+    <select id="selectList" resultMap="baseResultMap"
+		parameterType="com.lvmama.tnt.user.po.TntOperatingSpecialist">
+		<include refid="select" />
+	</select>
+
+	<select id="queryPersonByName" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_OPERATING_SPECIALIST
+	        WHERE 
+		        NAME = #{name}
+	    ]]>
+	</select>
+</mapper>
+

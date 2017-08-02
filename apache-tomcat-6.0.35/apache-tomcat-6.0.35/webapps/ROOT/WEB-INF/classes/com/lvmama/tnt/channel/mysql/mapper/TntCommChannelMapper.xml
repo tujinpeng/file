@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.channel.mysql.mapper.TntCommChannelMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.channel.po.TntCommChannel">
+        <result property="id" column="ID"/>
+        <result property="currentOrder" column="CURRENT_ORDER"/>
+        <result property="classification" column="CLASSIFICATION"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="ownedCategory" column="OWNED_CATEGORY"/>
+        <result property="packageType" column="PACKAGE_TYPE"/>
+        <result property="statusFlag" column="STATUS_FLAG"/>
+        <result property="sellFlag" column="SELL_FLAG"/>
+        <result property="dataSource" column="DATA_SOURCE"/>
+        <result property="categoryClassification" column="CATEGORY_CLASSIFICATION"/>
+        <result property="labelClassification" column="LABEL_CLASSIFICATION"/>
+        <result property="isRecommend" column="IS_RECOMMEND"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+	
+	<resultMap id="channelVoMap" type="com.lvmama.tnt.channel.vo.TntCommChannelVo"  extends="baseResultMap">
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,CURRENT_ORDER,CLASSIFICATION,PRODUCT_ID,PRODUCT_NAME,OWNED_CATEGORY,PACKAGE_TYPE,STATUS_FLAG,SELL_FLAG,DATA_SOURCE,CATEGORY_CLASSIFICATION,LABEL_CLASSIFICATION,IS_RECOMMEND,UPDATE_TIME
+	    ]]>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+        INSERT INTO TNT_COMM_CHANNEL (
+        	ID ,
+        	CURRENT_ORDER ,
+        	CLASSIFICATION ,
+        	PRODUCT_ID ,
+        	PRODUCT_NAME ,
+        	OWNED_CATEGORY ,
+        	PACKAGE_TYPE ,
+        	STATUS_FLAG ,
+        	SELL_FLAG ,
+        	DATA_SOURCE ,
+        	CATEGORY_CLASSIFICATION ,
+        	LABEL_CLASSIFICATION ,
+        	IS_RECOMMEND ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{id} ,
+        	#{currentOrder} ,
+        	#{classification} ,
+        	#{productId} ,
+        	#{productName} ,
+        	#{ownedCategory} ,
+        	#{packageType} ,
+        	#{statusFlag} ,
+        	#{sellFlag} ,
+        	#{dataSource} ,
+        	#{categoryClassification} ,
+        	#{labelClassification} ,
+        	#{isRecommend} ,
+        	#{updateTime} 
+        )
+	</insert>
+    
+    <select id="findSpecialRecommend" resultMap="baseResultMap" parameterType="java.util.Map">	  
+				SELECT 
+				<include refid="columns" /> 
+				FROM TNT_COMM_CHANNEL THS 
+				where 
+				<if test="classification !=null">
+	        		CLASSIFICATION = #{classification} AND 
+	       	  	</if>
+			    THS.CATEGORY_CLASSIFICATION = #{categoryClassification} 
+			    and THS.LABEL_CLASSIFICATION = #{labelClassification}  
+				order by THS.CURRENT_ORDER desc 
+	         limit 0,6
+	</select>
+	
+	<select id="findInsertInspecialRecomm" resultMap="baseResultMap"
+		 parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+				SELECT
+				<include refid="columns" />
+				FROM TNT_COMM_CHANNEL THS 
+				where 
+					 THS.PRODUCT_ID=#{productId}
+				     and THS.CATEGORY_CLASSIFICATION=#{categoryClassification} 
+				order by THS.id desc	
+	      	  limit 0,6
+	</select>
+	
+    
+	<update id="update" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+        UPDATE TNT_COMM_CHANNEL SET
+	        CURRENT_ORDER = #{currentOrder} ,
+	        CLASSIFICATION = #{classification} ,
+	        PRODUCT_ID = #{productId} ,
+	        PRODUCT_NAME = #{productName} ,
+	        OWNED_CATEGORY = #{ownedCategory} ,
+	        PACKAGE_TYPE = #{packageType} ,
+	        STATUS_FLAG = #{statusFlag} ,
+	        SELL_FLAG = #{sellFlag} ,
+	        DATA_SOURCE = #{dataSource} ,
+	        CATEGORY_CLASSIFICATION = #{categoryClassification} ,
+	        LABEL_CLASSIFICATION = #{labelClassification} ,
+	        IS_RECOMMEND = #{isRecommend} ,
+	        UPDATE_TIME = #{updateTime} 
+        WHERE 
+        	<if test="id !=null">
+	        	ID = #{id} 
+	        </if>
+	</update>
+
+	
+	<update id="sortSpecialRecomm" parameterType="java.util.Map"> 
+		UPDATE TNT_COMM_CHANNEL 
+		SET CURRENT_ORDER = CASE CURRENT_ORDER 
+		WHEN #{order1}  THEN #{order2}  
+		WHEN #{order2}  THEN #{order1}  
+		END 
+		WHERE ID in (#{id1} ,#{id2}) 
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_COMM_CHANNEL WHERE
+        ID = #{id} 
+    </delete>
+    
+    <delete id="deleteSpecialRecomm" parameterType="java.util.Map">
+        delete from TNT_COMM_CHANNEL        
+        WHERE 
+        PRODUCT_ID = #{productId}  AND CATEGORY_CLASSIFICATION = #{categoryClassification}
+    </delete>
+   
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COMM_CHANNEL 
+	        WHERE 
+		        ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="id != null and id !=''">
+				AND ID = #{id}
+	       	</if> 
+			<if test="currentOrder != null and currentOrder !=''">
+				AND CURRENT_ORDER = #{currentOrder}
+	       	</if> 
+			<if test="classification != null and classification !=''">
+				AND CLASSIFICATION = #{classification}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME = #{productName}
+	       	</if> 
+			<if test="ownedCategory != null and ownedCategory !=''">
+				AND OWNED_CATEGORY = #{ownedCategory}
+	       	</if> 
+			<if test="packageType != null and packageType !=''">
+				AND PACKAGE_TYPE = #{packageType}
+	       	</if> 
+			<if test="statusFlag != null and statusFlag !=''">
+				AND STATUS_FLAG = #{statusFlag}
+	       	</if> 
+			<if test="sellFlag != null and sellFlag !=''">
+				AND SELL_FLAG = #{sellFlag}
+	       	</if> 
+			<if test="dataSource != null and dataSource !=''">
+				AND DATA_SOURCE = #{dataSource}
+	       	</if> 
+			<if test="categoryClassification != null and categoryClassification !=''">
+				AND CATEGORY_CLASSIFICATION = #{categoryClassification}
+	       	</if> 
+			<if test="labelClassification != null and labelClassification !=''">
+				AND LABEL_CLASSIFICATION = #{labelClassification}
+	       	</if> 
+			<if test="isRecommend != null and isRecommend !=''">
+				AND IS_RECOMMEND = #{isRecommend}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+		</where>
+	</sql>
+	
+	<sql id="where2">
+		<where>	      				
+			<if test="classification != null and classification !=''">
+				AND CLASSIFICATION = #{classification}
+	       	</if> 
+			<if test="categoryClassification != null and categoryClassification !=''">
+				AND CATEGORY_CLASSIFICATION = #{categoryClassification}
+	       	</if> 
+			<if test="labelClassification != null and labelClassification !=''">
+				AND LABEL_CLASSIFICATION = #{labelClassification}
+	       	</if>
+	       	<if test="isRecommend != null and isRecommend !=''">
+				AND IS_RECOMMEND = #{isRecommend}
+	       	</if>
+	       	<if test="dataSource != null and dataSource !=''">
+				AND DATA_SOURCE = #{dataSource}
+	       	</if>
+	       	
+	       	
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+        SELECT count(*) FROM TNT_COMM_CHANNEL 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="countProduct" resultType="Integer" parameterType="java.util.Map">
+        SELECT count(*) FROM TNT_COMM_CHANNEL 
+		WHERE CATEGORY_CLASSIFICATION = #{categoryClassification}    
+		AND LABEL_CLASSIFICATION = #{labelClassification} 
+    </select>
+    
+         <!--  mysql分页查询-->
+    <select id="getTntCommChannelList" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+    	FROM TNT_COMM_CHANNEL 
+    	<include refid="where"/>
+    	ORDER BY UPDATE_TIME DESC
+    	LIMIT #{startRow},#{pageSize}
+    </select>
+    
+  
+   <select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+		SELECT <include refid="columns" />
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where"/> 
+	       ORDER BY UPDATE_TIME DESC
+	</select>
+    
+    
+    <select id="getProductList" resultMap="channelVoMap" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+		SELECT 
+		<include refid="columns" />
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where" />
+	    order by CURRENT_ORDER 
+	</select>
+	
+	<select id="getTntComm" resultMap="baseResultMap" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+	    SELECT <include refid="columns" />
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where" />
+	</select>
+	
+	<update id="sortChannelsRecomm" parameterType="java.util.Map">
+	
+	    UPDATE TNT_COMM_CHANNEL
+		SET CURRENT_ORDER = CASE CURRENT_ORDER 
+		WHEN #{id1}  THEN #{id2} 
+		WHEN #{id2}  THEN #{id1} 
+		END
+		WHERE CURRENT_ORDER in(#{id1} ,#{id2})
+		
+		<if test="classification !=null">
+			AND
+			CLASSIFICATION = #{classification} 
+	    </if>
+		AND
+		CATEGORY_CLASSIFICATION = #{categoryClassification}
+		AND
+		LABEL_CLASSIFICATION = #{labelClassification}
+		
+    </update>
+    
+    <select id="maxOrder" resultType="java.lang.Long" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+	    SELECT max(CURRENT_ORDER)
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where2" />
+	</select>
+	
+	<select id="countValid" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+	    SELECT count(*)
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where2" />
+	</select>
+	
+	<select id="queryCountBycategroy" resultType="java.lang.Integer" parameterType="java.lang.Long">
+	    SELECT count(*)
+	    FROM TNT_COMM_CHANNEL 
+	    WHERE
+	       CLASSIFICATION = #{classification}
+	    AND
+	       IS_RECOMMEND = 'Y'
+	</select>
+
+	
+	<update id="updateStatus" parameterType="java.lang.Long">
+        UPDATE TNT_COMM_CHANNEL SET
+	        IS_RECOMMEND = 'N'
+        WHERE 
+	        ID = #{id} 
+	</update>
+
+    <update id="updateClassificationStatus" parameterType="java.util.Map">
+        UPDATE TNT_COMM_CHANNEL SET
+	        IS_RECOMMEND = 'N'
+        WHERE 
+	        CLASSIFICATION = #{classification}
+		AND
+		    CATEGORY_CLASSIFICATION = #{categoryClassification}
+		AND
+		    LABEL_CLASSIFICATION = #{labelClassification}
+	</update>
+	
+	<select id="queryFrontChannelCommList" resultMap="channelVoMap" parameterType="com.lvmama.tnt.channel.po.TntCommChannel">
+		SELECT 
+		<include refid="columns" />
+		    FROM TNT_COMM_CHANNEL 
+	        <include refid="where" />
+	    order by CURRENT_ORDER 
+	</select>
+
+	<select id="getSpecialRecommendationForTicketByMap" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT
+		*
+		FROM
+		TNT_COMM_CHANNEL
+		WHERE
+		LABEL_CLASSIFICATION = #{labelClassification}
+		AND IS_RECOMMEND='Y'
+		AND DATA_SOURCE='PC'
+		AND STATUS_FLAG='Y'
+		AND SELL_FLAG='Y'
+		AND CATEGORY_CLASSIFICATION='TICKET'
+		ORDER BY
+		CURRENT_ORDER
+	</select>
+
+	<!-- AND tcc.DATA_SOURCE='PC' -->
+	<select id="getListForTicketByMap" parameterType="java.util.Map" resultMap="baseResultMap">
+		SELECT
+		*
+		FROM
+		TNT_COMM_CHANNEL tcc ,
+		TNT_DEST_CATEGORY tdc
+		WHERE
+		tcc.CLASSIFICATION=tdc.CATEGORY_ID
+		AND tcc.SELL_FLAG='Y'
+		AND tcc.STATUS_FLAG='Y'
+		AND tcc.CATEGORY_CLASSIFICATION='TICKET'
+		AND tcc.IS_RECOMMEND='Y'
+		AND tcc.LABEL_CLASSIFICATION= #{labelClassification}
+		AND tdc.MODE_TYPE='TICKET'
+	</select>
+</mapper>
+

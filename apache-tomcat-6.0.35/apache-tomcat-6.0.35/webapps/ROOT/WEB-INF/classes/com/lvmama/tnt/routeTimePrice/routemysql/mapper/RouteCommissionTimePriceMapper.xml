@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.routemysql.mapper.RouteCommissionTimePriceMapper">
+	<resultMap id="BaseResultMap" type="com.lvmama.tnt.routeTimePrice.vo.RouteCommissionTimePrice">
+		<result column="PRICE_ID" property="priceId"/>
+		<result column="SPEC_DATE" property="specDate"/>
+		<result column="UNIT_ID" property="unitId"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="RULE_FLAG" property="ruleFlag"/>
+		<result column="AUDIT_COMMISSION_PRICE" property="auditCommissionPrice"/>
+		<result column="CHILD_COMMISSION_PRICE" property="childCommissionPrice"/>
+		<result column="GAP_COMMISSION_PRICE" property="gapCommissionPrice"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+	</resultMap>
+
+	<sql id="columns">
+		PRICE_ID,
+		SPEC_DATE,
+		UNIT_ID,
+		USER_ID,
+		RULE_FLAG,
+		AUDIT_COMMISSION_PRICE,
+		CHILD_COMMISSION_PRICE,
+		GAP_COMMISSION_PRICE,
+		UPDATE_TIME
+	</sql>
+
+	<select id="queryByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ROUTE_COMMISSION_TIME_PRICE r
+		<where>
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and r.spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and r.spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and r.USER_ID = #{userId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="merge" parameterType="java.util.List">
+		insert into ROUTE_COMMISSION_TIME_PRICE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			PRICE_ID,
+			SPEC_DATE,
+			UNIT_ID,
+			USER_ID,
+			AUDIT_COMMISSION_PRICE,
+			CHILD_COMMISSION_PRICE,
+			GAP_COMMISSION_PRICE,
+			UPDATE_TIME
+		</trim>
+		<foreach collection="list" index="index" item="item" open="" close="" separator="union">
+		select 
+			#{item.priceId,jdbcType=DECIMAL},
+			#{item.specDate,jdbcType=DATE},
+			#{item.unitId,jdbcType=DECIMAL},
+			#{item.userId,jdbcType=VARCHAR},
+			#{item.auditCommissionPrice,jdbcType=DECIMAL},
+			#{item.childCommissionPrice,jdbcType=DECIMAL},
+			#{item.gapCommissionPrice,jdbcType=DECIMAL},
+			#{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+		ON DUPLICATE KEY
+		update
+			AUDIT_COMMISSION_PRICE = values(AUDIT_COMMISSION_PRICE),
+			CHILD_COMMISSION_PRICE = values(CHILD_COMMISSION_PRICE),
+			GAP_COMMISSION_PRICE = values(GAP_COMMISSION_PRICE),
+			UPDATE_TIME = values(UPDATE_TIME)
+	</insert>
+
+	<select id="queryCommissionUnitId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT DISTINCT(UNIT_ID) AS UNIT_ID FROM ROUTE_COMMISSION_TIME_PRICE
+	</select>
+	
+	<select id="queryCommissionUserIdByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select DISTINCT(USER_ID) AS USER_ID FROM ROUTE_COMMISSION_TIME_PRICE WHERE UNIT_ID=#{unitId}
+	</select>
+	
+	<select id="queryMaxCommissionByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT MAX(AUDIT_COMMISSION_PRICE) AS AUDIT_COMMISSION_PRICE FROM ROUTE_COMMISSION_TIME_PRICE
+		<where>
+			<if test="unitId != null">
+				and UNIT_ID=#{unitId}
+			</if>
+			<if test="beginDate != null and endDate != null ">
+				and SPEC_DATE between #{beginDate} and #{endDate}
+			</if>
+		</where>
+		 
+	</select>
+	
+	<insert id="move" parameterType="java.util.Map">
+		insert into ROUTE_COMMISSION_TIME_PRICE_HIS
+		SELECT * FROM ROUTE_COMMISSION_TIME_PRICE where spec_date <![CDATA[ <= ]]> #{endDate} LIMIT #{page}
+		ON DUPLICATE KEY
+		update
+			AUDIT_COMMISSION_PRICE = values(AUDIT_COMMISSION_PRICE),
+			CHILD_COMMISSION_PRICE = values(CHILD_COMMISSION_PRICE),
+			GAP_COMMISSION_PRICE = values(GAP_COMMISSION_PRICE),
+			UPDATE_TIME = values(UPDATE_TIME)
+	</insert>
+	
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from ROUTE_COMMISSION_TIME_PRICE
+		<where> 
+			<if test="endDate != null and endDate != ''">
+				and spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="ids!=null and ids!=''">
+				and PRICE_ID in
+				<foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+
+			<if test="beginDate != null and beginDate != ''">
+				and spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and USER_ID = #{userId}
+			</if>
+
+		</where>
+		<if test="page!=null and page!=''">
+			limit #{page}
+		</if>
+	</delete>
+	
+	<select id="queryIds" parameterType="java.util.Map" resultType="Long">
+		select PRICE_ID
+		from ROUTE_COMMISSION_TIME_PRICE r
+		<where>
+			<if test="beginDate != null and beginDate != ''">
+				and r.spec_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and r.spec_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="dates != null and dates != ''">
+				and r.spec_date in
+				<foreach collection="dates" item="date" index="index" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and r.UNIT_ID = #{unitId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and r.USER_ID = #{userId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into ROUTE_COMMISSION_TIME_PRICE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			PRICE_ID,
+			SPEC_DATE,
+			UNIT_ID,
+			USER_ID,
+			AUDIT_COMMISSION_PRICE,
+			CHILD_COMMISSION_PRICE,
+			GAP_COMMISSION_PRICE,
+			UPDATE_TIME
+		</trim>
+		values
+		<foreach collection="list" index="index" item="item" open="" close="" separator=",">
+			(#{item.priceId,jdbcType=DECIMAL},
+			#{item.specDate,jdbcType=DATE},
+			#{item.unitId,jdbcType=DECIMAL},
+			#{item.userId,jdbcType=VARCHAR},
+			#{item.auditCommissionPrice,jdbcType=DECIMAL},
+			#{item.childCommissionPrice,jdbcType=DECIMAL},
+			#{item.gapCommissionPrice,jdbcType=DECIMAL},
+			#{item.updateTime,jdbcType=TIMESTAMP})
+		</foreach>
+	</insert>
+</mapper>

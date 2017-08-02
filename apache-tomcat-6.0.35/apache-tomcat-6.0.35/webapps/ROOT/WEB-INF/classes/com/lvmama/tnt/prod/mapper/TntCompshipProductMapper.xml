@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntCompshipProductMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntCompshipProduct">
+        <result property="tntCompshipProductId" column="TNT_COMPSHIP_PRODUCT_ID"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="cancelFlag" column="CANCEL_FLAG"/>
+        <result property="saleFlag" column="SALE_FLAG"/>
+        <result property="districtId" column="DISTRICT_ID"/>
+        <result property="districtName" column="DISTRICT_NAME"/>
+        <result property="routeLine" column="ROUTE_LINE"/>
+        <result property="cruiseCompany" column="CRUISE_COMPANY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="lastUpdateTime" column="LAST_UPDATE_TIME"/>
+        <result property="ports" column="PORTS"/>
+        <result property="groupType" column="GROUP_TYPE"/>
+        <result property="minPerson" column="MIN_PERSON"/>
+        <result property="areCharter" column="ARE_CHARTER"/>
+        <result property="productType" column="PRODUCT_TYPE"/>
+        <result property="days" column="DAYS"/>
+        <result property="groupSupplierName" column="GROUP_SUPPLIER_NAME"/>
+        <result property="stopPort" column="STOP_PORT"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_COMPSHIP_PRODUCT_ID,PRODUCT_NAME,PRODUCT_ID,CATEGORY_ID,CANCEL_FLAG,SALE_FLAG,DISTRICT_ID,DISTRICT_NAME,ROUTE_LINE,CRUISE_COMPANY,CREATE_TIME,LAST_UPDATE_TIME,PORTS,GROUP_TYPE,MIN_PERSON,ARE_CHARTER,PRODUCT_TYPE,DAYS,GROUP_SUPPLIER_NAME,STOP_PORT
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntCompshipProduct">
+		<selectKey resultType="java.lang.Long" keyProperty="tntCompshipProductId"
+			order="BEFORE">
+			select  TNT_COMPSHIP_PRODUCT_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_COMPSHIP_PRODUCT (
+        	TNT_COMPSHIP_PRODUCT_ID ,
+        	PRODUCT_NAME ,
+        	PRODUCT_ID ,
+        	CATEGORY_ID ,
+        	CANCEL_FLAG ,
+        	SALE_FLAG ,
+        	DISTRICT_ID ,
+        	DISTRICT_NAME ,
+        	ROUTE_LINE ,
+        	CRUISE_COMPANY ,
+        	CREATE_TIME ,
+        	LAST_UPDATE_TIME ,
+        	PORTS  ,
+        	GROUP_TYPE ,
+        	MIN_PERSON ,
+        	ARE_CHARTER ,
+        	PRODUCT_TYPE ,
+        	DAYS ,
+        	GROUP_SUPPLIER_NAME  ,
+        	STOP_PORT 
+        ) VALUES (
+        	#{tntCompshipProductId,jdbcType=DECIMAL} ,
+        	#{productName,jdbcType=VARCHAR} ,
+        	#{productId,jdbcType=DECIMAL} ,
+        	#{categoryId,jdbcType=DECIMAL} ,
+        	#{cancelFlag,jdbcType=VARCHAR} ,
+        	#{saleFlag,jdbcType=VARCHAR} ,
+        	#{districtId,jdbcType=DECIMAL} ,
+        	#{districtName,jdbcType=VARCHAR} ,
+        	#{routeLine,jdbcType=VARCHAR} ,
+        	#{cruiseCompany,jdbcType=VARCHAR} ,
+        	SYSDATE,
+        	SYSDATE,
+        	#{ports,jdbcType=VARCHAR} ,
+        	#{groupType,jdbcType=VARCHAR} ,
+        	#{minPerson,jdbcType=DECIMAL} ,
+        	#{areCharter,jdbcType=VARCHAR} ,
+        	#{productType,jdbcType=VARCHAR} ,
+        	#{days,jdbcType=DECIMAL} ,
+        	#{groupSupplierName,jdbcType=VARCHAR} ,
+        	#{stopPort,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntCompshipProduct">
+        UPDATE TNT_COMPSHIP_PRODUCT SET
+	        PRODUCT_NAME = #{productName,jdbcType=VARCHAR} ,
+	        PRODUCT_ID = #{productId,jdbcType=DECIMAL} ,
+	        CATEGORY_ID = #{categoryId,jdbcType=DECIMAL} ,
+	        CANCEL_FLAG = #{cancelFlag,jdbcType=VARCHAR} ,
+	        SALE_FLAG = #{saleFlag,jdbcType=VARCHAR} ,
+	        DISTRICT_ID = #{districtId,jdbcType=DECIMAL} ,
+	        DISTRICT_NAME = #{districtName,jdbcType=VARCHAR} ,
+	        ROUTE_LINE = #{routeLine,jdbcType=VARCHAR} ,
+	        CRUISE_COMPANY = #{cruiseCompany,jdbcType=VARCHAR} ,
+	        LAST_UPDATE_TIME = SYSDATE ,
+	        PORTS = #{ports,jdbcType=VARCHAR} ,
+	        GROUP_TYPE = #{groupType,jdbcType=VARCHAR} ,
+	        MIN_PERSON = #{minPerson,jdbcType=DECIMAL} ,
+	        ARE_CHARTER = #{areCharter,jdbcType=VARCHAR} ,
+	        PRODUCT_TYPE = #{productType,jdbcType=VARCHAR} ,
+	        DAYS = #{days,jdbcType=DECIMAL} ,
+	        GROUP_SUPPLIER_NAME = #{groupSupplierName,jdbcType=VARCHAR} ,
+	        STOP_PORT = #{stopPort,jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="tntCompshipProductId !=null">
+	        	TNT_COMPSHIP_PRODUCT_ID = #{tntCompshipProductId,jdbcType=DECIMAL} 
+	        </if>
+	</update>
+	
+	 <update id="updateByParam" parameterType="java.util.Map">
+        UPDATE TNT_COMPSHIP_PRODUCT  
+        <set>
+             LAST_UPDATE_TIME = SYSDATE ,
+             <if test="productName != null and productName !=''">
+				 PRODUCT_NAME = #{productName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="cancelFlag != null and cancelFlag !=''">
+				CANCEL_FLAG = #{cancelFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="saleFlag != null and saleFlag !=''">
+				SALE_FLAG = #{saleFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryId != null and categoryId !=''">
+				CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+			</if>
+			<if test="districtId != null and districtId !=''">
+				DISTRICT_ID= #{districtId,jdbcType=NUMERIC},
+			</if>
+			<if test="districtName != null and districtName !=''">
+				DISTRICT_NAME = #{districtName,jdbcType=VARCHAR},
+			</if>
+			<if test="routeLine != null and routeLine !=''">
+				ROUTE_LINE = #{routeLine,jdbcType=VARCHAR},
+			</if>
+			<if test="cruiseCompany != null and cruiseCompany !=''">
+				CRUISE_COMPANY = #{cruiseCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="ports != null  and ports !=''">
+				PORTS = #{ports,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="groupType != null  and ports !=''">
+				GROUP_TYPE = #{groupType,jdbcType=VARCHAR},
+			</if>
+			<if test="minPerson != null  and ports !=''">
+				MIN_PERSON = #{minPerson,jdbcType=DECIMAL},
+			</if>
+			<if test="areCharter != null  and ports !=''">
+				ARE_CHARTER = #{areCharter,jdbcType=VARCHAR} ,
+			</if>
+			<if test="productType != null  and ports !=''">
+				PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null  and ports !=''">
+				DAYS = #{days,jdbcType=DECIMAL} ,
+			</if>
+			<if test="groupSupplierName != null  and ports !=''">
+				GROUP_SUPPLIER_NAME = #{groupSupplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="groupSupplierName != null  and ports !=''">
+				STOP_PORT = #{stopPort,jdbcType=VARCHAR},
+			</if>
+        </set>
+	       
+	       <where>
+        	<if test="productId !=null and productId !=''">
+	        	AND PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+	        </if>
+        	<if test="tntCompshipProductId !=null">
+	        	TNT_COMPSHIP_PRODUCT_ID = #{tntCompshipProductId,jdbcType=DECIMAL} 
+	        </if>
+	        </where>
+	</update> 
+	
+	
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_COMPSHIP_PRODUCT WHERE
+        TNT_COMPSHIP_PRODUCT_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COMPSHIP_PRODUCT 
+	        WHERE 
+		        TNT_COMPSHIP_PRODUCT_ID = #{id} 
+	</select>
+	
+	<select id="getByProductId" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_COMPSHIP_PRODUCT 
+	        WHERE 
+		        PRODUCT_ID = #{productId} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+		    1=1
+			<if test="tntCompshipProductId != null and tntCompshipProductId !=''">
+				AND A.TNT_COMPSHIP_PRODUCT_ID = #{tntCompshipProductId}
+	       	</if> 
+			<if test="productName != null and productName !=''">
+				AND A.PRODUCT_NAME like CONCAT(CONCAT('%',ltrim(rtrim(#{productName}))),'%')
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND A.PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="categoryId != null and categoryId !=''">
+				AND A.CATEGORY_ID = #{categoryId}
+	       	</if> 
+			<if test="cancelFlag != null and cancelFlag !=''">
+				AND A.CANCEL_FLAG = #{cancelFlag}
+	       	</if> 
+			<if test="saleFlag != null and saleFlag !=''">
+				AND A.SALE_FLAG = #{saleFlag}
+	       	</if> 
+			<if test="districtId != null and districtId !=''">
+				AND A.DISTRICT_ID = #{districtId}
+	       	</if> 
+			<if test="districtName != null and districtName !=''">
+				AND A.DISTRICT_NAME like CONCAT(CONCAT('%',ltrim(rtrim(#{districtName}))),'%')
+	       	</if> 
+			<if test="routeLine != null and routeLine !=''">
+				AND A.ROUTE_LINE = #{routeLine}
+	       	</if> 
+			<if test="cruiseCompany != null and cruiseCompany !=''">
+				AND A.CRUISE_COMPANY = #{cruiseCompany}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND A.CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="lastUpdateTime != null and lastUpdateTime !=''">
+				AND A.LAST_UPDATE_TIME = #{lastUpdateTime}
+	       	</if> 
+			<if test="ports != null and ports !=''">
+				AND A.PORTS like CONCAT(CONCAT('%',ltrim(rtrim(#{ports}))),'%')
+	       	</if> 
+	       	
+       		<if test="goodsId != null and goodsId  !=''">
+			     AND EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.GOODS_ID = #{goodsId}
+                                    AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+	       	
+       	 	<if test="goodsStatus != null and goodsStatus  !=''">
+			    AND	EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.GOODS_CANCEL_FLAG = #{goodsStatus}
+                                     AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+	       	
+       	 	<if test="goodsName != null and goodsName  !=''">
+			   AND	EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.Goods_Name like CONCAT(CONCAT('%',ltrim(rtrim(#{goodsName}))),'%')
+                                     AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	  
+		1=1    				
+			<if test="param.tntCompshipProductId != null and param.tntCompshipProductId !=''">
+				AND A.TNT_COMPSHIP_PRODUCT_ID = #{param.tntCompshipProductId}
+	       	</if>
+			<if test="param.productName != null and param.productName !=''">
+				AND A.PRODUCT_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.productName}))),'%')
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND A.PRODUCT_ID = #{param.productId}
+	       	</if>
+			<if test="param.categoryId != null and param.categoryId !=''">
+				AND A.CATEGORY_ID = #{param.categoryId}
+	       	</if>
+			<if test="param.cancelFlag != null and param.cancelFlag !=''">
+				AND A.CANCEL_FLAG = #{param.cancelFlag}
+	       	</if>
+			<if test="param.saleFlag != null and param.saleFlag !=''">
+				AND A.SALE_FLAG = #{param.saleFlag}
+	       	</if>
+			<if test="param.districtId != null and param.districtId !=''">
+				AND A.DISTRICT_ID = #{param.districtId}
+	       	</if>
+			<if test="param.districtName != null and param.districtName !=''">
+				AND A.DISTRICT_NAME like CONCAT(CONCAT('%',ltrim(rtrim(#{param.districtName}))),'%')
+	       	</if>
+			<if test="param.routeLine != null and param.routeLine !=''">
+				AND A.ROUTE_LINE = #{param.routeLine}
+	       	</if>
+			<if test="param.cruiseCompany != null and param.cruiseCompany !=''">
+				AND A.CRUISE_COMPANY = #{param.cruiseCompany}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND A.CREATE_TIME = #{param.createTime}
+	       	</if>
+			<if test="param.lastUpdateTime != null and param.lastUpdateTime !=''">
+				AND A.LAST_UPDATE_TIME = #{param.lastUpdateTime}
+	       	</if>
+			<if test="param.ports != null and param.ports !=''">
+				AND A.PORTS like
+					CONCAT(CONCAT('%',ltrim(rtrim(#{param.ports}))),'%')
+	       	</if>
+	       	
+	       	<if test="param.goodsId != null and param.goodsId  !=''">
+			 AND	EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.GOODS_ID = #{param.goodsId}
+                                    AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+	       	
+       	 	<if test="param.goodsStatus != null and param.goodsStatus  !=''">
+			 AND	EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.GOODS_CANCEL_FLAG = #{param.goodsStatus}
+                                     AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+	       	
+       	 	<if test="param.goodsName != null and param.goodsName  !=''">
+			 AND	EXISTS (SELECT 1 FROM TNT_CRUISE_PACKAGE TCP  WHERE TCP.Goods_Name like CONCAT(CONCAT('%',ltrim(rtrim(#{param.goodsName}))),'%')
+                                    AND TCP.PRODUCT_ID = A.PRODUCT_ID)
+	       	</if>
+	       	
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntCompshipProduct">
+        SELECT count(*) FROM TNT_COMPSHIP_PRODUCT A
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT A.*
+	    FROM TNT_COMPSHIP_PRODUCT A
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <!-- 批量更新邮轮公司 -->
+    <update id="updateCruiseCompanyBatch" parameterType="map">
+        UPDATE TNT_COMPSHIP_PRODUCT 
+        SET
+        	LAST_UPDATE_TIME = SYSDATE, CRUISE_COMPANY = #{cruiseCompany}  
+        WHERE PRODUCT_ID IN
+          (
+        		select DISTINCT TCPPR.PRODUCT_ID from TNT_CRUISE_PACKAGE_PRODUCT_REL TCPPR,TNT_COMPSHIP_PRODUCT TCP
+			WHERE  TCPPR.PRODUCT_ID=TCP.PRODUCT_ID
+			AND TCPPR.Sub_Category_Id= #{subCategoryId} 
+			AND TCPPR.SUB_PRODUCT_ID=#{subProductId} 
+			AND ( TCP.CRUISE_COMPANY <![CDATA[ <> ]]> #{cruiseCompany} or TCP.CRUISE_COMPANY is null) 
+        )
+    </update>
+
+
+</mapper>
+

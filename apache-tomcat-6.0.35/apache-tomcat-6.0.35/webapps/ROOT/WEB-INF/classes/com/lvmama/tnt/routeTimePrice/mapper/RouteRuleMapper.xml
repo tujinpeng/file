@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.mapper.RouteRuleMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.comm.tnt.po.RouteRuleVO">
+		<result property="routeRuleId" column="TNT_ROUTE_RULE_ID" jdbcType="INTEGER"/>
+		<result property="ruleDate" column="RULEDATE" jdbcType="DATE"/>
+		<result property="unitId" column="UNITID" jdbcType="INTEGER"/>
+		<result property="disOrChannelId" column="DISORCHANNELID" jdbcType="VARCHAR"/>
+		<result property="disOrChannelName" column="DISORCHANNELNAME" jdbcType="VARCHAR"/>
+		<result property="isLockup" column="ISLOCKUP" jdbcType="VARCHAR"/>
+		<result property="isCommonRule" column="ISCOMMONRULE" jdbcType="VARCHAR"/>
+		<result property="adultType" column="ADULTTYPE" jdbcType="VARCHAR"/>
+		<result property="adultMode" column="ADULTMODE" jdbcType="VARCHAR"/>
+		<result property="adultValue" column="ADULTVALUE" jdbcType="DOUBLE"/>
+		<result property="childType" column="CHILDTYPE" jdbcType="VARCHAR"/>
+		<result property="childMode" column="CHILDMODE" jdbcType="VARCHAR"/>
+		<result property="childValue" column="CHILDVALUE" jdbcType="DOUBLE"/>
+		<result property="roomDifferencesType" column="ROOMDIFFERENCESTYPE" jdbcType="VARCHAR"/>
+		<result property="roomDifferencesMode" column="ROOMDIFFERENCESMODE" jdbcType="VARCHAR"/>
+		<result property="roomDifferencesValue" column="ROOMDIFFERENCESVALUE" jdbcType="DOUBLE"/>
+	</resultMap>
+	
+	<resultMap id="baseLogResultMap" type="com.lvmama.tnt.routeTimePrice.vo.B2BTimePriceLogVO">
+		<result property="timePriceLogId" column="TIMEPRICELOGID" jdbcType="INTEGER"/>
+		<result property="unitId" column="UNITID" jdbcType="INTEGER"/>
+		<result property="disOrChannelId" column="DISORCHANNELID" jdbcType="VARCHAR"/>
+		<result property="isCommonRule" column="ISCOMMONRULE" jdbcType="VARCHAR"/>
+		<result property="dateBetween" column="DATEBETWEEN" jdbcType="VARCHAR"/>
+		<result property="modifyDate" column="MODIFYDATE" jdbcType="TIMESTAMP"/>
+		<result property="modifier" column="MODIFIER" jdbcType="VARCHAR"/>
+		<result property="content" column="CONTENT" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		TNT_ROUTE_RULE_ID,
+		RULEDATE,
+		UNITID,
+		DISORCHANNELID,
+		DISORCHANNELNAME,
+		ISLOCKUP,
+		ISCOMMONRULE,
+		ADULTTYPE,
+		ADULTMODE,
+		ADULTVALUE,
+		CHILDTYPE,
+		CHILDMODE,
+		CHILDVALUE,
+		ROOMDIFFERENCESTYPE,
+		ROOMDIFFERENCESMODE,
+		ROOMDIFFERENCESVALUE
+	</sql>
+
+	<insert id="insertOrUpdateRouteRule" parameterType="java.util.List">
+			merge into lvmama_pet.TNT_ROUTE_RULE ru using
+			(
+			<foreach collection="list" item="item" index="index" separator="union">
+				(select 
+				#{item.unitId} as unitId,
+				#{item.disOrChannelId} as disOrChannelId,
+				#{item.isCommonRule} as isCommonRule 
+				from dual) 
+			</foreach>
+			)t1
+				on (
+					t1.unitId = ru.unitId and t1.isCommonRule = ru.isCommonRule and t1.disOrChannelId = ru.disOrChannelId) 
+			when matched then 
+			update
+			<set>
+				<if test="item.isLockup != null and item.isLockup != ''">
+					ISLOCKUP=#{item.isLockup},
+				</if>
+				<if test="item.adultType != null and item.adultType != ''">
+					ADULTTYPE=#{item.adultType},
+				</if>
+				<if test="item.adultMode != null and item.adultMode != ''">
+					ADULTMODE=#{item.adultMode},
+				</if>
+				<if test="item.adultValue != null and item.adultValue != ''">
+					ADULTVALUE=#{item.adultValue},
+				</if>
+				<if test="item.childType != null and item.childType != ''">
+					CHILDTYPE=#{item.childType},
+				</if>
+				<if test="item.childMode != null and item.childMode != ''">
+					CHILDMODE=#{item.childMode},
+				</if>
+				<if test="item.childValue != null and item.childValue != ''">
+					CHILDVALUE=#{item.childValue},
+				</if>
+				<if test="item.roomDifferencesType != null and item.roomDifferencesType != ''">
+					ROOMDIFFERENCESTYPE=#{item.roomDifferencesType},
+				</if>
+				<if test="item.roomDifferencesMode != null and item.roomDifferencesMode != ''">
+					ROOMDIFFERENCESMODE=#{item.roomDifferencesMode},
+				</if>
+				<if test="item.roomDifferencesValue != null and item.roomDifferencesValue != ''">
+					ROOMDIFFERENCESVALUE=#{item.roomDifferencesValue},
+				</if>
+					MODIFYDATE = sysdate
+			</set>
+			when not matched then 
+			insert
+			<selectKey resultType="java.lang.Long" keyProperty="routeRuleId"
+				order="BEFORE">
+				select TNT_ROUTE_RULE_SEQ.nextval from dual
+			</selectKey>
+			<trim prefix="(" suffix=")" suffixOverrides="," > 
+					TNT_ROUTE_RULE_Id,
+					unitId,
+					disOrChannelId,
+				<if test="item.disOrChannelName != null and item.disOrChannelName != ''">
+					disOrChannelName,
+				</if>
+				<if test="item.isLockup != null and item.isLockup != ''">
+					isLockup,
+				</if>
+				<if test="item.isCommonRule != null and item.isCommonRule != ''">
+					isCommonRule,
+				</if>
+				<if test="item.adultType != null and item.adultType != ''">
+					adultType,
+				</if>
+				<if test="item.adultMode != null and item.adultMode != ''">
+					adultMode,
+				</if>
+				<if test="item.adultValue != null and item.adultValue != ''">
+					adultValue,
+				</if>
+				<if test="item.childType != null and item.childType != ''">
+					childType,
+				</if>
+				<if test="item.childMode != null and item.childMode != ''">
+					childMode,
+				</if>
+				<if test="item.childValue != null and item.childValue != ''">
+					childValue,
+				</if>
+				<if test="item.roomDifferencesType != null and item.roomDifferencesType != ''">
+					roomDifferencesType,
+				</if>
+				<if test="item.roomDifferencesMode != null and item.roomDifferencesMode != ''">
+					roomDifferencesMode,
+				</if>
+				<if test="item.roomDifferencesValue != null and item.roomDifferencesValue != ''">
+					roomDifferencesValue
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides="," >  
+					#{routeRuleId},
+					#{item.unitId},
+					#{item.disOrChannelId},
+				<if test="item.disOrChannelName != null and item.disOrChannelName != ''">
+					#{item.disOrChannelName},
+				</if>
+				<if test="item.isLockup != null and item.isLockup != ''">
+					#{item.isLockup},
+				</if>
+				<if test="item.isCommonRule != null and item.isCommonRule != ''">
+					#{item.isCommonRule},
+				</if>
+				<if test="item.adultType != null and item.adultType != ''">
+					#{item.adultType},
+				</if>
+				<if test="item.adultMode != null and item.adultMode != ''">
+					#{item.adultMode},
+				</if>
+				<if test="item.adultValue != null and item.adultValue != ''">
+					#{item.adultValue},
+				</if>
+				<if test="item.childType != null and item.childType != ''">
+					#{item.childType},
+				</if>
+				<if test="item.childMode != null and item.childMode != ''">
+					#{item.childMode},
+				</if>
+				<if test="item.childValue != null and item.childValue != ''">
+					#{item.childValue},
+				</if>
+				<if test="item.roomDifferencesType != null and item.roomDifferencesType != ''">
+					#{item.roomDifferencesType},
+				</if>
+				<if test="item.roomDifferencesMode != null and item.roomDifferencesMode != ''">
+					#{item.roomDifferencesMode},
+				</if>
+				<if test="item.roomDifferencesValue != null and item.roomDifferencesValue != ''">
+					#{item.roomDifferencesValue}
+				</if>
+			</trim>
+	</insert>
+
+	<select id="queryRouteRule" parameterType="com.lvmama.comm.tnt.po.RouteRuleVO" resultMap="baseResultMap">
+		select 
+		<include refid="columns"/>
+		from lvmama_pet.TNT_ROUTE_RULE ru
+		<where>
+			1 =1 
+			<if test="ruleDate != null and ruleDate != ''">
+				and ru.RULEDATE=#{ruleDate}
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and ru.UNITID = #{unitId} 
+			</if>
+			<if test="disOrChannelId != null and disOrChannelId != ''">
+				and ru.DISORCHANNELID = #{disOrChannelId} 
+			</if>
+			<if test="isCommonRule != null and isCommonRule != ''">
+				and ru.ISCOMMONRULE = #{isCommonRule}
+			</if>
+			<if test="isLockup != null and isLockup != ''">
+				and ru.ISLOCKUP = #{isLockup}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryRouteRuleByParams" parameterType="java.util.Map" resultMap="baseResultMap">
+		select <include refid="columns"/>
+			from TNT_ROUTE_RULE ru
+		<where>
+			<if test="unitId != null and unitId !=''">
+				ru.UNITID = #{unitId}
+			</if>
+			<if test="userId != null and userId !=''">
+				ru.DISORCHANNELID = #{userId}
+			</if>
+			<if test="dates != null">
+				ru.RULEDATE in
+				<foreach collection="dates" index="index" item="date" open="(" close=")" separator=",">
+					#{date}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryLogs" resultMap="baseLogResultMap" parameterType="java.util.Map">
+	select * from 
+		(select A.*,ROWNUM RN from 
+			(select * from TNT_ROUTE_TIMEPRICE_LOG log where log.unitId = #{unitId} and log.DISORCHANNELID = #{disOrChannelId} order by log.createDate desc) A 
+			<![CDATA[ WHERE ROWNUM <= #{end} ]]>)
+			 where RN >= #{start} 
+	</select>
+	<select id="countLogs" parameterType="com.lvmama.comm.tnt.po.RouteRuleVO" resultType="long">
+		select count(*) from TNT_ROUTE_TIMEPRICE_LOG log where log.unitId = #{unitId} and log.DISORCHANNELID = #{disOrChannelId}
+	</select>
+	<insert id="insertRuleChangeLog" parameterType="com.lvmama.tnt.routeTimePrice.vo.B2BTimePriceLogVO">
+		<selectKey resultType="java.lang.Long" keyProperty="timePriceLogId" order="BEFORE">
+				select TNT_ROUTE_TIMEPRICE_LOG_SEQ.nextval from dual
+		</selectKey>
+		insert into TNT_ROUTE_TIMEPRICE_LOG 
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+				timePriceLogId,
+				unitId,
+				disOrChannelId,
+			<if test="isCommonRule != null and  isCommonRule != '' ">
+				isCommonRule,
+			</if>
+			<if test="dateBetween != null and  dateBetween != '' ">
+				dateBetween,
+			</if>
+				modifyDate,
+			<if test="modifier != null and  modifier != '' ">
+				modifier,
+			</if>
+			<if test="content != null and  content != '' ">
+				content,
+			</if>
+				createDate
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+				#{timePriceLogId},
+				#{unitId},
+				#{disOrChannelId},
+			<if test="isCommonRule != null and  isCommonRule != '' ">
+				#{isCommonRule},
+			</if>
+			<if test="dateBetween != null and  dateBetween != '' ">
+				#{dateBetween},
+			</if>
+				sysdate,
+			<if test="modifier != null and  modifier != '' ">
+				#{modifier},
+			</if>
+			<if test="content != null and  content != '' ">
+				#{content},
+			</if>
+				sysdate
+		</trim>
+	
+	</insert>
+	
+	<update id="update" parameterType="com.lvmama.comm.tnt.po.RouteRuleVO">
+		update TNT_ROUTE_RULE
+			<set>
+				ISLOCKUP=#{isLockup,jdbcType=VARCHAR},
+				ADULTTYPE=#{adultType,jdbcType=VARCHAR},
+				ADULTMODE=#{adultMode,jdbcType=VARCHAR},
+				ADULTVALUE=#{adultValue,jdbcType=DECIMAL},
+				CHILDTYPE=#{childType,jdbcType=VARCHAR},
+				CHILDMODE=#{childMode,jdbcType=VARCHAR},
+				CHILDVALUE=#{childValue,jdbcType=DECIMAL},
+				ROOMDIFFERENCESTYPE=#{roomDifferencesType,jdbcType=VARCHAR},
+				ROOMDIFFERENCESMODE=#{roomDifferencesMode,jdbcType=VARCHAR},
+				ROOMDIFFERENCESVALUE=#{roomDifferencesValue,jdbcType=DECIMAL},
+				MODIFYDATE = sysdate
+			</set>
+		<where>
+			1 =1 
+			<if test="ruleDate != null and ruleDate != ''">
+				and RULEDATE = #{ruleDate}
+			</if>
+			<if test="unitId != null and unitId != ''">
+				and UNITID = #{unitId} 
+			</if>
+			<if test="disOrChannelId != null and disOrChannelId != ''">
+				and DISORCHANNELID = #{disOrChannelId} 
+			</if>
+			<if test="isCommonRule != null and isCommonRule != ''">
+				and ISCOMMONRULE = #{isCommonRule}
+			</if>
+			<if test="isLockup != null and isLockup != ''">
+				and ISLOCKUP = #{isLockup}
+			</if>
+		</where>
+	</update>
+
+</mapper>
+

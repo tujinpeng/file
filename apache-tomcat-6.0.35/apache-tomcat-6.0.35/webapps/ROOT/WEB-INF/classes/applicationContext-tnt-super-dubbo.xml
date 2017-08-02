@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://code.alibabatech.com/schema/dubbo
+						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+       default-autowire="byName">
+	<!-- tnt-sorder依赖 -->
+	<dubbo:reference id="prodProductService" interface="com.lvmama.comm.bee.service.prod.ProdProductService"/>
+	<dubbo:reference id="orderBatchService" interface="com.lvmama.comm.bee.service.ord.OrderBatchService"/>
+	<dubbo:reference id="prodProductBranchService" interface="com.lvmama.comm.bee.service.prod.ProdProductBranchService"/>
+	<dubbo:reference id="orderServiceProxy" interface="com.lvmama.comm.bee.service.ord.OrderService"/>
+	<dubbo:reference id="passCodeService" interface="com.lvmama.comm.bee.service.pass.PassCodeService"/>
+	<dubbo:reference id="vstTimePriceService" interface="com.lvmama.comm.bee.service.prod.VstTimePriceService"/>
+	<dubbo:reference id="tntSuppGoodsTimePriceService" interface="com.lvmama.comm.tnt.service.TntSuppGoodsTimePriceService" group="tnt_sorder"/>
+	
+	<!-- REFUND -->
+	<dubbo:reference id="ordSaleServiceService" interface="com.lvmama.comm.pet.service.sale.OrdSaleServiceService"/>
+	<!-- tnt-dist 额外依赖-->
+	<dubbo:reference id="unityProductService" interface="com.lvmama.comm.bee.service.prod.UnityProductService"/>
+	<dubbo:reference id="pageService" interface="com.lvmama.comm.bee.service.prod.PageService"/>
+	<dubbo:reference id="prodProductRoyaltyService" interface="com.lvmama.comm.bee.service.prod.ProdProductRoyaltyService"/>
+	<dubbo:reference id="unityOrderService" interface="com.lvmama.comm.bee.service.ord.UnityOrderService"/>
+	<dubbo:reference id="distProdTimePriceService" interface="com.lvmama.comm.bee.service.dist.DistProdTimePriceService"/>
+	<dubbo:reference id="smsHistoryService" interface="com.lvmama.comm.bee.service.com.ISmsHistoryService"/>
+	<dubbo:reference id="prodProductPlaceService" interface="com.lvmama.comm.bee.service.prod.ProdProductPlaceService"/>
+	<dubbo:reference id="unityProductPlaceService" interface="com.lvmama.comm.bee.service.prod.UnityProductPlaceService"/>
+	<dubbo:reference id="viewPageJourneyTipsService" interface="com.lvmama.comm.bee.service.view.ViewPageJourneyTipsService"/>
+	<dubbo:reference id="beeProdProductService" interface="com.lvmama.comm.bee.service.prod.BeeProdProductService" />
+    <dubbo:reference id="prodProductHeadService" interface="com.lvmama.comm.pet.service.prod.ProdProductHeadService" />
+	<dubbo:reference id="receiverUserService" interface="com.lvmama.comm.pet.service.user.IReceiverUserService"/>
+    <bean id="productServiceProxy" class="com.lvmama.comm.pet.service.prod.ProductServiceProxy">
+        <property name="beeProdProductService" ref="beeProdProductService"/>
+    </bean>
+    <dubbo:reference id="ordOrderStatusService" interface="com.lvmama.comm.pet.service.sale.OrdOrderStatusService"/>
+    <dubbo:reference id="ordRefundApplyService" interface="com.lvmama.comm.pet.service.sale.OrdRefundApplyService"/>
+    <dubbo:reference id="ordRefundMentService" interface="com.lvmama.comm.pet.service.sale.OrdRefundMentService"/>
+    <dubbo:reference id="distributionOrderServiceProxy" interface="com.lvmama.comm.bee.service.ord.DistributionOrderService"/>
+		
+    <!-- tnt_back 额外依赖 -->
+    <dubbo:reference id="unityOrderExpandService" interface="com.lvmama.comm.bee.service.ord.UnityOrderExpandService"/>
+    <dubbo:reference id="opTravelGroupService" interface="com.lvmama.comm.bee.service.op.IOpTravelGroupService"/>
+    <dubbo:reference id="ordOrderSHHolidayService" interface="com.lvmama.comm.bee.service.ord.OrdOrderSHHolidayService"/>
+    <dubbo:reference id="orderItemMetaAperiodicService" interface="com.lvmama.comm.bee.service.ord.OrderItemMetaAperiodicService"/>
+    <dubbo:reference id="viewPageService" interface="com.lvmama.comm.bee.service.view.ViewPageService"/>
+    <dubbo:reference id="orderRefundService" interface="com.lvmama.comm.pet.service.sale.OrderRefundService"/>
+    <dubbo:reference id="ordEContractService" interface="com.lvmama.comm.pet.service.econtract.OrdEContractService"/>
+    <dubbo:reference id="comAffixService" interface="com.lvmama.comm.pet.service.pub.ComAffixService"/>
+    <dubbo:reference id="ordOrderChannelService" interface="com.lvmama.comm.pet.service.ord.OrdOrderChannelService"/>
+    <dubbo:reference id="vstSeckillService" interface="com.lvmama.comm.vst.service.VstSeckillService"/>
+    <!-- tnt_sback 额外依赖 -->
+    <dubbo:reference id="comMessageService" interface="com.lvmama.comm.pet.service.pub.ComMessageService"/>
+    
+    <!-- tnt_clutter 额外依赖 -->
+    <dubbo:reference id="mobileTrainService" interface="com.lvmama.comm.pet.service.mobile.MobileTrainService"/>
+</beans>

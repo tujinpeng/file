@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntRecommendMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.vo.TntRecommend">
+        <result property="recommendId" column="RECOMMEND_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="recomType" column="RECOM_TYPE"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		RECOMMEND_ID,PRODUCT_ID,RECOM_TYPE,UPDATE_TIME,CREATE_TIME,CATEGORY_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.TntRecommend">
+		<selectKey resultType="java.lang.Long" keyProperty="recommendId"
+			order="BEFORE">
+			select  TNT_RECOMMEND_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_RECOMMEND (
+        	RECOMMEND_ID ,
+        	PRODUCT_ID ,
+        	RECOM_TYPE ,
+        	UPDATE_TIME ,
+        	CREATE_TIME ,
+        	CATEGORY_ID
+        ) VALUES (
+        	#{recommendId jdbcType=NUMERIC} ,
+        	#{productId jdbcType=NUMERIC} ,
+        	#{recomType jdbcType=NUMERIC} ,
+        	#{updateTime jdbcType=TIMESTAMP} ,
+        	#{createTime jdbcType=TIMESTAMP} ,
+        	#{categoryId jdbcType=NUMERIC} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.TntRecommend">
+        UPDATE TNT_RECOMMEND SET
+	        PRODUCT_ID = #{productId jdbcType=NUMERIC} ,
+	        RECOM_TYPE = #{recomType jdbcType=NUMERIC} ,
+	        UPDATE_TIME = #{updateTime jdbcType=TIMESTAMP} ,
+	        CREATE_TIME = #{createTime jdbcType=TIMESTAMP} ,
+	        CATEGORY_ID = #{categoryId jdbcType=NUMERIC}
+        WHERE 
+        	<if test="recommendId !=null">
+	        	RECOMMEND_ID = #{recommendId jdbcType=NUMERIC} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_RECOMMEND WHERE
+        RECOMMEND_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_RECOMMEND 
+	        WHERE 
+		        RECOMMEND_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="recommendId != null and recommendId !=''">
+				AND RECOMMEND_ID = #{recommendId}
+	       	</if> 
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+	       	</if> 
+			<if test="recomType != null and recomType !=''">
+				AND RECOM_TYPE = #{recomType}
+	       	</if> 
+			<if test="updateTime != null and updateTime !=''">
+				AND UPDATE_TIME = #{updateTime}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if>
+	       	<if test="categoryId != null and categoryId !=''">
+				AND CATEGORY_ID = #{categoryId}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.recommendId != null and param.recommendId !=''">
+				AND RECOMMEND_ID = param.recommendId
+	       	</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = param.productId
+	       	</if>
+			<if test="param.recomType != null and param.recomType !=''">
+				AND RECOM_TYPE = param.recomType
+	       	</if>
+			<if test="param.updateTime != null and param.updateTime !=''">
+				AND UPDATE_TIME = param.updateTime
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = param.createTime
+	       	</if>
+	       	<if test="param.categoryId != null and param.categoryId !=''">
+				AND CATEGORY_ID = param.categoryId
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.TntRecommend">
+        SELECT count(*) FROM TNT_RECOMMEND 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_RECOMMEND 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+	<select id="getListByRecomType" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_RECOMMEND 
+	    WHERE RECOM_TYPE <![CDATA[=]]> #{recomTypeParam}
+	    	AND CATEGORY_ID <![CDATA[=]]> #{categoryId}
+	    ORDER BY RECOMMEND_ID
+    </select>
+    
+    <delete id="deleteByRecomType" parameterType="java.util.Map">
+    	DELETE FROM TNT_RECOMMEND 
+	    WHERE RECOM_TYPE <![CDATA[=]]> #{recomTypeParam}
+	    	AND CATEGORY_ID <![CDATA[=]]> #{categoryId}
+    </delete>
+</mapper>
+

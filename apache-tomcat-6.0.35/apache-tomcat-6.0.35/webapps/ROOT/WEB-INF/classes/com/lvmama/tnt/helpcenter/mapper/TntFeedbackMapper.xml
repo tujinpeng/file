@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.helpcenter.mapper.TntFeedbackMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntFeedback">
+	    <result property="feedbackId" column="FEEDBACK_ID"/>
+	    <result property="feedbackUserId" column="FEEDBACK_USER_ID"/>
+	    <result property="feedbackUserName" column="FEEDBACK_USER_NAME"/>
+	    <result property="feedbackQuestion" column="FEEDBACK_QUESTION"/>
+	    <result property="feedbackAnswer" column="FEEDBACK_ANSWER"/>
+	    <result property="feedbackTime" column="FEEDBACK_TIME"/>
+	    <result property="responsePerson" column="RESPONSE_PERSON"/>
+	    <result property="isFaq" column="IS_FAQ"/>
+	    <result property="feedbackStatus" column="FEEDBACK_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.lvmama.tnt.user.po.TntFeedback" id="listResultMap" extends="baseResultMap">
+		 <result property="feedbackUserMobile" column="FEEDBACK_USER_MOBILE"/>
+	     <result property="feedbackUserEmail" column="FEEDBACK_USER_EMAIL"/>
+	     <result property="responseTime" column="RESPONSE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		FEEDBACK_ID,FEEDBACK_USER_ID,FEEDBACK_USER_NAME,FEEDBACK_QUESTION,FEEDBACK_ANSWER,FEEDBACK_TIME,RESPONSE_PERSON,IS_FAQ,FEEDBACK_STATUS
+	    ]]>
+	</sql>
+
+	<sql id="listcolumns">
+	    <![CDATA[
+		feedBack.FEEDBACK_ID,feedBack.FEEDBACK_USER_ID,feedBack.FEEDBACK_USER_NAME,feedBack.FEEDBACK_QUESTION,feedBack.FEEDBACK_ANSWER,feedBack.FEEDBACK_TIME,feedBack.RESPONSE_PERSON,feedBack.RESPONSE_TIME,feedBack.IS_FAQ,feedBack.FEEDBACK_STATUS,
+		userDetail.Mobile_Number as feedback_user_mobile,userDetail.Email  feedback_user_email
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.user.po.TntFeedback">
+		<selectKey resultType="java.lang.Long" keyProperty="feedbackId" order="BEFORE">
+			select  TNT_FEEDBACK_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_FEEDBACK (
+        	FEEDBACK_ID ,
+        	FEEDBACK_USER_ID ,
+        	FEEDBACK_USER_NAME ,
+        	FEEDBACK_QUESTION ,
+        	FEEDBACK_TIME ,
+        	FEEDBACK_STATUS ,
+        	IS_FAQ 
+        ) VALUES (
+        	#{feedbackId} ,
+        	#{feedbackUserId} ,
+        	#{feedbackUserName,jdbcType=VARCHAR} ,
+        	#{feedbackQuestion,jdbcType=VARCHAR} ,
+        	sysdate,
+        	#{feedbackStatus,jdbcType=VARCHAR} ,
+        	#{isFaq,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.user.po.TntFeedback">
+        UPDATE TNT_FEEDBACK SET
+        	<if test="feedbackAnswer != null">
+				FEEDBACK_ANSWER = #{feedbackAnswer},
+			</if>
+	        <if test="responsePerson != null">
+	          	RESPONSE_PERSON = #{responsePerson} ,
+	        </if>
+	        <if test="responseTime != null">
+	        	RESPONSE_TIME = #{responseTime},
+	        </if>
+	        <if test="feedbackStatus != null">
+	       		 FEEDBACK_STATUS = #{feedbackStatus}
+	        </if>
+        WHERE 
+        	<if test="feedbackId !=null">
+	        	FEEDBACK_ID = #{feedbackId} 
+	        </if>
+	</update>
+
+
+	<update id="setFAQStatus">
+		 UPDATE TNT_FEEDBACK SET
+		        <if test="isFaq != null and isFaq !=''">
+					 IS_FAQ = #{isFaq}
+		       	</if> 
+	        WHERE 
+	        	<if test="feedbackId !=null">
+		        	FEEDBACK_ID = #{feedbackId} 
+		        </if>
+	</update>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_FEEDBACK 
+	        WHERE 
+		        FEEDBACK_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="feedbackId != null and feedbackId !=''">
+				AND FEEDBACK_ID = #{feedbackId}
+	       	</if> 
+			<if test="feedbackUserId != null and feedbackUserId !=''">
+				AND FEEDBACK_USER_ID = #{feedbackUserId}
+	       	</if> 
+			<if test="feedbackQuestion != null and feedbackQuestion !=''">
+				AND FEEDBACK_QUESTION = #{feedbackQuestion}
+	       	</if> 
+			<if test="feedbackAnswer != null and feedbackAnswer !=''">
+				AND FEEDBACK_ANSWER = #{feedbackAnswer}
+	       	</if> 
+			<if test="feedbackTime != null and feedbackTime !=''">
+				AND FEEDBACK_TIME = #{feedbackTime}
+	       	</if> 
+			<if test="responsePerson != null and responsePerson !=''">
+				AND RESPONSE_PERSON = #{responsePerson}
+	       	</if> 
+			<if test="isFaq != null and isFaq !=''">
+				AND IS_FAQ = #{isFaq}
+	       	</if> 
+			<if test="feedbackStatus != null and feedbackStatus !=''">
+				AND FEEDBACK_STATUS = #{feedbackStatus}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+			<if test="param.feedbackId != null and param.feedbackId !=''">
+				AND FEEDBACK_ID = #{param.feedbackId}
+	       	</if>
+			<if test="param.feedbackUserId != null and param.feedbackUserId !=''">
+				AND FEEDBACK_USER_ID = #{param.feedbackUserId}
+	       	</if>
+			<if test="param.feedbackQuestion != null and param.feedbackQuestion !=''">
+				AND FEEDBACK_QUESTION = #{param.feedbackQuestion}
+	       	</if>
+			<if test="param.feedbackAnswer != null and param.feedbackAnswer !=''">
+				AND FEEDBACK_ANSWER = #{param.feedbackAnswer}
+	       	</if>
+			<if test="param.feedbackTime != null and param.feedbackTime !=''">
+				AND FEEDBACK_TIME = #{param.feedbackTime}
+	       	</if>
+			<if test="param.responsePerson != null and param.responsePerson !=''">
+				AND RESPONSE_PERSON = #{param.responsePerson}
+	       	</if>
+			<if test="param.isFaq != null and param.isFaq !=''">
+				AND IS_FAQ = #{param.isFaq}
+	       	</if>
+			<if test="param.feedbackStatus != null and param.feedbackStatus !=''">
+				AND FEEDBACK_STATUS = #{param.feedbackStatus}
+	       	</if>
+	       <if test="param.beginfeedbackdate!=null and param.endfeedbackdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME >= to_date(#{param.beginfeedbackdate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="param.beginfeedbackdate!=null and param.endfeedbackdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME <= to_date(#{param.param.endfeedbackdate!=},'yyyy-mm-dd')+1
+			]]>
+			</if>	
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.user.po.TntFeedback">
+        SELECT count(*) FROM TNT_FEEDBACK 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="listResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="listcolumns" />
+	    FROM TNT_FEEDBACK feedBack,TNT_USER_DETAIL userDetail
+      	WHERE feedBack.Feedback_User_Id=userDetail.User_Id(+)
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.routeTimePrice.mapper.RouteSuppVstTimePriceMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.routeTimePrice.vo.RoutePackageVstTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="unitId" column="UNIT_ID"/>
+        <result property="specDate" column="SPEC_DATE"/>
+        <result property="stockType" column="STOCK_TYPE"/>
+        <result property="stock" column="STOCK"/>
+        <result property="totalStock" column="TOTAL_STOCK"/>
+        <result property="oversellFlag" column="OVERSELL_FLAG"/>
+        <result property="adultOnSaleFlag" column="ADULT_ON_SALE_FLAG"/>
+        <result property="childOnSaleFlag" column="CHILD_ON_SALE_FLAG"/>
+        <result property="gapOnSaleFlag" column="GAP_ON_SALE_FLAG"/>
+        <result property="adultSettlementPrice" column="ADULT_SETTLEMENT_PRICE"/>
+        <result property="adultPrice" column="ADULT_PRICE"/>
+        <result property="childSettlementPrice" column="CHILD_SETTLEMENT_PRICE"/>
+        <result property="childPrice" column="CHILD_PRICE"/>
+        <result property="gapSettlementPrice" column="GAP_SETTLEMENT_PRICE"/>
+        <result property="gapPrice" column="GAP_PRICE"/>
+        <result property="aheadBookTime" column="AHEAD_BOOK_TIME"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="goodsStockFlag" column="GOODS_STOCK_FLAG"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TIME_PRICE_ID,UNIT_ID,SPEC_DATE,STOCK_TYPE,STOCK,TOTAL_STOCK,OVERSELL_FLAG,ADULT_ON_SALE_FLAG,CHILD_ON_SALE_FLAG,GAP_ON_SALE_FLAG,ADULT_SETTLEMENT_PRICE,ADULT_PRICE,CHILD_SETTLEMENT_PRICE,CHILD_PRICE,GAP_SETTLEMENT_PRICE,GAP_PRICE,AHEAD_BOOK_TIME,BOOK_LIMIT_TYPE,GOODS_STOCK_FLAG,UPDATE_TIME,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.routeTimePrice.vo.RoutePackageVstTimePrice">
+		<selectKey resultType="java.lang.Long" keyProperty="timePriceId"
+			order="BEFORE">
+			select  route_packagevsttimeprice_seq.nextval from dual
+		</selectKey>
+        INSERT INTO route_package_vst_time_price (
+        	TIME_PRICE_ID ,
+        	UNIT_ID ,
+        	SPEC_DATE ,
+        	STOCK_TYPE ,
+        	STOCK ,
+        	TOTAL_STOCK ,
+        	OVERSELL_FLAG ,
+        	ADULT_ON_SALE_FLAG ,
+       	  	CHILD_ON_SALE_FLAG,
+        	GAP_ON_SALE_FLAG,
+        	ADULT_SETTLEMENT_PRICE ,
+        	ADULT_PRICE ,
+        	CHILD_SETTLEMENT_PRICE ,
+        	CHILD_PRICE ,
+        	GAP_SETTLEMENT_PRICE ,
+        	GAP_PRICE ,
+        	AHEAD_BOOK_TIME ,
+        	BOOK_LIMIT_TYPE ,
+      		UPDATE_TIME,
+      		CREATE_TIME
+        ) VALUES (
+        	#{timePriceId jdbcType=NUMERIC} ,
+        	#{unitId jdbcType=NUMERIC},
+        	#{specDate jdbcType=DATE} ,
+        	#{stockType jdbcType=VARCHAR} ,
+        	#{stock jdbcType=NUMERIC} ,
+        	#{totalStock jdbcType=NUMERIC} ,
+        	#{oversellFlag jdbcType=VARCHAR} ,
+        	#{adultOnSaleFlag jdbcType=VARCHAR} ,
+       	  	#{childOnSaleFlag jdbcType=VARCHAR},
+        	#{gapOnSaleFlag jdbcType=VARCHAR},
+        	#{adultSettlementPrice jdbcType=NUMERIC} ,
+        	#{adultPrice jdbcType=NUMERIC} ,
+        	#{childSettlementPrice jdbcType=NUMERIC} ,
+        	#{childPrice jdbcType=NUMERIC} ,
+        	#{gapSettlementPrice jdbcType=NUMERIC} ,
+        	#{gapPrice jdbcType=NUMERIC} ,
+        	#{aheadBookTime jdbcType=NUMERIC} ,
+        	#{bookLimitType jdbcType=VARCHAR},
+      		sysdate,
+        	sysdate
+        )
+	</insert>
+    <insert id="merge" parameterType="java.util.List">
+		merge into route_package_vst_time_price r using 
+		(	
+			<foreach collection="list" index="index" item="item" open="" close="" separator="union">
+				select 
+					#{item.unitId jdbcType=NUMERIC} unitId,
+					#{item.specDate jdbcType=DATE} specDate,
+					#{item.stockType jdbcType=VARCHAR} stockType,
+					#{item.stock jdbcType=NUMERIC} stock,
+					#{item.totalStock jdbcType=NUMERIC} totalStock,
+					#{item.oversellFlag jdbcType=VARCHAR} oversellFlag,
+					#{item.adultOnSaleFlag jdbcType=VARCHAR} adultOnSaleFlag,
+					#{item.childOnSaleFlag jdbcType=VARCHAR} childOnSaleFlag,
+					#{item.gapOnSaleFlag jdbcType=VARCHAR} gapOnSaleFlag,
+					#{item.adultSettlementPrice jdbcType=NUMERIC} adultSettlementPrice,
+					#{item.adultPrice jdbcType=NUMERIC} adultPrice,
+					#{item.childSettlementPrice jdbcType=NUMERIC} childSettlementPrice,
+					#{item.childPrice jdbcType=NUMERIC} childPrice,
+					#{item.gapSettlementPrice jdbcType=NUMERIC} gapSettlementPrice,
+					#{item.gapPrice jdbcType=NUMERIC} gapPrice,
+					#{item.aheadBookTime jdbcType=NUMERIC} aheadBookTime,
+					#{item.bookLimitType jdbcType=VARCHAR} bookLimitType,
+					#{item.goodsStockFlag jdbcType=DECIMAL} goodsStockFlag 
+				from dual
+			 </foreach>
+		)tmp
+		on ( 
+			tmp.unitId = r.UNIT_ID 
+			and tmp.specDate = r.SPEC_DATE
+			)
+		when matched THEN
+		update
+			set
+			r.STOCK_TYPE = tmp.stockType,
+			r.STOCK = tmp.stock,
+			r.TOTAL_STOCK = tmp.totalStock,
+			r.OVERSELL_FLAG = tmp.oversellFlag,
+			r.ADULT_ON_SALE_FLAG = tmp.adultOnSaleFlag,
+			r.CHILD_ON_SALE_FLAG = tmp.childOnSaleFlag,
+			r.GAP_ON_SALE_FLAG = tmp.gapOnSaleFlag,
+			r.ADULT_SETTLEMENT_PRICE = tmp.adultSettlementPrice,
+			r.ADULT_PRICE = tmp.adultPrice,
+			r.CHILD_SETTLEMENT_PRICE = tmp.childSettlementPrice,
+			r.CHILD_PRICE =tmp.childPrice ,
+			r.GAP_SETTLEMENT_PRICE = tmp.gapSettlementPrice,
+			r.GAP_PRICE = tmp.gapPrice,
+			r.AHEAD_BOOK_TIME = tmp.aheadBookTime,
+			r.BOOK_LIMIT_TYPE = tmp.bookLimitType,
+			r.GOODS_STOCK_FLAG = tmp.goodsStockFlag,
+			r.UPDATE_TIME = sysdate
+		when not matched THEN
+		insert 
+		 <trim prefix="(" suffix=")" suffixOverrides="," > 
+			TIME_PRICE_ID ,
+        	UNIT_ID ,
+        	SPEC_DATE ,
+			STOCK_TYPE ,
+			STOCK ,
+			TOTAL_STOCK ,
+			OVERSELL_FLAG ,
+			ADULT_ON_SALE_FLAG ,
+			CHILD_ON_SALE_FLAG,
+			GAP_ON_SALE_FLAG,
+			ADULT_SETTLEMENT_PRICE,
+			ADULT_PRICE,
+			CHILD_SETTLEMENT_PRICE,
+			CHILD_PRICE,
+			GAP_SETTLEMENT_PRICE,
+			GAP_PRICE,
+			AHEAD_BOOK_TIME,
+			BOOK_LIMIT_TYPE,
+			GOODS_STOCK_FLAG,
+			UPDATE_TIME,
+			CREATE_TIME
+		 </trim>
+		 <trim  prefix="values (" suffix=")" suffixOverrides=",">
+			route_packagevsttimeprice_seq.nextval,
+			tmp.unitId,
+			tmp.specDate  ,
+			tmp.stockType ,
+			tmp.stock ,
+			tmp.totalStock,
+			tmp.oversellFlag  ,
+			tmp.adultOnSaleFlag ,
+			tmp.childOnSaleFlag ,
+			tmp.gapOnSaleFlag,
+			tmp.adultSettlementPrice ,
+			tmp.adultPrice,
+			tmp.childSettlementPrice,
+			tmp.childPrice ,
+			tmp.gapSettlementPrice  ,
+			tmp.gapPrice,
+			tmp.aheadBookTime ,
+			tmp.bookLimitType ,
+			tmp.goodsStockFlag ,
+			sysdate,
+			sysdate
+		</trim> 
+	</insert>
+	<update id="update" parameterType="com.lvmama.tnt.routeTimePrice.vo.RoutePackageVstTimePrice">
+        UPDATE route_package_vst_time_price SET
+	        SUPP_GOODS_ID = #{suppGoodsId jdbcType=NUMERIC},
+	        SUPPLIER_ID = #{supplierId jdbcType=NUMERIC},
+	        SPEC_DATE = #{specDate jdbcType=DATE} ,
+	        STOCK_TYPE = #{stockType jdbcType=VARCHAR} ,
+	        STOCK = #{stock jdbcType=NUMERIC} ,
+	        TOTAL_STOCK = #{totalStock jdbcType=NUMERIC} ,
+	        OVERSELL_FLAG = #{oversellFlag jdbcType=VARCHAR} ,
+	        ADULT_ON_SALE_FLAG = #{adultOnSaleFlag jdbcType=VARCHAR} ,
+	        ADULT_SETTLEMENT_PRICE = #{adultSettlementPrice jdbcType=NUMERIC} ,
+	        ADULT_PRICE = #{adultPrice jdbcType=NUMERIC} ,
+	        CHILD_SETTLEMENT_PRICE = #{childSettlementPrice jdbcType=NUMERIC} ,
+	        CHILD_PRICE = #{childPrice jdbcType=NUMERIC} ,
+	        GAP_SETTLEMENT_PRICE = #{gapSettlementPrice jdbcType=NUMERIC} ,
+	        GAP_PRICE =#{gapPrice jdbcType=NUMERIC} ,
+	        AHEAD_BOOK_TIME = #{aheadBookTime jdbcType=NUMERIC} ,
+	        BOOK_LIMIT_TYPE = #{bookLimitType jdbcType=VARCHAR} ,
+	        CHILD_ON_SALE_FLAG = #{childOnSaleFlag jdbcType=VARCHAR} ,
+	        GAP_ON_SALE_FLAG = #{gapOnSaleFlag jdbcType=VARCHAR},
+	        UPDATE_TIME = sysdate
+        WHERE 
+        	<if test="unitId !=null">
+	        	UNIT_ID = #{unitId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM route_package_vst_time_price WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM route_package_vst_time_price 
+	        WHERE 
+		        UNIT_ID = #{unitId} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="timePriceId != null and timePriceId !=''">
+				AND TIME_PRICE_ID = #{timePriceId}
+	       	</if> 
+			<if test="unitId != null and unitId !=''">
+				AND UNIT_ID = #{unitId}
+	       	</if> 
+			<if test="specDate != null and specDate !=''">
+				AND SPEC_DATE = #{specDate}
+	       	</if> 
+			<if test="stockType != null and stockType !=''">
+				AND STOCK_TYPE = #{stockType}
+	       	</if> 
+			<if test="stock != null and stock !=''">
+				AND STOCK = #{stock}
+	       	</if> 
+			<if test="totalStock != null and totalStock !=''">
+				AND TOTAL_STOCK = #{totalStock}
+	       	</if> 
+			<if test="oversellFlag != null and oversellFlag !=''">
+				AND OVERSELL_FLAG = #{oversellFlag}
+	       	</if> 
+			<if test="adultOnSaleFlag != null and adultOnSaleFlag !=''">
+				AND ADULT_ON_SALE_FLAG = #{adultOnSaleFlag}
+	       	</if> 
+			<if test="adultSettlementPrice != null and adultSettlementPrice !=''">
+				AND ADULT_SETTLEMENT_PRICE = #{adultSettlementPrice}
+	       	</if> 
+			<if test="adultPrice != null and adultPrice !=''">
+				AND ADULT_PRICE = #{adultPrice}
+	       	</if> 
+			<if test="childSettlementPrice != null and childSettlementPrice !=''">
+				AND CHILD_SETTLEMENT_PRICE = #{childSettlementPrice}
+	       	</if> 
+			<if test="childPrice != null and childPrice !=''">
+				AND CHILD_PRICE = #{childPrice}
+	       	</if> 
+			<if test="gapSettlementPrice != null and gapSettlementPrice !=''">
+				AND GAP_SETTLEMENT_PRICE = #{gapSettlementPrice}
+	       	</if> 
+			<if test="gapPrice != null and gapPrice !=''">
+				AND GAP_PRICE = #{gapPrice}
+	       	</if> 
+			<if test="aheadBookTime != null and aheadBookTime !=''">
+				AND AHEAD_BOOK_TIME = #{aheadBookTime}
+	       	</if> 
+			<if test="bookLimitType != null and bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = #{bookLimitType}
+	       	</if> 
+	       	<if test="childOnSaleFlag != null and childOnSaleFlag !=''">
+				AND CHILD_ON_SALE_FLAG = #{childOnSaleFlag}
+	       	</if> 
+	       	<if test="gapOnSaleFlag != null and gapOnSaleFlag !=''">
+				AND GAP_ON_SALE_FLAG = #{gapOnSaleFlag}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.timePriceId != null and param.timePriceId !=''">
+				AND TIME_PRICE_ID = param.timePriceId
+	       	</if>
+			<if test="param.unitId != null and param.unitId !=''">
+				AND UNIT_ID = param.unitId
+	       	</if>
+			<if test="param.specDate != null and param.specDate !=''">
+				AND SPEC_DATE = param.specDate
+	       	</if>
+			<if test="param.stockType != null and param.stockType !=''">
+				AND STOCK_TYPE = param.stockType
+	       	</if>
+			<if test="param.stock != null and param.stock !=''">
+				AND STOCK = param.stock
+	       	</if>
+			<if test="param.totalStock != null and param.totalStock !=''">
+				AND TOTAL_STOCK = param.totalStock
+	       	</if>
+			<if test="param.oversellFlag != null and param.oversellFlag !=''">
+				AND OVERSELL_FLAG = param.oversellFlag
+	       	</if>
+			<if test="param.adultOnSaleFlag != null and param.adultOnSaleFlag !=''">
+				AND ADULT_ON_SALE_FLAG = param.adultOnSaleFlag
+	       	</if>
+			<if test="param.adultSettlementPrice != null and param.adultSettlementPrice !=''">
+				AND ADULT_SETTLEMENT_PRICE = param.adultSettlementPrice
+	       	</if>
+			<if test="param.adultPrice != null and param.adultPrice !=''">
+				AND ADULT_PRICE = param.adultPrice
+	       	</if>
+			<if test="param.childSettlementPrice != null and param.childSettlementPrice !=''">
+				AND CHILD_SETTLEMENT_PRICE = param.childSettlementPrice
+	       	</if>
+			<if test="param.childPrice != null and param.childPrice !=''">
+				AND CHILD_PRICE = param.childPrice
+	       	</if>
+			<if test="param.gapSettlementPrice != null and param.gapSettlementPrice !=''">
+				AND GAP_SETTLEMENT_PRICE = param.gapSettlementPrice
+	       	</if>
+			<if test="param.gapPrice != null and param.gapPrice !=''">
+				AND GAP_PRICE = param.gapPrice
+	       	</if>
+			<if test="param.aheadBookTime != null and param.aheadBookTime !=''">
+				AND AHEAD_BOOK_TIME = param.aheadBookTime
+	       	</if>
+			<if test="param.bookLimitType != null and param.bookLimitType !=''">
+				AND BOOK_LIMIT_TYPE = param.bookLimitType
+	       	</if>
+	       	<if test="param.childOnSaleFlag != null and param.childOnSaleFlag !=''">
+				AND CHILD_ON_SALE_FLAG = param.childOnSaleFlag
+	       	</if>
+	       	<if test="param.gapOnSaleFlag != null and param.gapOnSaleFlag !=''">
+				AND GAP_ON_SALE_FLAG = param.gapOnSaleFlag
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.routeTimePrice.vo.RoutePackageVstTimePrice">
+        SELECT count(*) FROM route_package_vst_time_price 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM route_package_vst_time_price 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+    
+    <select id="selectSuppVstOneDayTimePrice" resultMap="baseResultMap">
+    	SELECT <include refid="columns" />
+	    FROM route_package_vst_time_price 
+	    WHERE unit_Id = #{unitId}
+	    AND SPEC_DATE<![CDATA[=]]>TO_DATE(#{oneDay},'YYYY-MM-DD')
+    </select>
+    
+    <select id="selectSuppVstTimePriceByPeriod" resultMap="baseResultMap">	   
+	    SELECT <include refid="columns" />
+	    	FROM route_package_vst_time_price
+	    <where>
+	    	<if test="unitId!=null and unitId!=''">
+	    		UNIT_ID = #{unitId}
+	    	</if>
+	    	<if test="beginDate!=null and beginDate!=''">
+	    		AND SPEC_DATE<![CDATA[>=]]>TO_DATE(#{beginDate},'YYYYMMDD')
+	    	</if>
+	    	<if test="endDate!=null and endDate!=''">
+	    		AND SPEC_DATE<![CDATA[<=]]>TO_DATE(#{endDate},'YYYYMMDD')
+	    	</if>
+	    </where> 
+	</select>
+	
+	<select id="selectSuppVstTimePriceByDates" resultMap="baseResultMap">	   
+	    SELECT <include refid="columns" />
+	    FROM route_package_vst_time_price r
+	    WHERE r.UNIT_ID = #{unitId}
+	    	AND r.SPEC_DATE in
+	    <foreach collection="dates" index="index" item="date" open="(" close=")" separator=",">
+	    	TO_DATE(#{date},'YYYY-MM-DD')
+	    </foreach>
+	</select>
+	
+	<select id="queryMaxSpecDate" resultType="date">
+		select max(SPEC_DATE) 
+		FROM route_package_vst_time_price r
+		<where>
+			<if test="unitId!='' and unitId!=null">
+				r.UNIT_ID = #{unitId}
+			</if>
+			<if test="dateTime!='' and dateTime!=null">
+				and r.SPEC_DATE <![CDATA[ > ]]> TO_DATE(#{dateTime},'YYYY-MM-DD')
+			</if>
+		</where>
+	</select>
+	
+	<select id="findOnsaleRecentDate" resultMap="baseResultMap">
+		SELECT <include refid="columns" />
+		FROM route_package_vst_time_price r
+		WHERE r.unit_id=#{unitId}
+			AND r.spec_date>=sysdate
+			AND r.adult_on_sale_flag = 'Y'
+			AND r.adult_price is not null
+		ORDER BY r.adult_price asc
+	</select>
+
+	<select id="findEarlyDatePrice" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		FROM route_package_vst_time_price r
+		WHERE r.unit_id = #{unitId}
+		AND r.spec_date >= #{startDate}
+		AND r.spec_date <![CDATA[<=]]> #{endDate}
+		AND (r.adult_on_sale_flag = 'Y' OR r.adult_on_sale_flag = '' OR r.adult_on_sale_flag is null)
+		AND r.adult_price is not null
+		ORDER BY r.spec_date asc
+	</select>
+	
+</mapper>

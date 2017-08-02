@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntProdPolicyMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntProdPolicy">
+		<result property="tntPolicyId" column="TNT_POLICY_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="targetId" column="TARGET_ID" />
+		<result property="targetType" column="TARGET_TYPE" />
+		<result property="policyType" column="POLICY_TYPE" />
+		<result property="discount" column="DISCOUNT" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="userId" column="USER_ID" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+		<result property="companyName" column="COMPANY_NAME" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="cashback" column="CASHBACK" />
+		<result property="cashbackAmount" column="CASHBACKAMOUNT" />
+		<result property="cashbackLock" column="CASHBACKLOCK" />
+		<result property="commission" column="COMMISSION" />
+		<result property="commissionRate" column="COMMISSIONRATE" />
+		<result property="commissionVolid" column="COMMISSIONVOLID" />
+		<result property="couponRuleId" column="COUPON_RULE_ID" />
+		<!-- <association property="user" javaType="tntUser"> <id property="userId" column="USER_ID" /> <result property="realName" 
+			column="REAL_NAME" /> <result property="detail.companyTypeId" column="COMPANY_TYPE_ID" /> </association> -->
+	</resultMap>
+
+	<resultMap type="com.lvmama.tnt.prod.po.TntProdPolicy" id="withRuleResultMap" extends="baseResultMap">
+		<id column="RN" />
+		<result property="couponName" column="COUPON_NAME" />
+		<association property="couponRule" javaType="com.lvmama.tnt.coupon.pojo.TntCouponRule">
+			<id property="tntCouponRuleId" column="TNT_COUPON_RULE_ID" />
+			<result property="couponId" column="COUPON_ID" />
+			<result property="parentCategoryId" column="PARENT_CATEGORY_ID" />
+			<result property="categoryId" column="CATEGORY_ID" />
+			<result property="productStatus" column="PRODUCT_STATUS" />
+			<result property="goodsStatus" column="GOODS_STATUS" />
+			<result property="goodsSpec" column="GOODS_SPEC" />
+			<result property="payTarget" column="PAY_TARGET" />
+		</association>
+	</resultMap>
+
+	<resultMap id="simplePolicyResult" type="com.lvmama.tnt.prod.vo.SimpleTntProdPolicy">
+		<result property="tntPolicyId" column="TNT_POLICY_ID" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="targetId" column="TARGET_ID" />
+		<result property="targetType" column="TARGET_TYPE" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_POLICY_ID,PRODUCT_ID,BRANCH_ID,TARGET_ID,TARGET_TYPE,POLICY_TYPE,DISCOUNT,PRODUCT_TYPE,CASHBACK,CASHBACKAMOUNT,CASHBACKLOCK,COMMISSION,COMMISSIONRATE,COMMISSIONVOLID,COUPON_RULE_ID
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		<selectKey resultType="java.lang.Long" keyProperty="tntPolicyId" order="BEFORE">
+			select TNT_PROD_POLICY_ID_SEQ.nextval
+			from dual
+		</selectKey>
+		INSERT INTO TNT_PROD_POLICY (
+		TNT_POLICY_ID ,
+		PRODUCT_ID ,
+		BRANCH_ID ,
+		TARGET_ID ,
+		TARGET_TYPE ,
+		POLICY_TYPE ,
+		PRODUCT_TYPE ,
+		DISCOUNT,
+		CASHBACK,
+		CASHBACKAMOUNT,
+		CASHBACKLOCK,
+		COMMISSION,
+		COMMISSIONRATE,
+		COMMISSIONVOLID,
+		COUPON_RULE_ID
+		) VALUES (
+		#{tntPolicyId,jdbcType=DECIMAL} ,
+		#{productId,jdbcType=DECIMAL} ,
+		#{branchId,jdbcType=DECIMAL} ,
+		#{targetId,jdbcType=DECIMAL} ,
+		#{targetType,jdbcType=VARCHAR} ,
+		#{policyType,jdbcType=VARCHAR} ,
+		#{productType,jdbcType=VARCHAR} ,
+		#{discount,jdbcType=DECIMAL},
+		#{cashback,jdbcType=VARCHAR},
+		#{cashbackAmount,jdbcType=DECIMAL},
+		#{cashbackLock,jdbcType=VARCHAR},
+		#{commission,jdbcType=VARCHAR},
+		#{commissionRate,jdbcType=DECIMAL},
+		#{commissionVolid,jdbcType=VARCHAR},
+		#{couponRuleId,jdbcType=DECIMAL}
+		)
+	</insert>
+
+	<update id="updateById" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		UPDATE TNT_PROD_POLICY SET
+		DISCOUNT = #{discount,jdbcType=DECIMAL}
+		<if test="productId != null and productId !=''">
+			, PRODUCT_ID = #{productId,jdbcType=DECIMAL}
+		</if>
+		<if test="branchId != null and branchId !=''">
+			, BRANCH_ID = #{branchId,jdbcType=DECIMAL}
+		</if>
+		<if test="targetType != null and targetType !=''">
+			, TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+		</if>
+		<if test="targetId != null and targetId !=''">
+			, TARGET_ID = #{targetId,jdbcType=DECIMAL}
+		</if>
+		<if test="policyType != null and policyType !=''">
+			, POLICY_TYPE = #{policyType,jdbcType=VARCHAR}
+		</if>
+		<if test="productType != null and productType !=''">
+			, PRODUCT_TYPE = #{productType,jdbcType=VARCHAR}
+		</if>
+		<if test="cashback != null and cashback !=''">
+			, CASHBACK = #{cashback,jdbcType=VARCHAR}
+		</if>
+		<if test="cashbackAmount != null">
+			, CASHBACKAMOUNT = #{cashbackAmount,jdbcType=DECIMAL}
+		</if>
+		<if test="cashbackLock != null and cashbackLock !=''">
+			, CASHBACKLOCK = #{cashbackLock,jdbcType=VARCHAR}
+		</if>
+		<if test="commission != null and commission !=''">
+			, COMMISSION = #{commission,jdbcType=VARCHAR}
+		</if>
+		<if test="commissionRate != null">
+			, COMMISSIONRATE = #{commissionRate,jdbcType=DECIMAL}
+		</if>
+		<if test="commissionVolid != null and commissionVolid !=''">
+			, COMMISSIONVOLID = #{commissionVolid,jdbcType=VARCHAR}
+		</if>
+		<if test="couponRuleId != null and couponRuleId !=''">
+			, COUPON_RULE_ID = #{couponRuleId,jdbcType=DECIMAL}
+		</if>
+
+		WHERE
+		TNT_POLICY_ID = #{tntPolicyId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_PROD_POLICY
+		WHERE
+		TNT_POLICY_ID = #{id}
+	</delete>
+
+	<delete id="deleteByRuleId" parameterType="Long">
+		DELETE FROM TNT_PROD_POLICY
+		WHERE
+		COUPON_RULE_ID = #{couponRuleId}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PROD_POLICY
+		WHERE
+		TNT_POLICY_ID = #{id}
+	</select>
+
+	<select id="getPriceByRule" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT
+		${_parameter}
+		FROM dual
+	</select>
+
+	<select id="queryPolicyBybranchIdandProductId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+			SELECT <include refid="columns" /> FROM TNT_PROD_POLICY
+			where 
+			<if test="productId != null and productId !=''">
+				 PRODUCT_ID = #{productId}
+			</if>
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+			</if>
+			<if test="productType != null and productType !=''">
+				AND PRODUCT_TYPE = #{productType,jdbcType=VARCHAR}
+			</if>
+			<if test="targetType != null and targetType !=''">
+				AND TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+			</if>
+			<if test="targetId != null and targetId !=''">
+				AND TARGET_ID = #{targetId}
+			</if>
+		</select>
+	<select id="queryPolicyByBranchIdAndTargetId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT * FROM TNT_PROD_POLICY
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="queryByDist" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PROD_POLICY
+		WHERE TARGET_TYPE
+		= #{targetType} AND COUPON_RULE_ID is null
+		<if test="targetId != null and targetId !=''">
+			AND TARGET_ID = #{targetId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="branchId != null and branchId !=''">
+			AND BRANCH_ID = #{branchId}
+		</if>
+	</select>
+
+	<sql id="where">
+
+		<if test="tntPolicyId != null and tntPolicyId !=''">
+			AND TNT_POLICY_ID = #{tntPolicyId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="branchId != null and branchId !=''">
+			AND BRANCH_ID = #{branchId}
+		</if>
+		<if test="targetId != null and targetId !=''">
+			AND TARGET_ID = #{targetId}
+		</if>
+		<if test="targetType != null and targetType !=''">
+			AND TARGET_TYPE = #{targetType}
+		</if>
+		<if test="policyType != null and policyType !=''">
+			AND POLICY_TYPE = #{policyType}
+		</if>
+		<if test="discount != null and discount !=''">
+			AND DISCOUNT = #{discount}
+		</if>
+		<if test="productType != null and productType !=''">
+			AND PRODUCT_TYPE = #{productType,jdbcType=VARCHAR}
+		</if>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT count(*) FROM TNT_PROD_POLICY
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="queryByTarget" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PROD_POLICY
+		WHERE
+		PRODUCT_TYPE = #{productType}
+		AND TARGET_TYPE
+		= #{targetType}
+		and coupon_rule_id is null
+		<if test="targetId != null and targetId !=''">
+			AND TARGET_ID = #{targetId}
+		</if>
+		<if test="productId != null and productId !=''">
+			AND PRODUCT_ID = #{productId}
+		</if>
+		<if test="branchId != null and branchId !=''">
+			AND BRANCH_ID = #{branchId}
+		</if>
+	</select>
+
+	<sql id="query_columns">
+		a.USER_ID,a.REAL_NAME,b.COMPANY_TYPE_ID,b.COMPANY_NAME,t.channel_id,c.TNT_POLICY_ID,
+		(case
+		when
+		c.branch_id is
+		not null
+		then
+		c.branch_id
+		when
+		d.branch_id is not
+		null
+		then
+		d.branch_id
+		when
+		e.branch_id
+		is
+		not null then
+		e.branch_id
+		else
+		f.branch_id
+		end) as
+		BRANCH_ID,
+		(case
+		when
+		c.product_id is
+		not null then
+		c.product_id
+		when d.product_id is
+		not null
+		then
+		d.product_id
+		when
+		e.product_id is
+		not null then e.product_id
+		else
+		f.product_id
+		end) as
+		PRODUCT_ID,
+		(case
+		when
+		c.target_id is not
+		null
+		then
+		c.target_id
+		when
+		d.target_id is not null
+		then
+		d.target_id
+		when
+		e.target_id
+		is
+		not null then
+		e.target_id
+		else
+		f.target_id
+		end) as
+		TARGET_ID,
+		(case
+		when
+		c.target_type is
+		not null then
+		c.target_type
+		when d.target_type
+		is
+		not
+		null
+		then
+		d.target_type
+		when
+		e.target_type
+		is
+		not null then
+		e.target_type
+		else
+		f.target_type
+		end) as
+		TARGET_TYPE,
+		(case
+		when
+		c.discount
+		is not null
+		then
+		c.discount
+		when
+		d.discount is not null
+		then
+		d.discount
+		when
+		e.discount
+		is
+		not
+		null then
+		e.discount
+		else
+		f.discount
+		end)
+		as DISCOUNT,
+		(case
+		when
+		c.policy_type is not
+		null then
+		c.policy_type
+		when
+		d.policy_type
+		is not
+		null
+		then
+		d.policy_type
+		when
+		e.policy_type is
+		not
+		null
+		then
+		e.policy_type
+		else
+		f.policy_type
+		end) as
+		POLICY_TYPE,
+
+		(case when c.cashback is not null then c.cashback when
+		d.cashback is not null then d.cashback when e.cashback
+		is not null
+		then e.cashback else f.cashback end) as CASHBACK,
+
+		(case when c.cashbackamount is not null then c.cashbackamount when d.cashbackamount is not null then d.cashbackamount
+		when
+		e.cashbackamount
+		is not null then e.cashbackamount else f.cashbackamount end) as CASHBACKAMOUNT,
+
+		(case when
+		c.cashbacklock is not null then c.cashbacklock when d.cashbacklock is not null then d.cashbacklock when
+		e.cashbacklock
+		is not null then e.cashbacklock else f.cashbacklock end) as CASHBACKLOCK,
+
+		(case when c.commission is not null then
+		c.commission when d.commission is not null then d.commission when e.commission
+		is
+		not null then e.commission else
+		f.commission end) as COMMISSION,
+
+		(case when c.commissionrate is not null then c.commissionrate when d.commissionrate is
+		not null then d.commissionrate when
+		e.commissionrate
+		is not null then e.commissionrate else f.commissionrate end) as
+		COMMISSIONRATE,
+
+		(case when c.commissionvolid is not null then c.commissionvolid when d.commissionvolid is not null then
+		d.commissionvolid
+		when e.commissionvolid
+		is not null then e.commissionvolid else f.commissionvolid end) as
+		COMMISSIONVOLID
+	</sql>
+
+	<sql id="query_dist_columns">
+		a.USER_ID,a.REAL_NAME,b.COMPANY_TYPE_ID,b.COMPANY_NAME,t.channel_id,
+		(case
+		when
+		c.TNT_POLICY_ID is not null
+		then
+		c.TNT_POLICY_ID
+		else
+		d.TNT_POLICY_ID
+		end) as
+		TNT_POLICY_ID,
+		(case
+		when
+		c.target_id is not null
+		then
+		c.target_id
+		else
+		d.target_id
+		end) as
+		TARGET_ID,
+		(case
+		when
+		c.target_type is
+		not null then
+		c.target_type
+		else
+		d.target_type
+		end) as
+		TARGET_TYPE,
+		(case
+		when
+		c.discount
+		is not null
+		then
+		c.discount
+		else
+		d.discount
+		end)
+		as DISCOUNT,
+		(case
+		when
+		c.policy_type is not
+		null then
+		c.policy_type
+		else
+		d.policy_type
+		end) as
+		POLICY_TYPE
+	</sql>
+
+	<sql id="queryPolicySql">
+		select distinct
+		<include refid="query_columns" />
+		from tnt_user
+		a,tnt_user_detail b,
+		tnt_company_type t,
+		tnt_prod_policy
+		c,tnt_prod_policy d,tnt_prod_policy
+		e,tnt_prod_policy
+		f
+		where
+		a.user_id =
+		b.user_id and b.company_type_id =
+		t.company_type_id(+)
+		<if test="param.user!=null">
+			<if test="param.user.detail !=null and param.user.detail.companyTypeId != null and param.user.detail.companyTypeId !=''">
+				and b.company_type_id =#{param.user.detail.companyTypeId}
+			</if>
+			<if test="param.channelId != null and param.channelId !=''">
+				and t.channel_id =#{param.channelId}
+			</if>
+			<if test="param.user.realName!=null and param.user.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',#{param.user.realName}),'%')
+			</if>
+			<if test="param.user.detail.companyName!=null and param.user.detail.companyName!=''">
+				AND b.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{param.user.detail.companyName})),'%')
+			</if>
+		</if>
+		and a.user_id = c.target_id(+)
+		<if test="param.branchId!=null and param.branchId!=''">
+			and c.branch_id(+) =#{param.branchId}
+		</if>
+		and
+		c.target_type(+) = 'PROD_DISTRIBUTOR'
+		and c.coupon_rule_id is null
+		and
+		d.target_id(+) = t.channel_id
+		<if test="param.branchId!=null and param.branchId!=''">
+			and d.branch_id(+) =#{param.branchId}
+		</if>
+		and
+		d.target_type(+)='PROD_CHANNEL'
+		and d.coupon_rule_id is null
+		and
+		a.user_id = e.target_id(+)
+		and
+		e.target_type(+) =
+		'DISTRIBUTOR'
+		and e.coupon_rule_id is null
+		and
+		f.target_id(+) =
+		t.channel_id and
+		f.target_type(+)='CHANNEL'
+		and
+		f.coupon_rule_id is null
+		and b.FINAL_STATUS='DOING'
+		<if test="param.isSeted!=null and param.isSeted!=''">
+			and c.TARGET_TYPE =#{param.isSeted}
+		</if>
+		order by DISCOUNT
+	</sql>
+
+	<sql id="queryDistPolicySql">
+		select
+		<include refid="query_dist_columns" />
+		from tnt_user
+		a,tnt_user_detail b,
+		tnt_company_type t,
+		tnt_prod_policy
+		c,tnt_prod_policy d
+		where
+		a.user_id =
+		b.user_id and
+		b.company_type_id =
+		t.company_type_id(+)
+		<if test="param.user!=null">
+			<if test="param.user.detail !=null and param.user.detail.companyTypeId != null and param.user.detail.companyTypeId !=''">
+				and b.company_type_id =#{param.user.detail.companyTypeId}
+			</if>
+			<if test="param.user.realName!=null and param.user.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',trim(#{param.user.realName})),'%')
+			</if>
+			<if test="param.user.detail.companyName!=null and param.user.detail.companyName!=''">
+				AND b.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{param.user.detail.companyName})),'%')
+			</if>
+		</if>
+		and a.user_id = c.target_id(+)
+		and
+		c.target_type(+) = 'DISTRIBUTOR'
+		and
+		d.target_id(+) = t.channel_id
+		and
+		d.target_type(+) =
+		'CHANNEL'
+		and d.coupon_rule_id is null
+	</sql>
+
+	<select id="getPolicy" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select
+		<include refid="query_columns" />
+		from
+		tnt_user
+		a,tnt_user_detail b,
+		tnt_company_type t,
+		tnt_prod_policy
+		c,tnt_prod_policy d,tnt_prod_policy
+		e,tnt_prod_policy
+		f
+		where
+		a.user_id =
+		b.user_id and b.company_type_id =
+		t.company_type_id(+)
+		<if test="user!=null">
+			<if test="user.userId != null and user.userId !=''">
+				and a.user_id =#{user.userId}
+			</if>
+			<if test="user.detail !=null and user.detail.companyTypeId != null and user.detail.companyTypeId !=''">
+				and b.company_type_id =#{user.detail.companyTypeId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				and t.channel_id =#{channelId}
+			</if>
+			<if test="user.realName!=null and user.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',#{user.realName}),'%')
+			</if>
+		</if>
+		and a.user_id = c.target_id(+)
+		<if test="branchId!=null and branchId!=''">
+			and c.branch_id(+) =#{branchId}
+		</if>
+		and
+		c.target_type(+) = 'PROD_DISTRIBUTOR'
+		<!-- and c.coupon_rule_id is not null -->
+		and
+		d.target_id(+) = t.channel_id
+		<if test="branchId!=null and branchId!=''">
+			and d.branch_id(+) =#{branchId}
+		</if>
+		and
+		d.target_type(+)='PROD_CHANNEL'
+		<!-- and d.coupon_rule_id is null -->
+		and
+		a.user_id = e.target_id(+)
+		and
+		e.target_type(+) =
+		'DISTRIBUTOR'
+		and e.coupon_rule_id is null
+		and
+		f.target_id(+) =
+		t.channel_id and
+		f.target_type(+)='CHANNEL'
+		and
+		f.coupon_rule_id is null
+	</select>
+
+	<select id="queryWithUser" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		select p.branch_id, ud.user_id, channel.channel_id
+        from lvmama_pet.tnt_user_detail ud,
+        lvmama_pet.tnt_channel channel,
+        lvmama_pet.tnt_user u,
+        (select
+        b.branch_id, b.target_id,b.target_type
+        from lvmama_pet.tnt_product a, lvmama_pet.tnt_prod_policy b
+        where a.branch_id =
+        b.branch_id
+        and
+        a.category_id = b.product_type
+        and a.branch_id = #{param.branchId}
+        and b.target_type = 'PROD_DISTRIBUTOR') p
+        where ud.user_id = p.target_id(+)
+        and ud.channel_code = channel.channel_code
+        and ud.user_id = u.user_id
+        <if test="param.channelId!=null and param.channelId!=''">
+            and channel.channel_id = #{param.channelId}
+        </if>
+        and ud.final_status = 'DOING'
+        and ud.user_id = u.user_id
+        and ud.user_id not in (select user_id
+        from
+        lvmama_pet.tnt_product_user tpu
+        where tpu.valid = 'false'
+        and tpu.goods_id =#{param.branchId}
+        and tpu.type = #{param.productType})
+        <if test="param.isSeted!=null and param.isSeted!=''">
+            and p.TARGET_TYPE =#{param.isSeted}
+            and p.TARGET_ID=ud.USER_ID
+        </if>
+        <if test="param.user!=null">
+            <if test="param.user.realName!=null and param.user.realName!=''">
+                and u.REAL_NAME like
+                CONCAT(CONCAT('%',#{param.user.realName}),'%')
+            </if>
+            <if test="param.user.detail!=null">
+                <if test="param.user.detail.companyTypeId!=null and param.user.detail.companyTypeId!=''">
+                    and ud.COMPANY_TYPE_ID =#{param.user.detail.companyTypeId}
+                </if>
+                <if test="param.user.detail.companyName!=null and param.user.detail.companyName!=''">
+                    and ud.COMPANY_NAME like
+                    CONCAT(CONCAT('%',#{param.user.detail.companyName}),'%')
+                </if>
+            </if>
+        </if>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="countWithUser" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select count(1)
+		from lvmama_pet.tnt_user_detail ud,
+		lvmama_pet.tnt_channel channel,
+		lvmama_pet.tnt_user u,
+		(select
+		b.branch_id, b.target_id,b.target_type
+		from lvmama_pet.tnt_product a, lvmama_pet.tnt_prod_policy b
+		where a.branch_id =
+		b.branch_id
+		and
+		a.category_id = b.product_type
+		and a.branch_id = #{branchId}
+		and b.target_type = 'PROD_DISTRIBUTOR') p
+		where ud.user_id = p.target_id(+)
+		and ud.channel_code = channel.channel_code
+		and ud.user_id = u.user_id
+		<if test="channelId!=null and channelId!=''">
+			and channel.channel_id = #{channelId}
+		</if>
+		and ud.final_status = 'DOING'
+		and ud.user_id = u.user_id
+		and ud.user_id not in (select user_id
+		from
+		lvmama_pet.tnt_product_user tpu
+		where tpu.valid = 'false'
+		and tpu.goods_id =#{branchId}
+		and tpu.type = #{productType})
+		<if test="isSeted!=null and isSeted!=''">
+			and p.TARGET_TYPE =#{isSeted}
+			and p.TARGET_ID=ud.USER_ID
+		</if>
+		<if test="user!=null">
+			<if test="user.realName!=null and user.realName!=''">
+				and u.REAL_NAME like
+				CONCAT(CONCAT('%',#{user.realName}),'%')
+			</if>
+			<if test="user.detail!=null">
+				<if test="user.detail.companyTypeId!=null and user.detail.companyTypeId!=''">
+					and ud.COMPANY_TYPE_ID =#{user.detail.companyTypeId}
+				</if>
+				<if test="user.detail.companyName!=null and user.detail.companyName!=''">
+					and ud.COMPANY_NAME like
+					CONCAT(CONCAT('%',#{user.detail.companyName}),'%')
+				</if>
+			</if>
+		</if>
+	</select>
+
+	<select id="queryPolicy" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		<include refid="queryPolicySql" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="queryDistPolicy" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		<include refid="queryDistPolicySql" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="queryPolicyCount" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select
+		count(1)
+		from tnt_user a,tnt_user_detail b,
+		tnt_company_type t,
+		tnt_prod_policy c,tnt_prod_policy d,tnt_prod_policy
+		e,tnt_prod_policy
+		f
+		where
+		a.user_id = b.user_id and b.company_type_id =
+		t.company_type_id(+)
+		<if test="user!=null">
+			<if test="user.detail !=null and user.detail.companyTypeId != null and user.detail.companyTypeId !=''">
+				and b.company_type_id =#{user.detail.companyTypeId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				and t.channel_id =#{channelId}
+			</if>
+			<if test="user.realName!=null and user.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',trim(#{user.realName})),'%')
+			</if>
+			<if test="user.detail.companyName!=null and user.detail.companyName!=''">
+				AND b.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{user.detail.companyName})),'%')
+			</if>
+		</if>
+		and a.user_id = c.target_id(+)
+		<if test="branchId!=null and branchId!=''">
+			and c.branch_id(+) =#{branchId}
+		</if>
+		and
+		c.target_type(+) = 'PROD_DISTRIBUTOR'
+		and c.coupon_rule_id is null
+		and
+		d.target_id(+) = t.channel_id
+		<if test="branchId!=null and branchId!=''">
+			and d.branch_id(+) =#{branchId}
+		</if>
+		and
+		d.target_type(+)='PROD_CHANNEL'
+		and d.coupon_rule_id is null
+		and
+		a.user_id = e.target_id(+)
+		and
+		e.target_type(+) =
+		'DISTRIBUTOR'
+		and e.coupon_rule_id is null
+		and
+		f.target_id(+) =
+		t.channel_id and
+		f.target_type(+)='CHANNEL'
+		and
+		f.coupon_rule_id is null
+		and b.FINAL_STATUS='DOING'
+		<if test="isSeted!=null and isSeted!=''">
+			and c.TARGET_TYPE =#{isSeted}
+		</if>
+	</select>
+
+	<select id="queryDistPolicyCount" resultType="Integer" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select
+		count(1)
+		from tnt_user a,tnt_user_detail b,
+		tnt_company_type t,
+		tnt_prod_policy c,tnt_prod_policy d
+		where
+		a.user_id =
+		b.user_id and
+		b.company_type_id =
+		t.company_type_id(+)
+		<if test="user!=null">
+			<if test="user.detail !=null and user.detail.companyTypeId != null and user.detail.companyTypeId !=''">
+				and b.company_type_id =#{user.detail.companyTypeId}
+			</if>
+			<if test="user.realName!=null and user.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',trim(#{user.realName})),'%')
+			</if>
+			<if test="user.detail.companyName!=null and user.detail.companyName!=''">
+				AND b.COMPANY_NAME like
+				CONCAT(CONCAT('%',trim(#{user.detail.companyName})),'%')
+			</if>
+		</if>
+		and a.user_id = c.target_id(+)
+		and
+		c.target_type(+) = 'DISTRIBUTOR'
+		and
+		d.target_id(+) = t.channel_id
+		and
+		d.target_type(+) =
+		'CHANNEL'
+	</select>
+
+	<select id="listExactPolicy" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		<if test="userId != null and userId !=''">
+        select * from tnt_prod_policy where
+        branch_id =#{branchId} and
+        target_id =#{userId} and TARGET_TYPE
+        ='PROD_DISTRIBUTOR'
+        union all
+        </if>
+        select * from
+        tnt_prod_policy where branch_id =
+        #{branchId} and target_id = #{channelId}
+        and TARGET_TYPE
+        ='PROD_CHANNEL'
+        union all
+         <if test="userId != null and userId !=''">
+        select
+        * from tnt_prod_policy where
+        target_id = #{userId} and TARGET_TYPE
+        ='DISTRIBUTOR'
+        union all
+        </if>
+        select * from
+        tnt_prod_policy where target_id =
+        #{channelId} and TARGET_TYPE ='CHANNEL'
+        and COUPON_RULE_ID is not null
+	</select>
+
+	<select id="selectWithCouponRule" resultMap="withRuleResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select p.*,r.*,c.COUPON_NAME from TNT_PROD_POLICY
+		p,TNT_COUPON_RULE r,TNT_COUPON c
+		<where>
+			p.COUPON_RULE_ID = r.TNT_COUPON_RULE_ID(+)
+			and r.COUPON_ID = c.TNT_COUPON_ID
+			<if test="tntPolicyId != null and tntPolicyId !=''">
+				AND p.TNT_POLICY_ID = #{tntPolicyId}
+			</if>
+			<if test="productType !=null and productType !=''">
+				AND p.PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="couponRuleId != null and couponRuleId !=''">
+				AND p.COUPON_RULE_ID = #{couponRuleId}
+			</if>
+			<if test="targetId != null and targetId !=''">
+				AND p.TARGET_ID = #{targetId}
+			</if>
+			<if test="targetType != null and targetType !=''">
+				AND p.TARGET_TYPE = #{targetType}
+			</if>
+			<if test="branchId != null and branchId !=''">
+				AND p.BRANCH_ID = #{branchId}
+			</if>
+			<if test="couponId != null and couponId !=''">
+				AND r.COUPON_ID = #{couponId}
+			</if>
+			<if test="isRuleIdNull!=null">
+				AND p.COUPON_RULE_ID is null
+			</if>
+		</where>
+	</select>
+
+	<select id="queryWithCouponRule" resultMap="withRuleResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		*
+		FROM TNT_PROD_POLICY p,TNT_COUPON_RULE r,TNT_COUPON c
+		<where>
+			p.COUPON_RULE_ID = r.TNT_COUPON_RULE_ID(+) and r.COUPON_ID = c.TNT_COUPON_ID
+			<if test="param.couponId != null and param.couponId !=''">
+				AND r.COUPON_ID = #{param.couponId}
+			</if>
+			<if test="param.targetType != null and param.targetType !=''">
+				AND p.TARGET_TYPE = #{param.targetType}
+			</if>
+			<if test="param.inChannelIds != null and param.inChannelIds !=''">
+				AND c.CHANNEL_ID in (#{param.inChannelIds})
+			</if>
+			<if test="param.isRuleIdNull!=null">
+				AND p.COUPON_RULE_ID is null
+			</if>
+			<if test="param.couponRule != null">
+				<if test="param.couponRule.parentCategoryId != null and param.couponRule.parentCategoryId !=''">
+					AND r.PARENT_CATEGORY_ID = #{param.couponRule.parentCategoryId}
+				</if>
+				<if test="param.couponRule.categoryId != null and param.couponRule.categoryId !=''">
+					AND r.CATEGORY_ID = #{param.couponRule.categoryId}
+				</if>
+				<if test="param.couponRule.productStatus != null and param.couponRule.productStatus !=''">
+					AND r.PRODUCT_STATUS = #{param.couponRule.productStatus}
+				</if>
+				<if test="param.couponRule.goodsStatus != null and param.couponRule.goodsStatus !=''">
+					AND r.GOODS_STATUS = #{param.couponRule.goodsStatus}
+				</if>
+				<if test="param.couponRule.goodsSpec != null and param.couponRule.goodsSpec !=''">
+					AND r.GOODS_SPEC = #{param.couponRule.goodsSpec}
+				</if>
+				<if test="param.couponRule.payTarget != null and param.couponRule.payTarget !=''">
+					AND r.PAY_TARGET = #{param.couponRule.payTarget}
+				</if>
+			</if>
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="countWithCouponRule" resultType="Long" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT count(1) FROM TNT_PROD_POLICY p,TNT_COUPON_RULE r,TNT_COUPON c
+		<where>
+			p.COUPON_RULE_ID = r.TNT_COUPON_RULE_ID(+) and r.COUPON_ID = c.TNT_COUPON_ID
+			<if test="couponId != null and couponId !=''">
+				AND r.COUPON_ID = #{couponId}
+			</if>
+			<if test="targetType != null and targetType !=''">
+				AND p.TARGET_TYPE = #{targetType}
+			</if>
+			<if test="inChannelIds != null and inChannelIds !=''">
+				AND c.CHANNEL_ID in (#{inChannelIds})
+			</if>
+			<if test="branchId != null and branchId !=''">
+				AND p.BRANCH_ID = #{branchId}
+			</if>
+			<if test="isRuleIdNull!=null">
+				AND p.COUPON_RULE_ID is null
+			</if>
+			<if test="couponRule != null">
+				<if test="couponRule.parentCategoryId != null and couponRule.parentCategoryId !=''">
+					AND r.PARENT_CATEGORY_ID = #{couponRule.parentCategoryId}
+				</if>
+				<if test="couponRule.categoryId != null and couponRule.categoryId !=''">
+					AND r.CATEGORY_ID = #{couponRule.categoryId}
+				</if>
+				<if test="couponRule.productStatus != null and couponRule.productStatus !=''">
+					AND r.PRODUCT_STATUS = #{couponRule.productStatus}
+				</if>
+				<if test="couponRule.goodsStatus != null and couponRule.goodsStatus !=''">
+					AND r.GOODS_STATUS = #{couponRule.goodsStatus}
+				</if>
+				<if test="couponRule.goodsSpec != null and couponRule.goodsSpec !=''">
+					AND r.GOODS_SPEC = #{couponRule.goodsSpec}
+				</if>
+				<if test="couponRule.payTarget != null and couponRule.payTarget !=''">
+					AND r.PAY_TARGET = #{couponRule.payTarget}
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<sql id="withUserCouponRuleFrom">
+		from (select d.user_id,
+		d.company_type_id,
+		d.company_name,
+		a.channel_id,
+		b.*,
+		f.tnt_policy_id
+		from tnt_coupon a,
+		tnt_coupon_rule
+		b,
+		tnt_user_detail d,
+		tnt_channel e,
+		tnt_prod_policy f
+		where a.tnt_coupon_id = b.coupon_id
+		and a.channel_id
+		= e.channel_id
+		and d.channel_code = e.channel_code
+		and b.tnt_coupon_rule_id = f.coupon_rule_id
+		and d.user_id =
+		f.target_id
+		and
+		f.target_type = 'DISTRIBUTOR'
+		union
+		select d.user_id,
+		d.company_type_id,
+		d.company_name,
+		a.channel_id,
+		b.*,
+		null as tnt_policy_id
+		from tnt_coupon a,
+		tnt_coupon_rule b,
+		tnt_user_detail d,
+		tnt_channel e,
+		tnt_prod_policy f
+		where
+		a.tnt_coupon_id = b.coupon_id
+		and a.channel_id
+		= e.channel_id
+		and d.channel_code = e.channel_code
+		and b.tnt_coupon_rule_id
+		= f.coupon_rule_id
+		and d.final_status = 'DOING'
+		and not exists
+		(select 1
+		from tnt_prod_policy g
+		where g.target_id =
+		d.user_id
+		and g.target_type =
+		'DISTRIBUTOR'
+		and g.coupon_rule_id =
+		b.tnt_coupon_rule_id)) policy,
+		tnt_user usr
+	</sql>
+
+	<select id="queryWithUserCouponRule" resultMap="withRuleResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		select policy.*,usr.real_name
+		<include refid="withUserCouponRuleFrom" />
+		<where>
+			policy.user_id = usr.user_id
+			<if test="param.companyTypeId != null and param.companyTypeId !=''">
+				AND policy.COMPANY_TYPE_ID = #{param.companyTypeId}
+			</if>
+			<if test="param.realName != null and param.realName !=''">
+				AND usr.REAL_NAME like CONCAT(CONCAT('%',#{param.realName}),'%')
+			</if>
+			<if test="param.companyName != null and param.companyName !=''">
+				AND policy.COMPANY_NAME like CONCAT(CONCAT('%',#{param.companyName}),'%')
+			</if>
+			<if test="param.couponId != null and param.couponId !=''">
+				AND policy.COUPON_ID = #{param.couponId}
+			</if>
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="countWithUserCouponRule" resultType="Long" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select count(1)
+		<include refid="withUserCouponRuleFrom" />
+		<where>
+			policy.user_id = usr.user_id
+			<if test="companyTypeId != null and companyTypeId !=''">
+				AND policy.COMPANY_TYPE_ID = #{companyTypeId}
+			</if>
+			<if test="realName != null and realName !=''">
+				AND usr.REAL_NAME like CONCAT(CONCAT('%',#{realName}),'%')
+			</if>
+			<if test="companyName != null and companyName !=''">
+				AND policy.COMPANY_NAME like CONCAT(CONCAT('%',#{companyName}),'%')
+			</if>
+			<if test="couponId != null and couponId !=''">
+				AND policy.COUPON_ID = #{couponId}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectNullCoupon" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		select * from TNT_PROD_POLICY
+		<where>
+			COUPON_RULE_ID is null
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="getSinglePolicyByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.prod.po.TntProdPolicy">
+		SELECT TPP.*,TCR.*
+		FROM LVMAMA_PET.TNT_PROD_POLICY TPP, LVMAMA_PET.TNT_COUPON_RULE TCR
+		WHERE TPP.COUPON_RULE_ID =
+		TCR.TNT_COUPON_RULE_ID
+		AND TPP.TARGET_TYPE = #{targetType}
+		AND TPP.TARGET_ID = #{targetId}
+		AND TCR.CATEGORY_ID =
+		#{productType}
+		<if test="branchId != null">
+			AND TPP.BRANCH_ID = #{branchId}
+		</if>
+		<if test="payTarget != null and payTarget !=''">
+			AND TCR.PAY_TARGET = #{payTarget}
+		</if>
+	</select>
+
+	<select id="listSimplePolicy" resultMap="simplePolicyResult" parameterType="com.lvmama.tnt.prod.vo.SimpleTntProdPolicy">
+		select
+		BRANCH_ID,TARGET_ID,TARGET_TYPE
+		from TNT_PROD_POLICY
+		<where>
+			<if test="ruleId != null and ruleId !=''">
+				COUPON_RULE_ID = #{ruleId}
+			</if>
+			<if test="notTargetType != null and notTargetType.size>0">
+				AND TARGET_TYPE NOT IN
+				<foreach collection="notTargetType" open="(" index="index" item="item" separator="," close=")">
+					'${item}'
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>
+

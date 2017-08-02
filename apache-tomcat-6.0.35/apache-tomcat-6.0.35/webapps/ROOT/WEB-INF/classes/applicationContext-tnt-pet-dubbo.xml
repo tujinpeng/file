@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://code.alibabatech.com/schema/dubbo
+http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+ <alias name="comLogRemoteService" alias="comLogService"/>
+
+    <dubbo:reference id="userUserProxy" interface="com.lvmama.comm.pet.service.user.UserUserProxy"/>
+    <dubbo:reference id="permUserService" interface="com.lvmama.comm.pet.service.perm.PermUserService"/>
+    <dubbo:reference id="permissionService" interface="com.lvmama.comm.pet.service.perm.PermissionService"/>
+    <dubbo:reference id="comLogServiceRemote" interface="com.lvmama.comm.pet.service.pub.ComLogService"/>
+    <dubbo:reference id="sensitiveWordService" interface="com.lvmama.comm.pet.service.sensitiveW.SensitiveWordService"/>
+    
+    <!-- payment -->
+    <dubbo:reference id="payPaymentService" interface="com.lvmama.comm.pet.service.pay.PayPaymentService"/>
+ 	<dubbo:reference id="payPaymentGatewayService" interface="com.lvmama.comm.pet.service.pay.PayPaymentGatewayService"/>
+    <!-- remote dest -->
+    
+    <dubbo:reference id="productSearchInfoService" interface="com.lvmama.comm.pet.service.search.ProductSearchInfoService"/>
+    <dubbo:reference id="syncBaseService" interface="com.lvmama.comm.bee.service.sync.SyncBaseService"/>
+    <dubbo:reference id="favorService" interface="com.lvmama.comm.pet.service.favor.FavorService"/>
+    <dubbo:reference id="placeCityService" interface="com.lvmama.comm.pet.service.pub.PlaceCityService"/>
+    <dubbo:reference id="placeService" interface="com.lvmama.comm.pet.service.place.PlaceService"/>
+    <dubbo:reference id="smsRemoteService" interface="com.lvmama.comm.pet.service.sms.SmsRemoteService"/>
+    <dubbo:reference id="comEmailTemplateService" interface="com.lvmama.comm.pet.service.pub.ComEmailTemplateService"/>
+    <dubbo:reference id="comSmsTemplateRemoteService" interface="com.lvmama.comm.pet.service.pub.ComSmsTemplateService" group="pet_public"/>
+    <dubbo:reference id="comLogRemoteService" interface="com.lvmama.comm.pet.service.pub.ComLogService"/>
+	<dubbo:reference id="emailRemoteService" interface="com.lvmama.comm.pet.service.email.EmailService"/>
+    <dubbo:reference id="comFSRemoteService" interface="com.lvmama.comm.pet.service.pub.ComFSService"/>
+    <dubbo:reference id="smsConfigService" interface="com.lvmama.comm.pet.service.sms.SmsConfigService"/>
+
+</beans>

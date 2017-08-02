@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.notice.mapper.NoticeMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		<result property="tuanProdNoticeId" column="TNT_TUAN_PROD_NOTICE_ID" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="noticeStatus" column="NOTICE_STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="noticeCreator" column="NOTICE_CREATER" />
+		<result property="noticeContent" column="NOTICE_CONTENT" />
+	</resultMap>
+	
+	<select id="countWithDetail" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		select
+		count(1)
+		from TNT_TUAN_PROD_NOTICE a 
+		<include refid="whereSQL" />
+	</select>
+	
+	<select id="fetchPageWithDetail" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		select
+		<include refid="detail_columns" />
+		from TNT_TUAN_PROD_NOTICE a
+		<include refid="pageWhereSQL" />
+		order by a.CREATE_TIME desc
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="getNoticeById" resultMap="baseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="detail_columns" />
+		from TNT_TUAN_PROD_NOTICE a
+		where a.TNT_TUAN_PROD_NOTICE_ID = #{noticeId}
+	</select>
+	
+	<select id="getNoticeByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		select
+		<include refid="detail_columns" />
+		from TNT_TUAN_PROD_NOTICE a
+		<include refid="whereSQL" />
+		order by a.CREATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="tuanProdNoticeId"
+			order="BEFORE">
+			select TNT_TUAN_PROD_NOTICE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_TUAN_PROD_NOTICE (
+			  TNT_TUAN_PROD_NOTICE_ID ,
+			  PRODUCT_ID ,
+			  GOODS_ID ,
+			  NOTICE_STATUS ,
+			  CREATE_TIME ,
+			  NOTICE_CREATER ,
+			  NOTICE_CONTENT ,
+			  PRODUCT_TYPE
+		) VALUES (
+			  #{tuanProdNoticeId, jdbcType=DECIMAL} ,
+			  #{productId, jdbcType=DECIMAL} ,
+			  #{goodsId, jdbcType=DECIMAL} ,
+			  #{noticeStatus, jdbcType=VARCHAR} ,
+			  sysdate ,
+			  #{noticeCreator, jdbcType=VARCHAR} ,
+			  #{noticeContent, jdbcType=VARCHAR} ,
+			  #{productType, jdbcType=VARCHAR}
+		)
+	</insert>	
+	
+	<update id="update" parameterType="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		UPDATE TNT_TUAN_PROD_NOTICE 
+		SET NOTICE_STATUS =  #{noticeStatus, jdbcType=VARCHAR} ,
+		NOTICE_CONTENT = #{noticeContent, jdbcType=VARCHAR} 
+		WHERE TNT_TUAN_PROD_NOTICE_ID = #{tuanProdNoticeId, jdbcType=DECIMAL}
+	</update>
+	
+	<select id="verify" resultType="java.lang.Integer" parameterType="com.lvmama.tnt.notice.vo.TuanProdNoticeInfo">
+		select
+		count(1)
+		from TNT_PRODUCT a 
+		<where>
+			<if test="productType!=null and productType!=''">
+				AND upper(a.PRODUCT_TYPE) = upper(#{productType})	
+			</if>
+			<if test="productId!=null and productId!=''">
+				AND a.PRODUCT_ID = #{productId}
+			</if>
+			<if test="goodsId!=null and goodsId!=''">
+				AND a.BRANCH_ID = #{goodsId}
+			</if>
+		</where>
+		
+	</select>
+	
+	<sql id="whereSQL">
+		<where>
+			<if test="productType!=null and productType!=''">
+				AND a.PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="productId!=null and productId!=''">
+				AND a.PRODUCT_ID = #{productId}
+			</if>
+			<if test="goodsId!=null and goodsId!=''">
+				AND a.GOODS_ID = #{goodsId}
+			</if>
+			<if test="noticeStatus!=null and noticeStatus!=''">
+				AND a.NOTICE_STATUS = #{noticeStatus}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+			 <![CDATA[ AND a.CREATE_TIME >= #{createTimeBegin}]]>
+			</if>
+			<if test="dateCreateTimeEnd!=null and dateCreateTimeEnd!=''">
+			 <![CDATA[ AND a.CREATE_TIME <= #{dateCreateTimeEnd}]]>
+			</if>
+			<if test="noticeCreator!=null and noticeCreator!=''">
+				AND a.NOTICE_CREATER = #{noticeCreator}
+			</if>
+			<if test="noticeContent!=null and noticeContent!=''">
+				AND a.NOTICE_CONTENT = #{noticeContent}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="pageWhereSQL">
+		<where>
+			<if test="param.productType!=null and param.productType!=''">
+				AND a.PRODUCT_TYPE = #{param.productType}
+			</if>
+			<if test="param.productId!=null and param.productId!=''">
+				AND a.PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.goodsId!=null and param.goodsId!=''">
+				AND a.GOODS_ID = #{param.goodsId}
+			</if>
+			<if test="param.noticeStatus!=null and param.noticeStatus!=''">
+				AND a.NOTICE_STATUS = #{param.noticeStatus}
+			</if>
+			<if test="param.createTimeBegin!=null and param.createTimeBegin!=''">
+			 	<![CDATA[ AND a.CREATE_TIME >= #{param.createTimeBegin}]]>
+			</if>
+			<if test="param.dateCreateTimeEnd!=null and param.dateCreateTimeEnd!=''">
+			 	<![CDATA[ AND a.CREATE_TIME <= #{param.dateCreateTimeEnd}]]>
+			</if>
+			<if test="param.noticeCreator!=null and param.noticeCreator!=''">
+				AND a.NOTICE_CREATER = #{param.noticeCreator}
+			</if>
+			<if test="param.noticeContent!=null and param.noticeContent!=''">
+				AND a.NOTICE_CONTENT = #{param.noticeContent}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="detail_columns">
+	    <![CDATA[
+		a.TNT_TUAN_PROD_NOTICE_ID,a.PRODUCT_TYPE,a.PRODUCT_ID,a.GOODS_ID,a.NOTICE_STATUS,a.CREATE_TIME,a.NOTICE_CREATER,a.NOTICE_CONTENT
+	    ]]>
+	</sql>
+	
+</mapper>
+

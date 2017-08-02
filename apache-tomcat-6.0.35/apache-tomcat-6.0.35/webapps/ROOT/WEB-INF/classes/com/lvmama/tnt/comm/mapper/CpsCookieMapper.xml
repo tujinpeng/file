@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.comm.mapper.CpsCookieMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.comm.bee.po.distribution.CpsCookie">
+        <result property="cpsCookieId" column="cps_cookie_id"/>
+        <result property="cpsId" column="cps_id"/>
+        <result property="params" column="params"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.lvmama.comm.bee.po.distribution.CpsCookie">
+		<selectKey resultType="java.lang.Long" keyProperty="cpsCookieId"
+			order="BEFORE">
+			select  cps_cookie_seq.nextval from dual
+		</selectKey>
+        INSERT INTO CPS_COOKIE (
+        	cps_cookie_id,
+        	cps_id,
+        	params
+        ) VALUES (
+        	#{cpsCookieId},
+        	#{cpsId},
+        	#{params}
+        )
+	</insert>
+
+    <select id="query" resultMap="baseResultMap" parameterType="java.lang.String" >
+   	    select * from cps_cookie where cps_id=#{cpsId}
+    </select>
+
+	<select id="getDistributorKeyByCode" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT DISTRIBUTOR_KEY
+		FROM TNT_USER a ,TNT_USER_DETAIL b 
+	    WHERE a.USER_ID = b.USER_ID
+			AND b.DISTRIBUTOR_CODE = #{code}
+	</select>
+
+</mapper>
+

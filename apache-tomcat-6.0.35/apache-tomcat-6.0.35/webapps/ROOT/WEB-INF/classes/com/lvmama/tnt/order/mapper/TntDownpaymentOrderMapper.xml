@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntDownpaymentOrderMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntDownpaymentOrder">
+        <result property="tntDownpaymentOrderId" column="TNT_DOWNPAYMENT_ORDER_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="downpaymentStatus" column="DOWNPAYMENT_STATUS"/>
+        <result property="downpaymentAmount" column="DOWNPAYMENT_AMOUNT"/>
+        <result property="finalpaymentStatus" column="FINALPAYMENT_STATUS"/>
+        <result property="finalpaymentAmount" column="FINALPAYMENT_AMOUNT"/>
+        <result property="finalpaymentPayTarget" column="FINALPAYMENT_PAYTARGET"/>
+        <result property="finalpaymentPaytime" column="FINALPAYMENT_PAYTIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="confirmUrl" column="CONFIRM_URL"/>
+    </resultMap>
+    
+   <resultMap id="tntOrderMap" type="com.lvmama.tnt.order.po.TntOrder" >
+        <result property="tntOrderId" column="TNT_ORDER_ID" />
+		<result property="orderId" column="ORDER_ID" />
+		<result property="partnerOrderId" column="PARTNER_ORDER_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="distributorId" column="DISTRIBUTOR_ID" />
+		<result property="orderAmount" column="ORDER_AMOUNT" />
+		<result property="isRefund" column="IS_REFUND" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="paymentStatus" column="PAYMENT_STATUS" />
+		<result property="paymentTime" column="PAYMENT_TIME" />
+		<result property="approveStatus" column="APPROVE_STATUS" />
+		<result property="performStatus" column="PERFORM_STATUS" />
+		<result property="visitTime" column="VISIT_TIME" />
+		<result property="orderStatus" column="ORDER_STATUS" />
+		<result property="resourceConfirmStatus" column="RESOURCE_CONFIRM_STATUS" />
+		<result property="distributorName" column="DISTRIBUTOR_NAME" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="contactName" column="CONTACT_NAME" />
+		<result property="contactMoblie" column="CONTACT_MOBLIE" />
+		<result property="resourceLackReason" column="RESOURCE_LACK_REASON" />
+		<result property="settleStatus" column="SETTLE_STATUS" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="paymentTarget" column="PAYMENT_TARGET" />
+		<result property="refundAmount" column="REFUND_AMOUNT" />
+		<result property="refundStatus" column="REFUND_STATUS" />
+		<result property="smsTimes" column="SMS_TIMES" />
+		<result property="companyName" column="COMPANY_NAME" />
+		<result property="commentsCashback" column="COMMENTS_CASHBACK" />
+		<result property="sysFlag" column="SYS_FLAG" />
+		<result property="createOperator" column="create_operator" />
+		<result property="orderChannel" column="order_Channel" />
+		<result property="categoryId" column="category_Id" />
+		<result property="diminishAmount" column="diminish_Amount" />
+		<result property="commissionAmount" column="commission_amount" />
+		<result property="shareRoom" column="SHAREROOM" />
+		<result property="commonCommissionAmount" column="COMMON_COMMISSION_AMOUNT" />
+		<result property="downpaymentAmount" column="DOWNPAYMENT_AMOUNT" />
+    </resultMap>
+    
+    <resultMap id="resultMapForDownPament" type="com.lvmama.tnt.order.po.TntOrder" extends="tntOrderMap">
+		<result property="tntDownpaymentOrder.downpaymentStatus" column="DOWNPAYMENT_STATUS" />
+		<result property="tntDownpaymentOrder.downpaymentAmount" column="DOWNPAYMENT_AMOUNT" />
+		<result property="tntDownpaymentOrder.finalpaymentStatus" column="FINALPAYMENT_STATUS" />
+		<result property="tntDownpaymentOrder.finalpaymentAmount" column="FINALPAYMENT_AMOUNT" />
+		<result property="tntDownpaymentOrder.finalpaymentPayTarget" column="FINALPAYMENT_PAYTARGET" />
+		<result property="tntDownpaymentOrder.finalpaymentPaytime" column="FINALPAYMENT_PAYTIME" />
+		<result property="tntDownpaymentOrder.remark" column="REMARK" />
+		<result property="tntDownpaymentOrder.orderId" column="ORDERID" />
+		<result property="tntDownpaymentOrder.tntDownpaymentOrderId" column="TNT_DOWNPAYMENT_ORDER_ID"/>
+		<result property="tntDownpaymentOrder.confirmUrl" column="CONFIRM_URL"/>
+	</resultMap>
+    	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_ID,ORDER_ID,PARTNER_ORDER_ID,CHANNEL_ID,DISTRIBUTOR_ID,ORDER_AMOUNT,IS_REFUND,CREATE_TIME,REFUND_AMOUNT,COMMENTS_CASHBACK,create_operator,
+		PRODUCT_ID,PRODUCT_NAME,PAYMENT_STATUS,PAYMENT_TIME,APPROVE_STATUS,PERFORM_STATUS,VISIT_TIME,ORDER_STATUS,QUANTITY,order_Channel,category_Id,
+		RESOURCE_CONFIRM_STATUS,DISTRIBUTOR_NAME,PRODUCT_TYPE,CONTACT_NAME,CONTACT_MOBLIE,RESOURCE_LACK_REASON,SETTLE_STATUS,PAYMENT_TARGET,REFUND_STATUS,SMS_TIMES,SYS_FLAG,diminish_Amount,COMMISSION_AMOUNT
+	    ]]>
+	</sql>
+    
+    <insert id="insert" parameterType="com.lvmama.tnt.order.po.TntDownpaymentOrder">
+		<selectKey resultType="java.lang.Long" keyProperty="tntDownpaymentOrderId"
+			order="BEFORE">
+			select  TNT_DOWNPAYMENT_ORDER_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_DOWNPAYMENT_ORDER (
+        	TNT_DOWNPAYMENT_ORDER_ID ,
+        	ORDER_ID ,
+        	DOWNPAYMENT_STATUS ,
+        	DOWNPAYMENT_AMOUNT ,
+        	FINALPAYMENT_STATUS ,
+        	FINALPAYMENT_AMOUNT ,
+        	FINALPAYMENT_PAYTARGET ,
+        	FINALPAYMENT_PAYTIME ,
+        	REMARK,
+        	CONFIRM_URL
+        ) VALUES (
+        	#{tntDownpaymentOrderId} ,
+        	#{orderId,jdbcType=DECIMAL} ,
+        	#{downpaymentStatus,jdbcType=VARCHAR} ,
+        	#{downpaymentAmount,jdbcType=DECIMAL} ,
+        	#{finalpaymentStatus,jdbcType=VARCHAR} ,
+        	#{finalpaymentAmount,jdbcType=DECIMAL} ,
+        	#{finalpaymentPayTarget,jdbcType=VARCHAR} ,
+        	#{finalpaymentPaytime,jdbcType=TIMESTAMP} ,
+        	#{remark,jdbcType=VARCHAR},
+        	#{confirmUrl,jdbcType=VARCHAR}
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntDownpaymentOrder">
+        UPDATE TNT_DOWNPAYMENT_ORDER 
+        	<set>
+	        	<if test="downpaymentStatus != null and downpaymentStatus !=''">
+		        	DOWNPAYMENT_STATUS = #{downpaymentStatus,jdbcType=VARCHAR} ,
+		       	</if>
+		       	<if test="downpaymentAmount != null">
+		        	DOWNPAYMENT_AMOUNT = #{downpaymentAmount,jdbcType=DECIMAL} ,
+		       	</if>
+		       	<if test="finalpaymentStatus != null and finalpaymentStatus !=''">
+		        	FINALPAYMENT_STATUS = #{finalpaymentStatus,jdbcType=VARCHAR} ,
+		       	</if>
+		       	<if test="finalpaymentAmount != null">
+		        	finalpaymentAmount = #{finalpaymentAmount,jdbcType=DECIMAL} ,
+		       	</if>
+		       	<if test="finalpaymentPayTarget != null">
+		        	FINALPAYMENT_PAYTARGET = #{finalpaymentPayTarget,jdbcType=VARCHAR} ,
+		       	</if>
+		       	<if test="finalpaymentPaytime != null">
+		        	FINALPAYMENT_PAYTIME = #{finalpaymentPaytime,jdbcType=TIMESTAMP} ,
+		       	</if>
+		       	<if test="remark != null and remark !=''">
+		       		REMARK = #{remark,jdbcType=VARCHAR} ,
+		       	</if>
+		       	<if test="confirmUrl != null and confirmUrl !=''">
+		       		CONFIRM_URL = #{confirmUrl,jdbcType=VARCHAR} ,
+		       	</if>
+		    </set>   	
+        WHERE 1=1
+        	<if test="tntDownpaymentOrderId !=null">
+	        	and TNT_DOWNPAYMENT_ORDER_ID = #{tntDownpaymentOrderId} 
+	        </if>
+	        <if test="orderId !=null">
+	          AND	ORDER_ID = #{orderId} 
+	        </if>
+	</update>
+	
+	<update id="updateFinalPayStatus" parameterType="com.lvmama.tnt.order.po.TntDownpaymentOrder">
+	 UPDATE TNT_DOWNPAYMENT_ORDER 
+		 <set>
+        	<if test="downpaymentStatus != null and downpaymentStatus !=''">
+	        	DOWNPAYMENT_STATUS = #{downpaymentStatus,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="downpaymentAmount != null">
+	        	DOWNPAYMENT_AMOUNT = #{downpaymentAmount,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="finalpaymentStatus != null and finalpaymentStatus !=''">
+	        	FINALPAYMENT_STATUS = #{finalpaymentStatus,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="finalpaymentAmount != null">
+	        	finalpaymentAmount = #{finalpaymentAmount,jdbcType=DECIMAL} ,
+	       	</if>
+	       	<if test="tag == true">
+	        	FINALPAYMENT_PAYTARGET = #{finalpaymentPayTarget,jdbcType=VARCHAR} ,
+	        	FINALPAYMENT_PAYTIME = #{finalpaymentPaytime,jdbcType=TIMESTAMP} ,
+	        	REMARK = #{remark,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="tag == false and finalpaymentPayTarget != null and finalpaymentPayTarget !=''">
+	        	FINALPAYMENT_PAYTARGET = #{finalpaymentPayTarget,jdbcType=VARCHAR} ,
+	       	</if>
+	       	<if test="tag == false and finalpaymentPaytime != null"> 
+	        	FINALPAYMENT_PAYTIME = #{finalpaymentPaytime,jdbcType=TIMESTAMP} ,
+	       	</if> 
+	       	<if test="tag == false and remark != null and remark !=''"> 
+	       		REMARK = #{remark,jdbcType=VARCHAR} ,
+	       	</if> 
+	     </set>
+        <where> 1=1
+        	<if test="tntDownpaymentOrderId !=null">
+	        	and TNT_DOWNPAYMENT_ORDER_ID = #{tntDownpaymentOrderId} 
+	        </if>
+	        <if test="orderId !=null">
+	        	AND	ORDER_ID = #{orderId} 
+	        </if>
+	      </where>
+	</update>
+	<select id="getByOrderId" parameterType="Long" resultMap="baseResultMap">
+		select * from TNT_DOWNPAYMENT_ORDER d where d.order_id =#{orderId} 
+	</select>
+	
+	<select id="downOrderCount" parameterType="com.lvmama.tnt.order.po.TntOrder" resultType="java.lang.Long">
+	    select count(1)
+	        from TNT_DOWNPAYMENT_ORDER d
+	        left join TNT_ORDER o
+          on d.order_id = o.order_id
+          <where>
+           	<include refid="joinWhereSQL" />
+          </where>
+	</select>
+	
+	<select id="downOrderWithDetail" parameterType="page" resultMap="resultMapForDownPament">
+		<include refid="basic.pageSearchHead" />
+			 select d.TNT_DOWNPAYMENT_ORDER_ID,d.order_id,
+	        o.PARTNER_ORDER_ID,
+	        o.product_name,
+	        o.category_Id,
+	        o.company_name,
+	        o.channel_id,
+	        o.ORDER_AMOUNT,
+	        d.downpayment_amount,
+	        d.finalpayment_amount,
+	        o.ORDER_STATUS,
+	        d.finalpayment_status,
+	        d.downpayment_status,
+	        d.remark,
+	        d.finalpayment_paytarget,
+	        d.finalpayment_paytime,
+	        o.create_operator,d.confirm_url,o.ORDER_CHANNEL
+	   from tnt_downpayment_order d
+	   left join (SELECT TNT_ORDER_ID,
+	                     ORDER_ID,
+	                     PARTNER_ORDER_ID,
+	                     CHANNEL_ID,
+	                     DISTRIBUTOR_ID,
+	                     ORDER_AMOUNT,
+	                     IS_REFUND,
+	                     CREATE_TIME,
+	                     REFUND_AMOUNT,
+	                     COMMENTS_CASHBACK,
+	                     create_operator,
+	                     PRODUCT_ID,
+	                     PRODUCT_NAME,
+	                     PAYMENT_STATUS,
+	                     PAYMENT_TIME,
+	                     APPROVE_STATUS,
+	                     PERFORM_STATUS,
+	                     VISIT_TIME,
+	                     ORDER_STATUS,
+	                     QUANTITY,
+	                     order_Channel,
+	                     category_Id,
+	                     RESOURCE_CONFIRM_STATUS,
+	                     DISTRIBUTOR_NAME,
+	                     PRODUCT_TYPE,
+	                     CONTACT_NAME,
+	                     CONTACT_MOBLIE,
+	                     RESOURCE_LACK_REASON,
+	                     SETTLE_STATUS,
+	                     PAYMENT_TARGET,
+	                     REFUND_STATUS,
+	                     SMS_TIMES,
+	                     SYS_FLAG,
+	                     diminish_Amount,
+	                     COMMISSION_AMOUNT,
+	                     decode(d.company_name,
+	                            null,
+	                            (select u.real_name
+	                               from tnt_user u
+	                              where u.user_id = d.user_id),
+	                            d.company_name) COMPANY_NAME
+	                FROM TNT_ORDER o
+	               INNER JOIN TNT_USER_DETAIL d
+	                  ON o.distributor_id = d.user_id) o
+	   			  on o.order_id = d.order_id
+	   		 <where>
+	   			  <include refid="joinDetailWhereSQL" />
+	   		 </where>
+          <include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<sql id="joinDetailWhereSQL">
+		<if test="param.tntOrderId != null and param.tntOrderId !=''">
+				AND o.TNT_ORDER_ID = #{param.tntOrderId}
+		</if>
+		<if test="param.orderId != null and param.orderId !=''">
+			AND o.ORDER_ID = #{param.orderId}
+		</if>
+		<if test="param.partnerOrderId != null and param.partnerOrderId !=''">
+			AND o.PARTNER_ORDER_ID = #{param.partnerOrderId}
+		</if>
+		<if test="param.channelId != null and param.channelId !=''">
+			AND o.CHANNEL_ID = #{param.channelId}
+		</if>
+		<if test="param.distributorId != null and param.distributorId !=''">
+			AND o.DISTRIBUTOR_ID = #{param.distributorId}
+		</if>
+		<if test="param.orderAmount != null and param.orderAmount !=''">
+			AND o.ORDER_AMOUNT = #{param.orderAmount}
+		</if>
+		<if test="param.isRefund != null and param.isRefund !=''">
+			AND o.IS_REFUND = #{param.isRefund}
+		</if>
+		<if test="param.dateCreateTimeBegin != null and param.dateCreateTimeEnd !=null">
+			<![CDATA[ AND o.CREATE_TIME > #{param.dateCreateTimeBegin} and CREATE_TIME< #{param.dateCreateTimeEnd} ]]>
+		</if>
+		<if test="param.datePaymentTimeBegin != null and param.datePaymentTimeEnd !=null">
+			<![CDATA[ AND o.PAYMENT_TIME > #{param.datePaymentTimeBegin} and PAYMENT_TIME< #{param.datePaymentTimeEnd}]]>
+		</if>
+		<if test="param.dateVisitTimeBegin != null and param.dateVisitTimeEnd !=null">
+			<![CDATA[ AND o.VISIT_TIME >= #{param.dateVisitTimeBegin} and o.VISIT_TIME< #{param.dateVisitTimeEnd} ]]>
+		</if>
+		<if test="param.productId != null and param.productId !=''">
+			AND o.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.productName != null and param.productName !=''">
+			AND o.PRODUCT_NAME like
+			CONCAT(CONCAT('%',#{param.productName}),'%')
+		</if>
+		<if test="param.paymentStatus != null and param.paymentStatus !=''">
+			AND o.PAYMENT_STATUS = #{param.paymentStatus}
+		</if>
+		<if test="param.approveStatus != null and param.approveStatus !=''">
+			AND o.APPROVE_STATUS = #{param.approveStatus}
+		</if>
+		<if test="param.performStatus != null and param.performStatus !=''">
+			AND o.PERFORM_STATUS = #{param.performStatus}
+		</if>
+		<if test="param.orderStatus != null and param.orderStatus !=''">
+			AND o.ORDER_STATUS = #{param.orderStatus}
+		</if>
+		<if test="param.resourceConfirmStatus != null and param.resourceConfirmStatus !=''">
+			AND o.RESOURCE_CONFIRM_STATUS = #{param.resourceConfirmStatus}
+		</if>
+		<if test="param.distributorName != null and param.distributorName !=''">
+			AND o.DISTRIBUTOR_NAME 
+			like
+			CONCAT(CONCAT('%',#{param.distributorName}),'%')
+		</if>
+		<if test="param.contactName != null and param.contactName !=''">
+			AND o.CONTACT_NAME like
+			CONCAT(CONCAT('%',#{param.contactName}),'%')
+		</if>
+		<if test="param.contactMoblie != null and param.contactMoblie !=''">
+			AND o.CONTACT_MOBLIE = #{param.contactMoblie}
+		</if>
+		<if test="param.resourceLackReason != null and param.resourceLackReason !=''">
+			AND o.RESOURCE_LACK_REASON = #{param.resourceLackReason}
+		</if>
+		<if test="param.settleStatus != null and param.settleStatus !=''">
+			AND o.SETTLE_STATUS = #{param.settleStatus}
+		</if>
+		<if test="param.productType != null and param.productType !=''">
+			AND o.PRODUCT_TYPE = #{param.productType}
+		</if>
+		<if test="param.paymentTarget != null and param.paymentTarget !=''">
+			AND o.PAYMENT_TARGET = #{param.paymentTarget}
+		</if>
+		<if test="param.refundStatus != null and param.refundStatus !=''">
+			AND o.refund_Status = #{param.refundStatus}
+		</if>
+		<if test="param.unAuditStatus != null">
+			AND o.REFUND_STATUS IN 
+			<foreach item="unAuditStatu" index="index" collection="unAuditStatus" open="(" separator="," close=")">  
+			  #{param.unAuditStatu}  
+			 </foreach>
+		</if>
+		<if test="param.companyName != null and param.companyName !=''">
+			AND d.COMPANY_NAME like
+			CONCAT(CONCAT('%',trim(#{param.companyName})),'%')
+		</if>
+		<if test="param.companyTypeId != null">
+			AND o.distributor_id in (select tud.user_id from tnt_user_detail tud where tud.company_type_id = #{param.companyTypeId}) 
+		</if>
+		<if test="param.orderChannel != null and param.orderChannel !=''">
+			AND o.order_Channel = #{param.orderChannel}
+		</if>
+		<if test="param.createOperator != null and param.createOperator !=''">
+			AND o.create_Operator like
+			CONCAT(CONCAT('%',trim(#{param.createOperator})),'%')
+		</if>
+		<if test="param.subUserName != null and param.subUserName !=''">
+               AND o.create_Operator = #{param.subUserName}
+         </if>   
+         <if test="param.tntDownpaymentOrder.finalpaymentStatus != null and param.tntDownpaymentOrder.finalpaymentStatus !=''">
+               AND d.FINALPAYMENT_STATUS = #{param.tntDownpaymentOrder.finalpaymentStatus}
+         </if>
+	</sql>
+	
+	<sql id="joinWhereSQL">
+		<if test="tntOrderId != null and tntOrderId !=''">
+				AND o.TNT_ORDER_ID = #{tntOrderId}
+		</if>
+		<if test="orderId != null and orderId !=''">
+			AND o.ORDER_ID = #{orderId}
+		</if>
+		<if test="partnerOrderId != null and partnerOrderId !=''">
+			AND o.PARTNER_ORDER_ID = #{partnerOrderId}
+		</if>
+		<if test="channelId != null and channelId !=''">
+			AND o.CHANNEL_ID = #{channelId}
+		</if>
+		<if test="distributorId != null and distributorId !=''">
+			AND o.DISTRIBUTOR_ID = #{distributorId}
+		</if>
+		<if test="orderAmount != null and orderAmount !=''">
+			AND o.ORDER_AMOUNT = #{orderAmount}
+		</if>
+		<if test="isRefund != null and isRefund !=''">
+			AND o.IS_REFUND = #{isRefund}
+		</if>
+		<if test="dateCreateTimeBegin != null and dateCreateTimeEnd !=null">
+			<![CDATA[ AND o.CREATE_TIME > #{dateCreateTimeBegin} and CREATE_TIME< #{dateCreateTimeEnd} ]]>
+		</if>
+		<if test="datePaymentTimeBegin != null and datePaymentTimeEnd !=null">
+			<![CDATA[ AND o.PAYMENT_TIME > #{datePaymentTimeBegin} and PAYMENT_TIME< #{datePaymentTimeEnd}]]>
+		</if>
+		<if test="dateVisitTimeBegin != null and dateVisitTimeEnd !=null">
+			<![CDATA[ AND o.VISIT_TIME >= #{dateVisitTimeBegin} and o.VISIT_TIME< #{dateVisitTimeEnd} ]]>
+		</if>
+		<if test="productId != null and productId !=''">
+			AND o.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productName != null and productName !=''">
+			AND o.PRODUCT_NAME like
+			CONCAT(CONCAT('%',#{productName}),'%')
+		</if>
+		<if test="paymentStatus != null and paymentStatus !=''">
+			AND o.PAYMENT_STATUS = #{paymentStatus}
+		</if>
+		<if test="approveStatus != null and approveStatus !=''">
+			AND o.APPROVE_STATUS = #{approveStatus}
+		</if>
+		<if test="performStatus != null and performStatus !=''">
+			AND o.PERFORM_STATUS = #{performStatus}
+		</if>
+		<if test="orderStatus != null and orderStatus !=''">
+			AND o.ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test="resourceConfirmStatus != null and resourceConfirmStatus !=''">
+			AND o.RESOURCE_CONFIRM_STATUS = #{resourceConfirmStatus}
+		</if>
+		<if test="distributorName != null and distributorName !=''">
+			AND o.DISTRIBUTOR_NAME 
+			like
+			CONCAT(CONCAT('%',#{distributorName}),'%')
+		</if>
+		<if test="contactName != null and contactName !=''">
+			AND o.CONTACT_NAME like
+			CONCAT(CONCAT('%',#{contactName}),'%')
+		</if>
+		<if test="contactMoblie != null and contactMoblie !=''">
+			AND o.CONTACT_MOBLIE = #{contactMoblie}
+		</if>
+		<if test="resourceLackReason != null and resourceLackReason !=''">
+			AND o.RESOURCE_LACK_REASON = #{resourceLackReason}
+		</if>
+		<if test="settleStatus != null and settleStatus !=''">
+			AND o.SETTLE_STATUS = #{settleStatus}
+		</if>
+		<if test="productType != null and productType !=''">
+			AND o.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="paymentTarget != null and paymentTarget !=''">
+			AND o.PAYMENT_TARGET = #{paymentTarget}
+		</if>
+		<if test="refundStatus != null and refundStatus !=''">
+			AND o.refund_Status = #{refundStatus}
+		</if>
+		<if test="unAuditStatus != null">
+			AND o.REFUND_STATUS IN 
+			<foreach item="unAuditStatu" index="index" collection="unAuditStatus" open="(" separator="," close=")">  
+			  #{unAuditStatu}  
+			 </foreach>
+		</if>
+		<if test="companyName != null and companyName !=''">
+			AND d.COMPANY_NAME like
+			CONCAT(CONCAT('%',trim(#{companyName})),'%')
+		</if>
+		<if test="companyTypeId != null">
+			AND o.distributor_id in (select tud.user_id from tnt_user_detail tud where tud.company_type_id = #{companyTypeId}) 
+		</if>
+		<if test="orderChannel != null and orderChannel !=''">
+			AND o.order_Channel = #{orderChannel}
+		</if>
+		<if test="createOperator != null and createOperator !=''">
+			AND o.create_Operator like
+			CONCAT(CONCAT('%',trim(#{createOperator})),'%')
+		</if>
+		<if test="subUserName != null and subUserName !=''">
+               AND o.create_Operator = #{subUserName}
+         </if>   
+         <if test="tntDownpaymentOrder.finalpaymentStatus != null and tntDownpaymentOrder.finalpaymentStatus !=''">
+               AND d.FINALPAYMENT_STATUS = #{tntDownpaymentOrder.finalpaymentStatus}
+         </if>
+	</sql>
+</mapper>
+

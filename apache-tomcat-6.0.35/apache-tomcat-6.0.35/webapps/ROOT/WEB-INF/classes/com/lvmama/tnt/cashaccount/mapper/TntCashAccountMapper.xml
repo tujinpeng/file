@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashAccountMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		<result property="cashAccountId" column="CASH_ACCOUNT_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="balance" column="BALANCE" />
+		<result property="totalMoney" column="total_Money" />
+		<result property="freezeMoney" column="freeze_Money" />
+		<result property="valid" column="VALID" />
+		<result property="mobileNumber" column="MOBILE_NUMBER" />
+		<result property="paymentPassword" column="PAYMENT_PASSWORD" />
+	</resultMap>
+
+	<resultMap id="searchResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashAccount" extends="baseResultMap">
+		<result property="userName" column="USER_NAME" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="accountType" column="ACCOUNT_TYPE" />
+		<result property="email" column="SUB_NAME" />
+		<result property="tntUser.detail.companyName" column="COMPANY_NAME" />
+	</resultMap>
+
+	<resultMap id="subCashAccountResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		<result property="cashAccountId" column="CASH_ACCOUNT_ID" />
+		<result property="email" column="SUB_NAME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CASH_ACCOUNT_ID,USER_ID,BALANCE,VALID,MOBILE_NUMBER,PAYMENT_PASSWORD,total_Money,freeze_Money
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		<selectKey resultType="java.lang.Long" keyProperty="cashAccountId" order="BEFORE">
+			select
+			TNT_CASH_ACCOUNT_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_CASH_ACCOUNT (
+		CASH_ACCOUNT_ID ,
+		USER_ID ,
+		BALANCE ,
+		VALID ,
+		MOBILE_NUMBER ,
+		freeze_Money,
+		total_Money,
+		PAYMENT_PASSWORD
+		)
+		VALUES (
+		#{cashAccountId,jdbcType=DECIMAL} ,
+		#{userId,jdbcType=DECIMAL} ,
+		#{balance,jdbcType=DECIMAL} ,
+		#{valid,jdbcType=VARCHAR} ,
+		#{mobileNumber,jdbcType=VARCHAR} ,
+		#{freezeMoney,jdbcType=DECIMAL} ,
+		#{totalMoney,jdbcType=DECIMAL} ,
+		#{paymentPassword,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT SET
+		BALANCE = #{balance,jdbcType=DECIMAL}
+		VALID
+		= #{valid,jdbcType=VARCHAR} ,
+		MOBILE_NUMBER =
+		#{mobileNumber,jdbcType=VARCHAR} ,
+		PAYMENT_PASSWORD =
+		#{paymentPassword,jdbcType=VARCHAR}
+		WHERE
+		<if test="cashAccountId !=null">
+			CASH_ACCOUNT_ID = #{cashAccountId}
+		</if>
+		<if test="userId !=null">
+			USER_ID = #{userId} ,
+		</if>
+	</update>
+
+	<update id="updatePayMobile" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE
+		TNT_CASH_ACCOUNT SET
+		MOBILE_NUMBER =
+		#{mobileNumber,jdbcType=VARCHAR}
+		WHERE
+		USER_ID = #{userId}
+	</update>
+
+	<update id="updatePayPassword" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE
+		TNT_CASH_ACCOUNT SET
+		PAYMENT_PASSWORD =
+		#{paymentPassword,jdbcType=VARCHAR}
+		WHERE
+		USER_ID = #{userId}
+	</update>
+
+	<update id="updateBalance" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT
+		SET
+		BALANCE = #{balance,jdbcType=DECIMAL} ,
+		freeze_Money=
+		#{freezeMoney,jdbcType=DECIMAL} ,
+		total_Money =
+		#{totalMoney,jdbcType=DECIMAL}
+		WHERE
+		USER_ID = #{userId}
+	</update>
+	
+	<update id="updateFreeze" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT
+		SET
+		BALANCE = BALANCE +
+		#{balance,jdbcType=DECIMAL},
+		freeze_Money = freeze_Money +
+		#{freezeMoney,jdbcType=DECIMAL}
+		WHERE CASH_ACCOUNT_ID =
+		#{cashAccountId}
+	</update>
+
+	<update id="appendBalance" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT
+		SET
+		BALANCE = BALANCE +
+		#{balance,jdbcType=DECIMAL},
+		TOTAL_MONEY =
+		TOTAL_MONEY +
+		#{balance,jdbcType=DECIMAL}
+		WHERE CASH_ACCOUNT_ID =
+		#{cashAccountId}
+	</update>
+	
+	<update id="appendBalanceLock" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT
+		SET
+		BALANCE = BALANCE +
+		#{balance,jdbcType=DECIMAL},
+		TOTAL_MONEY =
+		TOTAL_MONEY +
+		#{balance,jdbcType=DECIMAL}
+		WHERE CASH_ACCOUNT_ID =
+		#{cashAccountId}
+		AND BALANCE = #{oldBalance,jdbcType=DECIMAL}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_CASH_ACCOUNT
+		WHERE
+		CASH_ACCOUNT_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CASH_ACCOUNT
+		WHERE
+		CASH_ACCOUNT_ID = #{id}
+	</select>
+
+
+	<select id="getByUserId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CASH_ACCOUNT
+		WHERE
+		USER_ID = #{userId}
+	</select>
+
+	<select id="checkUnique" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(*) FROM TNT_CASH_ACCOUNT T
+		WHERE
+		T.MOBILE_NUMBER = #{mobile,jdbcType=VARCHAR}
+	</select>
+
+	<sql id="where">
+		<if test="cashAccountId != null and cashAccountId !=''">
+			AND a.CASH_ACCOUNT_ID = #{cashAccountId}
+		</if>
+		<if test="userId != null and userId !=''">
+			AND a.USER_ID = #{userId}
+		</if>
+		<if test="valid != null and valid !=''">
+			AND a.VALID = #{valid}
+		</if>
+		<if test="mobileNumber != null and mobileNumber !=''">
+			AND a.MOBILE_NUMBER = #{mobileNumber}
+		</if>
+		<if test="userName != null and userName !=''">
+			AND b.USER_Name like
+			CONCAT(CONCAT('%',#{userName}),'%')
+		</if>
+		<if test="companyName != null and companyName !=''">
+			AND d.COMPANY_NAME like
+			CONCAT(CONCAT('%',trim(#{companyName})),'%')
+		</if>
+		<if test="realName != null and realName !=''">
+			AND b.REAL_NAME like
+			CONCAT(CONCAT('%',#{realName}),'%')
+		</if>
+		<if test="accountType!=null and accountType=='SUBER_USER'">
+			<if test="email != null and email !=''">
+				AND sub.SUB_NAME = #{email}
+			</if>
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.userId != null and param.userId !=''">
+			AND a.USER_ID = #{param.userId}
+		</if>
+		<if test="param.cashAccountId != null and param.cashAccountId !=''">
+			AND a.CASH_ACCOUNT_ID = #{param.cashAccountId}
+		</if>
+		<if test="param.userName != null and param.userName !=''">
+			AND b.USER_Name like
+			CONCAT(CONCAT('%',#{param.userName}),'%')
+		</if>
+		<if test="param.realName != null and param.realName !=''">
+			AND b.REAL_NAME like
+			CONCAT(CONCAT('%',#{param.realName}),'%')
+		</if>
+		<if test="param.companyName != null and param.companyName !=''">
+			AND d.COMPANY_NAME like
+			CONCAT(CONCAT('%',trim(#{param.companyName})),'%')
+		</if>
+		<if test="param.valid != null and param.valid !=''">
+			AND a.VALID = #{param.valid}
+		</if>
+		<if test="param.mobileNumber != null and param.mobileNumber !=''">
+			AND a.MOBILE_NUMBER = #{param.mobileNumber}
+		</if>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		select count(1) from
+		(
+
+		<if test="accountType==null or accountType=='' or accountType=='MAIN_USER'">
+			SELECT 1
+			FROM TNT_CASH_ACCOUNT a,TNT_USER b,TNT_USER_DETAIL d
+			where a.USER_ID = b.USER_ID and a.USER_ID = d.USER_ID
+			<include refid="where" />
+			<if test="email != null and email!=''">
+				and 1=2
+			</if>
+		</if>
+		<if test="accountType==null or accountType==''">
+			union all
+		</if>
+		<if test="accountType==null or accountType=='' or accountType=='SUBER_USER'">
+			SELECT 1
+			FROM TNT_CASH_ACCOUNT a,TNT_USER b,TNT_USER_DETAIL d,TNT_SUB_USER sub,TNT_ACCOUNT_USER_RELATE r
+			where
+			b.USER_ID = d.USER_ID and b.USER_ID = sub.TNT_USER_ID
+			and r.USER_ID = sub.TNT_SUB_USER_ID and a.USER_ID =
+			r.ACCOUNT_USER_ID
+			<include refid="where" />
+			<if test="email != null and email !=''">
+				AND sub.SUB_NAME = #{email}
+			</if>
+		</if>
+		)
+	</select>
+
+	<select id="findPage" resultMap="searchResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		<if test="param.accountType==null or param.accountType=='' or param.accountType=='MAIN_USER'">
+			SELECT 'MAIN_USER' as ACCOUNT_TYPE,null as SUB_NAME,
+			CASH_ACCOUNT_ID,a.USER_ID,a.BALANCE,a.VALID,a.MOBILE_NUMBER,a.PAYMENT_PASSWORD,total_Money,freeze_Money,b.user_Name,b.REAL_NAME,d.COMPANY_NAME
+			FROM TNT_CASH_ACCOUNT a,TNT_USER b,TNT_USER_DETAIL d
+			where a.USER_ID = b.USER_ID and a.USER_ID = d.USER_ID
+			<include refid="pageWhere" />
+			<if test="param.email != null and param.email!=''">
+				and 1=2
+			</if>
+		</if>
+		<if test="param.accountType==null or param.accountType==''">
+			union all
+		</if>
+		<if test="param.accountType==null or param.accountType=='' or param.accountType=='SUBER_USER'">
+			SELECT 'SUBER_USER' as ACCOUNT_TYPE,sub.SUB_NAME as SUB_NAME,
+			CASH_ACCOUNT_ID,a.USER_ID,a.BALANCE,a.VALID,a.MOBILE_NUMBER,a.PAYMENT_PASSWORD,total_Money,freeze_Money,b.user_Name,b.REAL_NAME,d.COMPANY_NAME
+			FROM TNT_CASH_ACCOUNT a,TNT_USER b,TNT_USER_DETAIL d,TNT_SUB_USER sub,TNT_ACCOUNT_USER_RELATE r
+			where b.USER_ID =
+			d.USER_ID and b.USER_ID = sub.TNT_USER_ID
+			and r.USER_ID = sub.TNT_SUB_USER_ID and a.USER_ID = r.ACCOUNT_USER_ID
+			<include refid="pageWhere" />
+			<if test="param.email != null and param.email !=''">
+				AND sub.SUB_NAME = #{param.email}
+			</if>
+		</if>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="selectSubCashAccountByUserId" resultMap="subCashAccountResultMap" parameterType="Long">
+		select c.cash_account_id,
+		a.sub_name
+		from lvmama_pet.tnt_sub_user a,
+		lvmama_pet.tnt_account_user_relate b,
+		lvmama_pet.tnt_cash_account c
+		where
+		a.tnt_sub_user_id = b.user_id
+		and b.account_user_id = c.user_id
+		and a.tnt_user_id = #{userId}
+	</select>
+	
+	<!-- 扣减佣金 -->
+	<update id="subtractBalance" parameterType="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+		UPDATE TNT_CASH_ACCOUNT
+		SET
+		BALANCE = BALANCE -
+		#{balance,jdbcType=DECIMAL},
+		TOTAL_MONEY = TOTAL_MONEY -
+		#{balance,jdbcType=DECIMAL}
+		WHERE CASH_ACCOUNT_ID =
+		#{cashAccountId}
+		AND
+		VALID = 'Y'
+	</update>
+</mapper>
+

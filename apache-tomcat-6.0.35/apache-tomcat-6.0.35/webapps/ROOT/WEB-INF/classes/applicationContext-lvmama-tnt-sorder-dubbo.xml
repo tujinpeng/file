@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://code.alibabatech.com/schema/dubbo
+						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+       default-autowire="byName">
+
+		<dubbo:reference id="deviceProductService" interface="com.lvmama.comm.bee.service.ckdevice.CkDeviceProductService" group="tnt_sorder"/>
+		<dubbo:reference id="deviceService" interface="com.lvmama.comm.bee.service.ckdevice.CkDeviceService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionTuanDestroyLogService" interface="com.lvmama.comm.bee.service.distribution.DistributionTuanDestroyLogService" group="tnt_sorder"/>
+		<dubbo:reference id="tuanBatchLimitService" interface="com.lvmama.comm.bee.service.distribution.TuanBatchLimitService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionTuanCouponService" interface="com.lvmama.tnt.distribution.DistributionTuanCouponService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionTuanCouponBatchService" interface="com.lvmama.comm.bee.service.distribution.DistributionTuanCouponBatchService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionRakeBackService" interface="com.lvmama.comm.bee.service.distribution.DistributionRakeBackService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionOrderRefundService" interface="com.lvmama.comm.bee.service.distribution.DistributionOrderRefundService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionOrderService" interface="com.lvmama.comm.bee.service.distribution.DistributionOrderService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionService" interface="com.lvmama.comm.bee.service.distribution.DistributionService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionProductService" interface="com.lvmama.comm.bee.service.distribution.DistributionProductService" group="tnt_sorder"/>
+		<dubbo:reference id="distributionTuanService" interface="com.lvmama.comm.bee.service.distribution.DistributionTuanService" group="tnt_sorder"/>
+		<dubbo:reference id="routeProductInfoService" interface="com.lvmama.tnt.channel.service.RouteProductInfoService" group="tnt_sorder"/>
+		
+</beans>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mysql.mapper.TntOrderVerificateMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntOrder">
+		<result property="tntOrderId" column="TNT_ORDER_ID" />
+		<result property="orderId" column="ORDER_ID" />
+		<result property="partnerOrderId" column="PARTNER_ORDER_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="distributorId" column="DISTRIBUTOR_ID" />
+		<result property="orderAmount" column="ORDER_AMOUNT" />
+		<result property="isRefund" column="IS_REFUND" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="paymentStatus" column="PAYMENT_STATUS" />
+		<result property="paymentTime" column="PAYMENT_TIME" />
+		<result property="approveStatus" column="APPROVE_STATUS" />
+		<result property="performStatus" column="PERFORM_STATUS" />
+		<result property="visitTime" column="VISIT_TIME" />
+		<result property="orderStatus" column="ORDER_STATUS" />
+		<result property="resourceConfirmStatus" column="RESOURCE_CONFIRM_STATUS" />
+		<result property="distributorName" column="DISTRIBUTOR_NAME" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="contactName" column="CONTACT_NAME" />
+		<result property="contactMoblie" column="CONTACT_MOBLIE" />
+		<result property="resourceLackReason" column="RESOURCE_LACK_REASON" />
+		<result property="settleStatus" column="SETTLE_STATUS" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="paymentTarget" column="PAYMENT_TARGET" />
+		<result property="refundAmount" column="REFUND_AMOUNT" />
+		<result property="refundStatus" column="REFUND_STATUS" />
+		<result property="smsTimes" column="SMS_TIMES" />
+		<result property="companyName" column="COMPANY_NAME" />
+		<result property="commentsCashback" column="COMMENTS_CASHBACK" />
+		<result property="sysFlag" column="SYS_FLAG" />
+		<result property="createOperator" column="CREATE_OPERATOR" />
+		<result property="orderChannel" column="ORDER_CHANNEL" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="diminishAmount" column="DIMINISH_AMOUNT" />
+		<result property="commissionAmount" column="COMMISSION_AMOUNT" />
+		<result property="shareRoom" column="SHAREROOM" />
+		<result property="commonCommissionAmount" column="COMMON_COMMISSION_AMOUNT" />
+		<result property="downpaymentAmount" column="DOWNPAYMENT_AMOUNT" />
+		<result property="distActualPay" column="DIST_ACTUAL_PAY" />
+		<result property="noticeStatus" column="NOTICE_STATUS" />
+		<result property="oid" column="OID" />
+		
+		<result property="isVerificated" column="IS_VERIFICATED" />
+		<result property="verificateTime" column="VERIFICATE_TIME" />
+		
+	</resultMap>
+	
+	<sql id="where">
+			<if test="orderId != null and orderId !=''">
+				AND o.ORDER_ID = #{orderId}
+			</if>
+			<if test="partnerOrderId != null and partnerOrderId !=''">
+				AND o.PARTNER_ORDER_ID = #{partnerOrderId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				AND o.CHANNEL_ID = #{channelId}
+			</if>
+			<if test="distributorId != null and distributorId !=''">
+				AND o.DISTRIBUTOR_ID = #{distributorId}
+			</if>		
+			<if test="dateCreateTimeBegin != null and dateCreateTimeBegin!='' and dateCreateTimeEnd !=null and dateCreateTimeEnd!=''">
+				<![CDATA[ AND o.CREATE_TIME > #{dateCreateTimeBegin,jdbcType=DATE} AND o.CREATE_TIME < #{dateCreateTimeEnd,jdbcType=DATE} ]]>
+			</if>
+			<if test="datePaymentTimeBegin != null and datePaymentTimeBegin!='' and datePaymentTimeEnd !=null and datePaymentTimeEnd!=''">
+				<![CDATA[ AND o.PAYMENT_TIME > #{datePaymentTimeBegin} AND o.PAYMENT_TIME< #{datePaymentTimeEnd}]]>
+			</if>
+			<if test="dateVisitTimeBegin != null and dateVisitTimeBegin!='' and dateVisitTimeEnd !=null and dateVisitTimeEnd!=''">
+				<![CDATA[ AND o.VISIT_TIME >= #{dateVisitTimeBegin,jdbcType=DATE} and o.VISIT_TIME< #{dateVisitTimeEnd,jdbcType=DATE} ]]>
+			</if>
+			<if test="productId != null and productId !=''">
+				AND o.PRODUCT_ID = #{productId}
+			</if>
+			<if test="productName != null and productName !=''">
+				AND o.PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="paymentStatus != null and paymentStatus !=''">
+				AND o.PAYMENT_STATUS = #{paymentStatus}
+			</if>
+			<if test="approveStatus != null and approveStatus !=''">
+				AND o.APPROVE_STATUS = #{approveStatus}
+			</if>
+			<if test="performStatus != null and performStatus !=''">
+				AND o.PERFORM_STATUS = #{performStatus}
+			</if>
+			<if test="orderStatus != null and orderStatus !=''">
+				AND o.ORDER_STATUS = #{orderStatus}
+			</if>
+			<if test="distributorName != null and distributorName !=''">
+				AND o.DISTRIBUTOR_NAME 
+				like
+				CONCAT(CONCAT('%',#{distributorName}),'%')
+			</if>
+			<if test="contactName != null and contactName !=''">
+				AND o.CONTACT_NAME like
+				CONCAT(CONCAT('%',#{contactName}),'%')
+			</if>
+			<if test="contactMoblie != null and contactMoblie !=''">
+				AND o.CONTACT_MOBLIE = #{contactMoblie}
+			</if>
+			<if test="settleStatus != null and settleStatus !=''">
+				AND o.SETTLE_STATUS = #{settleStatus}
+			</if>
+			<if test="productType != null and productType !=''">
+				AND o.PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="paymentTarget != null and paymentTarget !=''">
+				AND o.PAYMENT_TARGET = #{paymentTarget}
+			</if>
+			<if test="refundStatus != null and refundStatus !=''">
+				AND o.REFUND_STATUS = #{refundStatus}
+			</if>
+			<if test="orderChannel != null and orderChannel !=''">
+				AND o.ORDER_CHANNEL = #{orderChannel}
+			</if>
+			<if test="createOperator != null and createOperator !=''">
+				AND o.CREATE_OPERATOR like
+				CONCAT(CONCAT('%',trim(#{createOperator})),'%')
+			</if>
+	</sql>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[ ORDER_ID, PARTNER_ORDER_ID, CHANNEL_ID, DISTRIBUTOR_ID, ORDER_AMOUNT, IS_REFUND, CREATE_TIME , PRODUCT_ID , PRODUCT_NAME ,
+	  PAYMENT_STATUS , PAYMENT_TIME , APPROVE_STATUS,  PERFORM_STATUS ,  VISIT_TIME ,  ORDER_STATUS,  RESOURCE_CONFIRM_STATUS ,
+	  DISTRIBUTOR_NAME,  PRODUCT_TYPE ,  SETTLE_STATUS ,  RESOURCE_LACK_REASON ,  CONTACT_MOBLIE,  CONTACT_NAME ,
+	  QUANTITY ,  PAYMENT_TARGET ,  REFUND_STATUS ,  SMS_TIMES,  SYS_FLAG ,  COMMENTS_CASHBACK ,  CREATE_OPERATOR,
+	  ORDER_CHANNEL ,  CATEGORY_ID ,  ORIGINAL_AMOUNT,  ACTUAL_PAY,  DIMINISH_AMOUNT ,  COMMISSION_AMOUNT,
+	  SHAREROOM ,  COMMON_COMMISSION_AMOUNT ,  COMMISSION_AMOUNT_SET_TIME ,  DISTPRICE_SET_TIME ,
+	  NOTICE_STATUS ,  DOWNPAYMENT_AMOUNT ,  DIST_ACTUAL_PAY,  OID, IS_VERIFICATED, VERIFICATE_TIME
+	    ]]>
+	</sql>
+	<!--  getByApiOrderId -->
+	<select id="getByApiOrderId" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_API_ORDER o
+		WHERE ORDER_ID = #{orderId}
+	</select>
+
+	<!-- saveOrderVerificate mysql -->
+	<insert id="saveOrderVerificate" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		INSERT INTO TNT_API_ORDER (
+		  ORDER_ID, PARTNER_ORDER_ID, CHANNEL_ID, DISTRIBUTOR_ID, ORDER_AMOUNT, IS_REFUND, CREATE_TIME , PRODUCT_ID , PRODUCT_NAME ,
+		  PAYMENT_STATUS , PAYMENT_TIME , APPROVE_STATUS,  PERFORM_STATUS ,  VISIT_TIME ,  ORDER_STATUS,  RESOURCE_CONFIRM_STATUS ,
+		  DISTRIBUTOR_NAME,  PRODUCT_TYPE ,  SETTLE_STATUS ,  RESOURCE_LACK_REASON ,  CONTACT_MOBLIE,  CONTACT_NAME ,
+		  QUANTITY ,  PAYMENT_TARGET,SYS_FLAG ,CREATE_OPERATOR, ORDER_CHANNEL ,  CATEGORY_ID , IS_VERIFICATED ,  VERIFICATE_TIME
+		) VALUES (		
+			#{orderId,jdbcType=DECIMAL} ,
+			#{partnerOrderId,jdbcType=VARCHAR} ,
+			#{channelId,jdbcType=DECIMAL} ,
+			#{distributorId,jdbcType=DECIMAL} ,
+			#{orderAmount,jdbcType=DECIMAL} ,
+			#{isRefund,jdbcType=VARCHAR} ,
+			#{createTime,jdbcType=TIMESTAMP},
+			#{productId,jdbcType=DECIMAL} ,
+			#{productName,jdbcType=VARCHAR} ,
+			#{paymentStatus,jdbcType=VARCHAR} ,
+			#{paymentTime,jdbcType=TIMESTAMP} ,
+			#{approveStatus,jdbcType=VARCHAR} ,
+			#{performStatus,jdbcType=VARCHAR} ,
+			#{visitTime,jdbcType=TIMESTAMP} ,
+			#{orderStatus,jdbcType=VARCHAR} ,
+			#{resourceConfirmStatus,jdbcType=VARCHAR} ,
+			#{distributorName,jdbcType=VARCHAR} ,
+ 			#{productType,jdbcType=VARCHAR} ,
+			#{settleStatus,jdbcType=VARCHAR},
+			#{resourceLackReason,jdbcType=VARCHAR} ,
+			#{contactMoblie,jdbcType=VARCHAR} ,
+			#{contactName,jdbcType=VARCHAR} ,
+			#{quantity,jdbcType=VARCHAR} ,
+			#{paymentTarget,jdbcType=VARCHAR},
+			#{sysFlag,jdbcType=VARCHAR},
+			#{createOperator,jdbcType=VARCHAR},
+			#{orderChannel,jdbcType=VARCHAR},
+			#{categoryId,jdbcType=VARCHAR},
+			#{isVerificated,jdbcType=VARCHAR} ,
+			#{verificateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<!--countVerification  -->
+	<select id="countVerification" resultType="Integer" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		SELECT COUNT(1) FROM TNT_API_ORDER o 
+		<where>
+			<include refid="where" />
+			<![CDATA[  AND o.VISIT_TIME < now() ]]>
+		</where>
+	</select>
+	<!-- findVerification -->
+	<select id="findVerification" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT
+        <include refid="columns" />
+        FROM TNT_API_ORDER o 
+        <where>
+        	<include refid="where" />
+        	<![CDATA[  AND o.VISIT_TIME < now() ]]>
+        </where>
+        LIMIT #{start},#{pageSize}
+	</select>
+	<!-- updateByOrderId -->
+	<update id="updateByOrderId" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		UPDATE TNT_API_ORDER o
+		<set>
+			<if test="isVerificated != null and isVerificated !=''">
+				IS_VERIFICATED = #{isVerificated,jdbcType=VARCHAR},
+			</if>
+			<if test="verificateTime != null and verificateTime !=''">
+				VERIFICATE_TIME = #{verificateTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		WHERE
+		ORDER_ID = #{orderId}
+	</update>
+	
+</mapper>
+

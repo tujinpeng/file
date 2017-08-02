@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntHotelGroupBranchMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupBranch">
+        <result property="id" column="ID"/>
+        <result property="freedomProductId" column="FREEDOM_PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="detailId" column="DETAIL_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productStatus" column="PRODUCT_STATUS"/>
+        <result property="productSaleFlag" column="PRODUCT_SALE_FLAG"/>
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="branchStatus" column="BRANCH_STATUS"/>
+        <result property="branchSaleFlag" column="BRANCH_SALE_FLAG"/>
+        <result property="branchName" column="BRANCH_NAME"/>
+        <result property="maxVisitor" column="MAX_VISITOR"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+
+
+		ID,FREEDOM_PRODUCT_ID,GROUP_ID,DETAIL_ID,PRODUCT_ID,PRODUCT_STATUS,PRODUCT_SALE_FLAG,PRODUCT_NAME,BRANCH_ID,BRANCH_STATUS,BRANCH_SALE_FLAG,BRANCH_NAME,MAX_VISITOR
+
+
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupBranch">
+        INSERT INTO TNT_HOTEL_GROUP_BRANCH (
+        	FREEDOM_PRODUCT_ID ,
+        	GROUP_ID ,
+        	DETAIL_ID ,
+        	PRODUCT_ID ,
+        	PRODUCT_STATUS ,
+        	PRODUCT_SALE_FLAG ,
+        	PRODUCT_NAME ,
+        	BRANCH_ID ,
+        	BRANCH_STATUS ,
+        	BRANCH_SALE_FLAG ,
+        	BRANCH_NAME ,
+        	MAX_VISITOR 
+        ) VALUES (
+        	#{freedomProductId} ,
+        	#{groupId} ,
+        	#{detailId} ,
+        	#{productId} ,
+        	#{productStatus} ,
+        	#{productSaleFlag} ,
+        	#{productName} ,
+        	#{branchId} ,
+        	#{branchStatus} ,
+        	#{branchSaleFlag} ,
+        	#{branchName} ,
+        	#{maxVisitor} 
+        )
+	</insert>
+
+    <insert id="insertForBatch" parameterType="java.util.List">
+        INSERT INTO TNT_HOTEL_GROUP_BRANCH (
+        FREEDOM_PRODUCT_ID ,
+        GROUP_ID ,
+	    DETAIL_ID ,
+        PRODUCT_ID ,
+        PRODUCT_STATUS ,
+        PRODUCT_SALE_FLAG ,
+        PRODUCT_NAME ,
+        BRANCH_ID ,
+        BRANCH_STATUS ,
+        BRANCH_SALE_FLAG ,
+        BRANCH_NAME ,
+        MAX_VISITOR
+        ) VALUES
+        <foreach collection="list" separator="," item="tntHotelGroupBranch" index="index">
+            (
+            #{tntHotelGroupBranch.freedomProductId} ,
+            #{tntHotelGroupBranch.groupId} ,
+            #{tntHotelGroupBranch.detailId} ,
+            #{tntHotelGroupBranch.productId} ,
+            #{tntHotelGroupBranch.productStatus} ,
+            #{tntHotelGroupBranch.productSaleFlag} ,
+            #{tntHotelGroupBranch.productName} ,
+            #{tntHotelGroupBranch.branchId} ,
+            #{tntHotelGroupBranch.branchStatus} ,
+            #{tntHotelGroupBranch.branchSaleFlag} ,
+            #{tntHotelGroupBranch.branchName} ,
+            #{tntHotelGroupBranch.maxVisitor}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupBranch">
+        UPDATE TNT_HOTEL_GROUP_BRANCH SET
+        FREEDOM_PRODUCT_ID = #{freedomProductId} ,
+        GROUP_ID = #{groupId} ,
+	    DETAIL_ID = #{detailId} ,
+        PRODUCT_ID = #{productId} ,
+        PRODUCT_STATUS = #{productStatus} ,
+        PRODUCT_SALE_FLAG = #{productSaleFlag} ,
+        PRODUCT_NAME = #{productName} ,
+        BRANCH_ID = #{branchId} ,
+        BRANCH_STATUS = #{branchStatus} ,
+        BRANCH_SALE_FLAG = #{branchSaleFlag} ,
+        BRANCH_NAME = #{branchName} ,
+        MAX_VISITOR = #{maxVisitor}
+        WHERE
+        <if test="id !=null">
+            ID = #{id}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_GROUP_BRANCH WHERE
+        ID = #{id} 
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="Long">
+        DELETE FROM TNT_HOTEL_GROUP_BRANCH WHERE ID in
+        <foreach collection="list" separator="," open="(" close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP_BRANCH
+        WHERE
+        ID = #{id}
+    </select>
+
+    <select id="getListByFreedomProductId" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP_BRANCH
+        WHERE
+        FREEDOM_PRODUCT_ID = #{freedomProductId}
+    </select>
+
+    <select id="getTntHotelGroupBranchList" resultMap="baseResultMap"
+            parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupBranch">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP_BRANCH
+        <include refid="where"/>
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="id != null and id !=''">
+                AND ID = #{id}
+            </if>
+            <if test="freedomProductId != null and freedomProductId !=''">
+                AND FREEDOM_PRODUCT_ID = #{freedomProductId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND GROUP_ID = #{groupId}
+            </if>
+			<if test="detailId != null and detailId !=''">
+				AND DETAIL_ID = #{detailId}
+	       	</if> 
+            <if test="productId != null and productId !=''">
+                AND PRODUCT_ID = #{productId}
+            </if>
+            <if test="productStatus != null and productStatus !=''">
+                AND PRODUCT_STATUS = #{productStatus}
+            </if>
+            <if test="productSaleFlag != null and productSaleFlag !=''">
+                AND PRODUCT_SALE_FLAG = #{productSaleFlag}
+            </if>
+            <if test="productName != null and productName !=''">
+                AND PRODUCT_NAME = #{productName}
+            </if>
+            <if test="branchId != null and branchId !=''">
+                AND BRANCH_ID = #{branchId}
+            </if>
+            <if test="branchStatus != null and branchStatus !=''">
+                AND BRANCH_STATUS = #{branchStatus}
+            </if>
+            <if test="branchSaleFlag != null and branchSaleFlag !=''">
+                AND BRANCH_SALE_FLAG = #{branchSaleFlag}
+            </if>
+            <if test="branchName != null and branchName !=''">
+                AND BRANCH_NAME = #{branchName}
+            </if>
+            <if test="maxVisitor != null and maxVisitor !=''">
+                AND MAX_VISITOR = #{maxVisitor}
+            </if>
+            
+            <if test="productStatusUnEqual != null and productStatusUnEqual !=''">
+				AND PRODUCT_STATUS <![CDATA[ <> ]]> #{productStatusUnEqual}
+	       	</if> 
+			<if test="productSaleFlagUnEqual != null and productSaleFlagUnEqual !=''">
+				AND PRODUCT_SALE_FLAG <![CDATA[ <> ]]> #{productSaleFlagUnEqual}
+	       	</if> 
+	       	<if test="branchStatusUnEqual != null and branchStatusUnEqual !=''">
+				AND BRANCH_STATUS <![CDATA[ <> ]]> #{branchStatusUnEqual}
+	       	</if> 
+			<if test="branchSaleFlagUnEqual != null and branchSaleFlagUnEqual !=''">
+				AND BRANCH_SALE_FLAG <![CDATA[ <> ]]> #{branchSaleFlagUnEqual}
+	       	</if> 
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.id != null and param.id !=''">
+                AND ID = #{param.id}
+            </if>
+            <if test="param.freedomProductId != null and param.freedomProductId !=''">
+                AND FREEDOM_PRODUCT_ID = #{param.freedomProductId}
+            </if>
+            <if test="param.groupId != null and param.groupId !=''">
+                AND GROUP_ID = #{param.groupId}
+            </if>
+			<if test="param.detailId != null and param.detailId !=''">
+				AND DETAIL_ID = param.detailId
+	       	</if>
+            <if test="param.productId != null and param.productId !=''">
+                AND PRODUCT_ID = #{param.productId}
+            </if>
+            <if test="param.productStatus != null and param.productStatus !=''">
+                AND PRODUCT_STATUS = #{param.productStatus}
+            </if>
+            <if test="param.productSaleFlag != null and param.productSaleFlag !=''">
+                AND PRODUCT_SALE_FLAG = #{param.productSaleFlag}
+            </if>
+            <if test="param.productName != null and param.productName !=''">
+                AND PRODUCT_NAME = #{param.productName}
+            </if>
+            <if test="param.branchId != null and param.branchId !=''">
+                AND BRANCH_ID = #{param.branchId}
+            </if>
+            <if test="param.branchStatus != null and param.branchStatus !=''">
+                AND BRANCH_STATUS = #{param.branchStatus}
+            </if>
+            <if test="param.branchSaleFlag != null and param.branchSaleFlag !=''">
+                AND BRANCH_SALE_FLAG = #{param.branchSaleFlag}
+            </if>
+            <if test="param.branchName != null and param.branchName !=''">
+                AND BRANCH_NAME = #{param.branchName}
+            </if>
+            <if test="param.maxVisitor != null and param.maxVisitor !=''">
+                AND MAX_VISITOR = #{param.maxVisitor}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroupBranch">
+        SELECT count(*) FROM TNT_HOTEL_GROUP_BRANCH
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP_BRANCH
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+    
+    <select id="getTntHotelGroupBranchListByParam" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_HOTEL_GROUP_BRANCH 
+	    where FREEDOM_PRODUCT_ID = #{freedomProductId}
+	      and branch_id in 
+	        	<foreach collection="branchIdList" item="item" open="(" close=")" separator=","  >  
+                #{item}  
+    			</foreach> 
+	</select>
+
+</mapper>
+

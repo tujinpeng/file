@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntHotelGroupMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntHotelGroup">
+        <result property="id" column="ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="groupName" column="GROUP_NAME"/>
+        <result property="stayDays" column="STAY_DAYS"/>
+        <result property="hasBranch" column="HAS_BRANCH"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+
+
+
+
+
+		ID,PRODUCT_ID,GROUP_ID,GROUP_NAME,STAY_DAYS,HAS_BRANCH
+
+
+
+
+
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroup">
+        INSERT INTO TNT_HOTEL_GROUP (
+        	PRODUCT_ID ,
+        	GROUP_ID ,
+        	GROUP_NAME ,
+        	STAY_DAYS ,
+        	HAS_BRANCH 
+        ) VALUES (
+        	#{productId} ,
+        	#{groupId} ,
+        	#{groupName} ,
+        	#{stayDays} ,
+        	#{hasBranch} 
+        )
+	</insert>
+
+    <insert id="insertForBatch" parameterType="java.util.List">
+        INSERT INTO TNT_HOTEL_GROUP (
+        PRODUCT_ID ,
+        GROUP_ID ,
+        GROUP_NAME ,
+        STAY_DAYS ,
+        HAS_BRANCH
+        ) VALUES
+        <foreach collection="list" separator="," item="tntHotelGroup" index="index">
+            (
+            #{tntHotelGroup.productId} ,
+            #{tntHotelGroup.groupId} ,
+            #{tntHotelGroup.groupName} ,
+            #{tntHotelGroup.stayDays} ,
+            #{tntHotelGroup.hasBranch}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroup">
+        UPDATE TNT_HOTEL_GROUP SET
+        PRODUCT_ID = #{productId} ,
+        GROUP_ID = #{groupId} ,
+        GROUP_NAME = #{groupName} ,
+        STAY_DAYS = #{stayDays} ,
+        HAS_BRANCH = #{hasBranch}
+        WHERE
+        <if test="id !=null">
+            ID = #{id}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_HOTEL_GROUP WHERE
+        ID = #{id} 
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="java.util.List">
+        DELETE FROM TNT_HOTEL_GROUP WHERE ID in
+        <foreach collection="list" separator="," open="(" close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP
+        WHERE
+        ID = #{id}
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="id != null and id !=''">
+                AND ID = #{id}
+            </if>
+            <if test="productId != null and productId !=''">
+                AND PRODUCT_ID = #{productId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND GROUP_ID = #{groupId}
+            </if>
+            <if test="groupName != null and groupName !=''">
+                AND GROUP_NAME = #{groupName}
+            </if>
+            <if test="stayDays != null and stayDays !=''">
+                AND STAY_DAYS = #{stayDays}
+            </if>
+            <if test="hasBranch != null and hasBranch !=''">
+                AND HAS_BRANCH = #{hasBranch}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.id != null and param.id !=''">
+                AND ID = #{param.id}
+            </if>
+            <if test="param.productId != null and param.productId !=''">
+                AND PRODUCT_ID = #{param.productId}
+            </if>
+            <if test="param.groupId != null and param.groupId !=''">
+                AND GROUP_ID = #{param.groupId}
+            </if>
+            <if test="param.groupName != null and param.groupName !=''">
+                AND GROUP_NAME = #{param.groupName}
+            </if>
+            <if test="param.stayDays != null and param.stayDays !=''">
+                AND STAY_DAYS = #{param.stayDays}
+            </if>
+            <if test="param.hasBranch != null and param.hasBranch !=''">
+                AND HAS_BRANCH = #{param.hasBranch}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.freedom.mysql.po.TntHotelGroup">
+        SELECT count(*) FROM TNT_HOTEL_GROUP
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+
+    <select id="getListByProductId" resultMap="baseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_HOTEL_GROUP
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+</mapper>
+

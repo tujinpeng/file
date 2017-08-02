@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cps.mapper.TntCpsProdCommissionMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cps.vo.TntCpsProdCommission">
+	   <result property="productName" column="PRODUCT_NAME"/>
+	   <result property="productId" column="PRODUCT_ID"/>
+	   <result property="categoryId" column="CATEGORY_ID"/>
+	   <result property="startPrice" column="START_PRICE"/>
+	   <result property="commissionRate" column="COMMISSION_RATE"/>
+	   <result property="commissionCancelStartDate" column="COMMISSION_CANCEL_START_DATE"/>
+	   <result property="commissionCancelEndDate" column="COMMISSION_CANCEL_END_DATE"/>
+	   <result property="commissionCancelRate" column="COMMISSION_CANCEL_RATE"/>
+	   <result property="inCancelDate" column="IN_CANCEL_DATE"/>
+	</resultMap>
+
+    <select id="queryById" resultMap="baseResultMap" parameterType="Long" >
+   	    SELECT PRODUCT_NAME,PRODUCT_ID,CATEGORY_ID,START_PRICE,COMMISSION_RATE,COMMISSION_CANCEL_START_DATE,COMMISSION_CANCEL_END_DATE,COMMISSION_CANCEL_RATE,IN_CANCEL_DATE
+   	    FROM TNT_CPS_PROD_COMMISSION
+		WHERE PRODUCT_ID = #{productId}
+    </select>
+    
+    <select id="findCpsProdCommissionByCancelDate" resultMap="baseResultMap">
+    	SELECT *
+    	FROM TNT_CPS_PROD_COMMISSION T 
+    	WHERE T.COMMISSION_CANCEL_START_DATE IS NOT NULL 
+    	AND T.COMMISSION_CANCEL_END_DATE IS NOT NULL
+    </select>
+    
+
+   	<update id="update" parameterType="com.lvmama.tnt.cps.vo.TntCpsProdCommission">
+       UPDATE  TNT_CPS_PROD_COMMISSION SET
+     		PRODUCT_ID =  #{productId},
+     		<if test="productName != null and productName !=''">
+        	PRODUCT_NAME = #{productName},
+        	</if>
+        	<if test="categoryId != null and categoryId !=''">
+        	CATEGORY_ID =  #{categoryId},
+        	</if>
+        	<if test="startPrice != null and startPrice !=''">
+        	START_PRICE = #{startPrice},
+        	</if>
+        	<if test="commissionRate != null and commissionRate !='' or commissionRate==0">
+        	COMMISSION_RATE = #{commissionRate},
+        	</if>
+        	<if test="commissionCancelStartDate != null and commissionCancelStartDate != ''">
+        	COMMISSION_CANCEL_START_DATE = #{commissionCancelStartDate},
+        	</if>
+        	<if test="commissionCancelEndDate != null and commissionCancelEndDate != ''">
+        	COMMISSION_CANCEL_END_DATE = #{commissionCancelEndDate},
+        	</if>
+        	<if test="commissionCancelRate != null and commissionCancelRate != '' or commissionCancelRate==0">
+        	COMMISSION_CANCEL_RATE = #{commissionCancelRate},
+        	</if>
+        	<if test="inCancelDate != null and inCancelDate != ''">
+        	IN_CANCEL_DATE = #{inCancelDate},
+        	</if>
+        	<if test="updateTime != null and updateTime !=''">
+        	UPDATE_TIME =  #{updateTime}
+        	</if>
+       WHERE 
+       	 PRODUCT_ID = #{productId}
+	</update>
+	
+	<insert id="insert" parameterType="com.lvmama.tnt.cps.vo.TntCpsProdCommission" useGeneratedKeys="true" >
+		<selectKey resultType="java.lang.Long" keyProperty="prodCommissionId" order="BEFORE">
+			SELECT TNT_CPS_PROD_COMMISSION_ID_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	      INSERT INTO TNT_CPS_PROD_COMMISSION (
+				PROD_COMMISSION_ID,
+	        	PRODUCT_NAME,
+	        	PRODUCT_ID,
+	        	CATEGORY_ID ,
+	        	START_PRICE,
+	        	COMMISSION_RATE,
+	        	COMMISSION_CANCEL_START_DATE,
+	        	COMMISSION_CANCEL_END_DATE,
+	        	COMMISSION_CANCEL_RATE,
+	        	IN_CANCEL_DATE,
+	        	CREATE_TIME,
+	        	UPDATE_TIME
+	        ) VALUES (
+	        	#{prodCommissionId,jdbcType=NUMERIC},
+	        	#{productName,jdbcType=VARCHAR},
+		        #{productId,jdbcType=NUMERIC},
+		        #{categoryId,jdbcType=NUMERIC},
+		        #{startPrice,jdbcType=NUMERIC},
+		        #{commissionRate,jdbcType=NUMERIC},
+		        #{commissionCancelStartDate,jdbcType=DATE},
+		        #{commissionCancelEndDate,jdbcType=DATE},
+		        #{commissionCancelRate,jdbcType=NUMERIC},
+		        #{inCancelDate,jdbcType=VARCHAR},
+		      	#{createTime,jdbcType=DATE},
+		        #{updateTime,jdbcType=DATE}
+	        )
+	</insert>
+
+</mapper>

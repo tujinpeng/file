@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntHotelProductVoMapper">
+	<resultMap id="tntHotelProductVoResult" type="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		<result property="tntHotelProductId" column="TNT_HOTEL_PRODUCT_ID" />
+		<result property="tntProductId" column="TNT_PRODUCT_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="sysFlag" column="SYS_FLAG" />
+		<result property="status" column="VALID" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="channelIds" column="CHANNEL_IDS" />
+		<result property="channelBlackIds" column="CHANNEL_BLACK_IDS" />
+		<result property="districtName" column="DISTRICT_NAME" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="hotelStatus" column="HOTEL_STATUS" />
+		<result property="hotelType" column="HOTEL_TYPE" />
+		<result property="starRate" column="STAR_RATE" />
+		<result property="earliestArriveTime" column="EARLIEST_ARRIVE_TIME" />
+		<result property="latestLeaveTime" column="LATEST_LEAVE_TIME" />
+		<result property="adderss" column="ADDRESS" />
+		<result property="branchName" column="BRANCH_NAME" />
+		<result property="branchId" column="PRODUCT_BRANCH_ID" />
+		<result property="provinceName" column="PROVINCE_NAME"/>
+		<result property="cityName" column="CITY_NAME" />
+		<result property="pinyin" column="PINYIN"/>
+		<result property="hotelHoliday" column="HOTELHOLIDAY_TYPE"/>
+		<result property="payTarget" column="PAY_TO_LVMAMA" />
+		<result property="hotelSubject" column="HOTEL_SUBJECT"/>
+		<result property="longitude" column="LONGITUDE"/>
+		<result property="latitude" column="LATITUDE"/>
+		<result property="availableContact" column="AVAILABLE_CONTACT"/>
+	</resultMap>
+	<resultMap id="tntSpecialRecommendVoResult" type="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		<result property="id" column="ID" />
+		<result property="tntHotelProductId" column="TNT_HOTEL_PRODUCT_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="districtName" column="DISTRICT_NAME" />
+		<result property="payTarget" column="PAY_TO_LVMAMA" />
+		<result property="status" column="VALID" />
+		<result property="hotelStatus" column="HOTEL_STATUS" />
+		<result property="dataSource" column="DATASOURCE" />
+	</resultMap>
+	<resultMap id="tntHotelGoodsVoResult" type="com.lvmama.tnt.prod.vo.TntGoodsVo">
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="goodsId" column="GOODS_ID" />
+		<result property="goodsName" column="GOODS_NAME" />
+		<result property="payTarget" column="PAY_TO_LVMAMA" />
+		<result property="status" column="GOODS_STATUS" />
+		<result property="branchId" column="PRODUCT_BRANCH_ID" />
+		<result property="branchCancleFlag" column="BRANCH_CANCLE_FLAG" />
+		<result property="branchName" column="BRANCH_NAME" />
+		<result property="packageFlag" column="PACKAGE_FLAG" />
+	</resultMap>
+	<sql id="listColumns">
+		DISTINCT
+		PRODUCT.PRODUCT_ID,PRODUCT.PRODUCT_NAME,PRODUCT.VALID,PRODUCT.CATEGORY_ID,PRODUCT.DISTRICT_NAME,PRODUCT.PRODUCT_TYPE,PRODUCT.SYS_FLAG,
+		THP.HOTEL_STATUS,THP.HOTEL_TYPE,THP.STAR_RATE,THP.EARLIEST_ARRIVE_TIME,THP.LATEST_LEAVE_TIME,THP.ADDRESS
+	</sql>
+	
+	<sql id="listHotelColumns">
+		DISTINCT
+		PRODUCT.PRODUCT_ID,PRODUCT.PRODUCT_NAME,PRODUCT.VALID,PRODUCT.DISTRICT_NAME,PRODUCT.HOTEL_STATUS,PRODUCT.HOTEL_TYPE,
+		PRODUCT.STAR_RATE,PRODUCT.EARLIEST_ARRIVE_TIME,PRODUCT.LATEST_LEAVE_TIME,PRODUCT.ADDRESS,PRODUCT.CATEGORY_ID,PRODUCT.HOTELHOLIDAY_TYPE,PRODUCT.PAY_TO_LVMAMA,PRODUCT.HOTEL_SUBJECT,PRODUCT.AVAILABLE_CONTACT
+	</sql>
+	
+	<sql id="listSpecialRecommColumns">
+		DISTINCT
+		THS.ID,THS.TNT_HOTEL_PRODUCT_ID,THS.PRODUCT_ID,THS.PRODUCT_NAME,THS.DISTRICT_NAME,PRODUCT.PAY_TO_LVMAMA,PRODUCT.VALID,PRODUCT.HOTEL_STATUS
+	</sql>
+	
+	<sql id="listGoodsColumns">
+		PRODUCT.PRODUCT_ID,
+		PRODUCT.GOODS_ID,
+		PRODUCT.GOODS_NAME,
+		PRODUCT.PAY_TO_LVMAMA,
+		PRODUCT.GOODS_STATUS,
+		PRODUCT.PRODUCT_BRANCH_ID,
+		PRODUCT.BRANCH_CANCLE_FLAG,
+		PRODUCT.BRANCH_NAME,
+		PRODUCT.PACKAGE_FLAG
+	</sql>
+	
+	<sql id="listHotelRecom">
+		PRODUCT.PRODUCT_ID,
+		PRODUCT.GOODS_ID,
+		PRODUCT.PRODUCT_NAME,
+		PRODUCT.VALID,
+		PRODUCT.CATEGORY_ID,
+		PRODUCT.DISTRICT_NAME,
+		PRODUCT.SYS_FLAG,
+		PRODUCT.PAY_TO_LVMAMA,
+		PRODUCT.GOODS_STATUS,
+		PRODUCT.GOODS_NAME
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.productName != null  and param.productName !=''">
+			AND product.PRODUCT_NAME like
+			CONCAT(CONCAT('%',ltrim(rtrim(#{param.productName}))),'%')
+		</if>
+		<if test="param.productId != null and param.productId !=''">
+			AND product.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.status != null and param.status !=''">
+			AND product.VALID = #{param.status}
+		</if>
+		<if test="param.categoryId != null and param.categoryId !=''">
+			AND product.CATEGORY_ID = #{param.categoryId}
+		</if>
+		<if test="param.sysFlag != null and param.sysFlag !=''">
+			AND product.SYS_FLAG = #{param.sysFlag}
+		</if>
+		<if test="param.hotelHoliday != null and param.hotelHoliday !=''">
+			AND product.HOTELHOLIDAY_TYPE = #{param.hotelHoliday}
+		</if>
+		<if test="param.dest!=null">
+			<if test="param.dest.destType != null and param.dest.destType !=''">
+				AND product.DEST_TYPE = #{param.dest.destType}
+			</if>
+			<if test="param.dest.destName != null and param.dest.destName !=''">
+				AND product.DEST_NAME = #{param.dest.destName}
+			</if>
+			<if
+				test="param.dest.districtName != null and param.dest.districtName !=''">
+				AND product.DISTRICT_NAME like
+				CONCAT(CONCAT('%',trim(#{param.dest.districtName})),'%')
+			</if>
+		</if>
+		<if test="param.goods!=null">
+			<if test="param.goods.goodsName != null and param.goods.goodsName !=''">
+				AND product.GOODS_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.goods.goodsName}))),'%')
+			</if>
+			<if test="param.goods.goodsId != null and param.goods.goodsId !=''">
+				AND product.GOODS_ID = #{param.goods.goodsId}
+			</if>
+			<if test="param.goods.status != null and param.goods.status !=''">
+				AND product.GOODS_STATUS = #{param.goods.status}
+			</if>
+			<if test="param.goods.payTarget != null and param.goods.payTarget !=''">
+				AND product.PAY_TO_LVMAMA = #{param.goods.payTarget,jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="param.productType!=null and param.productType!=''">
+			AND lower(product.PRODUCT_TYPE) =
+			lower(#{param.productType})
+		</if>
+		<if test="param.starRates!=null and param.starRates!=''">
+			AND product.STAR_RATE IN
+			<foreach item="starRate" index="index" collection="param.starRates"
+				open="(" separator="," close=")">
+				#{starRate}
+			</foreach>
+		</if>
+		<if test="param.hotelStatus!=null and param.hotelStatus!=''">
+			AND product.HOTEL_STATUS = #{param.hotelStatus}
+		</if>
+		<if test="param.branchName != null and param.branchName !=''">
+			AND product.BRANCH_NAME like
+			CONCAT(CONCAT('%',trim(#{param.branchName})),'%')
+		</if>
+		<if test="param.hotelSubject != null and param.hotelSubject !=''">
+			AND product.HOTEL_SUBJECT = #{param.hotelSubject}
+		</if>
+		<if test="param.availableContact != null">
+			AND product.AVAILABLE_CONTACT = #{param.availableContact}
+		</if>
+	</sql>
+
+	<sql id="where">
+		<if test="productName != null  and productName !=''">
+			AND product.PRODUCT_NAME like
+			CONCAT(CONCAT('%',ltrim(rtrim(#{productName}))),'%')
+		</if>
+		<if test="productId != null and productId !=''">
+			AND product.PRODUCT_ID = #{productId}
+		</if>
+		<if test="status != null and status !=''">
+			AND product.VALID = #{status}
+		</if>
+		<if test="categoryId != null and categoryId !=''">
+			AND product.CATEGORY_ID = #{categoryId}
+		</if>
+		<if test="sysFlag != null and sysFlag !=''">
+			AND product.SYS_FLAG = #{sysFlag}
+		</if>
+		<if test="hotelHoliday != null and hotelHoliday !=''">
+			AND product.HOTELHOLIDAY_TYPE = #{hotelHoliday}
+		</if>
+		<if test="dest!=null">
+			<if test="dest.destType != null and dest.destType !=''">
+				AND product.DEST_TYPE = #{dest.destType}
+			</if>
+			<if test="dest.destName != null and dest.destName !=''">
+				AND product.DEST_NAME = #{dest.destName}
+			</if>
+			<if test="dest.districtName != null and dest.districtName !=''">
+				AND product.DISTRICT_NAME like
+				CONCAT(CONCAT('%',trim(#{dest.districtName})),'%')
+			</if>
+		</if>
+		<if test="goods!=null">
+			<if test="goods.goodsName != null and goods.goodsName !=''">
+				AND product.GOODS_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goods.goodsName}))),'%')
+			</if>
+			<if test="goods.goodsId != null and goods.goodsId !=''">
+				AND product.GOODS_ID = #{goods.goodsId}
+			</if>
+			<if test="goods.goodsType != null and goods.goodsType !=''">
+				AND product.GOODS_TYPE = #{goods.goodsType}
+			</if>
+			<if test="goods.status != null and goods.status !=''">
+				AND product.GOODS_STATUS = #{goods.status}
+			</if>
+			<if test="goods.payTarget != null and goods.payTarget !=''">
+				AND product.PAY_TO_LVMAMA = #{goods.payTarget,jdbcType=VARCHAR}
+			</if>
+		</if>
+		<!-- <if test="tntUser!=null">
+			<if test="tntUser.userId != null ">
+				AND usr.USER_ID = #{tntUser.userId}
+			</if>
+			<if test="tntUser.detail != null">
+				<if test="tntUser.detail.companyTypeId != null ">
+					AND usr.COMPANY_TYPE_ID =
+					#{tntUser.detail.companyTypeId}
+				</if>
+				<if
+					test="tntUser.detail.companyName != null and tntUser.detail.companyName !=''">
+					AND usr.COMPANY_NAME like
+					CONCAT(CONCAT('%',trim(#{tntUser.detail.companyName})),'%')
+				</if>
+			</if>
+		</if> -->
+		<if test="productType!=null and productType!=''">
+			AND lower(product.PRODUCT_TYPE) = lower(#{productType})
+		</if>
+		<if test="starRates!=null and starRates!=''">
+			AND product.STAR_RATE IN
+			<foreach item="startRate" index="index" collection="starRates"
+				open="(" separator="," close=")">
+				#{startRate}
+			</foreach>
+		</if>
+		<if test="hotelStatus!=null and hotelStatus!=''">
+			AND product.HOTEL_STATUS = #{hotelStatus}
+		</if>
+		<if test="branchName != null and branchName !=''">
+			AND product.BRANCH_NAME like
+			CONCAT(CONCAT('%',trim(#{branchName})),'%')
+		</if>
+		<if test="hotelSubject != null and hotelSubject !=''">
+			AND product.HOTEL_SUBJECT = #{hotelSubject}
+		</if>
+		<if test="availableContact != null">
+			AND product.AVAILABLE_CONTACT = #{availableContact}
+		</if>
+	</sql>
+
+	<select id="findPage" resultMap="tntHotelProductVoResult"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="listHotelColumns" />
+		FROM TNT_HOTEL_PRODUCT PRODUCT
+		<where>
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="findSpecialRecommend" resultMap="tntSpecialRecommendVoResult" parameterType="java.util.Map">	  
+		select distinct * from(      
+				SELECT
+				<include refid="listSpecialRecommColumns" />
+				FROM TNT_HOTEL_PRODUCT PRODUCT,TNT_SPECIAL_RECOMM THS
+				where 
+					 THS.TNT_HOTEL_PRODUCT_ID=PRODUCT.TNT_HOTEL_PRODUCT_ID 
+				     and THS.TYPE= #{type jdbcType=VARCHAR}         	 		
+				order by ths.id desc )  hotel
+	         WHERE ROWNUM <![CDATA[<=]]> 6
+	         order by hotel.id desc
+	</select>
+	
+	
+	<select id="findSpecialRecommendValid" resultMap="tntSpecialRecommendVoResult"
+		parameterType="java.util.Map">
+	        select distinct * from(
+				SELECT
+				  DISTINCT
+		           THS.ID,THS.TNT_HOTEL_PRODUCT_ID,THS.PRODUCT_ID,THS.PRODUCT_NAME,THS.DISTRICT_NAME,PRODUCT.VALID,PRODUCT.HOTEL_STATUS
+				FROM TNT_HOTEL_PRODUCT PRODUCT,TNT_SPECIAL_RECOMM THS,tnt_product  tp  
+				where 
+				     ths.product_id=product.product_id
+                     and PRODUCT.Product_Id = tp.product_id
+					 and PRODUCT.goods_id = tp.BRANCH_ID 
+				     and THS.type=0 AND PRODUCT.Category_Id = 1 AND PRODUCT.package_flag = 'N'           	 	
+				     and tp.channel_ids like '%102%'
+				     AND PRODUCT.GOODS_STATUS = 'Y'
+				     AND exists(
+				     	SELECT 1 FROM HOTEL_META_TIME_PRICE hmta where hmta.meta_goods_id = PRODUCT.goods_id 
+							AND hmta.spec_date = TO_DATE(#{queryDay},'YYYY-MM-DD') and hmta.onsale_flag = 'Y'
+						)   	
+				order by ths.id desc)	hotel
+	         WHERE ROWNUM <![CDATA[<=]]> 6
+	         and hotel.id not in (0)
+	         and hotel.valid='Y' 
+ 		     and hotel.hotel_status='Y'
+ 		     order by hotel.id desc
+	</select>
+	
+	
+	<select id="findInsertInspecialRecomm" resultMap="tntSpecialRecommendVoResult"
+		 parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+	       select * from(
+				SELECT
+				<include refid="listSpecialRecommColumns" />
+				FROM TNT_HOTEL_PRODUCT PRODUCT,TNT_SPECIAL_RECOMM THS
+				where 
+					 THS.TNT_HOTEL_PRODUCT_ID=PRODUCT.TNT_HOTEL_PRODUCT_ID 
+				     and THS.TYPE=#{categoryId}
+				     and THS.product_id=#{productId}   	 		
+				order by ths.id desc)	
+	       WHERE ROWNUM <![CDATA[<=]]> 6
+
+	</select>
+	
+	<delete id="deleteSpecialRecomm" parameterType="java.util.Map">
+        delete from TNT_SPECIAL_RECOMM        
+        WHERE 
+        PRODUCT_ID = #{productId jdbcType=VARCHAR}  AND TYPE=#{type jdbcType=VARCHAR}
+    </delete>
+    
+    <update id="updateSpecialRecomm" parameterType="java.util.Map">
+        update TNT_SPECIAL_RECOMM  set DATASOURCE=#{dataSource jdbcType=VARCHAR}  where id=0 and type=#{type}
+    </update>
+    
+    <select id="selectDataSource" resultMap="tntSpecialRecommendVoResult">
+		select id,datasource from TNT_SPECIAL_RECOMM where id=0 and type=0
+	</select>
+	
+	<insert id="insertSpecialRecomm" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo" >
+		insert into tnt_special_recomm(id,product_id,product_name,district_name,tnt_hotel_product_id,type)  
+  		select (select max(id)+1 from TNT_SPECIAL_RECOMM) id,product_id,product_name,district_name,tnt_hotel_product_id,#{categoryId} 
+        from tnt_hotel_product  where  product_id=#{productId}  and  rownum=1 
+	</insert>
+	
+	<select id="findGoodsPage" resultMap="tntHotelGoodsVoResult"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="listGoodsColumns" />
+		FROM TNT_HOTEL_PRODUCT PRODUCT
+		<where>
+			<include refid="whereGoodsPage" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<update id="sortSpecialRecomm" parameterType="java.util.Map"> 
+	    UPDATE TNT_SPECIAL_RECOMM
+		SET id = CASE id 
+		WHEN #{id1}  THEN #{id2} 
+		WHEN #{id2}  THEN #{id1} 
+		END
+		WHERE id in(#{id1} ,#{id2}) and type=#{type}
+		
+    </update>
+    
+
+	<sql id="whereGoodsPage">
+		<if test="param.productId != null and param.productId !=''">
+			AND product.PRODUCT_ID = #{param.productId}
+		</if>
+		<if test="param.goodsId != null and param.goodsId !=''">
+			AND product.GOODS_ID = #{param.goodsId}
+		</if>
+		<if test="param.goodsName != null and param.goodsName !=''">
+			AND product.GOODS_NAME like
+			CONCAT(CONCAT('%',trim(#{param.goodsName})),'%')
+		</if>
+		<if test="param.status != null and param.status !=''">
+			AND product.GOODS_STATUS = #{param.status}
+		</if>
+		<if test="param.branchId != null and param.branchId !=''">
+			AND product.PRODUCT_BRANCH_ID = #{param.branchId}
+		</if>
+		<if test="param.branchCancleFlag != null and param.branchCancleFlag !=''">
+			AND product.BRANCH_CANCLE_FLAG = #{param.branchCancleFlag}
+		</if>
+		<if test="param.branchName != null and param.branchName !=''">
+			AND product.BRANCH_NAME = #{param.branchName}
+		</if>
+		<if test="param.packageFlag != null and param.packageFlag !=''">
+			AND product.PACKAGE_FLAG = #{param.packageFlag}
+		</if>
+		<if test="param.payTarget != null and (param.payTarget =='PAY' or param.payTarget =='PREPAID')">
+			AND product.PAY_TO_LVMAMA = #{param.payTarget}   
+		</if>
+			ORDER BY PAY_TO_LVMAMA DESC
+	</sql>
+
+	<select id="count" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT count(distinct product.PRODUCT_ID) FROM TNT_HOTEL_PRODUCT product
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+		
+	<select id="countGoods" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.vo.TntGoodsVo">
+		SELECT count(1) FROM TNT_HOTEL_PRODUCT product
+		<where>
+			<include refid="whereGoods" />
+		</where>
+	</select>
+	
+	<sql id="whereGoods">
+		<if test="productId != null and productId !=''">
+			AND product.PRODUCT_ID = #{productId}
+		</if>
+		<if test="goodsId != null and goodsId !=''">
+			AND product.GOODS_ID = #{goodsId}
+		</if>
+		<if test="goodsName != null and goodsName !=''">
+			AND product.GOODS_NAME = #{goodsName}
+		</if>
+		<if test="payTarget != null and (payTarget =='PAY' or payTarget =='PREPAID')">
+			AND product.PAY_TO_LVMAMA = #{payTarget}
+		</if>
+		<if test="status != null and status !=''">
+			AND product.GOODS_STATUS = #{status}
+		</if>
+		<if test="branchId != null and branchId !=''">
+			AND product.PRODUCT_BRANCH_ID = #{branchId}
+		</if>
+		<if test="branchName != null and branchName !=''">
+			AND product.BRANCH_NAME = #{branchName}
+		</if>
+		<if test="branchCancleFlag != null and branchCancleFlag !=''">
+			AND product.BRANCH_CANCLE_FLAG = #{branchCancleFlag}
+		</if>
+		<if test="packageFlag != null and packageFlag !=''">
+			AND product.PACKAGE_FLAG = #{packageFlag}
+		</if>
+	</sql>
+
+	<select id="selectListWithUser" resultMap="tntHotelProductVoResult"
+		parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT
+		<include refid="listColumns" />
+		FROM TNT_PRODUCT product,TNT_HOTEL_PRODUCT thp,
+		TNT_USER_DETAIL usr
+		<where>
+			product.product_id = thp.product_id(+) and
+			usr.FINAL_STATUS='DOING'
+			and
+			not
+			exists
+			(select 1 from tnt_product_user puser
+			where
+			product.BRANCH_ID =
+			puser.GOODS_ID and
+			puser.type = product.category_id
+			and
+			puser.USER_ID = usr.USER_ID and
+			puser.VALID = 'false'
+			<if test="tntUser!=null">
+				<if test="tntUser.userId != null and tntUser.userId !=''">
+					AND puser.USER_ID = #{tntUser.userId}
+				</if>
+			</if>
+			)
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="selectList" resultMap="tntHotelProductVoResult"
+		parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT
+		<include refid="listColumns" />
+		FROM TNT_PRODUCT product,TNT_HOTEL_PRODUCT thp
+		<where>
+			product.product_id = thp.product_id(+)
+			<include refid="where" />
+		</where>
+	</select>
+
+	<select id="fuzzyQueryByProductName" resultMap="tntHotelProductVoResult"
+		parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT DISTINCT product.PRODUCT_NAME, product.DISTRICT_NAME
+		FROM TNT_PRODUCT product
+		<where>
+			<include refid="where"/>
+			AND ROWNUM BETWEEN 0 AND 100
+		</where>
+	</select>
+	
+	<select id="queryHotelCityName" resultMap="tntHotelProductVoResult"
+		parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT DISTINCT product.DISTRICT_NAME
+		FROM TNT_PRODUCT product
+		<where>
+		<if test="provinceName != null  and provinceName !=''">
+			AND product.DISTRICT_NAME like
+			CONCAT(CONCAT('%',ltrim(rtrim(#{provinceName}))),'%')
+			AND ROWNUM BETWEEN 0 AND 100
+		</if>
+		</where>
+	</select> 
+	<select id="queryBranchIds" resultMap="branchIdsResult" parameterType="Long">
+		SELECT PRODUCT_BRANCH_ID  FROM  TNT_HOTEL_PRODUCT WHERE
+			 PRODUCT_ID = #{productId} AND  SYS_FLAG = 'VST' AND  VALID = 'Y' AND  PAY_TO_LVMAMA = 'PREPAID' 
+			 AND BRANCH_CANCLE_FLAG = 'Y' GROUP BY PRODUCT_BRANCH_ID
+	</select>
+	<resultMap id="branchIdsResult" type="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		<result property="productBranchId" column="PRODUCT_BRANCH_ID" />
+	</resultMap>
+	
+	<select id="queryForNewOnLine" resultMap="tntHotelProductVoResult" parameterType="java.util.Map">
+		SELECT * 
+		FROM(
+			SELECT 
+				DISTINCT thp.PRODUCT_ID, MAX(thp.CREATE_TIME) AS lastTime
+			FROM
+				TNT_PRODUCT product,TNT_HOTEL_PRODUCT thp
+			WHERE
+				product.PRODUCT_ID = thp.PRODUCT_ID AND thp.SYS_FLAG = 'VST' AND  thp.VALID = 'Y' AND thp.HOTEL_STATUS = 'Y' AND thp.PAY_TO_LVMAMA = 'PREPAID'
+				AND thp.CATEGORY_ID = 1 AND thp.PACKAGE_FLAG = 'N' 
+				AND thp.GOODS_ID = product.BRANCH_ID
+				AND product.CHANNEL_IDS IS NOT NULL AND product.CHANNEL_IDS LIKE '%102%'
+				AND thp.GOODS_STATUS = 'Y'
+				AND EXISTS(SELECT 1 FROM HOTEL_META_TIME_PRICE hmta 
+					WHERE hmta.META_GOODS_ID = thp.GOODS_ID 
+					AND hmta.SPEC_DATE = TO_DATE(#{queryDay},'YYYY-MM-DD') and hmta.ONSALE_FLAG = 'Y')
+				GROUP BY thp.PRODUCT_ID
+				ORDER BY lastTime DESC)
+		WHERE ROWNUM <![CDATA[<=]]> #{maxNum}
+	</select>
+	
+	<select id="queryForHotelRecom" resultMap="tntHotelProductVoResult" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT DISTINCT
+		<include refid="listHotelRecom" />
+		FROM TNT_HOTEL_PRODUCT PRODUCT, TNT_PRODUCT PRD
+		<where>
+			<include refid="where" />
+			AND PRODUCT.PRODUCT_ID = PRD.PRODUCT_ID
+			AND PRODUCT.GOODS_ID = PRD.BRANCH_ID
+			AND PRD.CHANNEL_IDS LIKE '%102%'
+			AND PRODUCT.SYS_FLAG = 'VST' AND PRODUCT.VALID = 'Y' AND PRODUCT.HOTEL_STATUS = 'Y' AND PRODUCT.PAY_TO_LVMAMA = 'PREPAID'
+			AND PRODUCT.GOODS_STATUS = 'Y' AND PRODUCT.PACKAGE_FLAG = 'N' AND PRODUCT.CATEGORY_ID = 1
+		</where>
+	</select>
+	
+	<!-- 请勿改动 专用-->
+	<select id="countByBranchId" resultType="Integer" parameterType="long">
+		SELECT count(1) FROM lvmama_pet.TNT_HOTEL_PRODUCT A  where A.PRODUCT_BRANCH_ID = #{branchId}
+   				 AND exists(select 1 from lvmama_pet.ROUTE_PACKAGE_HOTEL PPH WHERE PPH.SUB_BRANCH_ID=A.PRODUCT_BRANCH_ID)
+	</select>
+	<select id="findProductIdByBranchId" resultType="Long" parameterType="long">
+		SELECT DISTINCT PRODUCT_ID
+		 FROM lvmama_pet.TNT_HOTEL_PRODUCT   where PRODUCT_BRANCH_ID = #{branchId}
+	</select>
+
+	<select id="searchNearbyHotel" resultMap="tntHotelProductVoResult" parameterType="java.util.Map">
+		<![CDATA[
+			 SELECT DISTINCT  THP.PRODUCT_ID,THP.LONGITUDE,THP.LATITUDE,THP.PRODUCT_NAME 
+		     FROM TNT_HOTEL_PRODUCT THP ,TNT_PRODUCT TP 
+		     WHERE THP.LONGITUDE IS NOT NULL AND THP.LATITUDE IS NOT NULL AND THP.SYS_FLAG = 'VST' AND  THP.VALID = 'Y' AND THP.PACKAGE_FLAG= 'N'
+		     AND THP.PAY_TO_LVMAMA = 'PREPAID' AND THP.HOTEL_STATUS = 'Y' AND THP.GOODS_STATUS = 'Y'  AND THP.BRANCH_CANCLE_FLAG = 'Y'
+		     AND THP.PRODUCT_ID = TP.PRODUCT_ID  AND THP.GOODS_ID = TP.BRANCH_ID AND TP.CHANNEL_IDS LIKE '%102%'
+			 AND THP.LONGITUDE >= #{minlng} AND THP.LONGITUDE <= #{maxlng}  AND THP.LATITUDE >= #{minlat} AND THP.LATITUDE <= #{maxlat} 
+			 AND THP.PRODUCT_ID <> #{productId}
+		]]>
+	</select>
+
+	<select id="selectListByParam" resultMap="tntHotelProductVoResult" parameterType="com.lvmama.tnt.prod.vo.TntHotelProductVo">
+		SELECT 
+			<include refid="listHotelColumns"/>
+		FROM TNT_HOTEL_PRODUCT PRODUCT
+		<where>
+			<include refid="where" />
+		</where>
+	</select>
+	
+	<select id="queryGoogsByGoodId" resultMap="tntHotelGoodsVoResult" parameterType="long">
+		SELECT 
+			<include refid="listGoodsColumns"/>
+		FROM TNT_HOTEL_PRODUCT PRODUCT
+		WHERE GOODS_ID = #{goodsId}
+	</select>
+
+	<update id="availableContactSet" parameterType="java.lang.Long">
+		UPDATE TNT_HOTEL_PRODUCT SET AVAILABLE_CONTACT = 1 where PRODUCT_ID = #{productId}
+	</update>
+
+	<update id="batchAvailableContactSet">
+		UPDATE  TNT_HOTEL_PRODUCT SET AVAILABLE_CONTACT = #{availableContact} where PRODUCT_ID IN
+		<foreach collection="list" index="index" open="(" separator="," close=")" item="productId">
+			#{productId}
+		</foreach>
+	</update>
+</mapper>

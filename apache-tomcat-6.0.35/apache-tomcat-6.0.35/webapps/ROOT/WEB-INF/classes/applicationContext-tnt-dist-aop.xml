@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="cacheCaptureInterceptor" class="com.lvmama.tnt.comm.cache.CacheCaptureInterceptor"/>	
+	<bean id="cacheCapturePointcut" class="org.springframework.aop.support.annotation.AnnotationMatchingPointcut">
+		<constructor-arg index="0" value="com.lvmama.tnt.comm.annotation.UseAop"></constructor-arg>
+		<constructor-arg index="1" value="com.lvmama.tnt.comm.annotation.CacheCapture"></constructor-arg>			
+	</bean>
+	<bean id="cacheCapturePointcutAdvice" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="pointcut" ref="cacheCapturePointcut" />
+		<property name="advice" ref="cacheCaptureInterceptor" />
+	</bean>
+	
+	<bean id="cacheCleanerInterceptor" class="com.lvmama.tnt.comm.cache.CacheCleanerInterceptor"/>	
+	<bean id="cacheCleanerPointcut" class="org.springframework.aop.support.annotation.AnnotationMatchingPointcut">
+		<constructor-arg index="0" value="com.lvmama.tnt.comm.annotation.UseAop"></constructor-arg>
+		<constructor-arg index="1" value="com.lvmama.tnt.comm.annotation.CacheCleaner"></constructor-arg>			
+	</bean>
+	<bean id="cacheCleanerPointcutAdvice" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="pointcut" ref="cacheCleanerPointcut" />
+		<property name="advice" ref="cacheCleanerInterceptor" />
+	</bean>
+	
+    <aop:config>
+        <aop:pointcut id="datalogInsertPointCut" expression="execution(* com.lvmama.tnt.*.mapper..insert*(..))" />
+        <aop:pointcut id="datalogUpdatePointCut" expression="execution(* com.lvmama.tnt.*.mapper..update*(..))" />
+        <aop:pointcut id="datalogDeletePointCut" expression="execution(* com.lvmama.tnt.*.mapper..delete*(..))" />
+        <aop:advisor advice-ref="cacheCleanerInterceptor" pointcut-ref="datalogInsertPointCut" />
+        <aop:advisor advice-ref="cacheCleanerInterceptor" pointcut-ref="datalogUpdatePointCut" />
+        <aop:advisor advice-ref="cacheCleanerInterceptor" pointcut-ref="datalogDeletePointCut" />
+    </aop:config>
+    
+	<aop:aspectj-autoproxy proxy-target-class="false" expose-proxy="true"></aop:aspectj-autoproxy>
+</beans>

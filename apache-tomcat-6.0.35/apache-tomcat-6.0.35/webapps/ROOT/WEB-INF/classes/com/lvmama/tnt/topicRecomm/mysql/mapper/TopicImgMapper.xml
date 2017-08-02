@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.topicRecomm.mysql.mapper.TopicImgMapper">
+	<!-- 保存操作. -->
+	<insert id="insert" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO">
+	     INSERT INTO TNT_TOPICIMG(
+	     	IMG_HEADLINE,
+	     	IMG_TYPE,
+	     	IMG_DESC,
+	     	IMG_INDEX,
+	     	IMG_URL,
+	     	UUID_NAME,
+	     	IMG_NAME,
+	     	HTTP_LOCATION,
+	     	UPDATE_DATE,
+	     	UPLOADER
+	     ) VALUES (
+	     	#{headLine},
+	     	#{imgType},
+	     	#{imgDesc},
+	     	#{imgIndex},
+	     	#{imgUrl},
+	     	#{uuidName},
+	     	#{imgName},
+	     	#{httpLocation},
+	     	#{updateDate},
+	     	#{upLoader}
+	     )
+	</insert>
+	
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.channel.vo.TopicImgVO">
+       <result property="headLine" column="IMG_HEADLINE"/>
+       <result property="imgIndex" column="IMG_INDEX"/>
+       <result property="imgDesc" column="IMG_DESC"/>
+       <result property="imgType" column="IMG_TYPE"/>
+       <result property="imgUrl" column="IMG_URL"/>
+       <result property="uuidName" column="UUID_NAME"/>
+       <result property="imgName" column="IMG_NAME"/>
+       <result property="httpLocation" column="HTTP_LOCATION"/>
+       <result property="updateDate" column="UPDATE_DATE"/>
+       <result property="upLoader" column="UPLOADER"/>
+	</resultMap>
+	
+	<!-- 查询所有图片信息 -->
+	<select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO" >
+   	    SELECT * FROM TNT_TOPICIMG WHERE 
+   	    		IMG_TYPE = #{imgType} 
+	    	<if test="imgIndex != null and imgIndex !=''">
+				AND  IMG_INDEX = #{imgIndex}
+			</if>
+   	    	ORDER BY IMG_INDEX ASC
+    </select>
+  	
+  	<!--更新图片信息,通过imgIndex进行更新.-->
+    <update id="update" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO">
+    	UPDATE TNT_TOPICIMG SET
+    		IMG_HEADLINE = #{headLine},
+    		UPDATE_DATE = #{updateDate},
+    		UPLOADER = #{upLoader}
+    	WHERE 
+    		IMG_INDEX = #{imgIndex} AND IMG_TYPE = #{imgType}
+	</update>
+	
+	<update id="updateImgDesc" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO">
+		UPDATE TNT_TOPICIMG SET
+			IMG_DESC = #{imgDesc},
+			UPDATE_DATE = #{updateDate},
+			UPLOADER = #{upLoader}
+		WHERE 
+			IMG_INDEX = #{imgIndex} AND IMG_TYPE = #{imgType}
+	
+	</update>
+	
+    <!-- 删除图片,通过imgIndex进行删除.-->
+    <delete id="delete" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO">
+		DELETE FROM TNT_TOPICIMG
+		WHERE 
+        	  IMG_INDEX =  #{imgIndex} AND IMG_TYPE = #{imgType}
+	</delete>
+	
+	<!-- 查询图片的数量. -->
+	 <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.channel.vo.TopicImgVO" >
+   	    SELECT COUNT(1) FROM TNT_TOPICIMG WHERE 
+   	    		IMG_TYPE = #{imgType} 
+   	    	<if test="imgIndex != null and imgIndex !=''">
+				AND  IMG_INDEX = #{imgIndex}
+			</if>
+    </select>
+    
+    <!-- 查询该图片类型所有图片的集合 -->
+    <select id="findTopicRecommend" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT * FROM TNT_TOPICIMG WHERE
+    		IMG_TYPE = #{imgType} ORDER BY IMG_INDEX ASC
+    </select>
+    
+    <!-- 主题推荐排序. -->
+    <update id="sortTopicRecommend" parameterType="java.util.Map">
+   		UPDATE TNT_TOPICIMG 
+   		SET IMG_INDEX = CASE
+   		WHEN IMG_INDEX = #{imgIndex1} THEN #{imgIndex2}
+   		WHEN IMG_INDEX = #{imgIndex2} THEN #{imgIndex1}
+   		END
+   		WHERE IMG_INDEX in(#{imgIndex1},#{imgIndex2}) AND IMG_TYPE =#{imgType}	
+    </update>
+    
+ 
+	<select id="getTopicImgVOForTicketByMap" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT * FROM TNT_TOPICIMG WHERE
+		IMG_TYPE = #{imgType} ORDER BY IMG_INDEX
+	</select>
+	
+</mapper>
+

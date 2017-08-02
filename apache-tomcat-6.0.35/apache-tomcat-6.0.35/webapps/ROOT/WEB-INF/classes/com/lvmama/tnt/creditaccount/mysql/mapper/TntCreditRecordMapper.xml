@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.creditaccount.mysql.mapper.TntCreditRecordMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.creditaccount.po.TntCreditRecord">
+        <result property="recordId" column="RECORD_ID"/>
+        <result property="creditId" column="CREDIT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="channelId" column="CHANNEL_ID"/>
+        <result property="creditMoney" column="CREDIT_MONEY"/>
+        <result property="useMoney" column="USE_MONEY"/>
+        <result property="remainMoney" column="REMAIN_MONEY"/>
+        <result property="freezeMoney" column="FREEZE_MONEY"/>
+        <result property="actualRepayMoney" column="ACTUAL_REPAY_MONEY"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="status" column="STATUS"/>
+        <result property="operationStatus" column="OPERATION_STATUS"/>
+        <result property="creditRemark" column="CREDIT_REMARK"/>
+        <result property="operationRemark" column="OPERATION_REMARK"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="refundMoney" column="REFUND_MONEY"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		RECORD_ID,CREDIT_ID,USER_ID,CHANNEL_ID,CREDIT_MONEY,USE_MONEY,REMAIN_MONEY,FREEZE_MONEY,ACTUAL_REPAY_MONEY,START_DATE,END_DATE,STATUS,OPERATION_STATUS,CREDIT_REMARK,OPERATION_REMARK,CREATE_TIME,UPDATE_TIME,REFUND_MONEY
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="recordId" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditRecord">
+        INSERT INTO TNT_CREDIT_RECORD (
+        	RECORD_ID ,
+        	CREDIT_ID ,
+        	USER_ID ,
+        	CHANNEL_ID ,
+        	CREDIT_MONEY ,
+        	USE_MONEY ,
+        	REMAIN_MONEY ,
+        	FREEZE_MONEY ,
+        	ACTUAL_REPAY_MONEY ,
+        	START_DATE ,
+        	END_DATE ,
+        	STATUS ,
+        	OPERATION_STATUS ,
+        	CREDIT_REMARK ,
+        	OPERATION_REMARK,
+        	CREATE_TIME,
+        	UPDATE_TIME,
+        	REFUND_MONEY
+        ) VALUES (
+        	#{recordId} ,
+        	#{creditId} ,
+        	#{userId} ,
+        	#{channelId} ,
+        	#{creditMoney} ,
+        	#{useMoney} ,
+        	#{remainMoney} ,
+        	#{freezeMoney} ,
+        	#{actualRepayMoney} ,
+        	#{startDate} ,
+        	#{endDate} ,
+        	#{status} ,
+        	#{operationStatus} ,
+        	#{creditRemark} ,
+        	#{operationRemark},
+        	#{createTime},
+        	#{updateTime},
+        	0
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditRecord">
+        UPDATE TNT_CREDIT_RECORD 
+        <trim prefix="set" suffixOverrides=",">
+	        <if test="creditId != null">CREDIT_ID = #{creditId} ,</if>
+	        <if test="userId != null">USER_ID = #{userId} ,</if>
+	        <if test="channelId != null">CHANNEL_ID = #{channelId} ,</if>
+	        <if test="creditMoney != null"> CREDIT_MONEY = #{creditMoney} ,</if>
+	        <if test="useMoney != null">USE_MONEY = #{useMoney} ,</if>
+	        <if test="remainMoney != null">REMAIN_MONEY = #{remainMoney} ,</if>
+	        <if test="freezeMoney != null">FREEZE_MONEY = #{freezeMoney} ,</if>
+	        <if test="actualRepayMoney != null">ACTUAL_REPAY_MONEY = #{actualRepayMoney} ,</if>
+	        <if test="startDate != null">START_DATE = #{startDate} ,</if>
+	        <if test="endDate != null">END_DATE = #{endDate} ,</if>
+	        <if test="status != null">STATUS = #{status} ,</if>
+	        <if test="operationStatus != null">OPERATION_STATUS = #{operationStatus} ,</if>
+	        <if test="creditRemark != null">CREDIT_REMARK = #{creditRemark} ,</if>
+	        <if test="operationRemark != null">OPERATION_REMARK = #{operationRemark} ,</if>
+	        <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+	        <if test="refundMoney!=null">REFUND_MONEY = #{refundMoney}</if>
+	       </trim>
+        WHERE 
+        	<if test="recordId !=null">
+	        	RECORD_ID = #{recordId} 
+	        </if>
+	</update>
+	
+	<update id="modifyMoneyByUserIdAndUpdateTime" parameterType="java.util.Map">
+	UPDATE TNT_CREDIT_RECORD
+	SET
+	USE_MONEY = #{useMoney} ,
+	<if test="remainMoney != null">REMAIN_MONEY = #{remainMoney} ,</if>
+	<if test="freezeMoney != null">FREEZE_MONEY = #{freezeMoney},</if>
+	UPDATE_TIME = #{updateDate}
+	WHERE
+	USER_ID = #{userId} AND
+	UPDATE_TIME = #{updateTime} AND 
+	STATUS = 'CREDIT_IN'
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CREDIT_RECORD WHERE
+        RECORD_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_RECORD 
+	        WHERE 
+		        RECORD_ID = #{id} 
+	</select>
+	
+	<select id="getByUserIdAndStatus"  resultMap="baseResultMap"  parameterType="java.util.Map">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_RECORD 
+	        WHERE 
+		        USER_ID = #{userId} 
+		        AND
+		        STATUS = #{status}
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="recordId != null and recordId !=''">
+				AND RECORD_ID = #{recordId}
+	       	</if> 
+			<if test="creditId != null and creditId !=''">
+				AND CREDIT_ID = #{creditId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+	       	</if> 
+			<if test="creditMoney != null and creditMoney !=''">
+				AND CREDIT_MONEY = #{creditMoney}
+	       	</if> 
+			<if test="useMoney != null and useMoney !=''">
+				AND USE_MONEY = #{useMoney}
+	       	</if> 
+			<if test="remainMoney != null and remainMoney !=''">
+				AND REMAIN_MONEY = #{remainMoney}
+	       	</if> 
+			<if test="freezeMoney != null and freezeMoney !=''">
+				AND FREEZE_MONEY = #{freezeMoney}
+	       	</if> 
+			<if test="actualRepayMoney != null and actualRepayMoney !=''">
+				AND ACTUAL_REPAY_MONEY = #{actualRepayMoney}
+	       	</if> 
+			<if test="startDate != null and startDate !=''">
+				AND START_DATE &gt;= #{startDate}
+	       	</if> 
+			<if test="endDate != null and endDate !=''">
+				AND END_DATE &lt;= #{endDate}
+	       	</if> 
+			<if test="status != null and status !=''">
+				AND STATUS = #{status}
+	       	</if> 
+			<if test="operationStatus != null and operationStatus !=''">
+				AND OPERATION_STATUS = #{operationStatus}
+	       	</if> 
+		</where>
+	</sql>
+		
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditRecord">
+        SELECT count(*) FROM TNT_CREDIT_RECORD 
+		<include refid="where"/>    
+    </select>
+    
+    <!--  mysql分页查询-->
+    <select id="getCreditRecordList" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+    	FROM TNT_CREDIT_RECORD 
+    	<include refid="where"/>
+    	ORDER BY RECORD_ID DESC
+    	LIMIT #{startRow},#{pageSize}
+    </select>
+    
+    <select id="query" resultMap="baseResultMap" parameterType="com.lvmama.tnt.creditaccount.po.TntCreditRecord">
+		SELECT <include refid="columns" />
+		    FROM TNT_CREDIT_RECORD 
+	        <include refid="where"/> 
+	       ORDER BY RECORD_ID DESC
+	</select>
+    
+</mapper>
+

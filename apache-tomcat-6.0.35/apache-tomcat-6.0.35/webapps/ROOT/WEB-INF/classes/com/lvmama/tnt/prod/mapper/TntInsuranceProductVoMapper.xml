@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- change by haofeifei 2016-06-12 code refactoring tntProduct-->
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntInsuranceProductVoMapper">
+	<resultMap type="com.lvmama.tnt.prod.vo.TntInsuranceProductVo" id="insuranceProductVoResult">
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="valid" column="VALID" /> <!--  商品是否可售 -->
+		<result property="canSaleFlag" column="CAN_SALE_FLAG" /> <!--  产品是否可售  -->
+		<result property="status" column="GOODS_STATUS" /> <!--  商品是否有效 -->
+		<result property="districtName" column="DISTRICT_NAME" />
+		<result property="insuranceType" column="INSURANCE_TYPE"/>
+        <result property="insuranceDays" column="INSURANCE_DAYS"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		distinct
+		product.PRODUCT_ID,product.PRODUCT_NAME,product.CAN_SALE_FLAG,product.GOODS_STATUS,product.VALID,product.DISTRICT_NAME,insurance.INSURANCE_TYPE,insurance.INSURANCE_DAYS
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.vo.TntInsuranceProductVo">
+		<selectKey resultType="java.lang.Long" keyProperty="tntInsuranceId">
+			select  TNT_INSURANCE_PRODCUT_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_INSURANCE_PRODCUT (
+        	TNT_INSURANCE_ID ,
+        	PRODUCT_ID ,
+        	GOODS_ID ,
+        	INSURANCE_TYPE ,
+        	INSURANCE_DAYS 
+        ) VALUES (
+        	#{tntInsuranceId} ,
+        	#{productId} ,
+        	#{goodsId} ,
+        	#{insuranceType} ,
+        	#{insuranceDays} 
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.prod.vo.TntInsuranceProductVo">
+        UPDATE TNT_INSURANCE_PRODCUT SET
+	        PRODUCT_ID = #{productId} ,
+	        GOODS_ID = #{goodsId} ,
+	        INSURANCE_TYPE = #{insuranceType} ,
+	        INSURANCE_DAYS = #{insuranceDays} 
+        WHERE 
+        	<if test="tntInsuranceId !=null">
+	        	TNT_INSURANCE_ID = #{tntInsuranceId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_INSURANCE_PRODCUT WHERE
+        TNT_INSURANCE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="insuranceProductVoResult" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_INSURANCE_PRODCUT 
+	        WHERE 
+		        TNT_INSURANCE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<if test="productId != null and productId !=''">
+			AND product.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productName != null  and productName !=''">
+			AND product.PRODUCT_NAME like
+			CONCAT(CONCAT('%',ltrim(rtrim(#{productName}))),'%')
+		</if>
+		<if test="valid != null and valid !=''">
+			AND product.VALID = #{valid}
+		</if>
+		<if test="productType!=null">
+			AND lower(product.product_type) = lower(#{productType})
+		</if>
+		<if test="channelIds != null and channelIds !=''">
+			AND product.CHANNEL_IDS like
+			CONCAT(CONCAT('%,',#{channelIds}),',%')
+		</if>
+		<if test="dest!=null">
+			<if test="dest.destType != null and dest.destType !=''">
+				AND product.DEST_TYPE = #{dest.destType}
+			</if>
+			<if test="dest.destName != null and dest.destName !=''">
+				AND product.DEST_NAME = #{dest.destName}
+			</if>
+			<if test="dest.districtName != null and dest.districtName !=''">
+				AND product.DISTRICT_NAME like
+				CONCAT(CONCAT('%',trim(#{dest.districtName})),'%')
+			</if>
+		</if>
+		<if test="goods!=null">
+			<if test="goods.goodsName != null and goods.goodsName !=''">
+				AND GOODS_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{goods.goodsName}))),'%')
+			</if>
+			<if test="goods.goodsId != null and goods.goodsId !=''">
+				AND BRANCH_ID = #{goods.goodsId}
+			</if>
+			<if test="goods.status != null and goods.status !=''">
+				AND GOODS_STATUS = #{goods.status}
+			</if>
+		</if>
+		<if test="user!=null">
+			<if test="user.detail != null">
+				<if test="user.detail.companyTypeId != null and user.detail.companyTypeId!=''">
+					AND usr.COMPANY_TYPE_ID =
+					#{user.detail.companyTypeId}
+				</if>
+				<if test="user.detail.companyName != null and user.detail.companyName!=''">
+					AND usr.COMPANY_NAME like
+					CONCAT(CONCAT('%',trim(#{user.detail.companyName})),'%')
+				</if>
+			</if>
+		</if>
+		<!-- 保险 -->
+		<if test="insuranceDays != null">
+			AND tip.INSURANCE_DAYS = #{insuranceDays}
+		</if>
+		
+		<if test="insuranceTypeList != null">
+			AND tip.INSURANCE_TYPE IN
+			<foreach item="type" index="index" collection="insuranceTypeList"
+				open="(" separator="," close=")">
+				#{type}
+			</foreach>
+		</if>
+</sql>
+		
+	<sql id="pageWhere">
+		  <if test="param.productName != null  and param.productName !=''">
+				AND product.PRODUCT_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.productName}))),'%')
+			</if>
+			<if test="param.productType!=null">
+			AND lower(product.product_type) = lower(#{param.productType})
+			</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND product.PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.valid != null and param.valid !=''">
+				AND product.VALID = #{param.valid}
+			</if>
+			<if test="param.channelIds != null and param.channelIds !=''">
+			AND product.CHANNEL_IDS like
+			CONCAT(CONCAT('%,',#{param.channelIds}),',%')
+		</if>
+		<if test="param.dest!=null">
+			<if test="param.dest.destType != null and param.dest.destType !=''">
+				AND product.DEST_TYPE = #{param.dest.destType}
+			</if>
+			<if test="param.dest.destName != null and param.dest.destName !=''">
+				AND product.DEST_NAME = #{param.dest.destName}
+			</if>
+			<if
+				test="param.dest.districtName != null and param.dest.districtName !=''">
+				AND product.DISTRICT_NAME like
+				CONCAT(CONCAT('%',trim(#{param.dest.districtName})),'%')
+			</if>
+		</if>
+		<if test="param.goods!=null">
+			<if test="param.goods.goodsName != null and param.goods.goodsName !=''">
+				AND product.GOODS_NAME like
+				CONCAT(CONCAT('%',ltrim(rtrim(#{param.goods.goodsName}))),'%')
+			</if>
+			<if test="param.goods.goodsId != null and param.goods.goodsId !=''">
+				AND product.BRANCH_ID = #{param.goods.goodsId}
+			</if>
+			<if test="param.goods.status != null and param.goods.status !=''">
+				AND product.GOODS_STATUS = #{param.goods.status}
+			</if>
+		</if>
+	    <if test="param.user!=null">
+			<if test="param.user.detail != null">
+				<if test="param.user.detail.companyTypeId != null and param.user.detail.companyTypeId!=''">
+					AND usr.COMPANY_TYPE_ID =
+					#{param.user.detail.companyTypeId}
+				</if>
+				<if test="param.user.detail.companyName != null and param.user.detail.companyName!=''">
+					AND usr.COMPANY_NAME like
+					CONCAT(CONCAT('%',trim(#{param.user.detail.companyName})),'%')
+				</if>
+			</if>
+		</if>
+		<!-- 保险 -->
+		<if test="param.insuranceDays != null">
+			AND tip.INSURANCE_DAYS = #{param.insuranceDays}
+		</if>
+		
+		<if test="param.insuranceTypeList != null">
+			AND tip.INSURANCE_TYPE IN
+			<foreach item="type" index="index" collection="param.insuranceTypeList"
+				open="(" separator="," close=")">
+				#{type}
+			</foreach>
+		</if>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.prod.vo.TntInsuranceProductVo">
+        SELECT count(distinct product.PRODUCT_ID) FROM TNT_PRODUCT product, TNT_INSURANCE_PRODCUT insurance
+         WHERE product.product_id = insurance.product_id(+)
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="insuranceProductVoResult" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_PRODUCT product, TNT_INSURANCE_PRODCUT insurance
+	    WHERE product.product_id = insurance.product_id(+)
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+
+	<select id="findPageWithUser" resultMap="insuranceProductVoResult"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT <include refid="columns" />
+		FROM TNT_PRODUCT product,TNT_INSURANCE_PRODCUT insurance,
+		TNT_USER_DETAIL usr
+		<where>
+			product.product_id=insurance.product_id(+) and
+			usr.FINAL_STATUS='DOING'
+			and
+			not
+			exists
+			(select 1 from tnt_product_user puser
+			where
+			product.BRANCH_ID =
+			puser.GOODS_ID and
+			puser.type = product.category_id
+			and
+			puser.USER_ID = usr.USER_ID and
+			puser.VALID = 'false'
+			<if test="param.user!=null">
+				<if test="param.user.userId != null ">
+					AND puser.USER_ID = #{param.user.userId}
+				</if>
+			</if>
+			)
+			<include refid="pageWhere" />
+			
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="countWithUser" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.vo.TntInsuranceProductVo">
+		SELECT count(distinct product.PRODUCT_ID)
+		FROM
+		TNT_PRODUCT product,
+		TNT_INSURANCE_PRODCUT insurance,
+		TNT_USER_DETAIL usr
+		<where>
+			product.product_id = insurance.product_id(+) and
+			usr.FINAL_STATUS='DOING'
+			and
+			not
+			exists
+			(select 1 from tnt_product_user puser
+			where
+			product.BRANCH_ID =
+			puser.GOODS_ID and
+			puser.type = product.category_id
+			and
+			puser.USER_ID = usr.USER_ID and
+			puser.VALID = 'false'
+			<if test="user!=null">
+				<if test="user.userId != null ">
+					AND puser.USER_ID = #{user.userId}
+				</if>
+			</if>
+			)
+			<include refid="where" />
+		</where>
+	</select>
+	
+	 <!-- 根据查询条件查询保险总数(下单) -->
+    <select id="findInsuranceProdsPageWithUserCount" resultType="Long" parameterType="com.lvmama.tnt.prod.vo.TntInsuranceProductVo">
+		select count(*) from (SELECT distinct(product.product_id) FROM TNT_PRODUCT product,TNT_USER_DETAIL usr, TNT_INSURANCE_PRODCUT tip
+		<where>
+			product.BRANCH_ID = tip.GOODS_ID
+			<include refid="where" />
+		</where>
+		)
+	</select>
+	
+	<!-- 查询保险对应的产品列表信息(下单) -->
+	<select id="findInsuranceProdsPageWithUser" resultMap="insuranceProductVoResult" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT distinct
+		product.PRODUCT_ID,product.PRODUCT_NAME,product.CAN_SALE_FLAG,product.GOODS_STATUS,product.VALID,product.category_id,tip.INSURANCE_TYPE,tip.INSURANCE_DAYS
+		FROM TNT_PRODUCT product,TNT_USER_DETAIL usr, TNT_INSURANCE_PRODCUT tip
+		<where>
+			product.BRANCH_ID = tip.GOODS_ID
+			<include refid="pageWhere" />
+		</where>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+</mapper>
+

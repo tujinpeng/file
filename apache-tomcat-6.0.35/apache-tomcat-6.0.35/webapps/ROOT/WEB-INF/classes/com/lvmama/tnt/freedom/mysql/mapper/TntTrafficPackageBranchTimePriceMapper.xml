@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.freedom.mysql.mapper.TntTrafficPackageBranchTimePriceMapper">
+
+    <resultMap id="baseResultMap" type="com.lvmama.tnt.freedom.mysql.po.TntTrafficPackageBranchTimePrice">
+        <result property="timePriceId" column="TIME_PRICE_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="packageId" column="PACKAGE_ID"/>
+        <result property="packageBranchId" column="PACKAGE_BRANCH_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="adultNum" column="ADULT_NUM"/>
+        <result property="childNum" column="CHILD_NUM"/>
+        <result property="selectDate" column="SELECT_DATE"/>
+        <result property="toStartDays" column="TO_START_DAYS"/>
+        <result property="backStartDays" column="BACK_START_DAYS"/>
+        <result property="goodsId" column="GOODS_ID"/>
+        <result property="sellPrice" column="SELL_PRICE"/>
+        <result property="settlePrice" column="SETTLE_PRICE"/>
+        <result property="stockFlag" column="STOCK_FLAG"/>
+        <result property="stockNum" column="STOCK_NUM"/>
+        <result property="overSale" column="OVER_SALE"/>
+        <result property="aheadHour" column="AHEAD_HOUR"/>
+        <result property="bookLimitType" column="BOOK_LIMIT_TYPE"/>
+        <result property="packTrafficAuditCount" column="PACK_TRAFFIC_AUDIT_COUNT"/>
+        <result property="packTrafficChildCount" column="PACK_TRAFFIC_CHILD_COUNT"/>
+        <result property="auditSalePrice" column="AUDIT_SALE_PRICE"/>
+        <result property="auditSettlePrice" column="AUDIT_SETTLE_PRICE"/>
+        <result property="childSalePrice" column="CHILD_SALE_PRICE"/>
+        <result property="childSettlePrice" column="CHILD_SETTLE_PRICE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+	    <![CDATA[
+
+
+
+
+
+
+
+		TIME_PRICE_ID,GROUP_ID,PACKAGE_ID,PACKAGE_BRANCH_ID,BRANCH_ID,CATEGORY_ID,SALE_TYPE,ADULT_NUM,CHILD_NUM,SELECT_DATE,TO_START_DAYS,BACK_START_DAYS,GOODS_ID,SELL_PRICE,SETTLE_PRICE,STOCK_FLAG,STOCK_NUM,OVER_SALE,AHEAD_HOUR,BOOK_LIMIT_TYPE,PACK_TRAFFIC_AUDIT_COUNT,PACK_TRAFFIC_CHILD_COUNT,AUDIT_SALE_PRICE,AUDIT_SETTLE_PRICE,CHILD_SALE_PRICE,CHILD_SETTLE_PRICE,CREATE_TIME,UPDATE_TIME
+
+
+
+
+
+
+
+        ]]>
+	</sql>
+
+    <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+    <insert id="insert" parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficPackageBranchTimePrice">
+        INSERT INTO TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE (
+        	GROUP_ID ,
+        	PACKAGE_ID ,
+        	PACKAGE_BRANCH_ID ,
+        	BRANCH_ID ,
+        	CATEGORY_ID ,
+        	SALE_TYPE ,
+        	ADULT_NUM ,
+        	CHILD_NUM ,
+        	SELECT_DATE ,
+        	TO_START_DAYS ,
+        	BACK_START_DAYS ,
+        	GOODS_ID ,
+        	SELL_PRICE ,
+        	SETTLE_PRICE ,
+        	STOCK_FLAG ,
+        	STOCK_NUM ,
+        	OVER_SALE ,
+        	AHEAD_HOUR ,
+        	BOOK_LIMIT_TYPE ,
+        	PACK_TRAFFIC_AUDIT_COUNT ,
+        	PACK_TRAFFIC_CHILD_COUNT ,
+        	AUDIT_SALE_PRICE ,
+        	AUDIT_SETTLE_PRICE ,
+        	CHILD_SALE_PRICE ,
+        	CHILD_SETTLE_PRICE ,
+        	CREATE_TIME ,
+        	UPDATE_TIME 
+        ) VALUES (
+        	#{groupId} ,
+        	#{packageId} ,
+        	#{packageBranchId} ,
+        	#{branchId} ,
+        	#{categoryId} ,
+        	#{saleType} ,
+        	#{adultNum} ,
+        	#{childNum} ,
+        	#{selectDate} ,
+        	#{toStartDays} ,
+        	#{backStartDays} ,
+        	#{goodsId} ,
+        	#{sellPrice} ,
+        	#{settlePrice} ,
+        	#{stockFlag} ,
+        	#{stockNum} ,
+        	#{overSale} ,
+        	#{aheadHour} ,
+        	#{bookLimitType} ,
+        	#{packTrafficAuditCount} ,
+        	#{packTrafficChildCount} ,
+        	#{auditSalePrice} ,
+        	#{auditSettlePrice} ,
+        	#{childSalePrice} ,
+        	#{childSettlePrice} ,
+        	now() ,
+        	now()
+        )
+	</insert>
+
+    <update id="update" parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficPackageBranchTimePrice">
+        UPDATE TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE SET
+        GROUP_ID = #{groupId} ,
+        PACKAGE_ID = #{packageId} ,
+        PACKAGE_BRANCH_ID = #{packageBranchId} ,
+        BRANCH_ID = #{branchId} ,
+        CATEGORY_ID = #{categoryId} ,
+        SALE_TYPE = #{saleType} ,
+        ADULT_NUM = #{adultNum} ,
+        CHILD_NUM = #{childNum} ,
+        SELECT_DATE = #{selectDate} ,
+        TO_START_DAYS = #{toStartDays} ,
+        BACK_START_DAYS = #{backStartDays} ,
+        GOODS_ID = #{goodsId} ,
+        SELL_PRICE = #{sellPrice} ,
+        SETTLE_PRICE = #{settlePrice} ,
+        STOCK_FLAG = #{stockFlag} ,
+        STOCK_NUM = #{stockNum} ,
+        OVER_SALE = #{overSale} ,
+        AHEAD_HOUR = #{aheadHour} ,
+        BOOK_LIMIT_TYPE = #{bookLimitType} ,
+        PACK_TRAFFIC_AUDIT_COUNT = #{packTrafficAuditCount} ,
+        PACK_TRAFFIC_CHILD_COUNT = #{packTrafficChildCount} ,
+        AUDIT_SALE_PRICE = #{auditSalePrice} ,
+        AUDIT_SETTLE_PRICE = #{auditSettlePrice} ,
+        CHILD_SALE_PRICE = #{childSalePrice} ,
+        CHILD_SETTLE_PRICE = #{childSettlePrice} ,
+        UPDATE_TIME = now()
+        WHERE
+        <if test="timePriceId !=null">
+            TIME_PRICE_ID = #{timePriceId}
+        </if>
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE WHERE
+        TIME_PRICE_ID = #{id} 
+    </delete>
+
+    <delete id="deleteForBatch" parameterType="Long">
+        DELETE FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE WHERE
+        TIME_PRICE_ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByPackageIds" parameterType="Long">
+        DELETE FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE WHERE
+        PACKAGE_ID IN
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        WHERE
+        TIME_PRICE_ID = #{id}
+    </select>
+
+    <select id="getByPackageBranchId" resultMap="baseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        WHERE
+        1 = 1
+        <if test="packageBranchId != null and packageBranchId !=''">
+            AND PACKAGE_BRANCH_ID = #{packageBranchId}
+        </if>
+        <if test="selectDate != null and selectDate !=''">
+            AND SELECT_DATE = #{selectDate}
+        </if>
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="timePriceId != null and timePriceId !=''">
+                AND TIME_PRICE_ID = #{timePriceId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND GROUP_ID = #{groupId}
+            </if>
+            <if test="packageId != null and packageId !=''">
+                AND PACKAGE_ID = #{packageId}
+            </if>
+            <if test="packageBranchId != null and packageBranchId !=''">
+                AND PACKAGE_BRANCH_ID = #{packageBranchId}
+            </if>
+            <if test="branchId != null and branchId !=''">
+                AND BRANCH_ID = #{branchId}
+            </if>
+            <if test="categoryId != null and categoryId !=''">
+                AND CATEGORY_ID = #{categoryId}
+            </if>
+            <if test="saleType != null and saleType !=''">
+                AND SALE_TYPE = #{saleType}
+            </if>
+            <if test="adultNum != null and adultNum !=''">
+                AND ADULT_NUM = #{adultNum}
+            </if>
+            <if test="childNum != null and childNum !=''">
+                AND CHILD_NUM = #{childNum}
+            </if>
+            <if test="selectDate != null and selectDate !=''">
+                AND SELECT_DATE = #{selectDate}
+            </if>
+            <if test="toStartDays != null and toStartDays !=''">
+                AND TO_START_DAYS = #{toStartDays}
+            </if>
+            <if test="backStartDays != null and backStartDays !=''">
+                AND BACK_START_DAYS = #{backStartDays}
+            </if>
+            <if test="goodsId != null and goodsId !=''">
+                AND GOODS_ID = #{goodsId}
+            </if>
+            <if test="sellPrice != null and sellPrice !=''">
+                AND SELL_PRICE = #{sellPrice}
+            </if>
+            <if test="settlePrice != null and settlePrice !=''">
+                AND SETTLE_PRICE = #{settlePrice}
+            </if>
+            <if test="stockFlag != null and stockFlag !=''">
+                AND STOCK_FLAG = #{stockFlag}
+            </if>
+            <if test="stockNum != null and stockNum !=''">
+                AND STOCK_NUM = #{stockNum}
+            </if>
+            <if test="overSale != null and overSale !=''">
+                AND OVER_SALE = #{overSale}
+            </if>
+            <if test="aheadHour != null and aheadHour !=''">
+                AND AHEAD_HOUR = #{aheadHour}
+            </if>
+            <if test="bookLimitType != null and bookLimitType !=''">
+                AND BOOK_LIMIT_TYPE = #{bookLimitType}
+            </if>
+            <if test="packTrafficAuditCount != null and packTrafficAuditCount !=''">
+                AND PACK_TRAFFIC_AUDIT_COUNT = #{packTrafficAuditCount}
+            </if>
+            <if test="packTrafficChildCount != null and packTrafficChildCount !=''">
+                AND PACK_TRAFFIC_CHILD_COUNT = #{packTrafficChildCount}
+            </if>
+            <if test="auditSalePrice != null and auditSalePrice !=''">
+                AND AUDIT_SALE_PRICE = #{auditSalePrice}
+            </if>
+            <if test="auditSettlePrice != null and auditSettlePrice !=''">
+                AND AUDIT_SETTLE_PRICE = #{auditSettlePrice}
+            </if>
+            <if test="childSalePrice != null and childSalePrice !=''">
+                AND CHILD_SALE_PRICE = #{childSalePrice}
+            </if>
+            <if test="childSettlePrice != null and childSettlePrice !=''">
+                AND CHILD_SETTLE_PRICE = #{childSettlePrice}
+            </if>
+            <if test="createTime != null and createTime !=''">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime !=''">
+                AND UPDATE_TIME = #{updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="param.timePriceId != null and param.timePriceId !=''">
+                AND TIME_PRICE_ID = #{param.timePriceId}
+            </if>
+            <if test="param.groupId != null and param.groupId !=''">
+                AND GROUP_ID = #{param.groupId}
+            </if>
+            <if test="param.packageId != null and param.packageId !=''">
+                AND PACKAGE_ID = #{param.packageId}
+            </if>
+            <if test="param.packageBranchId != null and param.packageBranchId !=''">
+                AND PACKAGE_BRANCH_ID = #{param.packageBranchId}
+            </if>
+            <if test="param.branchId != null and param.branchId !=''">
+                AND BRANCH_ID = #{param.branchId}
+            </if>
+            <if test="param.categoryId != null and param.categoryId !=''">
+                AND CATEGORY_ID = #{param.categoryId}
+            </if>
+            <if test="param.saleType != null and param.saleType !=''">
+                AND SALE_TYPE = #{param.saleType}
+            </if>
+            <if test="param.adultNum != null and param.adultNum !=''">
+                AND ADULT_NUM = #{param.adultNum}
+            </if>
+            <if test="param.childNum != null and param.childNum !=''">
+                AND CHILD_NUM = #{param.childNum}
+            </if>
+            <if test="param.selectDate != null and param.selectDate !=''">
+                AND SELECT_DATE = #{param.selectDate}
+            </if>
+            <if test="param.toStartDays != null and param.toStartDays !=''">
+                AND TO_START_DAYS = #{param.toStartDays}
+            </if>
+            <if test="param.backStartDays != null and param.backStartDays !=''">
+                AND BACK_START_DAYS = #{param.backStartDays}
+            </if>
+            <if test="param.goodsId != null and param.goodsId !=''">
+                AND GOODS_ID = #{param.goodsId}
+            </if>
+            <if test="param.sellPrice != null and param.sellPrice !=''">
+                AND SELL_PRICE = #{param.sellPrice}
+            </if>
+            <if test="param.settlePrice != null and param.settlePrice !=''">
+                AND SETTLE_PRICE = #{param.settlePrice}
+            </if>
+            <if test="param.stockFlag != null and param.stockFlag !=''">
+                AND STOCK_FLAG = #{param.stockFlag}
+            </if>
+            <if test="param.stockNum != null and param.stockNum !=''">
+                AND STOCK_NUM = #{param.stockNum}
+            </if>
+            <if test="param.overSale != null and param.overSale !=''">
+                AND OVER_SALE = #{param.overSale}
+            </if>
+            <if test="param.aheadHour != null and param.aheadHour !=''">
+                AND AHEAD_HOUR = #{param.aheadHour}
+            </if>
+            <if test="param.bookLimitType != null and param.bookLimitType !=''">
+                AND BOOK_LIMIT_TYPE = #{param.bookLimitType}
+            </if>
+            <if test="param.packTrafficAuditCount != null and param.packTrafficAuditCount !=''">
+                AND PACK_TRAFFIC_AUDIT_COUNT = #{param.packTrafficAuditCount}
+            </if>
+            <if test="param.packTrafficChildCount != null and param.packTrafficChildCount !=''">
+                AND PACK_TRAFFIC_CHILD_COUNT = #{param.packTrafficChildCount}
+            </if>
+            <if test="param.auditSalePrice != null and param.auditSalePrice !=''">
+                AND AUDIT_SALE_PRICE = #{param.auditSalePrice}
+            </if>
+            <if test="param.auditSettlePrice != null and param.auditSettlePrice !=''">
+                AND AUDIT_SETTLE_PRICE = #{param.auditSettlePrice}
+            </if>
+            <if test="param.childSalePrice != null and param.childSalePrice !=''">
+                AND CHILD_SALE_PRICE = #{param.childSalePrice}
+            </if>
+            <if test="param.childSettlePrice != null and param.childSettlePrice !=''">
+                AND CHILD_SETTLE_PRICE = #{param.childSettlePrice}
+            </if>
+            <if test="param.createTime != null and param.createTime !=''">
+                AND CREATE_TIME = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null and param.updateTime !=''">
+                AND UPDATE_TIME = #{param.updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="Integer"
+            parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficPackageBranchTimePrice">
+        SELECT count(*) FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        <include refid="where"/>
+    </select>
+
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        <include refid="pageWhere"/>
+        <include refid="mysql.pageSearchFoot"/>
+    </select>
+
+    <select id="getTntTrafficPackageBranchTimePriceList" resultMap="baseResultMap"
+            parameterType="com.lvmama.tnt.freedom.mysql.po.TntTrafficPackageBranchTimePrice">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        <include refid="where"/>
+    </select>
+    
+    <select id="getListByPackageBranchIdList" resultMap="baseResultMap"
+            parameterType="java.util.List">
+        SELECT
+        <include refid="columns"/>
+        FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE
+        WHERE PACKAGE_BRANCH_ID in 
+        <foreach collection="list" separator="," open="(" close=")" index="index" item="id">
+            #{id}
+        </foreach>
+        ORDER BY PACKAGE_ID,GROUP_ID,SELECT_DATE
+    </select>
+    
+    <select id="getListByDuration" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_BRANCH_ID = #{packageBranchId}
+		AND SELECT_DATE <![CDATA[ >= ]]>  #{beginDate}
+		AND SELECT_DATE <![CDATA[ <= ]]>  #{endDate}
+    </select>
+    
+    <select id="getDurationListByPackageId" resultMap="baseResultMap" parameterType="java.util.Map">
+    	SELECT <include refid="columns" />
+	    FROM TNT_TRAFFIC_PACKAGE_BRANCH_TIME_PRICE 
+		WHERE PACKAGE_ID = #{packageId}
+		AND SELECT_DATE <![CDATA[ >= ]]>  #{beginDate}
+		AND SELECT_DATE <![CDATA[ <= ]]>  #{endDate}
+    </select>
+
+
+</mapper>
+

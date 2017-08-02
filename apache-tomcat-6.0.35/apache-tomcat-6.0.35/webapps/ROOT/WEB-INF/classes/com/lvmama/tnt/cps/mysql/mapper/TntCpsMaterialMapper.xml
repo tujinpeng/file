@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cps.mysql.mapper.TntCpsMaterialMapper">
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cps.vo.TntCpsMaterial">
+	   <id property="materialId" column="MATERIAL_ID"/>
+       <result property="advertise" column="ADVERTISE"/>
+       <result property="channel" column="CHANNEL"/>
+       <result property="materialType" column="MATERIAL_TYPE"/>
+       <result property="materialCopy" column="MATERIAL_COPY"/>
+       <result property="materialUrl" column="MATERIAL_URL"/>
+       <result property="materialSize" column="MATERIAL_SIZE"/>
+       <result property="materCategory" column="MATER_CATEGORY"/>
+       <result property="materialPhoto" column="MATERIAL_PHOTO"/>
+       <result property="createTime" column="CREATE_TIME"/>
+       <result property="updateTime" column="UPDATE_TIME"/>
+	</resultMap>
+	<insert id="insert" parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial" useGeneratedKeys="true" keyProperty="materialId" >
+	      INSERT INTO TNT_CPS_MATERIAL (
+	        	ADVERTISE,
+	        	CHANNEL,
+	        	MATERIAL_TYPE ,
+	        	MATERIAL_COPY,
+	        	MATERIAL_URL,
+	        	MATERIAL_SIZE,
+	        	MATER_CATEGORY,
+	        	MATERIAL_PHOTO,
+	        	CREATE_TIME,
+	        	UPDATE_TIME
+	        ) VALUES (
+	        	#{advertise,jdbcType=VARCHAR},
+		        #{channel,jdbcType=VARCHAR},
+		        #{materialType,jdbcType=VARCHAR},
+		        #{materialCopy,jdbcType=VARCHAR},
+		        #{materialUrl,jdbcType=VARCHAR},
+		      	#{materialSize,jdbcType=VARCHAR},
+		      	#{materCategory,jdbcType=VARCHAR},
+		      	#{materialPhoto,jdbcType=VARCHAR},
+		      	NOW(),
+		      	NOW()
+	        )
+	</insert>
+	<delete id="delete" parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial">
+		DELETE FROM TNT_CPS_MATERIAL
+		WHERE 
+        MATERIAL_ID =  #{materialId}
+	</delete>
+	<select id="queryById" resultMap="baseResultMap" parameterType="Long" >
+   	    SELECT * FROM TNT_CPS_MATERIAL WHERE 
+				MATERIAL_ID = #{materialId}
+    </select>
+    
+    <select id="queryByMediaId" resultMap="baseResultMap" parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial">
+   	    SELECT * FROM TNT_CPS_MATERIAL WHERE 
+		MEDIA_ID = #{mediaId}
+		<if test="materialType != null and materialType !=''">
+			AND MATERIAL_TYPE = #{materialType}
+		</if>
+    </select>
+    
+    <select id="count" resultType="Integer" >
+   	    SELECT count(*) FROM TNT_CPS_MATERIAL
+		where 1=1 
+		<include refid="whereCpsPic" />
+    </select>
+    
+	<select id="count2" resultType="Integer"  parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial">
+   	    SELECT count(*) FROM TNT_CPS_MATERIAL
+		where 1=1 
+		<include refid="whereCpsPic" />
+    </select>
+    
+    <select id="queryByParam" resultMap="baseResultMap" parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial" >
+   	    SELECT * FROM TNT_CPS_MATERIAL
+   	    where 1=1 
+		<include refid="whereCpsPic" />
+    </select>
+	
+	<select id="queryByParamForPage" resultMap="baseResultMap">
+		SELECT
+		*
+		FROM TNT_CPS_MATERIAL 
+		where 1=1 
+		<include refid="whereCpsPic" />
+		ORDER BY UPDATE_TIME DESC
+		limit #{offset},#{pageSize}
+	</select>
+	<sql id="whereCpsPic">
+		<if test="materialType != null and materialType !='' ">
+			AND	MATERIAL_TYPE = #{materialType}
+		</if>
+		<if test="channel != null and channel !='' ">
+			AND	CHANNEL = #{channel}
+		</if>
+   	    <if test="materialSize != null and materialSize !='' and materialSize !='THEOTHERS'">
+			AND	MATERIAL_SIZE = #{materialSize}
+		</if>
+		<if test="materialSize != null and materialSize !='' and materialSize =='THEOTHERS'">
+			AND	MATERIAL_SIZE NOT IN ( ${imgSizeListToStr} )
+		</if>
+		
+   	    <if test="materCategory != null and materCategory !='' ">
+			AND	MATER_CATEGORY = #{materCategory}
+		</if>
+		<if test="advertise != null and advertise !='' ">
+			AND	ADVERTISE LIKE CONCAT(CONCAT('%',TRIM(#{advertise})),'%')
+		</if>
+	</sql>
+	
+	
+	<select id="queryByParamForPage2" resultMap="baseResultMap" parameterType="page">
+		SELECT
+		*
+		FROM TNT_CPS_MATERIAL 
+		where 1=1 
+		<include refid="whereCpsPic2" />
+		ORDER BY UPDATE_TIME DESC
+		limit #{startRowsForMySql},#{pageSize}
+	</select>
+	
+	<sql id="whereCpsPic2">
+		<if test="param.materialType != null and param.materialType !='' ">
+			AND	MATERIAL_TYPE = #{param.materialType}
+		</if>
+		<if test="param.channel != null and param.channel !='' ">
+			AND	CHANNEL = #{param.channel}
+		</if>
+   	    <if test="param.materialSize != null and param.materialSize !='' and param.materialSize !='THEOTHERS'">
+			AND	MATERIAL_SIZE = #{param.materialSize}
+		</if>
+		<if test="param.materialSize != null and param.materialSize !='' and param.materialSize =='THEOTHERS'">
+			AND	MATERIAL_SIZE NOT IN ( ${param.imgSizeListToStr} )
+		</if>
+		
+   	    <if test="param.materCategory != null and param.materCategory !='' ">
+			AND	MATER_CATEGORY = #{param.materCategory}
+		</if>
+		<if test="param.advertise != null and param.advertise !='' ">
+			AND	ADVERTISE LIKE CONCAT(CONCAT('%',TRIM(#{param.advertise})),'%')
+		</if>
+	</sql>
+	
+	
+	<update id="update" parameterType="com.lvmama.tnt.cps.vo.TntCpsMaterial">
+        UPDATE  TNT_CPS_MATERIAL SET
+	        	CHANNEL = #{channel,jdbcType=VARCHAR},
+	        	ADVERTISE =  #{advertise,jdbcType=VARCHAR},
+	        	MATERIAL_URL =  #{materialUrl,jdbcType=VARCHAR},
+	        	MATERIAL_SIZE = #{materialSize,jdbcType=VARCHAR},
+	        	MATER_CATEGORY = #{materCategory,jdbcType=VARCHAR},
+	        	MATERIAL_PHOTO = #{materialPhoto,jdbcType=VARCHAR},
+	        	UPDATE_TIME = NOW()
+        WHERE 
+        	 MATERIAL_ID = #{materialId}
+	</update>
+		
+		    
+</mapper>
