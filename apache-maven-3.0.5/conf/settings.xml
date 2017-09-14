@@ -51,7 +51,7 @@ under the License.
    |
    | Default: ~/.m2/repository
     -->
-   <localRepository>F:/repository</localRepository>
+   <localRepository>~/repository</localRepository>
  
 
   <!-- interactiveMode
